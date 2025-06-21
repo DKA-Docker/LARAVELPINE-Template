@@ -44,9 +44,9 @@
 
         ],
         "post-create-project-cmd": [
-            "Template\\Scripts::runDocker",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
+            "@php artisan migrate --graceful --ansi",
+            "Template\\Scripts::runDocker"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
