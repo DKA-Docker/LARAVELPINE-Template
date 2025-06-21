@@ -60,20 +60,20 @@ class Scripts
 
             // If APP_KEY already exists, replace it
             if (preg_match('/APP_KEY:\s*["\']?.*["\']?/i', $serviceBlock)) {
-                $serviceBlock = preg_replace('/APP_KEY:\s*["\']?.*["\']?/i', 'APP_KEY: '.$key, $serviceBlock);
+                $serviceBlock = preg_replace('/APP_KEY:\s*["\']?.*["\']?/i', 'APP_KEY: "' . $key . '"', $serviceBlock);
                 echo "📝 APP_KEY found and updated.\n";
             } else {
                 // Check if environment block exists
                 if (preg_match('/environment:\n((\s{6,}.*\n)+)/', $serviceBlock, $envMatch)) {
                     // Append APP_KEY into existing environment
-                    $replacement = $envMatch[0] . '      APP_KEY: ' .$key."\n";
+                    $replacement = $envMatch[0] . '      APP_KEY: "' . $key . "\"\n";
                     $serviceBlock = str_replace($envMatch[0], $replacement, $serviceBlock);
                     echo "➕ APP_KEY added to existing environment block.\n";
                 } else {
                     // No environment block, insert after image
                     $serviceBlock = preg_replace(
                         '/(image:\s*yovanggaanandhika\/laravelpine:[^\n]*\n)/i',
-                        "$1    environment:\n      APP_KEY: $key\n",
+                        "$1    environment:\n      APP_KEY: \"{$key}\"\n",
                         $serviceBlock
                     );
                     echo "✨ APP_KEY added with new environment block.\n";
