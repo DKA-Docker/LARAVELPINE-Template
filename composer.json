@@ -44,8 +44,8 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate",
-            "Template\\Scripts::runDocker"
+            "Template\\Scripts::runDocker",
+            "Template\\Scripts::generateAppKeyAndInjectToDocker"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
