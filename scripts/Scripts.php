@@ -28,7 +28,6 @@ class Scripts
         foreach ($output as $line) {
             echo $line . PHP_EOL;
         }
-
         if ($returnCode !== 0) {
             echo "❌ Gagal menjalankan Docker. Pastikan Docker Desktop (Windows) atau Docker daemon (Linux) sedang aktif.\n";
             exit(1);
