@@ -1,6 +1,6 @@
 <?php
 
-namespace Template;
+namespace Template\Scripts;
 
 class Scripts
 {
