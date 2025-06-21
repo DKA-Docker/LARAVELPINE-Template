@@ -18,7 +18,7 @@ class Scripts
         }
 
         // Tentukan perintah yang sesuai
-        $cmd = $isWindows ? 'docker-compose up -d' : 'docker compose up -d';
+        $cmd = $isWindows ? 'docker-compose up -d --force-recreate' : 'docker compose up -d --force-recreate';
 
         // Eksekusi
         $output = [];
