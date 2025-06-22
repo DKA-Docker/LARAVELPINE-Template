@@ -1,9 +1,9 @@
-name: dka-example-laravelpine
+name: example-laravelpine
 services:
   app:
     image: yovanggaanandhika/laravelpine:8.3-fpm
-    container_name: dka-example-laravelpine-app
-    hostname: dka-example-laravelpine-app
+    container_name: example-laravelpine-app
+    hostname: example-laravelpine-app
     restart: always
     pull_policy: always
     depends_on:
@@ -29,7 +29,7 @@ services:
       LOG_LEVEL: debug
 
       DB_CONNECTION: mariadb
-      DB_HOST: dka-example-laravelpine-mariadb
+      DB_HOST: example-laravelpine-mariadb
       DB_PORT: 3306
       DB_DATABASE: laravel
       DB_USERNAME: laravel
@@ -97,8 +97,8 @@ services:
 
   mariadb:
     image: yovanggaanandhika/mariadb:latest
-    container_name: dka-example-laravelpine-mariadb
-    hostname: dka-example-laravelpine-mariadb
+    container_name: example-laravelpine-mariadb
+    hostname: example-laravelpine-mariadb
     restart: always
     environment:
       DKA_ROOT_PASSWORD: 'DHJAK12kndk2383dikhjfk34hjk4lk'
@@ -118,21 +118,18 @@ services:
       - type: volume
         source: mariadb-data
         target: /var/lib/mysql
-      - type: volume
-        source: mariadb-backup
+      - type: bind
+        source: ./database/backups
         target: /backup
     networks:
       - default
 
 volumes:
   mariadb-data:
-    name: dka-example-laravelpine-mariadb-data
-    driver: local
-  mariadb-backup:
-    name: dka-example-laravelpine-mariadb-backup
+    name: example-laravelpine-mariadb-data
     driver: local
 
 networks:
   default:
-    name: dka-example-laravelpine
+    name: example-laravelpine
     driver: bridge
