@@ -8,6 +8,7 @@
 /.fleet
 /.idea
 /.nova
+*.sql.gz
 /.phpunit.cache
 /.vscode
 /test
