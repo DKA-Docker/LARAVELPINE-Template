@@ -1,4 +1,7 @@
 .git
 .idea
 .vscode
+composer.lock
+yarn.lock
+package.lock
 
