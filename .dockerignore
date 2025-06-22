@@ -4,4 +4,8 @@
 composer.lock
 yarn.lock
 package.lock
+compose.*
+*.Dockerfile
+.env
+.env.*
 
