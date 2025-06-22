@@ -13,10 +13,10 @@ services:
       - mariadb
     environment:
       APP_NAME: DKA
-      APP_ENV: production
+      APP_ENV: local
       APP_KEY: base64:B0AZZuJCVUdGDbwE6fL1Y8Pns/ArKEXsgutuybyEBCM=
       APP_DEBUG: true
-      APP_URL: http://localhost
+      APP_URL: http://localhost:8080
       APP_TIMEZONE: Asia/Makassar
 
       APP_LOCALE: en
@@ -84,7 +84,7 @@ services:
           memory: 128M
     ports:
       - target: 80
-        published: 80
+        published: 8080
         protocol: tcp
         host_ip: 0.0.0.0
     networks:
