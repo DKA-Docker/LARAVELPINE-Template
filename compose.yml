@@ -88,6 +88,7 @@ services:
         protocol: tcp
         host_ip: 0.0.0.0
     #- uncomment for sync project and data in container
+    #- disable if production
     volumes:
       - type: bind
         source: .
@@ -100,12 +101,16 @@ services:
     container_name: example-laravelpine-mariadb
     hostname: example-laravelpine-mariadb
     restart: always
+    pull_policy: always
     environment:
       DKA_ROOT_PASSWORD: 'DHJAK12kndk2383dikhjfk34hjk4lk'
       DKA_DB_NAME: laravel
       DKA_DB_USERNAME: laravel
       DKA_DB_PASSWORD: laravel
+      # enable cron backup
       DKA_CRON_ENABLE: false
+      # run everyday 3:00 AM
+      DKA_CRON_PRIODIC: '0 3 * * *'
     deploy:
       resources:
         limits:
