@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import "./../css/app.css"
 import {PageContainer} from "./layout/pageContainer";
 
 // Render ke elemen dengan id 'app'

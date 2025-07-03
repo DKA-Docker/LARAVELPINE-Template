@@ -1,5 +1,6 @@
 import { FC, Suspense, lazy } from "react";
 import {Header} from "../components/header";
+import "./../../css/app.css"
 
 
 const Example = lazy(() => import("./../pages/example"));
