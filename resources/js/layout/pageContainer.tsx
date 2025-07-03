@@ -10,7 +10,7 @@ export const PageContainer : FC = () => {
     return (
         <>
             <Header/>
-            <Suspense>
+            <Suspense fallback={<h3>Loading ....</h3>}>
                 <Example/>
             </Suspense>
 
