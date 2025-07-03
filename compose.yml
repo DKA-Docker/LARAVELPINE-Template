@@ -14,7 +14,7 @@ services:
       APP_ENV: local
       APP_KEY: null
       APP_DEBUG: true
-      APP_URL: http://localhost
+      APP_URL: http://127.0.0.1:8000
       APP_TIMEZONE: Asia/Makassar
 
       APP_LOCALE: en
@@ -80,9 +80,18 @@ services:
         reservations:
           cpus: "0.80"
           memory: 128M
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
+      - target: 5173
+        published: 5173
+        protocol: tcp
+        host_ip: 0.0.0.0
       - target: 80
-        published: 8080
+        published: 8000
         protocol: tcp
         host_ip: 0.0.0.0
     #- uncomment for sync project and data in container
