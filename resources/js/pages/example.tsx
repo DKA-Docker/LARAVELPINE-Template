@@ -447,3 +447,5 @@ export const Example : FC = () => {
         </div>
     )
 }
+
+export default Example;

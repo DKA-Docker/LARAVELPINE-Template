@@ -1,14 +1,18 @@
-import {FC} from "react";
+import { FC, Suspense, lazy } from "react";
 import {Header} from "../components/header";
-import {Example} from "../pages/example";
 
+
+const Example = lazy(() => import("./../pages/example"));
 
 export const PageContainer : FC = () => {
 
     return (
         <>
             <Header/>
-            <Example/>
+            <Suspense>
+                <Example/>
+            </Suspense>
+
         </>
     )
 }
