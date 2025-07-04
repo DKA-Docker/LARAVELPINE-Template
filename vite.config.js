@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
 export default defineConfig({
+    build: {
+        sourcemap : false
+    },
     plugins: [
         laravel({
             input: ['resources/ts/app.tsx'],
@@ -21,6 +24,6 @@ export default defineConfig({
     },
     server: {
         host : '0.0.0.0',
-        port : 5173
+        port : 5173,
     }
 });

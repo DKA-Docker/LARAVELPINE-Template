@@ -7,6 +7,7 @@
             "@css/*": ["resources/css/*"],
             "@js/*": ["resources/js/*"]
         },
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "esModuleInterop": true
     }
 }

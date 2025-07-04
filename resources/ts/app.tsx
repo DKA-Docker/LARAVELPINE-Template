@@ -1,11 +1,15 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import { PageContainer } from "@res/layout/pageContainer";
-import "@css/app.css"
+import {RouterProvider} from "react-router-dom";
+import RoutesConfig from "@res/config/RoutesConfig";
 
 // Render ke elemen dengan id 'app'
 const rootElement = document.getElementById('root')
 if (rootElement) {
     const root = ReactDOM.createRoot(rootElement)
-    root.render(<PageContainer/>)
+    root.render(
+        <React.StrictMode>
+            <RouterProvider router={RoutesConfig}/>
+        </React.StrictMode>
+    )
 }
