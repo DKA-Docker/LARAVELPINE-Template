@@ -20,6 +20,6 @@
 <div id="root"></div>
 </body>
 @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite('resources/js/app.tsx')
+    @vite('resources/ts/app.tsx')
 @endif
 </html>

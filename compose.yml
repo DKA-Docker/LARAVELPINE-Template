@@ -129,9 +129,6 @@ services:
       - type: volume
         source: mariadb-data
         target: /var/lib/mysql
-      - type: bind
-        source: ./database/backups
-        target: /backup
     networks:
       - default
 

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,9 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadMigrationsFrom([
-            database_path('migrations/v1'),
-            database_path('migrations/v2'),
-        ]);
+        $paths = File::directories(database_path('migrations'));
+        $this->loadMigrationsFrom($paths);
     }
 }

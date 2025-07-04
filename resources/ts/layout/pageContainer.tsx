@@ -1,6 +1,5 @@
 import { FC, Suspense, lazy } from "react";
-import {Header} from "../components/header";
-import "./../../css/app.css"
+import { Header } from "@res/components/header";
 
 
 const Example = lazy(() => import("./../pages/example"));
@@ -13,7 +12,6 @@ export const PageContainer : FC = () => {
             <Suspense fallback={<h3>Loading ....</h3>}>
                 <Example/>
             </Suspense>
-
         </>
     )
 }
