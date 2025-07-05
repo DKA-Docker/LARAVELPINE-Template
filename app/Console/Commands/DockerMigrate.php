@@ -3,35 +3,42 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Yaml\Yaml;
 
 class DockerMigrate extends Command
 {
     protected $signature = 'docker:migrate';
-    protected $description = 'Menjalankan php artisan migrate di dalam container berdasarkan image dari compose.yml';
+    protected $description = 'Menjalankan php artisan migrate berdasarkan image Laravel di compose.yml';
 
     public function handle()
     {
-        $this->info("🔍 Membaca image dari compose.yml...");
-
         $composePath = base_path('compose.yml');
         if (!file_exists($composePath)) {
             $this->error("❌ File compose.yml tidak ditemukan.");
             return 1;
         }
 
-        $contents = file_get_contents($composePath);
+        $this->info("🔍 Membaca file compose.yml...");
+        $yaml = Yaml::parseFile($composePath);
 
-        // Cari image dari service 'app'
-        if (!preg_match('/app:\s+(?:.*\n)*?\s+image:\s*([^\s\n]+)/', $contents, $matches)) {
-            $this->error("❌ Tidak ditemukan image di service `app` dalam compose.yml.");
+        if (!isset($yaml['services']['app']['image'])) {
+            $this->error("❌ Service 'app' atau key 'image' tidak ditemukan dalam compose.yml.");
             return 1;
         }
 
-        $imageName = trim($matches[1]);
+        $imageName = $yaml['services']['app']['image'];
+        $targetImage = 'yovanggaanandhika/laravelpine:8.3-fpm';
+
         $this->info("📦 Image ditemukan: $imageName");
 
-        // Cari nama container berdasarkan image
-        $cmdGetContainer = "docker ps --filter ancestor=$imageName --format '{{.Names}}' | head -n 1";
+        if ($imageName !== $targetImage) {
+            $this->error("⚠️ Image tidak sesuai. Ditemukan: $imageName, tapi yang diharapkan: $targetImage");
+            return 1;
+        }
+
+        // Cari container aktif dari image
+        $this->info("🔍 Mencari container aktif dari image...");
+        $cmdGetContainer = "docker ps --format '{{.Image}} {{.Names}}' | grep '^$imageName ' | awk '{print \$2}' | head -n 1";
         $containerName = trim(shell_exec($cmdGetContainer));
 
         if (empty($containerName)) {
@@ -39,8 +46,18 @@ class DockerMigrate extends Command
             return 1;
         }
 
-        $this->info("🚀 Menjalankan migrate di container: {$containerName}");
+        $this->info("📦 Container ditemukan: $containerName");
 
+        // Cek apakah php tersedia
+        $checkPhp = "docker exec {$containerName} which php";
+        $phpPath = trim(shell_exec($checkPhp));
+        if (empty($phpPath)) {
+            $this->error("❌ Perintah `php` tidak ditemukan dalam container: {$containerName}");
+            return 1;
+        }
+
+        // Jalankan migrate
+        $this->info("🚀 Menjalankan migrate di container...");
         $execCmd = "docker exec -it {$containerName} php artisan migrate";
         passthru($execCmd, $exitCode);
 

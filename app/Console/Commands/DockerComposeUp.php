@@ -9,7 +9,7 @@ class DockerComposeUp extends Command
     protected $signature = 'compose:up {--force-recreate : Tambahkan --force-recreate saat menjalankan up}';
     protected $description = 'Menjalankan docker compose up dengan deteksi OS';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🚀 Menjalankan docker compose up...');
 
