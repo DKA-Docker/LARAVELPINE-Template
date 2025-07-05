@@ -20,11 +20,12 @@ class Accounts extends Authenticatable
         'credential',
         'contact',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $hidden = [
-        'remember_token'
+        'remember_token',
+        'deleted_at'
     ];
 
     // Relasi ke info

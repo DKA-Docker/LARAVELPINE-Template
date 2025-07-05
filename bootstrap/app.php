@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\SessionsAccounts;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,4 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->call(function () {
+            SessionsAccounts::query()
+                ->where('last_activity', '<', now()->timestamp - (config('session.lifetime') * 60))
+                ->delete();
+        })->weekly(); // ← 🗓️ prune setiap minggu
+    })
+    ->create();

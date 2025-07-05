@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sessions_accounts', function (Blueprint $table) {
-            $table->uuid('id')->primary(); // UUID id
-            $table->foreignUuid('account')->constrained('accounts')->onDelete('cascade');
-            $table->string('session'); // dari session()->getId()
-            $table->string('user_agent')->nullable();
-            $table->ipAddress()->nullable();
-            $table->timestamp('last_active_at')->nullable();
+            $table->uuid('id')->primary(); // session ID
+            $table->foreignUuid('account')->nullable()->constrained('accounts')->nullOnDelete();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->text('payload');
+            $table->integer('last_activity')->index();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

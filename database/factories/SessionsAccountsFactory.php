@@ -21,10 +21,29 @@ class SessionsAccountsFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'account' => Accounts::query()->inRandomOrder()->value('id'),
-            'session' => Str::random(40),
             'user_agent' => $this->faker->userAgent,
             'ip_address' => $this->faker->ipv4,
-            'last_active_at' => now(),
+            'payload' => $this->fakeJwt(),
+            'last_activity' => now()->timestamp,
         ];
+    }
+
+    protected function fakeJwt(): string
+    {
+        $header = base64_encode(json_encode([
+            'alg' => 'HS256',
+            'typ' => 'JWT',
+        ]));
+
+        $payload = base64_encode(json_encode([
+            'sub' => $this->faker->uuid,
+            'name' => $this->faker->name,
+            'iat' => now()->timestamp,
+            'exp' => now()->addHour()->timestamp,
+        ]));
+
+        $signature = Str::random(43); // random string simulating HMAC signature
+
+        return "$header.$payload.$signature";
     }
 }

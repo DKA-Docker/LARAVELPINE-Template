@@ -21,6 +21,7 @@ class AccountsCredentials extends Model
         'id',
         'password',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
 }

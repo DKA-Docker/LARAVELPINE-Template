@@ -14,22 +14,21 @@ class SessionsAccounts extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+
     protected $fillable = [
         'account',
-        'session',
         'user_agent',
         'ip_address',
-        'last_active_at',
+        'last_activity',
     ];
 
     protected $hidden = [
         'id',
-        'created_at',
-        'updated_at',
+        'payload',
     ];
 
     protected $casts = [
-        'last_active_at' => 'datetime',
+        'last_activity' => 'integer',
     ];
 
     public function account()
