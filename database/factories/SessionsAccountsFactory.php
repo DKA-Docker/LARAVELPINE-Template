@@ -20,7 +20,7 @@ class SessionsAccountsFactory extends Factory
     {
         return [
             'id' => (string) Str::uuid(),
-            'account' => Accounts::query()->inRandomOrder()->value('id'),
+            'user_id' => Accounts::query()->inRandomOrder()->value('id'),
             'user_agent' => $this->faker->userAgent,
             'ip_address' => $this->faker->ipv4,
             'payload' => $this->fakeJwt(),

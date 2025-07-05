@@ -16,7 +16,7 @@ class SessionsAccounts extends Model
 
 
     protected $fillable = [
-        'account',
+        'user_id',
         'user_agent',
         'ip_address',
         'last_activity',
