@@ -12,7 +12,7 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: local
-      APP_KEY: null
+      APP_KEY: base64:dnP4sJB2aMjJSYJDv3iG41t9VwlqobV4Cps2MeeThIo=
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar
 

@@ -29,8 +29,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "Template\\": "scripts/"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -45,14 +44,11 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "Template\\Scripts::generateAppKeyAndInjectToDocker",
-            "Template\\Scripts::runDocker"
+            "@php artisan key:generate",
+            "@php artisan compose:up"
         ],
         "key": [
-            "Template\\Scripts::generateAppKeyAndInjectToDocker"
-        ],
-        "docker": [
-            "Template\\Scripts::runDocker"
+            "@php artisan key:generate"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
