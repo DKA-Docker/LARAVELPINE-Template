@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\AccountsCredential;
 use App\Models\AccountsCredentials;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +12,6 @@ use Illuminate\Support\Str;
  */
 class AccountsCredentialsFactory extends Factory
 {
-    protected $model = AccountsCredentials::class;
     /**
      * Define the model's default state.
      *

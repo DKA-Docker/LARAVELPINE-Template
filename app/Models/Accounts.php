@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Accounts extends Authenticatable
 {
-    use Notifiable;
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -19,12 +18,13 @@ class Accounts extends Authenticatable
         'id',
         'information',
         'credential',
+        'contact',
         'created_at',
         'updated_at'
     ];
 
     protected $hidden = [
-        'remember_token',
+        'remember_token'
     ];
 
     // Relasi ke info
@@ -37,5 +37,10 @@ class Accounts extends Authenticatable
     public function credential(): HasOne
     {
         return $this->hasOne(AccountsCredentials::class, 'id', 'credential');
+    }
+
+    public function contact(): HasOne
+    {
+        return $this->hasOne(AccountsContacts::class, 'id', 'contact');
     }
 }

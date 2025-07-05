@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Accounts;
+use App\Models\AccountsContacts;
 use App\Models\AccountsCredentials;
 use App\Models\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,7 +15,6 @@ use Illuminate\Support\Str;
 class AccountsFactory extends Factory
 {
 
-    protected $model = Accounts::class;
     /**
      * Define the model's default state.
      *
@@ -25,11 +25,13 @@ class AccountsFactory extends Factory
         // Buat relasi terkait
         $info = AccountsInformations::factory()->create();
         $credential = AccountsCredentials::factory()->create();
+        $contact = AccountsContacts::factory()->create();
 
         return [
             'id' => (string) Str::uuid(),
             'information' => $info->id,
             'credential' => $credential->id,
+            'contact' => $contact->id,
             'created_at' => now(),
             'updated_at' => now(),
         ];

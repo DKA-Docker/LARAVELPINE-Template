@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsInformations>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsContacts>
  */
-class AccountsInformationsFactory extends Factory
+class AccountsContactsFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,8 +20,7 @@ class AccountsInformationsFactory extends Factory
     {
         return [
             'id' => (string) Str::uuid(),
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->safeEmail(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

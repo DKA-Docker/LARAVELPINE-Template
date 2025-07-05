@@ -2,24 +2,24 @@
 
 namespace App\Models;
 
+use Database\Factories\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountsCredentials extends Model
+class AccountsContacts extends Model
 {
+    /** @use HasFactory<AccountsContactsFactory> */
     use HasFactory;
 
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'username',
-        'password',
+        'email',
     ];
 
     protected $hidden = [
         'id',
-        'password',
         'created_at',
         'updated_at'
     ];

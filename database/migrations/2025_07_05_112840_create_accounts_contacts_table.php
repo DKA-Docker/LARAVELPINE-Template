@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounts_credentials', function (Blueprint $table) {
+        Schema::create('accounts_contacts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('username')->unique();
-            $table->string('password');
+            $table->string('email')->unique();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('accounts_credentials');
+        Schema::dropIfExists('accounts_contacts');
     }
 };
