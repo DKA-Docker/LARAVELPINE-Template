@@ -20,7 +20,7 @@ class AccountsContactsFactory extends Factory
     {
         return [
             'id' => (string) Str::uuid(),
-            'email' => $this->faker->safeEmail(),
+            'email' => $this->faker->unique()->email,
             'created_at' => now(),
             'updated_at' => now(),
         ];
