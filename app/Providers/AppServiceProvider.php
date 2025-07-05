@@ -20,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /** @var
+         * $paths muat semua migration sub dir dan semua dalam dir migration
+         */
         $paths = File::directories(database_path('migrations'));
         $this->loadMigrationsFrom($paths);
     }

@@ -10,6 +10,9 @@ shell:
 	docker exec -it $(shell docker ps --filter ancestor=$(DOCKER_NAME) --format '{{.Names}}' | head -n 1) bash
 
 migrate:
+	docker exec -it $(shell docker ps --filter ancestor=$(DOCKER_NAME) --format '{{.Names}}' | head -n 1) php artisan
+
+migrate:
 	docker exec -it $(shell docker ps --filter ancestor=$(DOCKER_NAME) --format '{{.Names}}' | head -n 1) php artisan migrate
 
 backup:
