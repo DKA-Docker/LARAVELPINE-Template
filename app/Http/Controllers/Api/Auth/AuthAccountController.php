@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Requests\AuthAccountsRequest;
 use App\Services\Auth\AuthAccountsServices;
@@ -16,7 +16,7 @@ class AuthAccountController
         $this->account = new AuthAccountsServices();
     }
 
-    public function store(AuthAccountsRequest $request): JsonResponse
+    public function login(AuthAccountsRequest $request): JsonResponse
     {
         /** Get All Request Data */
         $validated = $request->validated(); // hanya data tervalidasi

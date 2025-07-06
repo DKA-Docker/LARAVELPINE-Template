@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Resources\Accounts;
-
-use App\Http\Controllers\Auth\AuthAccountController;
+namespace App\Http\Controllers\Api\Resources\Accounts;
 use App\Services\Auth\AuthAccountsServices;
 use App\Services\Resources\ResourcesAccountsServices;
 use Illuminate\Http\JsonResponse;
