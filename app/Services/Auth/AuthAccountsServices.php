@@ -57,10 +57,11 @@ class AuthAccountsServices {
         $user = Auth::user();
         // Ambil Nama Token dari Env
         $nameOfToken = env('APP_NAME', 'Laravel');
-        // Ambil akun yang terkait dari relasi
-
+        // Ambil Session Life sama dengan Api
         $minutes = (int) env('SESSION_LIFETIME', 120); // pastikan bertipe integer
+        // Tambahkan Waktu Sekarang Dengan Waku Session Hidup
         $expiresAt = now()->addMinutes($minutes);
+        /** Funtion Pengembalian Data */
         return [
             'type' => 'Bearer',
             'access_token' => $user->createToken(
