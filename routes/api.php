@@ -1,10 +1,17 @@
 <?php
 
-use Illuminate\Http\Response;
+use App\Http\Controllers\Auth\AuthAccountController;
+use App\Http\Controllers\Resources\Accounts\ResourcesAccountsController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (Response $response) {
-    return array(
-        'status' => true
-    );
+Route::prefix('/')->group(function () {
+    // public Routes (can Access Without Login)
+    Route::prefix('auth')->group(function () {
+        Route::resource('/', AuthAccountController::class);
+    });
+    // protected Resources
+    Route::prefix('resources')->middleware('auth:sanctum')->group(function () {
+        Route::resource('accounts', ResourcesAccountsController::class);
+    });
 });
+

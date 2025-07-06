@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'accounts'),
+        'guard' => env('AUTH_GUARD', 'api'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'api'),
     ],
 
     /*
@@ -38,7 +38,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'accounts',
+            'provider' => 'web',
+        ],
+        'api' => [
+            'driver' => 'session',
+            'provider' => 'api',
         ],
     ],
 
@@ -60,9 +64,13 @@ return [
     */
 
     'providers' => [
-        'accounts' => [
+        'api' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Accounts::class),
+            'model' => env('AUTH_MODEL', App\Models\AccountsCredentials::class)
+        ],
+        'web' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\AccountsCredentials::class)
         ],
 
         // 'users' => [
@@ -91,8 +99,14 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'accounts',
+        'web' => [
+            'provider' => 'web',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'api' => [
+            'provider' => 'api',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
