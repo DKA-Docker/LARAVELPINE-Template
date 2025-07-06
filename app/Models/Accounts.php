@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Accounts extends Authenticatable
+class Accounts extends Model
 {
     use HasFactory, Notifiable;
 
@@ -29,19 +32,16 @@ class Accounts extends Authenticatable
     ];
 
     // Relasi ke info
-    public function info(): HasOne
+    public function information(): BelongsTo
     {
-        return $this->hasOne(AccountsInformations::class, 'id', 'information');
+        return $this->belongsTo(AccountsInformations::class, 'information');
     }
-
-    // Relasi ke credential
-    public function credential(): HasOne
+    public function credential(): BelongsTo
     {
-        return $this->hasOne(AccountsCredentials::class, 'id', 'credential');
+        return $this->belongsTo(AccountsCredentials::class, 'credential');
     }
-
-    public function contact(): HasOne
+    public function contact(): BelongsTo
     {
-        return $this->hasOne(AccountsContacts::class, 'id', 'contact');
+        return $this->belongsTo(AccountsContacts::class, 'contact');
     }
 }

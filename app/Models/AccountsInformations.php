@@ -13,6 +13,7 @@ class AccountsInformations extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'first_name',
         'last_name',
     ];

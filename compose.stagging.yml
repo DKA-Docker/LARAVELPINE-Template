@@ -14,7 +14,7 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: local
-      APP_KEY: base64:B0AZZuJCVUdGDbwE6fL1Y8Pns/ArKEXsgutuybyEBCM=
+      APP_KEY: null
       APP_DEBUG: true
       APP_URL: http://localhost:8080
       APP_TIMEZONE: Asia/Makassar
