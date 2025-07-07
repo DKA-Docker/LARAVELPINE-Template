@@ -5,9 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Yaml\Yaml;
 
-class DockerMigrate extends Command
+class ProjectMigrate extends Command
 {
-    protected $signature = 'docker:migrate';
+    protected $signature = 'project:migrate';
     protected $description = 'Menjalankan php artisan migrate berdasarkan image Laravel di compose.yml';
 
     public function handle()

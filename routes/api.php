@@ -10,7 +10,7 @@ Route::prefix('/')->group(function () {
         Route::post('login', [AuthAccountController::class, 'login']);
     });
     // protected Resources
-    Route::prefix('resources')->middleware('auth:sanctum')->group(function () {
+    Route::prefix('resources')->middleware(['auth:sanctum'])->group(function () {
         Route::resource('accounts', ResourcesAccountsController::class);
     });
 });
