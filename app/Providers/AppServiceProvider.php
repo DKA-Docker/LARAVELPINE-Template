@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        ini_set('max_execution_time', 10);
         /** @var
          * $paths muat semua migration sub dir dan semua dalam dir migration
          */

@@ -24,6 +24,20 @@ class AuthAccountController
         return response()->json(
             data : $authenticate,
             headers: [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ]
+        );
+    }
+
+    public function register(AuthAccountsRequest $request): JsonResponse
+    {
+        /** Get All Request Data */
+        $validated = $request->validated(); // hanya data tervalidasi
+        $authenticate = $this->account->authenticate($validated);
+        return response()->json(
+            data : $authenticate,
+            headers: [
                 'Content-Type' => 'application/json'
             ]
         );
