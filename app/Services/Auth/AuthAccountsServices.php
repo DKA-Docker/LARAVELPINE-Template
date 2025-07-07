@@ -2,13 +2,12 @@
 
 namespace App\Services\Auth;
 
-use App\Repositories\AccountsContactsRepository;
-use App\Repositories\AccountsCredentialsRepository;
-use App\Repositories\AccountsInformationsRepository;
-use App\Repositories\AccountsRepository;
+use App\Repositories\Accounts\AccountsRepository;
+use App\Repositories\Accounts\Components\AccountsContactsRepository;
+use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
+use App\Repositories\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AuthAccountsServices {

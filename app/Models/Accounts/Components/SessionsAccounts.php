@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounts\Components;
 
+use App\Models\Accounts\Accounts;
 use Database\Factories\SessionsAccountsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

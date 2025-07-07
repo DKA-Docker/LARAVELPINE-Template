@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounts\Components;
 
+use App\Models\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;

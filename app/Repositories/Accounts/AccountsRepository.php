@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accounts;
 
-use App\Models\Accounts;
+use App\Models\Accounts\Accounts;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Collection;

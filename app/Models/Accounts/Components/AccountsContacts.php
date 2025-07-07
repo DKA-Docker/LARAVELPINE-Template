@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounts\Components;
 
+use Database\Factories\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountsInformations extends Model
+class AccountsContacts extends Model
 {
+    /** @use HasFactory<AccountsContactsFactory> */
     use HasFactory;
 
     public $incrementing = false;
@@ -14,8 +16,7 @@ class AccountsInformations extends Model
 
     protected $fillable = [
         'id',
-        'first_name',
-        'last_name',
+        'email',
     ];
 
     protected $hidden = [

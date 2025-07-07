@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\SessionsAccounts;
+use App\Models\Accounts\Components\SessionsAccounts;
 use Illuminate\Database\Seeder;
 
 class SessionsAccountsSeeder extends Seeder

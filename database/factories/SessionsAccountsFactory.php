@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Accounts;
+use App\Models\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

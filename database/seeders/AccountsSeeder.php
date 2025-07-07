@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Accounts;
 use App\Services\Resources\ResourcesAccountsServices;
 use Illuminate\Database\Seeder;
 

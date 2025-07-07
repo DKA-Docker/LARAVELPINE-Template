@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Accounts;
-use App\Models\AccountsContacts;
-use App\Models\AccountsCredentials;
-use App\Models\AccountsInformations;
+use App\Models\Accounts\Components\AccountsContacts;
+use App\Models\Accounts\Components\AccountsCredentials;
+use App\Models\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

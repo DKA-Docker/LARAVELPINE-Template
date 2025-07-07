@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accounts\Components;
 
 
-use App\Models\Accounts;
-use App\Models\AccountsCredentials;
-use App\Models\AccountsInformations;
+use App\Models\Accounts\Components\AccountsCredentials;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Support\Facades\Hash;

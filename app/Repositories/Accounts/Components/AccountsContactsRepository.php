@@ -1,40 +1,41 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accounts\Components;
 
 
-use App\Models\AccountsInformations;
+use App\Models\Accounts\Components\AccountsContacts;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Support\Str;
 
-class AccountsInformationsRepository {
+class AccountsContactsRepository {
 
     protected Generator $faker;
 
+    /** Automatise Initialising Factory Faker */
     public function __construct()
     {
         $this->faker = Factory::create();
     }
+
     /**
      * Create a new account information record
      *
-     * @param array $args Named arguments such as ['first_name' => ..., 'last_name' => ...]
-     * @return AccountsInformations
+     * @param array $args Named arguments such as ['email' => ...]
+     * @return AccountsContacts
      */
-    public function Create(...$args): AccountsInformations
+    public function Create(...$args): AccountsContacts
     {
         /** @var $defaults
          * jika data inputan kosong maka ambil dari faker,
          */
         $defaults = [
             'id' => (string) Str::uuid(),
-            'first_name' => $this->faker->firstName,
-            'last_name' => null,
+            'email' => $this->faker->email,
         ];
 
         $data = array_merge($defaults, $args);
 
-        return AccountsInformations::query()->create($data);
+        return AccountsContacts::query()->create($data);
     }
 }
