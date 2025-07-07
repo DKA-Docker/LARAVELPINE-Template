@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Accounts;
 use Faker\Factory;
 use Faker\Generator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -35,6 +36,11 @@ class AccountsRepository {
         $data = array_merge($defaults, $args);
 
         return Accounts::query()->create($data);
+    }
+
+    public function ReadAll(): Collection
+    {
+        return Accounts::query()->get();
     }
 
 

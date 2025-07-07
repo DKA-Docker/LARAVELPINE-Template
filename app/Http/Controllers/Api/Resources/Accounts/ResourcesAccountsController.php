@@ -21,11 +21,12 @@ class ResourcesAccountsController extends Controller {
 
     public function index(): JsonResponse
     {
-        $user = Auth::user();
         // Function untuk mendapatkan data user dari auth data
-        $data = $this->auth->authorize($user);
+        $data = $this->account->ReadAll();
+
         return response()->json(
             data : $data,
+            status: $data['code'],
             headers: [
                 'Content-Type' => 'application/json'
             ]

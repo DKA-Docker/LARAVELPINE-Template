@@ -7,6 +7,7 @@ use App\Repositories\AccountsCredentialsRepository;
 use App\Repositories\AccountsInformationsRepository;
 use App\Repositories\AccountsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -88,5 +89,52 @@ class AuthAccountsServices {
             "msg" => "Successfully get data",
             "data" => $data, // ubah akun dan relasi ke array
         ];
+    }
+
+    public function verify(): array
+    {
+        $auth = Auth::user();
+        if ($auth){
+            /** @var $account mixed cari id usernya dari session */
+            $account = $this->account->Find($auth->getAuthIdentifier());
+            /** Load semua relasi akun */
+            $data = $account->load(['information', 'credential', 'contact']);
+            return [
+                "status" => true,
+                "code" => 200,
+                "msg" => "Successfully get data",
+                "data" => $data, // ubah akun dan relasi ke array
+            ];
+        }else{
+            return [
+                "status" => false,
+                "code" => 401,
+                "msg" => "Unauthorized",
+            ];
+        }
+    }
+
+    public function revoke(Request $request): array
+    {
+        $authenticate = Auth::user();
+        if ($authenticate){
+            /** @var $account mixed cari id usernya dari session */
+            $account = $this->account->Find($authenticate->getAuthIdentifier());
+            /** Load semua relasi akun */
+            $data = $account->load(['information', 'credential', 'contact']);
+            $request->user()->currentAccessToken()->delete();
+            return [
+                "status" => true,
+                "code" => 200,
+                "msg" => "Successfully revoke session",
+                "data" => $data, // ubah akun dan relasi ke array
+            ];
+        }else{
+            return [
+                "status" => false,
+                "code" => 401,
+                "msg" => "Session Not Exists",
+            ];
+        }
     }
 }
