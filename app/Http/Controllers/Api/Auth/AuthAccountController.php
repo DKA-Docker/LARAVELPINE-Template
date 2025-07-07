@@ -30,7 +30,7 @@ class AuthAccountController
         );
     }
 
-    public function verify(Request $request): JsonResponse
+    public function verify(): JsonResponse
     {
         /** Verify Session */
         $authenticate = $this->account->verify();

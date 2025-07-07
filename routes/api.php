@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 // public Routes (can Access Without Login)
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthAccountController::class, 'login']);
-    Route::post('verify', [AuthAccountController::class, 'verify']);
     Route::post('logout', [AuthAccountController::class, 'logout'])->middleware(['auth:api']);
 });
 // protected Resources

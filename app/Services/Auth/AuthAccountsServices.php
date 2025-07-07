@@ -116,7 +116,9 @@ class AuthAccountsServices {
 
     public function revoke(Request $request): array
     {
+        /** @var  $authenticate Authenticatable get Session Logged */
         $authenticate = Auth::user();
+        /** Check Logged session is Exists */
         if ($authenticate){
             /** @var $account mixed cari id usernya dari session */
             $account = $this->account->Find($authenticate->getAuthIdentifier());
