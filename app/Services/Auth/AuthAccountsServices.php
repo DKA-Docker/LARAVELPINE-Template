@@ -3,7 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Repositories\Accounts\AccountsRepository;
-use App\Repositories\Accounts\Components\AccountsContactsRepositoryInterface;
+use App\Repositories\Accounts\Components\AccountsContactsRepository;
 use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
 use App\Repositories\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -18,7 +18,7 @@ class AuthAccountsServices {
     protected AccountsRepository $account;
     protected AccountsInformationsRepository $information;
     protected AccountsCredentialsRepository $credential;
-    protected AccountsContactsRepositoryInterface $contact;
+    protected AccountsContactsRepository $contact;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class AuthAccountsServices {
         $this->account = new AccountsRepository();
         $this->information = new AccountsInformationsRepository();
         $this->credential = new AccountsCredentialsRepository();
-        $this->contact = new AccountsContactsRepositoryInterface();
+        $this->contact = new AccountsContactsRepository();
     }
 
     public function authenticate(array $args): array
