@@ -8,7 +8,7 @@ use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Support\Str;
 
-class AccountsInformationsRepository {
+class AccountsInformationsRepository implements AccountsInformationsRepositoryInterface {
 
     protected Generator $faker;
 

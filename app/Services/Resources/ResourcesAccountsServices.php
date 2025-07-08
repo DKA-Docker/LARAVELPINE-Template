@@ -3,7 +3,7 @@
 namespace App\Services\Resources;
 
 use App\Repositories\Accounts\AccountsRepository;
-use App\Repositories\Accounts\Components\AccountsContactsRepository;
+use App\Repositories\Accounts\Components\AccountsContactsRepositoryInterface;
 use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
 use App\Repositories\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Database\QueryException;
@@ -18,7 +18,7 @@ class ResourcesAccountsServices {
     protected AccountsRepository $account;
     protected AccountsInformationsRepository $information;
     protected AccountsCredentialsRepository $credential;
-    protected AccountsContactsRepository $contact;
+    protected AccountsContactsRepositoryInterface $contact;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class ResourcesAccountsServices {
         $this->account = new AccountsRepository();
         $this->information = new AccountsInformationsRepository();
         $this->credential = new AccountsCredentialsRepository();
-        $this->contact = new AccountsContactsRepository();
+        $this->contact = new AccountsContactsRepositoryInterface();
     }
 
     /**
