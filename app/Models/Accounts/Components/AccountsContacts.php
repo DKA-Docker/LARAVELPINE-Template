@@ -2,7 +2,7 @@
 
 namespace App\Models\Accounts\Components;
 
-use Database\Factories\AccountsContactsFactory;
+use Database\Factories\Accounts\Components\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

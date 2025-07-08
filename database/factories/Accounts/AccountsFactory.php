@@ -1,7 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Accounts;
 
+use App\Models\Accounts\Accounts;
 use App\Models\Accounts\Components\AccountsContacts;
 use App\Models\Accounts\Components\AccountsCredentials;
 use App\Models\Accounts\Components\AccountsInformations;

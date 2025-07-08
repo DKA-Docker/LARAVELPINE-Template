@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Accounts\Components\SessionsAccounts;
+use App\Models\Sessions\SessionsAccounts;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
