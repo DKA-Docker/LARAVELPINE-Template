@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class AccountsRepository {
+class AccountsRepository implements AccountsRepositoryInterface {
 
     protected Generator $faker;
 
@@ -44,7 +44,7 @@ class AccountsRepository {
     }
 
 
-    public function Find($id)
+    public function Find($id) : null|Collection|Accounts|Model
     {
         return Accounts::query()->findOrFail($id);
     }
