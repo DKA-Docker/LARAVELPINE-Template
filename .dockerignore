@@ -4,6 +4,7 @@
 composer.lock
 yarn.lock
 package.lock
+node_modules
 compose.*
 *.Dockerfile
 .env

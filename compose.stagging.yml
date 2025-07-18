@@ -13,9 +13,9 @@ services:
       - mariadb
     environment:
       APP_NAME: DKA
-      APP_ENV: local
+      APP_ENV: production
       APP_KEY: null
-      APP_DEBUG: true
+      APP_DEBUG: false
       APP_URL: http://localhost:8080
       APP_TIMEZONE: Asia/Makassar
 
