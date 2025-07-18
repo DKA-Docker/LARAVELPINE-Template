@@ -12,6 +12,7 @@
 /.phpunit.cache
 /.vscode
 /test
+/public/stats.html
 composer.lock
 /.zed
 /auth.json

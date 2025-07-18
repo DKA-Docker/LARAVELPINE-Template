@@ -1,9 +1,17 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import commonjs from 'vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
-import * as path from 'path';
+import viteTsconfigPaths from 'vite-tsconfig-paths'
+import viteCompression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
+import inspect from 'vite-plugin-inspect';
+import obfuscatorPlugin from "vite-plugin-javascript-obfuscator";
+import { ViteMinifyPlugin } from 'vite-plugin-minify'
+import svgr from '@svgr/rollup';
+import { version, name } from "./package.json";
+import { resolve } from "path"
+import * as zlib from "node:zlib";
 
 export default defineConfig({
     build: {
@@ -18,15 +26,63 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+        // @ts-ignore
+        svgr(),
         react(),
-        tailwindcss()
+        tailwindcss(),
+        viteTsconfigPaths(),
+        obfuscatorPlugin({
+            /** Jalankan Obfucated Hanya Di Mode Build **/
+            apply : "build",
+            /** Opsi Tambahan**/
+            options : {
+                /** Matikan Debug dan Nyalakan Proteksi**/
+                debugProtection : false,
+                /** Jangan Gabung Import Karna Project Menggunakan Lazy load **/
+                ignoreImports: true,
+                /** Hapus Semua Console Output **/
+                disableConsoleOutput: true,
+            }
+        }),
+        ViteMinifyPlugin({
+            /** Hapus whitespace Kosong **/
+            removeTagWhitespace : true,
+            preventAttributesEscaping : true,
+            collapseInlineTagWhitespace : true,
+            /** Hapus Tags Yang Tidak Dibutuhkan */
+            removeOptionalTags : true,
+            /** Balik Baris Baru **/
+            preserveLineBreaks : true,
+            /** Hapus Attributs Redundant **/
+            removeRedundantAttributes : true
+        }),
+        viteCompression({
+            algorithm: 'brotliCompress',
+            ext: '.dka',
+            compressionOptions: {
+                params: {
+                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11 // 🔥 kompresi tingkat akhir
+                }
+            },
+            threshold: 1024, // hanya compress file > 1KB
+            deleteOriginFile: false, // true kalau mau hapus file asli
+        }),
+        inspect(),
+        // @ts-ignore
+        visualizer({
+            title : ` apps ${name} - version ${version}`,
+            filename: 'public/stats.html',
+            gzipSize: true,
+            brotliSize: true,
+        })
+
     ],
     resolve: {
         alias: {
-            '@resources': path.resolve(__dirname, 'resources/ts'),
-            '@res': path.resolve(__dirname, 'resources/ts'),
-            '@css': path.resolve(__dirname, 'resources/css'),
-            '@js': path.resolve(__dirname, 'resources/js'),
+            '@resources': resolve(__dirname, 'resources/ts'),
+            '@res': resolve(__dirname, 'resources/ts'),
+            '@css': resolve(__dirname, 'resources/css'),
+            '@js': resolve(__dirname, 'resources/js'),
         },
     },
     server: {

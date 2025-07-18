@@ -1,4 +1,6 @@
 {
+    "name": "laravelpine",
+    "version": "0.0.1",
     "$schema": "https://json.schemastore.org/package.json",
     "private": true,
     "type": "module",
@@ -7,6 +9,7 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@svgr/rollup": "^8.1.0",
         "@tailwindcss/postcss": "^4.1.11",
         "@tailwindcss/vite": "^4.0.0",
         "@types/jquery": "^3.5.32",
@@ -24,8 +27,14 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-router-dom": "^7.6.3",
+        "rollup-plugin-visualizer": "^6.0.3",
         "tailwindcss": "^4.1.11",
-        "vite": "^6.2.4"
+        "vite": "^6.2.4",
+        "vite-plugin-compression": "^0.5.1",
+        "vite-plugin-inspect": "^11.3.0",
+        "vite-plugin-javascript-obfuscator": "^3.1.0",
+        "vite-plugin-minify": "^2.1.0",
+        "vite-tsconfig-paths": "^5.1.4"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
