@@ -4,7 +4,7 @@ Author: codervent
 Email: codervent@gmail.com
 File: main.scss
 
-Table of Index 
+Table of Index
 
   --Genral
   --aligns
@@ -1011,7 +1011,7 @@ $dropdownAnimation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animd
   right: 0;
   bottom: 0;
   transition: ease-out .3s;
-  
+
 }
 
 
@@ -1259,7 +1259,7 @@ form select.error:focus {
 }
 
 .bg-login {
-  background-image: url(../assets/images/auth/bg-login.png);
+  background-image: url('/storage/images/auth/bg-login.png');
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
@@ -1267,17 +1267,17 @@ form select.error:focus {
 
 .bg-register {
   @extend .bg-login;
-  background-image: url(../assets/images/auth/bg-register.png);
+  background-image: url(/storage/images/auth/bg-register.png);
 }
 
 .bg-forgot-password {
   @extend .bg-login;
-  background-image: url(../assets/images/auth/bg-forgot.png);
+  background-image: url('/storage/images/auth/bg-forgot.png');
 }
 
 .bg-reset-password {
   @extend .bg-login;
-  background-image: url(../assets/images/auth/bg-reset-password.png);
+  background-image: url('/storage/images/auth/bg-reset-password.png');
 }
 
 
