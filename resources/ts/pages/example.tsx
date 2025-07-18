@@ -1,7 +1,7 @@
 import {FC, useEffect} from "react";
 import $ from 'jquery'; // pastikan jQuery sudah di-install
 
-import "@css/app.css"
+import "@css/frontend.css"
 
 export const Example : FC = () => {
 
