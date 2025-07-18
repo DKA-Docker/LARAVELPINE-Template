@@ -21,7 +21,7 @@
     @endif
 </head>
 <body>
-<x-Backend.Container theme="{{ $theme }}"></x-Backend.Container>
+<x-Dashboard.Container theme="{{ $theme }}"></x-Dashboard.Container>
 @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
     @vite(["resources/js/app.js"])
 @endif

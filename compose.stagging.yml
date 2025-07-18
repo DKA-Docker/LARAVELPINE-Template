@@ -14,9 +14,9 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: production
-      APP_KEY: null
+      APP_KEY: base64:mMKJ+s5Xo3Ylzmf5NLzK+M0WOQx4Hgrt+T5brCRZIMQ=
       APP_DEBUG: true
-      APP_URL: http://localhost:8080
+      APP_URL: http://localhost:8000
       APP_TIMEZONE: Asia/Makassar
 
       APP_LOCALE: en
@@ -78,13 +78,13 @@ services:
       resources:
         limits:
           cpus: "1.0"
-          memory: 512M
+          memory: 2048M
         reservations:
           cpus: "0.80"
-          memory: 128M
+          memory: 1128M
     ports:
       - target: 80
-        published: 8080
+        published: 8000
         protocol: tcp
         host_ip: 0.0.0.0
     networks:

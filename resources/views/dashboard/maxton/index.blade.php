@@ -1,9 +1,7 @@
-<x-Backend.Partial.Header theme="{{ $theme }}">
-
-</x-Backend.Partial.Header>
-<x-Backend.Partial.Sidebar theme="{{ $theme }}">
-
-</x-Backend.Partial.Sidebar>
+<x-Dashboard.Partial.Header theme="{{ $theme }}">
+</x-Dashboard.Partial.Header>
+<x-Dashboard.Partial.Sidebar theme="{{ $theme }}">
+</x-Dashboard.Partial.Sidebar>
 <!--start main wrapper-->
 <main class="main-wrapper">
     <div class="main-content">
@@ -33,9 +31,9 @@
             </div>
         </div>
         <!--end breadcrumb-->
-        <x-Backend.Pages.Dashboard theme="{{ $theme }}">
+        <x-Dashboard.Pages.Dashboard theme="{{ $theme }}">
 
-        </x-Backend.Pages.Dashboard>
+        </x-Dashboard.Pages.Dashboard>
     </div>
 </main>
 <!--end main wrapper-->

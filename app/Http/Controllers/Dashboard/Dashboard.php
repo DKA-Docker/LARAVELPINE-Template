@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Dashboard;
 
 class Dashboard
 {
@@ -12,6 +12,6 @@ class Dashboard
     }
 
     public function index(){
-        return view("backend.index", [ 'theme' => $this->theme ]);
+        return view("dashboard.index", [ 'theme' => $this->theme ]);
     }
 }

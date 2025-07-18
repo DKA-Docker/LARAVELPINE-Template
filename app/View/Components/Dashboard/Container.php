@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Backend\Pages;
+namespace App\View\Components\Dashboard;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Dashboard extends Component {
+class Container extends Component {
 
     private string $theme;
 
@@ -20,6 +20,6 @@ class Dashboard extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('backend.'.$this->theme.'.pages.dashboard', [ 'theme' => $this->theme ]);
+        return view('dashboard.'.$this->theme.'.index', [ 'theme' => $this->theme ]);
     }
 }

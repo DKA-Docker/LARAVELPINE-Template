@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Backend\Partial\Header;
+namespace App\View\Components\Dashboard\Partial\Header;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -20,6 +20,6 @@ class Header extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('backend.'.$this->theme.'.partial.header');
+        return view('dashboard.'.$this->theme.'.partial.header');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Backend\Dashboard;
+use App\Http\Controllers\Dashboard\Dashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/'], function () {

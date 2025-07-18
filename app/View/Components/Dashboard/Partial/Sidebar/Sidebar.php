@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Backend;
+namespace App\View\Components\Dashboard\Partial\Sidebar;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Container extends Component {
+class Sidebar extends Component {
 
     private string $theme;
 
@@ -20,6 +20,6 @@ class Container extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('backend.'.$this->theme.'.index', [ 'theme' => $this->theme ]);
+        return view('dashboard.'.$this->theme.'.partial.sidebar');
     }
 }
