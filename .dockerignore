@@ -3,6 +3,7 @@
 .vscode
 composer.lock
 yarn.lock
+public/build
 package.lock
 node_modules
 compose.*
