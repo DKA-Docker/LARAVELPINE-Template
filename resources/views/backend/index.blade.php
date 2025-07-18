@@ -12,7 +12,7 @@
     <!-- If Mode Hot Reload Load ViteReact Refresh -->
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(["resources/css/". $theme ."/app.css"])
+        @vite(["resources/css/app.css"])
     @else
         <!-- Styles / Scripts -->
         <style>
@@ -23,7 +23,7 @@
 <body>
 <x-Backend.Container theme="{{ $theme }}"></x-Backend.Container>
 @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(["resources/js/". $theme ."/app.js"])
+    @vite(["resources/js/app.js"])
 @endif
 </body>
 </html>

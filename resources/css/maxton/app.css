@@ -2,11 +2,11 @@
 
 
 @import './assets/pace.min.css';
-
 @import 'perfect-scrollbar/css/perfect-scrollbar.css';
-@import '../../plugins/maxton/metismenu/metisMenu.min.css';
+@import 'metismenu/dist/metisMenu.min.css';
 @import '../../plugins/maxton/metismenu/mm-vertical.css';
 @import '../../plugins/maxton/simplebar/css/simplebar.css';
+@import "apexcharts/dist/apexcharts.css";
 @import './assets/bootstrap.min.css';
 @import './assets/bootstrap-extended.css';
 @import "../../sass/maxton/main.css";

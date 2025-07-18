@@ -1,16 +1,21 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import commonjs from 'vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
 export default defineConfig({
     build: {
-        sourcemap : false
+        sourcemap : false,
     },
     plugins: [
         laravel({
-            input: ['resources/ts/main.tsx'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/ts/main.tsx'
+            ],
             refresh: true,
         }),
         react(),
