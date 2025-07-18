@@ -14,14 +14,14 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: production
-      APP_KEY: base64:mMKJ+s5Xo3Ylzmf5NLzK+M0WOQx4Hgrt+T5brCRZIMQ=
+      APP_KEY: null
       APP_DEBUG: true
       APP_URL: http://localhost:8000
       APP_TIMEZONE: Asia/Makassar
 
-      APP_LOCALE: en
-      APP_FALLBACK_LOCALE: en
-      APP_FAKER_LOCALE: en_US
+      APP_LOCALE: id_ID
+      APP_FALLBACK_LOCALE: id_ID
+      APP_FAKER_LOCALE: id_ID
       APP_MAINTENANCE_DRIVER: file
       # APP_MAINTENANCE_STORE:database
       PHP_CLI_SERVER_WORKERS: 4
