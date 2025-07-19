@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Dashboard\Partial\Sidebar;
+namespace App\View\Components\Dashboard\Partial;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Sidebar extends Component {
+class Footer extends Component {
 
     private string $theme;
 
@@ -20,6 +20,6 @@ class Sidebar extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('dashboard.'.$this->theme.'.partial.sidebar');
+        return view('dashboard.'.$this->theme.'.partial.footer', [ 'theme' => $this->theme ]);
     }
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="blue-theme">
 <head>
@@ -21,9 +22,10 @@
     @endif
 </head>
 <body>
-<x-Dashboard.Container theme="{{ $theme }}"></x-Dashboard.Container>
+{{ $slot }}
 @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
     @vite(["resources/js/app.js"])
 @endif
 </body>
 </html>
+

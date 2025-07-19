@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Dashboard\Partial\Sidebar;
+namespace App\View\Components\Dashboard\Pages\Auth;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Sidebar extends Component {
+class Login extends Component {
 
     private string $theme;
 
@@ -20,6 +20,6 @@ class Sidebar extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('dashboard.'.$this->theme.'.partial.sidebar');
+        return view('dashboard.'.$this->theme.'.pages.auth.login', [ 'theme' => $this->theme ]);
     }
 }

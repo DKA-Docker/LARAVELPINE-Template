@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Auth;
 
-class Dashboard
+class Login
 {
     private string $theme;
 
@@ -12,7 +12,7 @@ class Dashboard
     }
 
     public function index(){
-        return view("dashboard.".$this->theme.".pages.dashboard.dashboard", [
+        return view("dashboard.".$this->theme.".pages.auth.login", [
             'theme' => $this->theme
         ]);
     }
