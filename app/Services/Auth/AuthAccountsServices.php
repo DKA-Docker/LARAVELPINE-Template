@@ -88,7 +88,7 @@ class AuthAccountsServices {
 
     public function verify(): array
     {
-        $auth = Auth::guard('api')->user();
+        $auth = Auth::guard('account')->user();
         if ($auth) {
             $account = $auth->load(['information', 'credential', 'contact']);
             return [
