@@ -10,6 +10,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'auth'], function () {
     Route::resource('login', Login::class)->names(['index' => 'login']);
 });
-Route::group(['prefix' => 'dashboards', 'middleware' => 'auth:web'], function () {
+Route::group(['prefix' => 'dashboards', 'middleware' => 'auth:account'], function () {
     Route::resource('',Dashboard::class)->names(['index' => 'dashboards']);
 });

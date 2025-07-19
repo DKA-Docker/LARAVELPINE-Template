@@ -34,7 +34,7 @@ class AuthAccountsServices {
         $this->contact = new AccountsContactsRepository();
     }
 
-    public function authenticate(array $args, string $guard = 'web'): array
+    public function authenticate(array $args): array
     {
         $defaults = [
             'username' => '',
@@ -56,45 +56,14 @@ class AuthAccountsServices {
             ];
         }
 
-        switch ($guard) {
-            case 'web': {
-                Auth::guard($guard)->login($account);
-                request()->session()->regenerate();
+        Auth::guard('account')->login($account);
+        request()->session()->regenerate();
 
-                return [
-                    'status' => true,
-                    'code' => 200,
-                    'msg' => 'Successfully logged in (web)',
-                ];
-            }
-
-            case 'api': {
-                $now = now();
-                $expiresAt = now()->addMinutes(config('session.lifetime', 120));
-
-                $tokenResult = $account->createToken(env('APP_NAME', 'Laravel'));
-
-                $storedToken = $account->tokens()->latest()->first();
-                $storedToken->expires_at = $expiresAt;
-                $storedToken->save();
-
-
-                return [
-                    'token_type' => 'Bearer',
-                    'access_token' => $tokenResult->plainTextToken,
-                    'expires_in'    => $now->diffInSeconds($expiresAt), // INI yang betul 💯
-                ];
-
-            }
-
-            default: {
-                return [
-                    'status' => false,
-                    'code' => 400,
-                    'msg' => "Unknown guard [$guard]",
-                ];
-            }
-        }
+        return [
+            'status' => true,
+            'code' => 200,
+            'msg' => 'Successfully logged in (web)',
+        ];
     }
 
 
