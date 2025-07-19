@@ -1,7 +1,7 @@
-<x-Dashboard.PageContainer theme="{{$theme}}">
-    <x-Dashboard.Partial.Header theme="{{ $theme }}">
+<x-Dashboard.PageContainer :theme="$theme" :account="$account">
+    <x-Dashboard.Partial.Header :theme="$theme" :account="$account">
     </x-Dashboard.Partial.Header>
-    <x-Dashboard.Partial.Sidebar theme="{{ $theme }}">
+    <x-Dashboard.Partial.Sidebar :theme="$theme" :account="$account">
     </x-Dashboard.Partial.Sidebar>
     <!--start main wrapper-->
     <main class="main-wrapper">

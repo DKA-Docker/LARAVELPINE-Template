@@ -23,8 +23,8 @@ class AuthAccountsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|min:6',
-            'password' => 'required|string|min:6',
+            'username' => 'required|string|min:2',
+            'password' => 'required|string|min:2',
         ];
     }
 }

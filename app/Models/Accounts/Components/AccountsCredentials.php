@@ -4,12 +4,13 @@ namespace App\Models\Accounts\Components;
 
 use App\Models\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
-class AccountsCredentials extends Authenticatable
+class AccountsCredentials extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -41,14 +42,8 @@ class AccountsCredentials extends Authenticatable
             : $value;
     }
 
-    public function account()
+    public function account(): HasOne
     {
         return $this->hasOne(Accounts::class, 'credential', 'id');
-    }
-
-    public function getAuthIdentifier()
-    {
-        // pastikan sudah ada relasi account()
-        return $this->account?->id ?? $this->id;
     }
 }

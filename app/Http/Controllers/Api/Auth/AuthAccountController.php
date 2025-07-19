@@ -20,7 +20,7 @@ class AuthAccountController
     {
         /** Get All Request Data */
         $validated = $request->validated(); // hanya data tervalidasi
-        $authenticate = $this->account->authenticate($validated);
+        $authenticate = $this->account->authenticate($validated, "api");
         return response()->json(
             data : $authenticate,
             headers: [

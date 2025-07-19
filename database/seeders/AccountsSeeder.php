@@ -29,14 +29,13 @@ class AccountsSeeder extends Seeder
                 "first_name" => "Administrator"
             ],
             "credential" => [
-                "username" => "administrator",
-                "password" => "administrator"
+                "username" => "admin",
+                "password" => "admin"
             ],
             "contact" => [
                 "email" => "admin@example.com"
             ]
         ]);
-        $this->factory->count(10)->create();
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }

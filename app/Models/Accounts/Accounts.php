@@ -6,17 +6,21 @@ use App\Models\Accounts\Components\AccountsContacts;
 use App\Models\Accounts\Components\AccountsCredentials;
 use App\Models\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Accounts extends Model
+class Accounts extends Authenticatable
 {
     use HasFactory, Notifiable;
 
     public $incrementing = false;
     protected $keyType = 'string';
 
+    /** Auto-load relasi credential, contact, dan information */
+    protected $with = ['credential', 'contact', 'information'];
+
+    /** Kolom yang bisa diisi */
     protected $fillable = [
         'id',
         'information',
@@ -26,22 +30,64 @@ class Accounts extends Model
         'updated_at',
     ];
 
+    /** Kolom yang disembunyikan dari JSON output */
     protected $hidden = [
         'remember_token',
-        'deleted_at'
+        'deleted_at',
+        'password', // Hide accessor password biar gak bocor hash
     ];
 
-    // Relasi ke info
-    public function information(): BelongsTo
-    {
-        return $this->belongsTo(AccountsInformations::class, 'information');
-    }
+    /** Cast tipe data */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    // ================= RELATIONSHIP =================
+
+    /** Relasi ke AccountsCredentials (credential ID disimpan di kolom `credential`) */
     public function credential(): BelongsTo
     {
-        return $this->belongsTo(AccountsCredentials::class, 'credential');
+        return $this->belongsTo(AccountsCredentials::class, 'credential')->withDefault();
     }
+
+    /** Relasi ke AccountsContacts (contact ID disimpan di kolom `contact`) */
     public function contact(): BelongsTo
     {
-        return $this->belongsTo(AccountsContacts::class, 'contact');
+        return $this->belongsTo(AccountsContacts::class, 'contact')->withDefault();
+    }
+
+    /** Relasi ke AccountsInformations (information ID disimpan di kolom `information`) */
+    public function information(): BelongsTo
+    {
+        return $this->belongsTo(AccountsInformations::class, 'information')->withDefault();
+    }
+
+    // ================= ACCESSOR =================
+
+    /** Ambil username dari relasi credential */
+    public function getUsernameAttribute()
+    {
+        return $this->getRelationValue('credential')?->username;
+    }
+
+    /** Ambil password hash dari relasi credential */
+    public function getPasswordAttribute()
+    {
+        return $this->getRelationValue('credential')?->password;
+    }
+
+    // ================= AUTH IMPLEMENTATION =================
+
+    /** Override untuk memberitahu Laravel password-nya ambil dari relasi */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /** (Opsional) Jika ingin override kolom primary key authentikasi */
+    public function getAuthIdentifierName()
+    {
+        return 'id';
     }
 }

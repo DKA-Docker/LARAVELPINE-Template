@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Models\Accounts\Accounts;
 use App\Repositories\Accounts\AccountsRepository;
 use App\Repositories\Accounts\Components\AccountsContactsRepository;
 use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
@@ -9,6 +10,8 @@ use App\Repositories\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthAccountsServices {
 
@@ -31,7 +34,7 @@ class AuthAccountsServices {
         $this->contact = new AccountsContactsRepository();
     }
 
-    public function authenticate(array $args): array
+    public function authenticate(array $args, string $guard = "web"): array
     {
         /** @var $defaults
          * jika data inputan kosong maka ambil dari faker,
@@ -46,29 +49,51 @@ class AuthAccountsServices {
          */
         $data = array_merge($defaults, $args);
 
-        if (!Auth::attempt($data)) {
-            return [
-                'status' => false,
-                'code' => 403,
-                'msg' => 'wrong credentials data. authenticate failed'
-            ];
+        switch ($guard){
+            case "web" : {
+                // Cari akun berdasarkan username dari relasi credential
+                $account = Accounts::with(['information', 'contact', 'credential'])
+                    ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
+                    ->first();
+                $passwordMatcher = Hash::check($data['password'], $account->password);
+                // Verifikasi password manual
+                if ($account && $passwordMatcher) {
+
+                    Auth::login($account);
+                    request()->session()->regenerate();
+                    return [
+                        'status' => true,
+                        'code' => 200,
+                        'msg' => 'Successfully Login',
+                    ];
+                }
+                return [
+                    'status' => true,
+                    'code' => 401,
+                    'msg' => 'Failed Validation Account',
+                ];
+            }
+            default : {
+                if (!Auth::attempt($data)) {
+                    return [
+                        'status' => false,
+                        'code' => 403,
+                        'msg' => 'wrong credentials data. authenticate failed'
+                    ];
+                }
+                // Getting User Auth
+                $user = Auth::user();
+                // Ambil Nama Token dari Env
+                $nameOfToken = env('APP_NAME', 'Laravel');
+                /** Funtion Pengembalian Data */
+                return [
+                    'type' => 'Bearer',
+                    'access_token' => $user->createToken(
+                        name: $nameOfToken
+                    )->plainTextToken
+                ];
+            }
         }
-        // Getting User Auth
-        $user = Auth::user();
-        // Ambil Nama Token dari Env
-        $nameOfToken = env('APP_NAME', 'Laravel');
-        // Ambil Session Life sama dengan Api
-        $minutes = (int) env('SESSION_LIFETIME', 120); // pastikan bertipe integer
-        // Tambahkan Waktu Sekarang Dengan Waku Session Hidup
-        $expiresAt = now()->addMinutes($minutes);
-        /** Funtion Pengembalian Data */
-        return [
-            'type' => 'Bearer',
-            'access_token' => $user->createToken(
-                name: $nameOfToken,
-                expiresAt: $expiresAt
-            )->plainTextToken
-        ];
     }
 
     /**

@@ -12,7 +12,7 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: local
-      APP_KEY: null
+      APP_KEY: base64:SnrqRqI0FbMLOISYeZu5mMMmv2CT6uQYxcZUUidipGM=
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar
 
@@ -35,7 +35,7 @@ services:
       DB_USERNAME: laravel
       DB_PASSWORD: laravel
 
-      SESSION_DRIVER: database
+      SESSION_DRIVER: file
       SESSION_TABLE: sessions_accounts
       SESSION_LIFETIME: 120
       SESSION_ENCRYPT: false
