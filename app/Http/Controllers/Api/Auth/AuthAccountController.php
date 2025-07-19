@@ -30,16 +30,30 @@ class AuthAccountController
         );
     }
 
-    public function verify(): JsonResponse
+    public function verify(Request $request): JsonResponse
     {
-        /** Verify Session */
-        $authenticate = $this->account->verify();
+        // Ambil token dari header Authorization
+        $authHeader = $request->header('Authorization');
+
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return response()->json([
+                'status' => false,
+                'code' => 401,
+                'msg' => 'Token not provided or invalid format',
+            ], 401);
+        }
+
+        $token = trim(str_replace('Bearer ', '', $authHeader));
+
+        // Verifikasi token pakai service
+        $authenticate = $this->account->verify($token);
+
         return response()->json(
-            data : $authenticate,
+            data: $authenticate,
             status: $authenticate['code'],
             headers: [
                 'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]
         );
     }

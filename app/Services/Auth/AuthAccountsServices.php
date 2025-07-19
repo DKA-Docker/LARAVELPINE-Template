@@ -34,67 +34,69 @@ class AuthAccountsServices {
         $this->contact = new AccountsContactsRepository();
     }
 
-    public function authenticate(array $args, string $guard = "web"): array
+    public function authenticate(array $args, string $guard = 'web'): array
     {
-        /** @var $defaults
-         * jika data inputan kosong maka ambil dari faker,
-         */
         $defaults = [
             'username' => '',
             'password' => '',
         ];
 
-        /**
-         * Jika Ada data inputnya maka akan digunakan data inputnya
-         */
         $data = array_merge($defaults, $args);
 
-        switch ($guard){
-            case "web" : {
-                // Cari akun berdasarkan username dari relasi credential
-                $account = Accounts::with(['information', 'contact', 'credential'])
-                    ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
-                    ->first();
-                $passwordMatcher = Hash::check($data['password'], $account->password);
-                // Verifikasi password manual
-                if ($account && $passwordMatcher) {
+        /** @var Accounts|null $account */
+        $account = Accounts::with(['information', 'contact', 'credential'])
+            ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
+            ->first();
+        // Validasi akun dan password
+        if (!$account || !Hash::check($data['password'], $account->password)) {
+            return [
+                'status' => false,
+                'code' => 401,
+                'msg' => 'Invalid credentials',
+            ];
+        }
 
-                    Auth::login($account);
-                    request()->session()->regenerate();
-                    return [
-                        'status' => true,
-                        'code' => 200,
-                        'msg' => 'Successfully Login',
-                    ];
-                }
+        switch ($guard) {
+            case 'web': {
+                Auth::guard($guard)->login($account);
+                request()->session()->regenerate();
+
                 return [
                     'status' => true,
-                    'code' => 401,
-                    'msg' => 'Failed Validation Account',
+                    'code' => 200,
+                    'msg' => 'Successfully logged in (web)',
                 ];
             }
-            default : {
-                if (!Auth::attempt($data)) {
-                    return [
-                        'status' => false,
-                        'code' => 403,
-                        'msg' => 'wrong credentials data. authenticate failed'
-                    ];
-                }
-                // Getting User Auth
-                $user = Auth::user();
-                // Ambil Nama Token dari Env
-                $nameOfToken = env('APP_NAME', 'Laravel');
-                /** Funtion Pengembalian Data */
+
+            case 'api': {
+                $now = now();
+                $expiresAt = now()->addMinutes(config('session.lifetime', 120));
+
+                $tokenResult = $account->createToken(env('APP_NAME', 'Laravel'));
+
+                $storedToken = $account->tokens()->latest()->first();
+                $storedToken->expires_at = $expiresAt;
+                $storedToken->save();
+
+
                 return [
-                    'type' => 'Bearer',
-                    'access_token' => $user->createToken(
-                        name: $nameOfToken
-                    )->plainTextToken
+                    'token_type' => 'Bearer',
+                    'access_token' => $tokenResult->plainTextToken,
+                    'expires_in'    => $now->diffInSeconds($expiresAt), // INI yang betul 💯
+                ];
+
+            }
+
+            default: {
+                return [
+                    'status' => false,
+                    'code' => 400,
+                    'msg' => "Unknown guard [$guard]",
                 ];
             }
         }
     }
+
 
     /**
      * @param Authenticatable|null $authenticate
@@ -117,25 +119,22 @@ class AuthAccountsServices {
 
     public function verify(): array
     {
-        $auth = Auth::user();
-        if ($auth){
-            /** @var $account mixed cari id usernya dari session */
-            $account = $this->account->Find($auth->getAuthIdentifier());
-            /** Load semua relasi akun */
-            $data = $account->load(['information', 'credential', 'contact']);
+        $auth = Auth::guard('api')->user();
+        if ($auth) {
+            $account = $auth->load(['information', 'credential', 'contact']);
             return [
                 "status" => true,
                 "code" => 200,
                 "msg" => "Successfully get data",
-                "data" => $data, // ubah akun dan relasi ke array
-            ];
-        }else{
-            return [
-                "status" => false,
-                "code" => 401,
-                "msg" => "Unauthorized",
+                "data" => $account->toArray(), // biar frontend gampang parsing
             ];
         }
+
+        return [
+            "status" => false,
+            "code" => 401,
+            "msg" => "Unauthorized",
+        ];
     }
 
     public function revoke(Request $request): array
