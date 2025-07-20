@@ -30,7 +30,10 @@ class AppsDashboardsConfigurationsMenusSeeder extends Seeder
                     'name' => 'Dashboards',
                     'icon' => 'dashboards',
                     'children' => [
-                        ['name' => 'overview'],
+                        [
+                            'name' => 'overview',
+                            'routes' => 'dashboards.index'
+                        ],
                         ['name' => 'statistic']
                     ]
                 ]
@@ -45,7 +48,10 @@ class AppsDashboardsConfigurationsMenusSeeder extends Seeder
                     'name' => 'Managements',
                     'icon' => 'settings',
                     'children' => [
-                        ['name' => 'Accounts'],
+                        [
+                            'name' => 'Accounts',
+                            'routes' => 'dashboards.settings.managements.accounts.index'
+                        ],
                         ['name' => 'Sessions']
                     ]
                 ]
