@@ -6,7 +6,7 @@ $(function () {
 
     /* scrollar */
 
-    new PerfectScrollbar(".user-list")
+    //new PerfectScrollbar(".user-list")
     new PerfectScrollbar(".notify-list")
 
     new PerfectScrollbar(".search-content")
@@ -36,7 +36,6 @@ $(function () {
 
     $(function () {
         new MetisMenu($('#sidenav'))
-        //$('#sidenav').metisMenu();
     });
 
     $(".sidebar-close").on("click", function () {

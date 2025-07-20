@@ -15,10 +15,10 @@ class Dashboard
 
     public function index(){
         $AuthAccount = Auth::user();
-        $account = json_decode(json_encode($AuthAccount->toArray()));
+        $session = json_decode(json_encode($AuthAccount->toArray()));
         return view("dashboard.".$this->theme.".pages.dashboard.dashboard", [
             'theme' => $this->theme,
-            'account' => $account
+            'session' => $session
         ]);
     }
 }

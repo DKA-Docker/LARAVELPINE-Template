@@ -13,7 +13,7 @@
     <!-- If Mode Hot Reload Load ViteReact Refresh -->
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(["resources/css/app.css"])
+        @vite(["resources/css/app.css","resources/js/app.js"])
     @else
         <!-- Styles / Scripts -->
         <style>
@@ -23,9 +23,6 @@
 </head>
 <body>
 {{ $slot }}
-@if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(["resources/js/app.js"])
-@endif
 </body>
 </html>
 

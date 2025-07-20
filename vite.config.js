@@ -20,9 +20,13 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                /** base Assets**/
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/ts/main.tsx'
+                'resources/ts/main.tsx',
+                /** Scope of pages **/
+                'resources/js/maxton/pages/dashboard.js',
+                'resources/js/maxton/pages/settings/managements/accounts.js'
             ],
             refresh: true,
         }),

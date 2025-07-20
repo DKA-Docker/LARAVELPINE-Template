@@ -479,7 +479,7 @@ input::placeholder {
 .sidebar-wrapper .menu-label {
   padding: 10px 16px 10px 16px;
   color: #b0afaf;
-  text-transform: uppercase;
+  //text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
 }

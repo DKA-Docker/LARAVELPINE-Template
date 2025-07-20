@@ -11,12 +11,12 @@ use stdClass;
 class Dashboard extends Component {
 
     private string $theme;
-    private stdClass $account;
+    private stdClass $session;
 
-    public function __construct($theme, $account)
+    public function __construct($theme, $session)
     {
         $this->theme = $theme;
-        $this->account = $account;
+        $this->session = $session;
     }
 
     /**
@@ -24,6 +24,6 @@ class Dashboard extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('dashboard.'.$this->theme.'.pages.dashboard.dashboard', [ 'theme' => $this->theme, 'account' => $this->account ]);
+        return view('dashboard.'.$this->theme.'.pages.dashboard.dashboard', [ 'theme' => $this->theme, 'session' => $this->session ]);
     }
 }

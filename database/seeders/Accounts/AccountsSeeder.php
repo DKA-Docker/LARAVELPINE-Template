@@ -1,8 +1,7 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Accounts;
 
-use App\Models\Accounts\Accounts;
 use App\Services\Resources\ResourcesAccountsServices;
 use Database\Factories\Accounts\AccountsFactory;
 use Illuminate\Database\Seeder;

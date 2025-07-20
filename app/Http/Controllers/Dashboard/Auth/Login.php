@@ -22,7 +22,7 @@ class Login
     }
 
     public function index(){
-        if (Auth::check()) return redirect()->route('dashboards');
+        if (Auth::check()) return redirect()->route('dashboards.index');
         return view("dashboard.".$this->theme.".pages.auth.login", [
             'theme' => $this->theme
         ]);
@@ -33,7 +33,7 @@ class Login
         /** Get All Request Data */
         $validated = $request->validated(); // hanya data tervalidasi
         $authenticate = $this->account->authenticate($validated);
-        if ($authenticate['status']) return redirect()->route('dashboards');
+        if ($authenticate['status']) return redirect()->route('dashboards.index');
         return back()->withErrors([
             'email' => 'Login gagal. Cek email atau password.',
         ])->onlyInput('email');

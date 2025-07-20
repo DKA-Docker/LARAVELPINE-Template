@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Sessions\SessionsAccounts;
 use Illuminate\Database\Seeder;
 
 class SessionsAccountsSeeder extends Seeder
@@ -13,7 +12,7 @@ class SessionsAccountsSeeder extends Seeder
     public function run(): void
     {
         //
-        SessionsAccounts::factory()->count(1)->create();
-        $this->command->info('✅ 1 sessions accounts successfully created.');
+        //SessionsAccounts::factory()->count(1)->create();
+        $this->command->info('✅ 0 sessions accounts successfully created.');
     }
 }
