@@ -1,10 +1,10 @@
 <x-Dashboard.Pages.MainContent :theme="$theme" :session="$session">
-    <h6 class="mb-0 text-uppercase">DataTable Import</h6>
-    <hr>
+    <x-Dashboard.Partial.Breadcrumb theme="{{ $theme }}">
+    </x-Dashboard.Partial.Breadcrumb>
     <div class="card">
         <div class="card-body">
-            <div class="table-responsive">
-                <table id="example" class="table table-striped table-bordered h-100" style="width:100%;" >
+            <div class="table-responsive p-3">
+                <table id="example" class="table table-striped table-bordered" style="width:100%" >
                     <thead>
                     <tr>
                         <th>Nama Lengkap</th>

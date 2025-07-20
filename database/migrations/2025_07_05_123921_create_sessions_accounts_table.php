@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sessions_accounts', function (Blueprint $table) {
-            $table->uuid('id')->primary(); // session ID
+            $table->string('id')->primary(); // default Laravel (string 255)
             $table->foreignUuid('user_id')->nullable()->constrained('accounts')->nullOnDelete();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();

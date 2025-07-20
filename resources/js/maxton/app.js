@@ -7,7 +7,6 @@ import "./assets/pace.min.js"
 import './assets/bootstrap.bundle.min.js';
 import 'jquery/dist/jquery.min.js';
 /** Imported Plugin**/
-import 'perfect-scrollbar/dist/perfect-scrollbar.min.js';
 import (`../../plugins/${theme}/simplebar/js/simplebar.min.js`);
 import (`../../plugins/${theme}/peity/jquery.peity.min.js`);
 /** Action for main asset in js client template  **/

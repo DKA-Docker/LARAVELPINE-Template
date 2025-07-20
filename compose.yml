@@ -35,7 +35,7 @@ services:
       DB_USERNAME: laravel
       DB_PASSWORD: laravel
 
-      SESSION_DRIVER: file
+      SESSION_DRIVER: database
       SESSION_TABLE: sessions_accounts
       SESSION_LIFETIME: 120
       SESSION_ENCRYPT: false

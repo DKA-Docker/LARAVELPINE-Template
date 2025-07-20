@@ -6,8 +6,6 @@
     <!--start main wrapper-->
     <main class="main-wrapper">
         <div class="main-content">
-            <x-Dashboard.Partial.Breadcrumb theme="{{ $theme }}">
-            </x-Dashboard.Partial.Breadcrumb>
             {{ $slot }}
         </div>
     </main>

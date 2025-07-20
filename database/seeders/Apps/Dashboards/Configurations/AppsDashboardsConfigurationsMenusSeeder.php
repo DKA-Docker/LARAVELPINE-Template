@@ -28,13 +28,15 @@ class AppsDashboardsConfigurationsMenusSeeder extends Seeder
             'menus' => [
                 [
                     'name' => 'Dashboards',
-                    'icon' => 'dashboards',
+                    'icon' => 'apps',
                     'children' => [
                         [
                             'name' => 'overview',
-                            'routes' => 'dashboards.index'
                         ],
-                        ['name' => 'statistic']
+                        [
+                            'name' => 'statistic',
+                            'routes' => 'dashboards.index'
+                        ]
                     ]
                 ]
             ],
