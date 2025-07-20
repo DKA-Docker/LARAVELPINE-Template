@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Settings\Managements;
 
 use App\Repositories\Accounts\AccountsRepository;
+use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Support\Facades\Auth;
 
 class Accounts
@@ -10,9 +11,10 @@ class Accounts
     private string $theme;
     private AccountsRepository $accountsRepository;
 
-    public function __construct($theme = "maxton")
+
+    public function __construct(null|string $theme)
     {
-        $this->theme = $theme;
+        $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");
         $this->accountsRepository = new AccountsRepository();
     }
 

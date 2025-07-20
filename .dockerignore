@@ -1,6 +1,8 @@
 .git
 .idea
 .vscode
+public/storage
+public/hot
 composer.lock
 yarn.lock
 public/build

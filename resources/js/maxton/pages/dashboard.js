@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import ApexCharts from "apexcharts";
 
 $(function () {
@@ -322,10 +323,9 @@ $(function () {
     ];
     // Render only if element exists
     charts.forEach(({ id, options }) => {
-        if (document.querySelector(id)) {
-            new ApexCharts(document.querySelector(id), options).render();
+        const elementsChart = $(id);
+        if (elementsChart.length) {
+            new ApexCharts(elementsChart, options).render();
         }
     });
-
-
 });

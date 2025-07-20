@@ -1,15 +1,18 @@
 import PerfectScrollbar from 'perfect-scrollbar';
 import MetisMenu from "metismenu";
 $(function () {
-    "use strict";
 
 
     /* scrollar */
 
     //new PerfectScrollbar(".user-list")
-    new PerfectScrollbar(".notify-list")
+    if ($('.notify-list').length) {
+        new PerfectScrollbar('.notify-list');
+    }
 
-    new PerfectScrollbar(".search-content")
+    if ($('.search-content').length) {
+        new PerfectScrollbar('.search-content');
+    }
 
     // new PerfectScrollbar(".mega-menu-widgets")
 

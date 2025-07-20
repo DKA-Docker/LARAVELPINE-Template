@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Support\Facades\Auth;
 
 class Dashboard
 {
     private string $theme;
 
-    public function __construct($theme = "maxton")
+    public function __construct(null|string $theme)
     {
-        $this->theme = $theme;
+        $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");
     }
 
     public function index(){

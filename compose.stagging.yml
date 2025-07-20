@@ -14,7 +14,7 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: production
-      APP_KEY: null
+      APP_KEY: base64:SnrqRqI0FbMLOISYeZu5mMMmv2CT6uQYxcZUUidipGM=
       APP_DEBUG: true
       APP_URL: http://localhost:8000
       APP_TIMEZONE: Asia/Makassar
@@ -38,7 +38,8 @@ services:
       DB_USERNAME: laravel
       DB_PASSWORD: laravel
 
-      SESSION_DRIVER: database
+      SESSION_DRIVER: file
+      SESSION_TABLE: sessions_accounts
       SESSION_LIFETIME: 120
       SESSION_ENCRYPT: false
       SESSION_PATH: /
@@ -74,6 +75,7 @@ services:
       AWS_USE_PATH_STYLE_ENDPOINT: false
 
       VITE_APP_NAME: "${APP_NAME}"
+      VITE_THEME_NAME: maxton
     deploy:
       resources:
         limits:

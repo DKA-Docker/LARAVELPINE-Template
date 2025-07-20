@@ -15,9 +15,9 @@ class Login
     private string $theme;
     protected AuthAccountsServices $account;
 
-    public function __construct($theme = "maxton")
+    public function __construct(null|string $theme)
     {
-        $this->theme = $theme;
+        $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");
         $this->account = new AuthAccountsServices();
     }
 

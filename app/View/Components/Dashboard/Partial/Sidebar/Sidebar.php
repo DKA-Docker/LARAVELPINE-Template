@@ -14,7 +14,7 @@ class Sidebar extends Component
     private object $account;
     private AppsDashboardsConfigurationsMenusRepository $menuRepository;
 
-    public function __construct(string $theme, object $session)
+    public function __construct(null|string $theme, object $session)
     {
         $this->theme = $theme;
         $this->session = $session;

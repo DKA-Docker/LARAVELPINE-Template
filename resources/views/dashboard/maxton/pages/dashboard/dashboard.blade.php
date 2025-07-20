@@ -786,6 +786,6 @@
         </div>
     </div>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(["resources/js/maxton/pages/dashboard.js"])
+        @vite(["resources/js/".$theme."/pages/dashboard.js"])
     @endif
 </x-Dashboard.Pages.MainContent>
