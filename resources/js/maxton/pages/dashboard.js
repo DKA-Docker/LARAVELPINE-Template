@@ -323,9 +323,9 @@ $(function () {
     ];
     // Render only if element exists
     charts.forEach(({ id, options }) => {
-        const elementsChart = $(id);
+        const elementsChart = $(`${id}`);
         if (elementsChart.length) {
-            new ApexCharts(elementsChart, options).render();
+            new ApexCharts(elementsChart[0], options).render();
         }
     });
 });
