@@ -4,7 +4,7 @@ namespace Database\Seeders\Apps\Dashboards\Configurations;
 
 use App\Models\Apps\Dashboards\Configurations\AppsDashboardsConfigurationsMenus;
 use App\Services\Resources\ResourcesAccountsServices;
-use Database\Factories\Accounts\AccountsFactory;
+use Database\Factories\Base\Accounts\AccountsFactory;
 use Database\Factories\Apps\Dashboards\Configurations\AppsDashboardsConfigurationsMenusFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;

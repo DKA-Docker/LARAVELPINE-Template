@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Accounts\Components;
+namespace App\Models\Base\Accounts\Components;
 
-use Database\Factories\Accounts\Components\AccountsContactsFactory;
+use Database\Factories\Base\Accounts\Components\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

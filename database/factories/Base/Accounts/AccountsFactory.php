@@ -1,16 +1,15 @@
 <?php
 
-namespace Database\Factories\Accounts;
+namespace Database\Factories\Base\Accounts;
 
-use App\Models\Accounts\Accounts;
-use App\Models\Accounts\Components\AccountsContacts;
-use App\Models\Accounts\Components\AccountsCredentials;
-use App\Models\Accounts\Components\AccountsInformations;
+use App\Models\Base\Accounts\Components\AccountsContacts;
+use App\Models\Base\Accounts\Components\AccountsCredentials;
+use App\Models\Base\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Accounts>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<Accounts>
  */
 class AccountsFactory extends Factory
 {

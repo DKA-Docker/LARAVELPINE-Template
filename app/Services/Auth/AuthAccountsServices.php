@@ -2,11 +2,11 @@
 
 namespace App\Services\Auth;
 
-use App\Models\Accounts\Accounts;
-use App\Repositories\Accounts\AccountsRepository;
-use App\Repositories\Accounts\Components\AccountsContactsRepository;
-use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
-use App\Repositories\Accounts\Components\AccountsInformationsRepository;
+use App\Models\Base\Accounts\Accounts;
+use App\Repositories\Base\Accounts\AccountsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsContactsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsCredentialsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

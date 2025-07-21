@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Seeders\Accounts;
+namespace Database\Seeders\Base\Accounts;
 
 use App\Services\Resources\ResourcesAccountsServices;
-use Database\Factories\Accounts\AccountsFactory;
+use Database\Factories\Base\Accounts\AccountsFactory;
 use Illuminate\Database\Seeder;
 
 class AccountsSeeder extends Seeder

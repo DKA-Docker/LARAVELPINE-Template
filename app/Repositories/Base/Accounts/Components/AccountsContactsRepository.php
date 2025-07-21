@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories\Accounts\Components;
+namespace App\Repositories\Base\Accounts\Components;
 
 
-use App\Models\Accounts\Components\AccountsContacts;
+use App\Models\Base\Accounts\Components\AccountsContacts;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Support\Str;

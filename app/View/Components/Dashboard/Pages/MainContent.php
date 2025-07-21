@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Dashboard\Pages;
 
-use App\Models\Accounts\Accounts;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

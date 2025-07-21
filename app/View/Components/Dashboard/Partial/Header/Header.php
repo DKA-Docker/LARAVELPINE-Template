@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Dashboard\Partial\Header;
 
-use App\Models\Accounts\Accounts;
+use App\Models\Base\Accounts\Accounts;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

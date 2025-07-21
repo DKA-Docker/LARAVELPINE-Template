@@ -2,10 +2,10 @@
 
 namespace App\Services\Resources;
 
-use App\Repositories\Accounts\AccountsRepository;
-use App\Repositories\Accounts\Components\AccountsContactsRepository;
-use App\Repositories\Accounts\Components\AccountsCredentialsRepository;
-use App\Repositories\Accounts\Components\AccountsInformationsRepository;
+use App\Repositories\Base\Accounts\AccountsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsContactsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsCredentialsRepository;
+use App\Repositories\Base\Accounts\Components\AccountsInformationsRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Throwable;

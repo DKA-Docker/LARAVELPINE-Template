@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Accounts\Components;
+namespace App\Repositories\Base\Accounts\Components;
 
-use App\Models\Accounts\Components\AccountsCredentials;
+use App\Models\Base\Accounts\Components\AccountsCredentials;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Sessions;
+namespace App\Models\Base\Sessions;
 
-use App\Models\Accounts\Accounts;
-use Database\Factories\Sessions\SessionsAccountsFactory;
+use App\Models\Base\Accounts\Accounts;
+use Database\Factories\Base\Sessions\SessionsAccountsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

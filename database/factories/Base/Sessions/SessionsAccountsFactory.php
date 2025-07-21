@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories\Sessions;
+namespace Database\Factories\Base\Sessions;
 
-use App\Models\Accounts\Accounts;
+use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

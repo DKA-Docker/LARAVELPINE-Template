@@ -1,15 +1,14 @@
 <?php
 
-namespace Database\Factories\Accounts\Components;
+namespace Database\Factories\Base\Accounts\Components;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsCredentials>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsInformations>
  */
-class AccountsCredentialsFactory extends Factory
+class AccountsInformationsFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,8 +19,8 @@ class AccountsCredentialsFactory extends Factory
     {
         return [
             'id' => (string) Str::uuid(),
-            'username' => $this->faker->unique()->userName,
-            'password' => Hash::make('password'), // default password
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
             'created_at' => now(),
             'updated_at' => now(),
         ];

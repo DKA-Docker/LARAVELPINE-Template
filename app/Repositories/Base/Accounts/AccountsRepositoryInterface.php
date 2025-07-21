@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Accounts;
+namespace App\Repositories\Base\Accounts;
 
-use App\Models\Accounts\Accounts;
+use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 

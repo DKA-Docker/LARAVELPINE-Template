@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Base\Accounts\AccountsSeeder;
 use Database\Seeders\Apps\Dashboards\Configurations\AppsDashboardsConfigurationsMenusSeeder;
-use Database\Seeders\Accounts\AccountsSeeder;
+use Database\Seeders\Base\Sessions\SessionsAccountsSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

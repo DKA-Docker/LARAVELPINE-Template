@@ -1,14 +1,15 @@
 <?php
 
-namespace Database\Factories\Accounts\Components;
+namespace Database\Factories\Base\Accounts\Components;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsContacts>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountsCredentials>
  */
-class AccountsContactsFactory extends Factory
+class AccountsCredentialsFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,7 +20,8 @@ class AccountsContactsFactory extends Factory
     {
         return [
             'id' => (string) Str::uuid(),
-            'email' => $this->faker->unique()->email,
+            'username' => $this->faker->unique()->userName,
+            'password' => Hash::make('password'), // default password
             'created_at' => now(),
             'updated_at' => now(),
         ];

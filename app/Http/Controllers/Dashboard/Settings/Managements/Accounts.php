@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\Settings\Managements;
 
-use App\Repositories\Accounts\AccountsRepository;
+use App\Repositories\Base\Accounts\AccountsRepository;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Support\Facades\Auth;
 

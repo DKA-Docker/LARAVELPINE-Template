@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class Sidebar extends Component
 {
     private string $theme;
-    private object $account;
+    private object $session;
     private AppsDashboardsConfigurationsMenusRepository $menuRepository;
 
     public function __construct(null|string $theme, object $session)

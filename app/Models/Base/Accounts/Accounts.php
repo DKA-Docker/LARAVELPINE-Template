@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Accounts;
+namespace App\Models\Base\Accounts;
 
-use App\Models\Accounts\Components\AccountsContacts;
-use App\Models\Accounts\Components\AccountsCredentials;
-use App\Models\Accounts\Components\AccountsInformations;
+use App\Models\Base\Accounts\Components\AccountsContacts;
+use App\Models\Base\Accounts\Components\AccountsCredentials;
+use App\Models\Base\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;

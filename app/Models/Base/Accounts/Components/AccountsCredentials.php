@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Accounts\Components;
+namespace App\Models\Base\Accounts\Components;
 
-use App\Models\Accounts\Accounts;
+use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
