@@ -24,7 +24,9 @@ export default defineConfig(({ mode }) => {
         'resources/js/app.js',
         'resources/ts/main.tsx',
         safeInput(`resources/js/${theme}/pages/dashboard.js`),
-        safeInput(`resources/js/${theme}/pages/settings/managements/accounts.js`)
+        safeInput(`resources/js/${theme}/pages/settings/managements/accounts.js`),
+        safeInput(`resources/js/${theme}/pages/settings/privileges/permissions.js`),
+        safeInput(`resources/js/${theme}/pages/settings/privileges/roles.js`)
     ].filter(Boolean); // Remove nulls
 
     return {

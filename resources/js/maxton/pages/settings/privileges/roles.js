@@ -22,10 +22,9 @@ $(function () {
                 });
         },
         columns: [
-            { data: 'information.first_name' },
-            { data: 'contact.email' },
+            { data: 'name' },
+            { data: 'guard_name' },
             { data: 'created_at' },
-            { data: 'roles' },
             { data: 'action' },
         ]
     });

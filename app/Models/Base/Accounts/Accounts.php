@@ -7,9 +7,11 @@ use App\Models\Base\Accounts\Components\AccountsCredentials;
 use App\Models\Base\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class Accounts extends Authenticatable
@@ -59,6 +61,11 @@ class Accounts extends Authenticatable
     public function contact(): BelongsTo
     {
         return $this->belongsTo(AccountsContacts::class, 'contact')->withDefault();
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id')->withDefault();
     }
 
     /** Relasi ke AccountsInformations (information ID disimpan di kolom `information`) */

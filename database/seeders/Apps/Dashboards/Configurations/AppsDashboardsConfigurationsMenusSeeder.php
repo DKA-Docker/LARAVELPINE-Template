@@ -56,10 +56,25 @@ class AppsDashboardsConfigurationsMenusSeeder extends Seeder
                         ],
                         ['name' => 'Sessions']
                     ]
+                ],
+                [
+                    'name' => 'Privileges',
+                    'icon' => 'settings',
+                    'children' => [
+                        [
+                            'name' => 'Roles',
+                            'routes' => 'dashboards.settings.privileges.roles.index'
+                        ],
+                        [
+                            'name' => 'Permissions',
+                            'routes' => 'dashboards.settings.privileges.permissions.index'
+                        ],
+                    ]
                 ]
             ],
             'created_at' => $this->pendingTime->addSeconds(2)
         ])->create(); // ← tetap pakai create!
+
 
 
         $this->factory->headingWithMenus([

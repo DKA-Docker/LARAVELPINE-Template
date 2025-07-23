@@ -46,7 +46,7 @@ class PermissionsAccountsSeeder extends Seeder
         // 5. Ambil akun admin dari service
         $adminAccount = $this->account->GetAccountWithUsername('root');
         // 6. Assign role admin ke akun admin
-        $adminAccount->assignRole('admin');
+        $adminAccount->assignRole('root');
         // 7. Cek hak akses (opsional buat debug)
         echo 'Has admin role? ' . ($adminAccount->hasRole('admin') ? 'Yes' : 'No') . PHP_EOL;
     }

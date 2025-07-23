@@ -51,7 +51,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
 
     public function with(): Builder
     {
-        return Accounts::with(['information','contact','credential']);
+        return Accounts::with(['information','contact','credential','roles']);
     }
 
 

@@ -5,6 +5,8 @@ use App\Http\Controllers\Dashboard\Auth\Logout;
 use App\Http\Controllers\Dashboard\Dashboard;
 use App\Http\Controllers\Dashboard\Settings\Managements\Accounts\Accounts;
 use App\Http\Controllers\Dashboard\Settings\Managements\Accounts\Components\Create;
+use App\Http\Controllers\Dashboard\Settings\Privileges\Permissions\Permissions;
+use App\Http\Controllers\Dashboard\Settings\Privileges\Roles\Roles;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +26,14 @@ Route::group(['prefix' => 'dashboards', 'middleware' => 'auth:account', 'as' => 
                 Route::group(['prefix' => 'create', 'as' => 'create.'], function () {
                     Route::resource('', Create::class);
                 });
+            });
+        });
+        Route::group(['prefix' => 'privileges', 'as' => 'privileges.'], function () {
+            Route::group(['prefix' => 'permissions', 'as' => 'permissions.'], function () {
+                Route::resource('', Permissions::class);
+            });
+            Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+                Route::resource('', Roles::class);
             });
         });
     });
