@@ -33,18 +33,18 @@ class PermissionsAccountsSeeder extends Seeder
         $permissions->each(fn ($perm) =>
             Permission::query()->firstOrCreate([
                 'name' => $perm,
-                'guard_name' => 'account',
+                'guard_name' => config("auth.defaults.guard"),
             ])
         );
         // 3. Buat role admin
         $role = Role::query()->firstOrCreate([
-            'name' => 'admin',
-            'guard_name' => 'account',
+            'name' => 'root',
+            'guard_name' => config("auth.defaults.guard"),
         ]);
         // 4. Assign semua permission ke role admin
         $role->syncPermissions($permissions);
         // 5. Ambil akun admin dari service
-        $adminAccount = $this->account->GetAccountWithUsername('admin');
+        $adminAccount = $this->account->GetAccountWithUsername('root');
         // 6. Assign role admin ke akun admin
         $adminAccount->assignRole('admin');
         // 7. Cek hak akses (opsional buat debug)
