@@ -35,6 +35,18 @@ class AccountsSeeder extends Seeder
                 "email" => "admin@example.com"
             ]
         ]);
+        $this->account->Create([
+            "information" => [
+                "first_name" => "User"
+            ],
+            "credential" => [
+                "username" => "user",
+                "password" => "user"
+            ],
+            "contact" => [
+                "email" => "user@example.com"
+            ]
+        ]);
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }

@@ -24,7 +24,6 @@ class AccountsCredentials extends Model
     ];
 
     protected $hidden = [
-        'id',
         'password',
         'created_at',
         'updated_at',

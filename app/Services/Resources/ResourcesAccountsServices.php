@@ -95,6 +95,14 @@ class ResourcesAccountsServices {
         }
     }
 
+
+    public function GetAccountWithUsername(string $username)
+    {
+        return $this->account
+            ->with(['credential', 'contact', 'information'])
+            ->whereHas('credential', fn($q) => $q->where('username', $username))
+            ->first();
+    }
     /**
      * @return mixed
      */

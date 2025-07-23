@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Support\Facades\Auth;
 
 class Dashboard

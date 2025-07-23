@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Dashboard\Pages\Dashboard\Settings\Managements;
+namespace App\View\Components\Dashboard\Pages\Dashboard\Settings\Managements\Accounts\Components;
 
 use App\Services\Resources\ResourcesAccountsServices;
 use Closure;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use stdClass;
 
-class Accounts extends Component {
+class Create extends Component {
 
     private string $theme;
     protected ResourcesAccountsServices $account;
@@ -26,7 +26,7 @@ class Accounts extends Component {
      */
     public function render(): View|Closure|string
     {
-        return view('dashboard.'.$this->theme.'.pages.dashboard.settings.managements.accounts', [
+        return view('dashboard.'.$this->theme.'.pages.dashboard.settings.managements.accounts.components.create', [
             'theme' => $this->theme,
             'account' => $this->account,
             'session' => $this->session

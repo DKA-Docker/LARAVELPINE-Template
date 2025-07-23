@@ -1,6 +1,7 @@
 <x-Dashboard.Pages.MainContent :theme="$theme" :session="$session">
     <x-Dashboard.Partial.Breadcrumb theme="{{ $theme }}">
     </x-Dashboard.Partial.Breadcrumb>
+    <a class="btn btn-grd-primary mb-3" href="{{ route(Str::beforeLast(Route::currentRouteName(), '.').".create.index") }}">Buat Akun Baru</a>
     <div class="card">
         <div class="card-body">
             <div class="table-responsive p-3">
@@ -10,6 +11,7 @@
                         <th>Nama Lengkap</th>
                         <th>Email</th>
                         <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                     </thead>
                     <tbody>

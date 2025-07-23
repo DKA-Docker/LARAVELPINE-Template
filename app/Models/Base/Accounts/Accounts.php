@@ -10,16 +10,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Accounts extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     public $incrementing = false;
     protected $keyType = 'string';
 
     /** Auto-load relasi credential, contact, dan information */
     protected $with = ['credential', 'contact', 'information'];
+
+    protected $guard_name = 'account';
 
     /** Kolom yang bisa diisi */
     protected $fillable = [
@@ -87,8 +90,8 @@ class Accounts extends Authenticatable
     }
 
     /** (Opsional) Jika ingin override kolom primary key authentikasi */
-    public function getAuthIdentifierName()
+    public function getAuthIdentifier()
     {
-        return 'id';
+        return $this->attributes['id']; // Force ambil dari kolom utama, bukan relasi
     }
 }

@@ -1,5 +1,5 @@
 <x-Dashboard.Pages.MainContent :theme="$theme" :session="$session">
-    <x-Dashboard.Partial.Breadcrumb theme="{{ $theme }}">
+    <x-Dashboard.Partial.Breadcrumb :theme="$theme">
     </x-Dashboard.Partial.Breadcrumb>
     <div class="row">
         <div class="col-xxl-8 d-flex align-items-stretch">

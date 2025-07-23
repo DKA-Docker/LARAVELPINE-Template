@@ -1,4 +1,6 @@
 FROM yovanggaanandhika/laravelpine:8.3-fpm
+# remove starter laravel in images
+RUN rm -rf /var/www
 # copy source files
 COPY . .
 # Gunakan find agar chmod lebih presisi, dan hindari masalah folder

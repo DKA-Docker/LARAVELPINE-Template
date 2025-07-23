@@ -5,6 +5,7 @@ namespace App\Repositories\Base\Accounts;
 use App\Models\Base\Accounts\Accounts;
 use Faker\Factory;
 use Faker\Generator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -40,7 +41,17 @@ class AccountsRepository implements AccountsRepositoryInterface {
 
     public function ReadAll(): Collection
     {
-        return Accounts::query()->get();
+        return Accounts::all();
+    }
+
+    public function query(): Builder
+    {
+        return Accounts::query();
+    }
+
+    public function with(): Builder
+    {
+        return Accounts::with(['information','contact','credential']);
     }
 
 
