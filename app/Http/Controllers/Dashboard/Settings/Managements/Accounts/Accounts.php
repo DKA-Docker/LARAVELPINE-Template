@@ -45,14 +45,14 @@ class Accounts extends Controller {
     public function store(): JsonResponse
     {
         $AuthID = Auth::id();
-
+        /** @var ambil Merger data $data */
         $data = $this->accountsRepository->with()
             ->whereHas('roles') // hanya yang punya role
             ->get();
 
         // Ambil prefix route tanpa bagian akhir (index, show, edit, dll.)
         $RouteGroup = Str::beforeLast(Route::currentRouteName(), '.');
-
+        /** Cenvertion to Datatables format  */
         return DataTables::of($data)
             ->addColumn('created_at', fn($row) => $row->created_at->format('H:i:s d-m-Y'))
             ->addColumn('roles', fn($row) => $row->roles->first()->name)

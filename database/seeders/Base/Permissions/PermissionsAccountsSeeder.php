@@ -28,6 +28,16 @@ class PermissionsAccountsSeeder extends Seeder
             'dashboards.settings.managements.accounts.update',
             'dashboards.settings.managements.accounts.delete',
             'dashboards.settings.managements.accounts.restore',
+            'dashboards.settings.privileges.permissions.view',
+            'dashboards.settings.privileges.permissions.create',
+            'dashboards.settings.privileges.permissions.update',
+            'dashboards.settings.privileges.permissions.delete',
+            'dashboards.settings.privileges.permissions.restore',
+            'dashboards.settings.privileges.roles.view',
+            'dashboards.settings.privileges.roles.create',
+            'dashboards.settings.privileges.roles.update',
+            'dashboards.settings.privileges.roles.delete',
+            'dashboards.settings.privileges.roles.restore',
         ]);
         // 2. Buat semua permission
         $permissions->each(fn ($perm) =>

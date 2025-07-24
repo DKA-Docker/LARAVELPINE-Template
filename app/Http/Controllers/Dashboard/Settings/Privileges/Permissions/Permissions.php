@@ -25,7 +25,7 @@ class Permissions extends Controller {
         $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");
         $this->permissionsRepository = new PermissionsRepository();
 
-        //$this->middleware(['permission:dashboards.settings.privileges.permissions.view'])->only('index');
+        $this->middleware(['permission:dashboards.settings.privileges.permissions.view'])->only('index');
     }
 
     public function index(): Factory|View|Application

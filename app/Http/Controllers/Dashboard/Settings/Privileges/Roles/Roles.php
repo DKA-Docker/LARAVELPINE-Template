@@ -26,11 +26,14 @@ class Roles extends Controller {
         $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");
         $this->rolesRepository = new RolesRepository();
 
-        //$this->middleware(['permission:dashboards.settings.privileges.permissions.view'])->only('index');
+        $this->middleware(['permission:dashboards.settings.privileges.roles.view'])->only('index');
     }
 
     public function index(): Factory|View|Application
     {
+        /**
+         * Action data in the auth user the view of layout data to Blade Data
+         */
         $AuthAccount = Auth::user();
         $session = json_decode(json_encode($AuthAccount->toArray()));
         return view("dashboard.".$this->theme.".pages.dashboard.settings.privileges.roles.roles", [
@@ -49,15 +52,15 @@ class Roles extends Controller {
         $data = $this->rolesRepository->ReadAll();
 
         // Ambil prefix route tanpa bagian akhir (index, show, edit, dll.)
-        $RouteGroup = Str::beforeLast(Route::currentRouteName(), '.');
+        $RouteCurrentGroup = Str::beforeLast(Route::currentRouteName(), '.');
 
         return DataTables::of($data)
             ->addColumn('created_at', fn($row) => $row->created_at->format('H:i:s d-m-Y'))
-            ->addColumn('action', function ($row) use ($AuthID, $RouteGroup) {
+            ->addColumn('action', function ($row) use ($AuthID, $RouteCurrentGroup) {
                 $buttons = [
-                    '<a href="'.route("$RouteGroup.show", $row->id).'" class="btn btn-sm btn-info">Lihat</a>',
-                    '<a href="'.route("$RouteGroup.edit", $row->id).'" class="btn btn-sm btn-warning">Edit</a>',
-                    '<a href="'.route("$RouteGroup.destroy", $row->id).'" class="btn btn-sm btn-danger '.($AuthID == $row->id ? 'disabled' : '').'">Delete</a>',
+                    '<a href="'.route("$RouteCurrentGroup.show", $row->id).'" class="btn btn-sm btn-info">Lihat</a>',
+                    '<a href="'.route("$RouteCurrentGroup.edit", $row->id).'" class="btn btn-sm btn-warning">Edit</a>',
+                    '<a href="'.route("$RouteCurrentGroup.destroy", $row->id).'" class="btn btn-sm btn-danger '.($AuthID == $row->id ? 'disabled' : '').'">Delete</a>',
                 ];
 
                 return implode('&nbsp;', $buttons);
