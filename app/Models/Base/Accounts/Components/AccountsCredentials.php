@@ -35,7 +35,13 @@ class AccountsCredentials extends Model
      */
     public function setPasswordAttribute($value)
     {
-        // Cegah double hash jika sudah hashed (misalnya dari seeder atau testing)
+        // Kalau nilainya null atau kosong, abaikan
+        if (empty($value)) return;
+        // Ambil password lama dari model (kalau sudah ada di DB)
+        $currentPassword = $this->getOriginal('password');
+        // Kalau value belum berubah, jangan set ulang
+        if ($value === $currentPassword) return;
+        // Kalau belum di-hash atau hash-nya butuh refresh, hash sekarang
         $this->attributes['password'] = Hash::needsRehash($value)
             ? Hash::make($value)
             : $value;

@@ -30,6 +30,6 @@ class AppsDashboardsConfigurationsMenus extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Menus::class, 'parent', 'id');
+        return $this->belongsTo(AppsDashboardsConfigurationsMenus::class, 'parent', 'id');
     }
 }

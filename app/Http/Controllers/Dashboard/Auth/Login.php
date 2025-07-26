@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\Dashboard\Auth;
 
 use App\Http\Requests\AuthAccountsRequest;
-use App\Models\Base\Accounts\Accounts;
-use App\Models\Base\Accounts\Components\AccountsCredentials;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class Login
 {

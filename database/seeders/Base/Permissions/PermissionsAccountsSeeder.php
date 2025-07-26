@@ -48,16 +48,16 @@ class PermissionsAccountsSeeder extends Seeder
         );
         // 3. Buat role admin
         $role = Role::query()->firstOrCreate([
-            'name' => 'root',
+            'name' => 'superadmin',
             'guard_name' => config("auth.defaults.guard"),
         ]);
         // 4. Assign semua permission ke role admin
         $role->syncPermissions($permissions);
         // 5. Ambil akun admin dari service
-        $adminAccount = $this->account->GetAccountWithUsername('root');
+        $adminAccount = $this->account->GetAccountWithUsername('superadmin');
         // 6. Assign role admin ke akun admin
-        $adminAccount->assignRole('root');
+        $adminAccount->assignRole('superadmin');
         // 7. Cek hak akses (opsional buat debug)
-        echo 'Has admin role? ' . ($adminAccount->hasRole('admin') ? 'Yes' : 'No') . PHP_EOL;
+        echo 'Has superadmin role? ' . ($adminAccount->hasRole('superadmin') ? 'Yes' : 'No') . PHP_EOL;
     }
 }

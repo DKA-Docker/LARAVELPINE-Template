@@ -3,8 +3,9 @@
     </x-Dashboard.Partial.Breadcrumb>
     <div class="row">
         <div class="col">
-            <form method="POST" action="{{ route(Str::beforeLast(Route::currentRouteName(), '.').".store") }}">
+            <form method="POST" autocomplete="off" action="{{ route(Str::beforeLast(Route::currentRouteName(), '.').".update", $account->id) }}">
                 @csrf
+                @method('PATCH')
                 <div class="card">
                     <div class="card-body">
                         <ul class="nav nav-pills mb-3" role="tablist">
@@ -26,7 +27,7 @@
                                         <label for="first_name" class="col-sm-3 col-form-label">First Name</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">person</i></span>
-                                            <input type="text" name="information[first_name]" id="first_name" placeholder="First Name" class="form-control @error('information.first_name') is-invalid @enderror" value="{{ old('information.first_name') }}">
+                                            <input type="text" name="information[first_name]" id="first_name" placeholder="First Name" class="form-control @error('information.first_name') is-invalid @enderror" value="{{ old('information.first_name') ?? $account->information->first_name }}">
                                             @error('information.first_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -36,7 +37,7 @@
                                         <label for="last_name" class="col-sm-3 col-form-label">Last Name</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">person</i></span>
-                                            <input type="text" name="information[last_name]" class="form-control" id="last_name" placeholder="Your Name">
+                                            <input type="text" name="information[last_name]" class="form-control" id="last_name" placeholder="Your Name" value="{{ $account->information->last_name}}">
                                         </div>
                                     </div>
                                 </div>
@@ -46,21 +47,22 @@
                                         <label for="username" class="col-sm-3 col-form-label">Username</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">person</i></span>
-                                            <input type="text" name="credential[username]" id="username" placeholder="username" class="form-control @error('credential.username') is-invalid @enderror" value="{{ old('credential.username') }}">
+                                            <input autocomplete="nope" type="text" name="credential[username]" id="username" placeholder="username" class="form-control @error('credential.username') is-invalid @enderror" value="{{ old('credential.username') ?? $account->credential->username }}">
                                             @error('credential.username')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+
                                     <div class="col-sm-6 password">
-                                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                                        <label for="new_password" class="col-sm-3 col-form-label">Password baru</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">lock</i></span>
-                                            <input autocomplete="off" type="password" name="credential[password]" id="password" placeholder="Your Password" class="form-control @error('credential.password') is-invalid @enderror" value="{{ old('credential.password') }}" >
-                                            <button class="btn btn-outline-secondary toggle-password"  tabindex="-1" type="button">
+                                            <input autocomplete="off" type="password" name="credential[new_password]" id="new_password" placeholder="Your Password" class="form-control @error('credential.new_password') is-invalid @enderror" value="{{ old('credential.new_password') }}">
+                                            <button class="btn btn-outline-secondary toggle-password" type="button"  tabindex="-1">
                                                 <i class="material-icons-outlined">visibility_off</i>
                                             </button>
-                                            @error('credential.password')
+                                            @error('credential.new_password')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -71,19 +73,19 @@
                                         <div class="form-text password-strength-label bold">Masukkan password Anda.</div>
                                     </div>
                                     <div class="col-sm-6 password">
-                                        <label for="password_confirmation" class="col-sm-3 col-form-label">Konfirmasi</label>
+                                        <label for="old_password" class="col-sm-3 col-form-label">Password Saat Ini</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">lock</i></span>
-                                            <input autocomplete="off" disabled type="password" name="credential[password_confirmation]" id="password_confirmation" placeholder="Your Password" class="form-control @error('credential.password_confirmation') is-invalid @enderror" value="{{ old('credential.password_confirmation') }}">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button"  tabindex="-1">
+                                            <input autocomplete="new-password" disabled type="password" name="credential[old_password]" id="old_password" placeholder="Password Saat ini" class="form-control @error('credential.old_password') is-invalid @enderror" value="{{ old('credential.old_password') }}" >
+                                            <button class="btn btn-outline-secondary toggle-password"  tabindex="-1" type="button">
                                                 <i class="material-icons-outlined">visibility_off</i>
                                             </button>
-                                            @error('credential.password_confirmation')
+                                            @error('credential.old_password')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <!-- Bootstrap helper text -->
-                                        <div class="form-text password-strength-label bold">Masukkan password Anda.</div>
+                                        <div class="form-text password-strength-label bold">Harap Isi Password baru anda.</div>
                                     </div>
                                 </div>
                                 <div class="row mb-3 p-2">
@@ -92,19 +94,11 @@
                                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="material-icons-outlined fs-5">email</i></span>
-                                            <input type="email" name="contact[email]" id="email" placeholder="Your Name" class="form-control @error('contact.email') is-invalid @enderror" value="{{ old('contact.email') }}">
+                                            <input type="email" name="contact[email]" id="email" placeholder="Your Name" class="form-control @error('credential.password_confirmation') is-invalid @enderror" value="{{ old('credential.password_confirmation') ?? $account->contact->email }}">
                                             @error('contact.email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 p-2">
-                                    <h5 class="mt-2">Izin Akses</h5>
-                                    <div class="col-sm-6">
-                                        <label for="select-permission" class="form-label">Pilih Permission</label>
-                                        <select class="form-select" id="select-permission" data-placeholder="Pilih Izin">
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -116,8 +110,7 @@
                             <label class="col-sm-9 col-form-label"></label>
                             <div class="col-sm-3 p-6">
                                 <div class="d-md-flex d-grid gap-3 justify-content-md-end">
-                                    <button type="submit" class="btn btn-grd-primary px-4">Buat</button>
-                                    <button type="button" class="btn btn-grd-royal px-4">Batal</button>
+                                    <button type="submit" class="btn btn-grd-primary px-4">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -127,6 +120,6 @@
         </div>
     </div>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(["resources/js/".$theme."/pages/settings/managements/components/create.js"])
+        @vite(["resources/js/".$theme."/pages/settings/managements/components/edit.js"])
     @endif
 </x-Dashboard.Pages.MainContent>

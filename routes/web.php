@@ -18,15 +18,9 @@ Route::group(['prefix' => 'auth'], function () {
 });
 Route::group(['prefix' => 'dashboards', 'middleware' => 'auth:account', 'as' => 'dashboards.'], function () {
     Route::resource('',Dashboard::class);
-
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::group(['prefix' => 'managements', 'as' => 'managements.'], function () {
-            Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function () {
-                Route::resource('', Accounts::class);
-                Route::group(['prefix' => 'create', 'as' => 'create.'], function () {
-                    Route::resource('', Create::class);
-                });
-            });
+            Route::resource('accounts', Accounts::class);
         });
         Route::group(['prefix' => 'privileges', 'as' => 'privileges.'], function () {
             Route::group(['prefix' => 'permissions', 'as' => 'permissions.'], function () {

@@ -14,7 +14,7 @@ class SessionsAccounts extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
-
+    protected $with = ['user_id'];
 
     protected $fillable = [
         'user_id',
@@ -32,7 +32,7 @@ class SessionsAccounts extends Model
         'last_activity' => 'integer',
     ];
 
-    public function account()
+    public function user_id()
     {
         return $this->belongsTo(Accounts::class);
     }

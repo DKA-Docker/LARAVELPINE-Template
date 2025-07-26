@@ -9,10 +9,18 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: function (data, callback) {
-            axios.post(location.pathname, data)
-                .then(response => callback(response.data))
+            axios.get(location.pathname, {
+                params: data, // <- FIXED disini
+                headers: {
+                    'Accept': 'application/json'
+                },
+            })
+                .then(response => {
+                    console.log('✅ DataTables response:', response);
+                    callback(response.data);
+                })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('❌ Error in DataTables:', error);
                     callback({
                         draw: data.draw,
                         recordsTotal: 0,
@@ -22,11 +30,20 @@ $(function () {
                 });
         },
         columns: [
-            { data: 'information.first_name' },
+            { data: 'full_name' },
+            { data: 'credential.username' },
             { data: 'contact.email' },
-            { data: 'created_at' },
             { data: 'roles' },
+            { data: 'created_at' },
             { data: 'action' },
         ]
     });
+
+
+    const timeoutMessage = $('.timeout-msg');
+    if (timeoutMessage.length){
+        setTimeout(() => {
+            timeoutMessage.fadeOut('slow');
+        })
+    }
 });

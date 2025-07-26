@@ -25,14 +25,15 @@ class AccountsSeeder extends Seeder
         // Buat 10 akun lengkap
         $this->account->Create([
             "information" => [
-                "first_name" => "Root Account"
+                "first_name" => "Super",
+                "last_name" => "Admin"
             ],
             "credential" => [
-                "username" => "root",
-                "password" => "root"
+                "username" => "superadmin",
+                "password" => "superadmin"
             ],
             "contact" => [
-                "email" => "root@example.com"
+                "email" => "superadmin@example.com"
             ]
         ]);
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');

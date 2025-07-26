@@ -6,6 +6,8 @@
 @import 'metismenu/dist/metisMenu.min.css';
 @import '../../plugins/maxton/metismenu/mm-vertical.css';
 @import '../../plugins/maxton/simplebar/css/simplebar.css';
+@import '../../plugins/maxton/select2/css/select2.min.css';
+@import '../../plugins/maxton/select2/css/select2-bootstrap5.css';
 @import "apexcharts/dist/apexcharts.css";
 @import './assets/bootstrap.min.css';
 @import './assets/bootstrap-extended.css';

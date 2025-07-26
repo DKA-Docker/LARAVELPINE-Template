@@ -20,7 +20,6 @@ class Roles extends Controller {
     private string $theme;
     private RolesRepository $rolesRepository;
 
-
     public function __construct(null|string $theme)
     {
         $this->theme = $theme ?? env("VITE_THEME_NAME","maxton");

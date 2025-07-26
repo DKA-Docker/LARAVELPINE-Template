@@ -38,4 +38,11 @@ class AccountsContactsRepository implements AccountsContactsRepositoryInterface 
 
         return AccountsContacts::query()->create($data);
     }
+
+    public function Update(int|string $id, array $data): AccountsContacts
+    {
+        $model = AccountsContacts::query()->findOrFail($id);
+        $model->update($data);
+        return $model;
+    }
 }

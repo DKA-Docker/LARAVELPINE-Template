@@ -66,6 +66,34 @@ class AuthAccountsServices {
         ];
     }
 
+    public function verifyPassword(array $args): array
+    {
+        $defaults = [
+            'id' => null,
+            'password' => null,
+        ];
+
+        $data = array_merge($defaults, $args);
+
+        /** @var Accounts|null $account */
+        $account = Accounts::with(['information', 'contact', 'credential'])
+            ->where('id',$data['id'])
+            ->first();
+        // Validasi akun dan password
+        if (!$account || !Hash::check($data['password'], $account->password)) {
+            return [
+                'status' => false,
+                'code' => 401,
+                'msg' => 'Password Not Match',
+            ];
+        }
+
+        return [
+            'status' => true,
+            'code' => 200,
+            'msg' => 'Successfully logged in (web)',
+        ];
+    }
 
     /**
      * @param Authenticatable|null $authenticate

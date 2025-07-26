@@ -3,6 +3,7 @@
 namespace App\Repositories\Base\Accounts\Components;
 
 use App\Models\Base\Accounts\Components\AccountsCredentials;
+use App\Models\Base\Accounts\Components\AccountsInformations;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Collection;
@@ -49,6 +50,15 @@ class AccountsCredentialsRepository implements AccountsCredentialsRepositoryInte
     public function Find(string $id) : null|AccountsCredentials|Collection|Model
     {
         return AccountsCredentials::query()->findOrFail($id);
+    }
+
+    public function Update(int|string $id, array $data): AccountsCredentials
+    {
+        $model = AccountsCredentials::query()->findOrFail($id);
+        $model->update([
+            ...$data,
+        ]);
+        return $model;
     }
 
 }

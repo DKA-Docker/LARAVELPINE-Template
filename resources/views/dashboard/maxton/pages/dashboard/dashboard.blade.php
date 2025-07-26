@@ -11,7 +11,7 @@
                                 <img src="{{ asset('storage/images/avatars/01.png') }}" class="rounded-circle bg-grd-info p-1"  width="60" height="60" alt="user">
                                 <div class="">
                                     <p class="mb-0 fw-semibold">Welcome back</p>
-                                    <h4 class="fw-semibold mb-0 fs-4 mb-0">{{ $session->information->first_name }}</h4>
+                                    <h4 class="fw-semibold mb-0 fs-4 mb-0">{{ $session->information->first_name }} {{ $session->information->last_name }}</h4>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-5">

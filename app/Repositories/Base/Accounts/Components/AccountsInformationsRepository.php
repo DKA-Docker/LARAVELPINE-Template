@@ -37,4 +37,16 @@ class AccountsInformationsRepository implements AccountsInformationsRepositoryIn
 
         return AccountsInformations::query()->create($data);
     }
+
+    public function ReadByID(string $id): AccountsInformations
+    {
+        return AccountsInformations::query()->findOrFail($id);
+    }
+
+    public function Update(int|string $id, array $data): AccountsInformations
+    {
+        $model = AccountsInformations::query()->findOrFail($id);
+        $model->update($data);
+        return $model;
+    }
 }
