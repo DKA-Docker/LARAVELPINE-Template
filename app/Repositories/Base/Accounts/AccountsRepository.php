@@ -59,4 +59,10 @@ class AccountsRepository implements AccountsRepositoryInterface {
     {
         return Accounts::query()->findOrFail($id);
     }
+
+    public function Delete($id)
+    {
+        $data = $this->Find($id);
+        return $data->delete();
+    }
 }

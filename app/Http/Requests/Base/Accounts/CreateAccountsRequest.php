@@ -28,7 +28,8 @@ class CreateAccountsRequest extends FormRequest
             'credential.username' => 'required|string|min:6',
             'credential.password' => 'required|string|min:6',
             'credential.password_confirmation' => 'required|string|min:6',
-            'contact.email' => 'required|email'
+            'contact.email' => 'required|email',
+            'roles' => 'nullable|string'
         ];
     }
 

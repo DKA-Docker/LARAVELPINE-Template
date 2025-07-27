@@ -23,7 +23,7 @@ class ResourcesAccountsServices {
     protected AccountsCredentialsRepository $credential;
     protected AccountsContactsRepository $contact;
 
-    protected AuthAccountsServices $accountServices;
+    protected AuthAccountsServices $authAccountServices;
 
     public function __construct()
     {
@@ -35,7 +35,7 @@ class ResourcesAccountsServices {
         $this->credential = new AccountsCredentialsRepository();
         $this->contact = new AccountsContactsRepository();
 
-        $this->accountServices = new AuthAccountsServices();
+        $this->authAccountServices = new AuthAccountsServices();
     }
 
     /**
@@ -62,6 +62,10 @@ class ResourcesAccountsServices {
                 /** Buat Data Account Yang di Create Menampilkan data Lengkap dari foreignnya */
                 $account->load(['information', 'credential', 'contact']);
 
+                if(!empty($payload['roles'])){
+                    $accountModel = $this->Find($account->id);
+                    $accountModel->assignRole($payload['roles']);
+                }
                 /** Successfully create Account */
                 return [
                     'status' => true,
@@ -196,7 +200,10 @@ class ResourcesAccountsServices {
         }
     }
 
-
+    public function Find(string $id)
+    {
+        return $this->account->Find($id);
+    }
 
     public function GetAccountWithUsername(string $username)
     {

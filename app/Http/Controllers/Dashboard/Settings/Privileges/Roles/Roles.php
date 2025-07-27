@@ -28,17 +28,32 @@ class Roles extends Controller {
         $this->middleware(['permission:dashboards.settings.privileges.roles.view'])->only('index');
     }
 
-    public function index(): Factory|View|Application
+    public function index(): Factory|View|Application|JsonResponse
     {
         /**
          * Action data in the auth user the view of layout data to Blade Data
          */
-        $AuthAccount = Auth::user();
-        $session = json_decode(json_encode($AuthAccount->toArray()));
-        return view("dashboard.".$this->theme.".pages.dashboard.settings.privileges.roles.roles", [
-            'theme' => $this->theme,
-            'session' => $session
-        ]);
+        switch (request()->expectsJson()){
+            case true : {
+                $ReadAll = $this->rolesRepository
+                    ->ReadAll();
+                return response()->json(
+                    data : $ReadAll,
+                    headers: [
+                        'Content-Type' => 'application/json'
+                    ]
+                );
+            }
+            default : {
+                $AuthAccount = Auth::user();
+                $session = json_decode(json_encode($AuthAccount->toArray()));
+                return view("dashboard.".$this->theme.".pages.dashboard.settings.privileges.roles.roles", [
+                    'theme' => $this->theme,
+                    'session' => $session
+                ]);
+            }
+        }
+
     }
 
     /**

@@ -103,7 +103,8 @@
                                     <h5 class="mt-2">Izin Akses</h5>
                                     <div class="col-sm-6">
                                         <label for="select-permission" class="form-label">Pilih Permission</label>
-                                        <select class="form-select" id="select-permission" data-placeholder="Pilih Izin">
+                                        <select class="form-select" name="roles" id="select-permission" data-placeholder="Pilih Izin">
+                                            <option></option>
                                         </select>
                                     </div>
                                 </div>

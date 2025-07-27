@@ -1,5 +1,7 @@
 import $ from 'jquery';
+import axios from "axios";
 import select2 from "select2"
+import zxcvbn from "zxcvbn";
 select2();
 window.$ = jQuery;
 
@@ -20,9 +22,24 @@ function selectPermission() {
         placeholder: $permission.data('placeholder') || 'Pilih sesuatu...'
     });
 
-    // Add option baru secara dinamis
-    const newOption = new Option("Admin Super Sakti", "role_super", false, false);
-    $permission.append(newOption)
+    axios.get(location.pathname, {
+        headers: {
+            'Accept': 'application/json'
+        },
+    })
+        .then(response => {
+            const datas = response.data;
+            datas.forEach((json) => {
+                // Add option baru secara dinamis
+                const newOption = new Option(json.name, json.name, false, false);
+                $permission.append(newOption)
+            })
+        })
+        .catch(error => {
+            console.error(error)
+        });
+
+
 }
 
 function passwordHandler() {

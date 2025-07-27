@@ -6,8 +6,10 @@ use App\Http\Requests\Base\Accounts\CreateAccountsRequest;
 use App\Http\Requests\Base\Accounts\UpdateAccountsRequest;
 use App\Repositories\Base\Accounts\AccountsRepository;
 use App\Repositories\Base\Accounts\Components\AccountsInformationsRepository;
+use App\Repositories\Base\Permissions\RolesRepository;
 use App\Services\Resources\ResourcesAccountsServices;
 use Exception;
+use Illuminate\Http;
 use http\Env\Response;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -27,6 +29,7 @@ class Accounts extends Controller {
     private string $theme;
     private ResourcesAccountsServices $accountsServices;
     private AccountsRepository $accountsRepository;
+    private RolesRepository $rolesRepository;
     private AccountsInformationsRepository $accountsInformationsRepository;
 
     public function __construct(null|string $theme)
@@ -35,6 +38,7 @@ class Accounts extends Controller {
         $this->accountsRepository = new AccountsRepository();
         $this->accountsInformationsRepository = new AccountsInformationsRepository();
         $this->accountsServices = new ResourcesAccountsServices();
+        $this->rolesRepository = new RolesRepository();
         $this->middleware(['permission:dashboards.settings.managements.accounts.view'])->only('index');
     }
 
@@ -63,9 +67,11 @@ class Accounts extends Controller {
                     ->addColumn('action', function ($row) use ($AuthAccount, $RouteGroup) {
                         $buttons = [
                             '<a href="'.route("$RouteGroup.show", $row->id).'" class=""><i class="material-icons-outlined text-primary fs-4 m-1">visibility</i></a>',
-                            '<a href="'.route("$RouteGroup.edit", $row->id).'" class=""><i class="material-icons-outlined text-warning fs-4 m-1">edit</i></a>',
-                            '<a href="'.($AuthAccount->id == $row->id ? 'javascript::void(0);' : route("$RouteGroup.destroy", $row->id)).'"><i class="material-icons-outlined '.(($AuthAccount->id == $row->id ? 'text-grey' : 'text-danger')).' fs-4 m-1">'.(($AuthAccount->id == $row->id ? 'block' : 'delete')).'</i></a>',
+                            '<a href="'.route("$RouteGroup.edit", $row->id).'" class=""><i class="material-icons-outlined text-warning fs-4 m-1">edit</i></a>'
                         ];
+                        if ($AuthAccount->id != $row->id){
+                            $buttons[] = '<a href="javascript:void(0)" class="act-del" data="' . $row->id . '"><i class="material-icons-outlined ' . (($AuthAccount->id == $row->id ? 'text-grey' : 'text-danger')) . ' fs-4 m-1">' . (($AuthAccount->id == $row->id ? 'block' : 'delete')) . '</i></a>';
+                        }
                         return implode('&nbsp;', $buttons);
                     })
                     ->addColumn('roles', function ($row) {
@@ -95,6 +101,7 @@ class Accounts extends Controller {
     public function store(CreateAccountsRequest $request): JsonResponse|RedirectResponse
     {
         $validated = $request->validated();
+        Log::info('payload', [$validated]);
         $accountCreate = $this->accountsServices->Create($validated);
         if ($accountCreate['status']){
             return redirect()
@@ -105,15 +112,49 @@ class Accounts extends Controller {
         }
     }
 
-    public function create(): Factory|View|Application
+    public function show(Request $request): Factory|View|Application|JsonResponse
     {
-        $AuthAccount = Auth::user();
-        $session = json_decode(json_encode($AuthAccount->toArray()));
-        return view("dashboard.".$this->theme.".pages.dashboard.settings.managements.accounts.components.create", [
-            'theme' => $this->theme,
-            'session' => $session,
-            'account' => $this->accountsRepository
-        ]);
+        $id = $request->route('account');
+        $accountData = $this->accountsRepository->Find($id);
+        $accountData = json_decode(json_encode($accountData->toArray()));
+        switch (request()->expectsJson()){
+            default : {
+                $AuthAccount = Auth::user();
+                $session = json_decode(json_encode($AuthAccount->toArray()));
+                return view("dashboard.".$this->theme.".pages.dashboard.settings.managements.accounts.components.view", [
+                    'theme' => $this->theme,
+                    'session' => $session,
+                    'account' => $accountData
+                ]);
+            }
+        }
+
+    }
+
+    public function create(): Factory|View|Application|JsonResponse
+    {
+        switch (request()->expectsJson()){
+            case true : {
+                $ReadAll = $this->rolesRepository
+                    ->ReadAll();
+                return response()->json(
+                    data : $ReadAll,
+                    headers: [
+                        'Content-Type' => 'application/json'
+                    ]
+                );
+            }
+            default : {
+                $AuthAccount = Auth::user();
+                $session = json_decode(json_encode($AuthAccount->toArray()));
+                return view("dashboard.".$this->theme.".pages.dashboard.settings.managements.accounts.components.create", [
+                    'theme' => $this->theme,
+                    'session' => $session,
+                    'account' => $this->accountsRepository
+                ]);
+            }
+        }
+
     }
 
     public function edit(\App\Models\Base\Accounts\Accounts $account): View|Application|Factory
@@ -132,7 +173,7 @@ class Accounts extends Controller {
     /**
      * @throws ValidationException
      */
-    public function update(Request $request)
+    public function update(Request $request): JsonResponse|RedirectResponse
     {
         $allRequest = $request->all();
         // Tambah ID dari route
@@ -158,6 +199,29 @@ class Accounts extends Controller {
             ->with('message', 'Data berhasil diupdate!');
     }
 
+    public function destroy(Request $request):Application|JsonResponse|View|RedirectResponse
+    {
+        $id = $request->route('account');
+        Log::info('id_delete', [$id]);
+        switch (request()->expectsJson()){
+            case true : {
+                $deletedData = $this->accountsRepository->Delete($id);
+                return response()->json(
+                    data : [
+                        'status' => $deletedData,
+                        'msg' => ($deletedData === true) ? 'Successfully Deleted Data' : 'Failed To Deleted Data'
+                    ],
+                    status: ($deletedData === true) ? 200 : 401,
+                    headers: [
+                        'Content-Type' => 'application/json'
+                    ]
+                );
+            }
+            default : {
+                return redirect()->route(Route::currentRouteName());
+            }
+        }
+    }
     public function getRouteKeyName()
     {
         return 'uuid';

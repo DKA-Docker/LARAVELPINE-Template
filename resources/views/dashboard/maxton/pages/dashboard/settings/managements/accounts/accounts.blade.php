@@ -18,7 +18,7 @@
                         <th>Email</th>
                         <th>Level Akses</th>
                         <th>Waktu Dibuat</th>
-                        <th>Aksi</th>
+                        <th class="action">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>

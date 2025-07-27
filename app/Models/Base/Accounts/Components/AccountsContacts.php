@@ -5,11 +5,13 @@ namespace App\Models\Base\Accounts\Components;
 use Database\Factories\Base\Accounts\Components\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class AccountsContacts extends Model
 {
     /** @use HasFactory<AccountsContactsFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -24,4 +26,5 @@ class AccountsContacts extends Model
         'updated_at',
         'deleted_at'
     ];
+
 }
