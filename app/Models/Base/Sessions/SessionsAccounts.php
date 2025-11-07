@@ -6,6 +6,7 @@ use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Base\Sessions\SessionsAccountsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SessionsAccounts extends Model
 {
@@ -32,7 +33,7 @@ class SessionsAccounts extends Model
         'last_activity' => 'integer',
     ];
 
-    public function user_id()
+    public function user_id(): BelongsTo
     {
         return $this->belongsTo(Accounts::class);
     }

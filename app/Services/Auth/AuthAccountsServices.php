@@ -4,14 +4,14 @@ namespace App\Services\Auth;
 
 use App\Models\Base\Accounts\Accounts;
 use App\Repositories\Base\Accounts\AccountsRepository;
-use App\Repositories\Base\Accounts\Components\AccountsContactsRepository;
-use App\Repositories\Base\Accounts\Components\AccountsCredentialsRepository;
-use App\Repositories\Base\Accounts\Components\AccountsInformationsRepository;
+use App\Repositories\Base\Accounts\Components\Contacts\AccountsContactsRepository;
+use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRepository;
+use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class AuthAccountsServices {
 
@@ -34,6 +34,17 @@ class AuthAccountsServices {
         $this->contact = new AccountsContactsRepository();
     }
 
+    /**
+     * @param array{
+     *     username: string,
+     *     password: string,
+     * } $args
+     * @return array{
+     *     status: bool,
+     *     code: int,
+     *     msg: string,
+     * }
+     */
     public function authenticate(array $args): array
     {
         $defaults = [
@@ -43,11 +54,13 @@ class AuthAccountsServices {
 
         $data = array_merge($defaults, $args);
 
-        /** @var Accounts|null $account */
+        /** @var Accounts|null $account
+         * @desc Lakukan merge relation dengan table members
+         */
         $account = Accounts::with(['information', 'contact', 'credential'])
             ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
             ->first();
-        // Validasi akun dan password
+        /** Validasi akun dan password */
         if (!$account || !Hash::check($data['password'], $account->password)) {
             return [
                 'status' => false,
@@ -106,6 +119,7 @@ class AuthAccountsServices {
         $account = $this->account->Find($authenticate->getAuthIdentifier());
         /** Load semua relasi akun */
         $data = $account->load(['information', 'credential', 'contact']);
+        /** Kembalikan Callback data Bahwa authorization telah berhasil ke pengguna */
         return [
             "status" => true,
             "code" => 200,
@@ -116,9 +130,13 @@ class AuthAccountsServices {
 
     public function verify(): array
     {
+        /** @var $auth Authenticatable ambil data verification dari data user yang login saat ini. */
         $auth = Auth::guard('account')->user();
+        /** Check If Auth Exists */
         if ($auth) {
+            /** @var  $account Model adalah data load relation  */
             $account = $auth->load(['information', 'credential', 'contact']);
+            /** Kembalikan Callback Array Response Ke function Ini */
             return [
                 "status" => true,
                 "code" => 200,
@@ -127,6 +145,7 @@ class AuthAccountsServices {
             ];
         }
 
+        /** Jika Tidak ada maka kembalikan Unauthorized */
         return [
             "status" => false,
             "code" => 401,
@@ -144,7 +163,9 @@ class AuthAccountsServices {
             $account = $this->account->Find($authenticate->getAuthIdentifier());
             /** Load semua relasi akun */
             $data = $account->load(['information', 'credential', 'contact']);
+            /** Ambil Data User dari Request. kemudian ambil access token saat ini dan lakukan penghapusan */
             $request->user()->currentAccessToken()->delete();
+            /** Kembalikan Response Bahwa Data Telah di hapus */
             return [
                 "status" => true,
                 "code" => 200,
@@ -152,6 +173,7 @@ class AuthAccountsServices {
                 "data" => $data, // ubah akun dan relasi ke array
             ];
         }else{
+            /** Kembalikan Response bahwa data telah dihapus di dalam sessions */
             return [
                 "status" => false,
                 "code" => 401,

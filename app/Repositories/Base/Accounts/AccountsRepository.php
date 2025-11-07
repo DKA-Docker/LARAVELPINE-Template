@@ -33,7 +33,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
             'credential' => null,
             'contact' => null,
         ];
-
+        /** @var $data $data lakukan merge data untuk payload dengan data default */
         $data = array_merge($defaults, $args);
 
         return Accounts::query()->create($data);
@@ -41,6 +41,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
 
     public function ReadAll(): Collection
     {
+        /** **/
         return Accounts::all();
     }
 
@@ -49,9 +50,9 @@ class AccountsRepository implements AccountsRepositoryInterface {
         return Accounts::query();
     }
 
-    public function with(): Builder
+    public function with(array $relations): Builder
     {
-        return Accounts::with(['information','contact','credential','roles']);
+        return Accounts::with($relations);
     }
 
 
@@ -60,7 +61,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
         return Accounts::query()->findOrFail($id);
     }
 
-    public function Delete($id)
+    public function Delete($id) : bool|null
     {
         $data = $this->Find($id);
         return $data->delete();

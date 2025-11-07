@@ -5,6 +5,7 @@ public/storage
 public/hot
 composer.lock
 yarn.lock
+frankenphp
 public/build
 package.lock
 node_modules

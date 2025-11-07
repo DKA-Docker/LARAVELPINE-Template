@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Base\Accounts\Accounts;
-use App\Models\Base\Accounts\Components\AccountsCredentials;
 
 return [
 

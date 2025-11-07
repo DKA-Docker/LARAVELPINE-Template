@@ -6,7 +6,6 @@ use Database\Factories\Base\Accounts\Components\AccountsContactsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 
 class AccountsContacts extends Model
 {

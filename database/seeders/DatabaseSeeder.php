@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Base\Accounts\AccountsSeeder;
-use Database\Seeders\Apps\Dashboards\Configurations\AppsDashboardsConfigurationsMenusSeeder;
-use Database\Seeders\Base\Permissions\PermissionsAccountsSeeder;
 use Database\Seeders\Base\Sessions\SessionsAccountsSeeder;
 use Illuminate\Database\Seeder;
 
@@ -19,9 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AccountsSeeder::class,
-            PermissionsAccountsSeeder::class,
             SessionsAccountsSeeder::class,
-            AppsDashboardsConfigurationsMenusSeeder::class
         ]);
     }
 }

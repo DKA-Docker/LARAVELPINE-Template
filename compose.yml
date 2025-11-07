@@ -12,7 +12,7 @@ services:
     environment:
       APP_NAME: DKA
       APP_ENV: local
-      APP_KEY: base64:SnrqRqI0FbMLOISYeZu5mMMmv2CT6uQYxcZUUidipGM=
+      APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar
 
@@ -32,8 +32,8 @@ services:
       DB_HOST: example-laravelpine-mariadb
       DB_PORT: 3306
       DB_DATABASE: laravel
-      DB_USERNAME: laravel
-      DB_PASSWORD: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: 'DHJAK12kndk2383dikhjfk34hjk4lk'
 
       SESSION_DRIVER: database
       SESSION_TABLE: sessions_accounts
@@ -102,8 +102,11 @@ services:
   mariadb:
     image: yovanggaanandhika/mariadb:latest
     container_name: example-laravelpine-mariadb
+    # alias name dari container mariadb
     hostname: example-laravelpine-mariadb
+    # lakukan restart container jika kontainer tiba-tiba terhenti
     restart: always
+    # lakukan pull otomatis image terbaru dari registry
     pull_policy: always
     environment:
       DKA_ROOT_PASSWORD: 'DHJAK12kndk2383dikhjfk34hjk4lk'
@@ -123,9 +126,13 @@ services:
           memory: 200M
           cpus: '0.8'
     ports:
+      # adalah port internal dari docker
       - target: 3306
-        published: 3307
+        # adalah port yang dipublish diluar docker
+        published: 3306
+        # adalah protocol yang di forwarding
         protocol: tcp
+        # adalah allow wishlist ip yang dapat mengakses container
         host_ip: 0.0.0.0
     volumes:
       - type: volume

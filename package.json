@@ -1,6 +1,4 @@
 {
-    "name": "laravelpine",
-    "version": "0.0.1",
     "$schema": "https://json.schemastore.org/package.json",
     "private": true,
     "type": "module",
@@ -9,47 +7,11 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@svgr/rollup": "^8.1.0",
-        "@tailwindcss/postcss": "^4.1.11",
         "@tailwindcss/vite": "^4.0.0",
-        "@types/jquery": "^3.5.32",
-        "@types/node": "^24.0.10",
-        "@types/react": "^19.1.8",
-        "@types/react-dom": "^19.1.6",
-        "@vitejs/plugin-react": "^4.6.0",
-        "autoprefixer": "^10.4.21",
+        "axios": "^1.11.0",
         "concurrently": "^9.0.1",
-        "dotenv": "^17.2.0",
-        "laravel-vite-plugin": "^1.2.0",
-        "react": "^19.1.0",
-        "react-dom": "^19.1.0",
-        "react-router-dom": "^7.6.3",
-        "rollup-plugin-visualizer": "^6.0.3",
-        "tailwindcss": "^4.1.11",
-        "vite": "^6.2.4",
-        "vite-plugin-compression": "^0.5.1",
-        "vite-plugin-inspect": "^11.3.0",
-        "vite-plugin-javascript-obfuscator": "^3.1.0",
-        "vite-plugin-minify": "^2.1.0",
-        "vite-tsconfig-paths": "^5.1.4"
-    },
-    "dependencies": {
-        "@emotion/react": "^11.14.0",
-        "@emotion/styled": "^11.14.1",
-        "@mui/icons-material": "^7.2.0",
-        "@mui/material": "^7.2.0",
-        "apexcharts": "^5.2.0",
-        "axios": "^1.8.2",
-        "datatables.net": "^2.3.2",
-        "datatables.net-dt": "^2.3.2",
-        "jquery": "^3.7.1",
-        "metismenu": "^3.0.7",
-        "metismenujs": "^1.4.0",
-        "perfect-scrollbar": "^1.5.6",
-        "sass-embedded": "^1.89.2",
-        "select2": "^4.1.0-rc.0",
-        "sweetalert2": "^11.22.2",
-        "vite-plugin-commonjs": "^0.10.4",
-        "zxcvbn": "^4.4.2"
+        "laravel-vite-plugin": "^2.0.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "^7.0.7"
     }
 }

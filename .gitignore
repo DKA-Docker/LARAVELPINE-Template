@@ -8,12 +8,8 @@
 /.fleet
 /.idea
 /.nova
-*.sql.gz
 /.phpunit.cache
 /.vscode
-/test
-/public/stats.html
-composer.lock
 /.zed
 /auth.json
 /node_modules
@@ -26,4 +22,7 @@ composer.lock
 Homestead.json
 Homestead.yaml
 Thumbs.db
-yarn.lock
+
+**/caddy
+frankenphp
+frankenphp-worker.php

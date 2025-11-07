@@ -58,7 +58,7 @@ class Accounts extends Authenticatable
         return $this->belongsTo(AccountsCredentials::class, 'credential')->withDefault();
     }
 
-    /** Relasi ke AccountsContacts (contact ID disimpan di kolom `contact`) */
+    /** Relasi ke Contacts (contact ID disimpan di kolom `contact`) */
     public function contact(): BelongsTo
     {
         return $this->belongsTo(AccountsContacts::class, 'contact')->withDefault();

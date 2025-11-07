@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('accounts_contacts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('email')->unique();
-            $table->softDeletes();
+            $table->uuid('id')->comment('adalah uuid dari data contact')->primary();
+            $table->string('email')->comment('adalah email untuk login')->unique();
+            $table->softDeletes()->comment('adalah parameter soft deleted');
             $table->timestamps();
         });
     }
