@@ -9,8 +9,6 @@ use App\Repositories\Base\Accounts\Components\Contacts\AccountsContactsRepositor
 use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRepository;
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -46,6 +44,7 @@ class ResourcesAccountsServices
      */
     public function Create(array $payload): array
     {
+        /** Begin Transaction */
         DB::beginTransaction();
         try {
             // (opsional) validasi cepat; hapus jika repositori sudah handle
@@ -56,7 +55,6 @@ class ResourcesAccountsServices
                 'roles'       => ['nullable', 'array'],
                 'roles.*'     => ['string'],
             ])->validate();
-
             /**
              * @var $information array about information account
              * @var $credential  array about credential account
@@ -65,31 +63,25 @@ class ResourcesAccountsServices
             $information = $this->information->Create(...($payload['information'] ?? []));
             $credential  = $this->credential->Create(...($payload['credential'] ?? []));
             $contact     = $this->contact->Create(...($payload['contact'] ?? []));
-
             /** @var $account Accounts function account */
             $account = $this->account->Create(
                 information: $information->id,
                 credential : $credential->id,
                 contact    : $contact->id,
             );
-
             /** role assignment: DI DALAM transaksi → atomik */
             if (!empty($payload['roles'])) {
                 $this->account->Find($account->id)?->assignRole($payload['roles']);
             }
-
             /** Muat Relations Data */
             $account->load(['information', 'credential', 'contact']);
-
             /** daftar efek samping yang harus nunggu commit */
             DB::afterCommit(function () use ($account) {
                 // Contoh: event(new \App\Events\AccountCreated($account->id));
                 // Contoh: Cache::put("account:{$account->id}", $account->toArray(), now()->addHour());
             });
-
             /** Commit Data */
             DB::commit();
-
             /** Back Callback */
             return [
                 'status' => true,
@@ -98,10 +90,14 @@ class ResourcesAccountsServices
                 'data'   => $account,
             ];
         } catch (QueryException $e) {
+            /** Cancel Changes Database */
             DB::rollBack();
+            /** Convert The Database Error To Http Error Payload  */
             return $this->HelpersExceptionsHttpCode->fromSQLError($e);
         } catch (Throwable $e) {
+            /** Cancel Changes Database */
             DB::rollBack();
+            /** General Http Error Payload  */
             return [
                 'status' => false,
                 'code'   => 500,
@@ -116,6 +112,7 @@ class ResourcesAccountsServices
      */
     public function Update(array $payload): array
     {
+        /** Begin Transaction */
         DB::beginTransaction();
         try {
             // (opsional) validasi id
@@ -278,44 +275,6 @@ class ResourcesAccountsServices
             return $this->HelpersExceptionsHttpCode->fromSQLError($e);
         } catch (Throwable $e) {
             DB::rollBack();
-            return [
-                'status' => false,
-                'code'   => 500,
-                'msg'    => 'Unexpected error: ' . $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * Get by username (format response konsisten)
-     * @return array{status:bool,code:int,msg:string,data?:mixed}
-     */
-    public function GetAccountWithUsername(string $username): array
-    {
-        try {
-            /** @var Accounts|null $account */
-            $account = $this->account
-                ->with(['credential', 'contact', 'information'])
-                ->whereHas('credential', fn($q) => $q->where('username', $username))
-                ->first();
-            /**  */
-            if (!$account) {
-                return [
-                    'status' => false,
-                    'code'   => 404,
-                    'msg'    => 'Account not found',
-                ];
-            }
-
-            return [
-                'status' => true,
-                'code'   => 200,
-                'msg'    => 'Account Successfully Read',
-                'data'   => $account,
-            ];
-        } catch (QueryException $e) {
-            return $this->HelpersExceptionsHttpCode->fromSQLError($e);
-        } catch (Throwable $e) {
             return [
                 'status' => false,
                 'code'   => 500,
