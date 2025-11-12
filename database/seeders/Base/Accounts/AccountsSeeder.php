@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Base\Accounts;
 
-use App\Services\Resources\ResourcesAccountsServices;
+use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Database\Factories\Base\Accounts\AccountsFactory;
 use Illuminate\Database\Seeder;
 
