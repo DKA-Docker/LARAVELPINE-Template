@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html class="h-full" data-kt-theme="true" data-kt-theme-mode="light" dir="ltr" lang="en">
+<html class="h-full" data-kt-theme="true" data-kt-theme-mode="light" dir="ltr" lang="{{ str_replace("_", "-", app()->getLocale()) }}">
     <head>
-        <base href="#" />
-        <title>Metronic - Tailwind CSS</title>
+        <title>{{ config("app.name", "Laravel") }}</title>
         <meta charset="utf-8" />
         <meta content="follow, index" name="robots" />
         <link href="#" rel="canonical" />

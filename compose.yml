@@ -72,7 +72,8 @@ services:
       AWS_USE_PATH_STYLE_ENDPOINT: false
 
       VITE_APP_NAME: "${APP_NAME}"
-      VITE_THEME_NAME: maxton
+
+      THEME_NAME: laravel
     deploy:
       resources:
         limits:
