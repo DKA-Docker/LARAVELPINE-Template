@@ -10658,7 +10658,6 @@
                 "resources/theme/" . config("theme.name", "laravel") . "/js/layouts/demo1.js",
             ])
         @endif
-
         <!-- End of Scripts -->
     </body>
 </html>
