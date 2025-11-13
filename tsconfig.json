@@ -1,12 +1,6 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "paths": {
-            "@resources/*": ["resources/ts/*"],
-            "@res/*": ["resources/ts/*"],
-            "@css/*": ["resources/css/*"],
-            "@js/*": ["resources/js/*"]
-        },
         "moduleResolution": "bundler",
         "jsx": "react-jsx",
         "esModuleInterop": true

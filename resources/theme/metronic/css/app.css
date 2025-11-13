@@ -1,4 +1,9 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+@import "../vendors/keenicons/styles.bundle.css";
+@import "@keenthemes/ktui/dist/styles.css";
+@import "apexcharts/dist/apexcharts.css";
+@import "../css/styles.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -9,3 +14,6 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+
+

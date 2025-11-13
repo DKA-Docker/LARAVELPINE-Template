@@ -130,7 +130,7 @@ services:
       # adalah port internal dari docker
       - target: 3306
         # adalah port yang dipublish diluar docker
-        published: 3306
+        published: 3307
         # adalah protocol yang di forwarding
         protocol: tcp
         # adalah allow wishlist ip yang dapat mengakses container
