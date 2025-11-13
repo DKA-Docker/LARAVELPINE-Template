@@ -73,7 +73,7 @@ services:
 
       VITE_APP_NAME: "${APP_NAME}"
 
-      THEME_NAME: metronic
+      THEME_NAME: Metronic
     deploy:
       resources:
         limits:

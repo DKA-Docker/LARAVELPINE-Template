@@ -4,6 +4,6 @@
 
 return [
     // ...
-    'view_path' => resource_path('layouts/'.config('theme.name', 'metronic')),
+    'view_path' => resource_path('layouts/'.config('theme.name', 'Metronic')),
     // ...
 ];
