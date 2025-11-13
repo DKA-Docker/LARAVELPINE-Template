@@ -66,7 +66,7 @@
                         <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                             <div class="flex flex-col justify-center gap-2">
                                 <h1 class="text-mono text-xl leading-none font-medium">Dashboard</h1>
-                                <div class="text-secondary-foreground flex items-center gap-2 text-sm font-normal">Central Hub for Personal Customization</div>
+                                <div class="text-secondary-foreground flex items-center gap-2 text-sm font-normal">Dashboard Logistik Satu Pintu</div>
                             </div>
                             <div class="flex items-center gap-2.5">
                                 <a class="kt-btn kt-btn-outline" href="#">View Profile</a>
@@ -91,103 +91,412 @@
                                             }
                                         </style>
                                         <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <img alt="" class="ms-5 mt-4 w-7" src="{{ asset(Storage::url("media/brand-logos/linkedin-2.svg")) }}" />
-                                            <div class="flex flex-col gap-1 px-5 pb-4">
-                                                <span class="text-mono text-3xl font-semibold">9.3k</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Amazing mates</span>
+                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
+                                                <span class="text-mono text-3xl font-semibold">0</span>
+                                                <span class="text-secondary-foreground text-sm font-normal">Permintaan Pengiriman</span>
                                             </div>
                                         </div>
                                         <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <img alt="" class="ms-5 mt-4 w-7" src="{{ asset(Storage::url("media/brand-logos/youtube-2.svg")) }}" />
-                                            <div class="flex flex-col gap-1 px-5 pb-4">
-                                                <span class="text-mono text-3xl font-semibold">24k</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Lessons Views</span>
+                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
+                                                <span class="text-mono text-3xl font-semibold">0</span>
+                                                <span class="text-secondary-foreground text-sm font-normal">Sedang Dikirim</span>
                                             </div>
                                         </div>
                                         <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <img alt="" class="ms-5 mt-4 w-7" src="{{ asset(Storage::url("media/brand-logos/instagram-03.svg")) }}" />
-                                            <div class="flex flex-col gap-1 px-5 pb-4">
-                                                <span class="text-mono text-3xl font-semibold">608</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">New subscribers</span>
+                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
+                                                <span class="text-mono text-3xl font-semibold">0</span>
+                                                <span class="text-secondary-foreground text-sm font-normal">Pengiriman Tertunda</span>
                                             </div>
                                         </div>
                                         <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <img alt="" class="ms-5 mt-4 w-7 dark:hidden" src="{{ asset(Storage::url("media/brand-logos/tiktok.svg")) }}" />
-                                            <img alt="" class="ms-5 mt-4 hidden w-7 dark:block" src="{{ asset(Storage::url("media/brand-logos/tiktok-dark.svg")) }}" />
-                                            <div class="flex flex-col gap-1 px-5 pb-4">
-                                                <span class="text-mono text-3xl font-semibold">2.5k</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Stream audience</span>
+                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
+                                                <span class="text-mono text-3xl font-semibold">0</span>
+                                                <span class="text-secondary-foreground text-sm font-normal">Pengiriman Selesai</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="lg:col-span-2">
-                                    <style>
-                                        .entry-callout-bg {
-                                            background-image: url('{{ asset(Storage::url("media/images/2600x1600/2.png")) }}');
-                                        }
-
-                                        .dark .entry-callout-bg {
-                                            background-image: url('{{ asset(Storage::url("media/images/2600x1600/2-dark.png")) }}');
-                                        }
-                                    </style>
-                                    <div class="kt-card h-full">
-                                        <div class="kt-card-content entry-callout-bg bg-[length:80%] [background-position:175%_25%] bg-no-repeat p-10 rtl:[background-position:-70%_25%]">
-                                            <div class="flex flex-col justify-center gap-4">
-                                                <div class="flex -space-x-2">
-                                                    <div class="flex">
-                                                        <img
-                                                            class="ring-background relative size-10 shrink-0 rounded-full ring-1 hover:z-5"
-                                                            src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                            alt=""
-                                                        />
+                                    <div class="grid">
+                                        <div class="kt-card kt-card-grid h-full min-w-full">
+                                            <div class="kt-card-header">
+                                                <h3 class="kt-card-title">Status Driver</h3>
+                                                <div class="kt-input max-w-48">
+                                                    <i class="ki-filled ki-magnifier"></i>
+                                                    <input data-kt-datatable-search="#kt_datatable_1" placeholder="Search Teams" type="text" />
+                                                </div>
+                                            </div>
+                                            <div class="kt-card-table">
+                                                <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="5" id="teams_datatable">
+                                                    <div class="kt-scrollable-x-auto">
+                                                        <table class="kt-table kt-table-border table-fixed" data-kt-datatable-table="true" id="kt_datatable_1">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="w-[50px]">
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-check="true" type="checkbox" />
+                                                                </th>
+                                                                <th class="w-[280px]">
+                                                                        <span class="kt-table-col">
+                                                                            <span class="kt-table-col-label">Team</span>
+                                                                            <span class="kt-table-col-sort"></span>
+                                                                        </span>
+                                                                </th>
+                                                                <th class="w-[125px]">
+                                                                        <span class="kt-table-col">
+                                                                            <span class="kt-table-col-label">Rating</span>
+                                                                            <span class="kt-table-col-sort"></span>
+                                                                        </span>
+                                                                </th>
+                                                                <th class="w-[135px]">
+                                                                        <span class="kt-table-col">
+                                                                            <span class="kt-table-col-label">Last Modified</span>
+                                                                            <span class="kt-table-col-sort"></span>
+                                                                        </span>
+                                                                </th>
+                                                                <th class="w-[125px]">
+                                                                        <span class="kt-table-col">
+                                                                            <span class="kt-table-col-label">Members</span>
+                                                                            <span class="kt-table-col-sort"></span>
+                                                                        </span>
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="1" />
+                                                                </td>
+                                                                <td>
+                                                                    <div class="flex flex-col gap-2">
+                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Product Management</a>
+                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Product development & lifecycle</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="kt-rating">
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>21 Oct, 2024</td>
+                                                                <td>
+                                                                    <div class="flex -space-x-2">
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                                <span
+                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-green-500 leading-none font-semibold text-white ring-1"
+                                                                                >
+                                                                                    +10
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="2" />
+                                                                </td>
+                                                                <td>
+                                                                    <div class="flex flex-col gap-2">
+                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Marketing Team</a>
+                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Campaigns & market analysis</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="kt-rating">
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label indeterminate">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>15 Oct, 2024</td>
+                                                                <td>
+                                                                    <div class="flex -space-x-2">
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                                <span
+                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-yellow-500 leading-none font-semibold text-white uppercase ring-1 hover:z-5"
+                                                                                >
+                                                                                    g
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="3" />
+                                                                </td>
+                                                                <td>
+                                                                    <div class="flex flex-col gap-2">
+                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">HR Department</a>
+                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Talent acquisition, employee welfare</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="kt-rating">
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>10 Oct, 2024</td>
+                                                                <td>
+                                                                    <div class="flex -space-x-2">
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                                <span
+                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-violet-500 leading-none font-semibold text-white ring-1"
+                                                                                >
+                                                                                    +A
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="4" />
+                                                                </td>
+                                                                <td>
+                                                                    <div class="flex flex-col gap-2">
+                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Sales Division</a>
+                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Customer relations, sales strategy</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="kt-rating">
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>05 Oct, 2024</td>
+                                                                <td>
+                                                                    <div class="flex -space-x-2">
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-24.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-7.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="5" />
+                                                                </td>
+                                                                <td>
+                                                                    <div class="flex flex-col gap-2">
+                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Development Team</a>
+                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Software development</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="kt-rating">
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label checked">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                        <div class="kt-rating-label indeterminate">
+                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
+                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>01 Oct, 2024</td>
+                                                                <td>
+                                                                    <div class="flex -space-x-2">
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-3.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-8.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                            <img
+                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
+                                                                                src="{{ asset(Storage::url("media/avatars/300-9.png")) }}"
+                                                                                alt=""
+                                                                            />
+                                                                        </div>
+                                                                        <div class="flex">
+                                                                                <span
+                                                                                    class="text-2xs ring-background bg-destructive relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full leading-none font-semibold text-white ring-1"
+                                                                                >
+                                                                                    +5
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                    <div class="flex">
-                                                        <img
-                                                            class="ring-background relative size-10 shrink-0 rounded-full ring-1 hover:z-5"
-                                                            src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                            alt=""
-                                                        />
-                                                    </div>
-                                                    <div class="flex">
-                                                        <img
-                                                            class="ring-background relative size-10 shrink-0 rounded-full ring-1 hover:z-5"
-                                                            src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                            alt=""
-                                                        />
-                                                    </div>
-                                                    <div class="flex">
-                                                        <span
-                                                            class="text-2xs ring-background relative inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-green-500 text-xs leading-none font-semibold text-white ring-1 hover:z-5"
-                                                        >
-                                                            S
-                                                        </span>
+                                                    <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
+                                                        <div class="order-2 flex items-center gap-2 md:order-1">
+                                                            Show
+                                                            <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select="" name="perpage"></select>
+                                                            per page
+                                                        </div>
+                                                        <div class="order-1 flex items-center gap-4 md:order-2">
+                                                            <span data-kt-datatable-info="true"></span>
+                                                            <div class="kt-datatable-pagination" data-kt-datatable-pagination="true"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <h2 class="text-mono text-xl font-semibold">
-                                                    Connect Today & Join
-                                                    <br />
-                                                    the
-                                                    <a class="kt-link" href="#">KeenThemes Network</a>
-                                                </h2>
-                                                <p class="text-secondary-foreground text-sm leading-5.5 font-normal">
-                                                    Enhance your projects with premium themes and
-                                                    <br />
-                                                    templates. Join the KeenThemes community today
-                                                    <br />
-                                                    for top-quality designs and resources.
-                                                </p>
                                             </div>
-                                        </div>
-                                        <div class="kt-card-footer justify-center">
-                                            <a class="kt-link kt-link-underlined kt-link-dashed" href="#">Get Started</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- end: grid -->
                             <!-- begin: grid -->
-                            <div class="grid items-stretch gap-5 lg:grid-cols-3 lg:gap-7.5">
+                            {{--<div class="grid items-stretch gap-5 lg:grid-cols-3 lg:gap-7.5">
                                 <div class="lg:col-span-1">
                                     <div class="kt-card h-full">
                                         <div class="kt-card-header">
@@ -319,7 +628,7 @@
                                                         <span class="text-mono text-sm font-normal">Online Store</span>
                                                     </div>
                                                     <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">$172k</span>
+                                                        <span class="lg:text-right">0</span>
                                                         <span class="lg:text-right">
                                                             <i class="ki-filled ki-arrow-up text-green-500"></i>
                                                             3.9%
@@ -332,7 +641,7 @@
                                                         <span class="text-mono text-sm font-normal">Facebook</span>
                                                     </div>
                                                     <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">$85k</span>
+                                                        <span class="lg:text-right">0</span>
                                                         <span class="lg:text-right">
                                                             <i class="ki-filled ki-arrow-down text-destructive"></i>
                                                             0.7%
@@ -345,7 +654,7 @@
                                                         <span class="text-mono text-sm font-normal">Instagram</span>
                                                     </div>
                                                     <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">$36k</span>
+                                                        <span class="lg:text-right">0</span>
                                                         <span class="lg:text-right">
                                                             <i class="ki-filled ki-arrow-up text-green-500"></i>
                                                             8.2%
@@ -356,1054 +665,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="lg:col-span-2">
-                                    <div class="kt-card h-full">
-                                        <div class="kt-card-header">
-                                            <h3 class="kt-card-title">Earnings</h3>
-                                            <div class="flex gap-5">
-                                                <label class="flex items-center gap-2">
-                                                    <input class="kt-switch" name="check" type="checkbox" value="1" />
-                                                    <span class="kt-label">Referrals only</span>
-                                                </label>
-                                                <select class="kt-select w-36" data-kt-select="true" data-kt-select-placeholder="Select period" name="kt-select">
-                                                    <option>None</option>
-                                                    <option value="1">1 month</option>
-                                                    <option value="2">3 month</option>
-                                                    <option value="3">6 month</option>
-                                                    <option value="4">12 month</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="kt-card-content flex grow flex-col items-stretch justify-end px-3 py-1">
-                                            <div id="earnings_chart"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end: grid -->
-                            <!-- begin: grid -->
-                            <div class="grid items-stretch gap-5 lg:grid-cols-3 lg:gap-7.5">
-                                <div class="lg:col-span-1">
-                                    <div class="kt-card h-full">
-                                        <div class="kt-card-content p-5 lg:p-7.5 lg:pt-6">
-                                            <div class="mb-7.5 flex flex-wrap items-center justify-between gap-5">
-                                                <div class="flex flex-col gap-1">
-                                                    <span class="text-mono text-xl font-semibold">Team Meeting</span>
-                                                    <span class="text-foreground text-sm font-semibold">09:00 - 09:30</span>
-                                                </div>
-                                                <img alt="" class="size-7" src="{{ asset(Storage::url("media/brand-logos/zoom.svg")) }}" />
-                                            </div>
-                                            <p class="text-foreground mb-8 text-sm leading-5.5 font-normal">
-                                                Team meeting to discuss strategies, outline
-                                                <br />
-                                                project milestones, define key goals, and
-                                                <br />
-                                                establish clear timelines.
-                                            </p>
-                                            <div class="bg-accent/50 flex gap-10 rounded-lg p-5">
-                                                <div class="flex flex-col gap-5">
-                                                    <div class="text-foreground flex items-center gap-1.5 text-sm font-normal">
-                                                        <i class="ki-filled ki-geolocation text-muted-foreground text-base"></i>
-                                                        Location
-                                                    </div>
-                                                    <div class="text-foreground pt-1.5 text-sm font-medium">Amsterdam</div>
-                                                </div>
-                                                <div class="flex flex-col gap-5">
-                                                    <div class="text-foreground flex items-center gap-1.5 text-sm font-normal">
-                                                        <i class="ki-filled ki-users text-muted-foreground text-base"></i>
-                                                        Team
-                                                    </div>
-                                                    <div class="flex -space-x-2">
-                                                        <div class="flex">
-                                                            <img
-                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <div class="flex">
-                                                            <img
-                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <div class="flex">
-                                                            <img
-                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <div class="flex">
-                                                            <span
-                                                                class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-green-500 text-xs leading-none font-semibold text-white ring-1 hover:z-5"
-                                                            >
-                                                                +10
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="kt-card-footer justify-center">
-                                            <a class="kt-link kt-link-underlined kt-link-dashed" href="#">Join Meeting</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="lg:col-span-2">
-                                    <div class="grid">
-                                        <div class="kt-card kt-card-grid h-full min-w-full">
-                                            <div class="kt-card-header">
-                                                <h3 class="kt-card-title">Teams</h3>
-                                                <div class="kt-input max-w-48">
-                                                    <i class="ki-filled ki-magnifier"></i>
-                                                    <input data-kt-datatable-search="#kt_datatable_1" placeholder="Search Teams" type="text" />
-                                                </div>
-                                            </div>
-                                            <div class="kt-card-table">
-                                                <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="5" id="teams_datatable">
-                                                    <div class="kt-scrollable-x-auto">
-                                                        <table class="kt-table kt-table-border table-fixed" data-kt-datatable-table="true" id="kt_datatable_1">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="w-[50px]">
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-check="true" type="checkbox" />
-                                                                    </th>
-                                                                    <th class="w-[280px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Team</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                    </th>
-                                                                    <th class="w-[125px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Rating</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                    </th>
-                                                                    <th class="w-[135px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Last Modified</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                    </th>
-                                                                    <th class="w-[125px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Members</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="1" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Product Management</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Product development & lifecycle</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>21 Oct, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-green-500 leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +10
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="2" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Marketing Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Campaigns & market analysis</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label indeterminate">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>15 Oct, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-yellow-500 leading-none font-semibold text-white uppercase ring-1 hover:z-5"
-                                                                                >
-                                                                                    g
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="3" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">HR Department</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Talent acquisition, employee welfare</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>10 Oct, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-violet-500 leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +A
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="4" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Sales Division</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Customer relations, sales strategy</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>05 Oct, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-24.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-7.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="5" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Development Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Software development</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label indeterminate">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>01 Oct, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-3.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-8.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-9.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background bg-destructive relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +5
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="6" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Quality Assurance</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Product testing</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>25 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-6.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-5.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="7" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Finance Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Financial planning</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>20 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-10.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-11.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-12.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs text-primary-foreground ring-background bg-primary relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full leading-none font-semibold ring-1"
-                                                                                >
-                                                                                    +8
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="8" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Customer Support</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Customer service</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label indeterminate">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>15 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-13.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-14.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="9" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">R&D Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Research & development</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>10 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-15.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-16.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="10" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Operations Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Operations management</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>05 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-17.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-18.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-19.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="11" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">IT Support</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Technical support</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>01 Sep, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-20.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-21.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="12" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Legal Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Legal support</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>25 Aug, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-22.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-23.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="13" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Logistics Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Supply chain</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label indeterminate">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>20 Aug, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-24.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-25.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="14" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Procurement Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Supplier management</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>15 Aug, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-26.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-27.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-28.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-violet-500 leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +3
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="15" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="flex flex-col gap-2">
-                                                                            <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Training Team</a>
-                                                                            <span class="text-2sm text-secondary-foreground leading-3 font-normal">Employee training</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="kt-rating">
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label checked">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                            <div class="kt-rating-label">
-                                                                                <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                                <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>10 Aug, 2024</td>
-                                                                    <td>
-                                                                        <div class="flex -space-x-2">
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-29.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                            <div class="flex">
-                                                                                <img
-                                                                                    class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                    src="{{ asset(Storage::url("media/avatars/300-30.png")) }}"
-                                                                                    alt=""
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
-                                                        <div class="order-2 flex items-center gap-2 md:order-1">
-                                                            Show
-                                                            <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select="" name="perpage"></select>
-                                                            per page
-                                                        </div>
-                                                        <div class="order-1 flex items-center gap-4 md:order-2">
-                                                            <span data-kt-datatable-info="true"></span>
-                                                            <div class="kt-datatable-pagination" data-kt-datatable-pagination="true"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </div>--}}
                             <!-- end: grid -->
                         </div>
                     </div>
