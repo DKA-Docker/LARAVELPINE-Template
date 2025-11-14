@@ -25,6 +25,7 @@
         @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
             @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css", "resources/theme/" . config("theme.name", "laravel") . "/js/app.js"])
         @endif
+        @livewireStyles
     </head>
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
         <!-- Theme Mode -->

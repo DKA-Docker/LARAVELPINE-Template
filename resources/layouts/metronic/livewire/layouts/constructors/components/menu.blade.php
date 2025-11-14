@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="kt-menu-item pt-2.25 pb-px">
-        <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Apps</span>
+        <span class="kt-me`nu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Apps</span>
     </div>
     <div class="kt-menu-item" data-kt-menu-item-toggle="accordion" data-kt-menu-item-trigger="click">
         <div class="kt-menu-link flex grow cursor-pointer items-center gap-[10px] border border-transparent py-[6px] ps-[10px] pe-[10px]" tabindex="0">
@@ -85,6 +85,7 @@
             <span class="kt-menu-icon text-muted-foreground w-[20px] items-start">
                 <i class="ki-duotone ki-map text-lg"></i>
             </span>
+
             <span class="kt-menu-title text-foreground text-sm font-bold">Tracking</span>
         </div>
     </div>
