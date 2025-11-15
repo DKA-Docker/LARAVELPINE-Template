@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="h-full" data-kt-theme="true" data-kt-theme-mode="dark" dir="ltr" lang="en">
     <head>
-        <title>{{ config("app.name", "Laravel") }}</title>
+        <title>{{ config("app.name", "Laravel") }} - Request Delivery</title>
         <meta charset="utf-8" />
         <meta content="follow, index" name="robots" />
         <link href="#" rel="canonical" />
@@ -25,6 +25,7 @@
         @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
             @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css", "resources/theme/" . config("theme.name", "laravel") . "/js/app.js"])
         @endif
+
         @livewireStyles
     </head>
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
@@ -53,10 +54,10 @@
         <!-- Page -->
         <!-- Main -->
         <div class="flex grow">
-            @livewire("metronic.layouts.constructors.sidebars")
+            @livewire("metronic.dashboards.layouts.constructors.sidebars")
             <!-- Wrapper -->
             <div class="kt-wrapper flex grow flex-col">
-                @livewire("metronic.layouts.constructors.headers")
+                @livewire("metronic.dashboards.layouts.constructors.headers")
                 <!-- Content -->
                 <main class="grow pt-5" id="content" role="content">
                     <!-- Container -->
@@ -66,11 +67,19 @@
                     <div class="kt-container-fixed">
                         <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                             <div class="flex flex-col justify-center gap-2">
-                                <h1 class="text-mono text-xl leading-none font-medium">Dashboard</h1>
-                                <div class="text-secondary-foreground flex items-center gap-2 text-sm font-normal">Dashboard Logistik Satu Pintu</div>
+                                <h1 class="text-mono text-xl leading-none font-medium">Delivery Request</h1>
+                                <div class="flex flex-wrap items-center gap-1.5 font-medium">
+                                    <span class="text-secondary-foreground text-base">Semua:</span>
+                                    <span class="gray-800 me-2 text-base font-semibold">49,053</span>
+                                    <span class="text-green-800 text-base">Diterima:</span>
+                                    <span class="text-green-600 text-base font-semibold">1724</span>
+                                    <span class="text-red-800 text-base">Ditolak:</span>
+                                    <span class="text-red-600 text-base font-semibold">1724</span>
+                                </div>
                             </div>
                             <div class="flex items-center gap-2.5">
-                                <a class="kt-btn kt-btn-outline" href="#">View Profile</a>
+                                <a class="kt-btn kt-btn-outline" href="#">Import CSV</a>
+                                <a class="kt-btn kt-btn-primary" href="#">Add Request</a>
                             </div>
                         </div>
                     </div>
@@ -78,602 +87,269 @@
                     <!-- Container -->
                     <div class="kt-container-fixed">
                         <div class="grid gap-5 lg:gap-7.5">
-                            <!-- begin: grid -->
-                            <div class="grid items-stretch gap-y-5 lg:grid-cols-3 lg:gap-7.5">
-                                <div class="lg:col-span-1">
-                                    <div class="grid h-full grid-cols-2 items-stretch gap-5 lg:gap-7.5">
-                                        <style>
-                                            .channel-stats-bg {
-                                                background-image: url('{{ asset(Storage::url("media/images/2600x1600/bg-3.png")) }}');
-                                            }
-
-                                            .dark .channel-stats-bg {
-                                                background-image: url('{{ asset(Storage::url("media/images/2600x1600/bg-3-dark.png")) }}');
-                                            }
-                                        </style>
-                                        <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
-                                                <span class="text-mono text-3xl font-semibold">0</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Permintaan Pengiriman</span>
-                                            </div>
+                            <div class="kt-card kt-card-grid min-w-full">
+                                <div class="kt-card-header flex-wrap gap-2">
+                                    <h3 class="kt-card-title text-sm">Showing 10 of 49,053 users</h3>
+                                    <div class="flex flex-wrap gap-2 lg:gap-5">
+                                        <div class="flex">
+                                            <label class="kt-input">
+                                                <i class="ki-filled ki-magnifier"></i>
+                                                <input placeholder="Search users" type="text" value="" />
+                                            </label>
                                         </div>
-                                        <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
-                                                <span class="text-mono text-3xl font-semibold">0</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Sedang Dikirim</span>
-                                            </div>
-                                        </div>
-                                        <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
-                                                <span class="text-mono text-3xl font-semibold">0</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Pengiriman Tertunda</span>
-                                            </div>
-                                        </div>
-                                        <div class="kt-card channel-stats-bg h-full flex-col justify-between gap-6 bg-cover bg-[right_top_-1.7rem] bg-no-repeat rtl:bg-[left_top_-1.7rem]">
-                                            <div class="flex flex-col gap-1 px-5 pb-4 pt-3">
-                                                <span class="text-mono text-3xl font-semibold">0</span>
-                                                <span class="text-secondary-foreground text-sm font-normal">Pengiriman Selesai</span>
-                                            </div>
+                                        <div class="flex flex-wrap gap-2.5">
+                                            <select class="kt-select w-36" data-kt-select="true" data-kt-select-placeholder="Select a status">
+                                                <option value="1">Active</option>
+                                                <option value="2">Disabled</option>
+                                                <option value="2">Pending</option>
+                                            </select>
+                                            <select class="kt-select w-36" data-kt-select="true" data-kt-select-placeholder="Select a sort">
+                                                <option value="1">Latest</option>
+                                                <option value="2">Older</option>
+                                                <option value="3">Oldest</option>
+                                            </select>
+                                            <button class="kt-btn kt-btn-outline kt-btn-primary">
+                                                <i class="ki-filled ki-setting-4"></i>
+                                                Filters
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="lg:col-span-2">
-                                    <div class="grid">
-                                        <div class="kt-card kt-card-grid h-full min-w-full">
-                                            <div class="kt-card-header">
-                                                <h3 class="kt-card-title">Status Driver</h3>
-                                                <div class="kt-input max-w-48">
-                                                    <i class="ki-filled ki-magnifier"></i>
-                                                    <input data-kt-datatable-search="#kt_datatable_1" placeholder="Search Teams" type="text" />
-                                                </div>
+                                <div class="kt-card-content">
+                                    <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="10">
+                                        <div class="kt-scrollable-x-auto">
+                                            <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-[60px] text-center">
+                                                            <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-check="true" type="checkbox" />
+                                                        </th>
+                                                        <th class="min-w-[200px]">
+                                                            <span class="kt-table-col asc">
+                                                                <span class="kt-table-col-label">User</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                        </th>
+                                                        <th class="min-w-[250px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">Browser</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                        </th>
+                                                        <th class="min-w-[190px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">IP Address</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                        </th>
+                                                        <th class="min-w-[190px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">Location</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                        </th>
+                                                        <th class="min-w-[190px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">Activity</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                        </th>
+                                                        <th class="w-[60px]"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="1" />
+                                                        </td>
+                                                        <td>
+                                                            <div class="flex items-center gap-2.5">
+                                                                <img alt="" class="size-7 shrink-0 rounded-full" src="assets/media/avatars/300-3.png" />
+                                                                <a class="text-mono hover:text-primary text-sm font-medium" href="#">Tyler Hero</a>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-foreground flex items-center gap-1.5 font-normal">
+                                                                <i class="ki-filled ki-chrome"></i>
+                                                                Chrome on Mac OS X
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-foreground font-normal">234.0.155.191</td>
+                                                        <td>
+                                                            <div class="text-foreground flex items-center gap-1.5 font-normal">
+                                                                <img alt="" class="size-4 shrink-0 rounded-full" src="assets/media/flags/estonia.svg" />
+                                                                Estonia
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-foreground font-normal">Current session</td>
+                                                        <td>
+                                                            <div class="kt-menu" data-kt-menu="true">
+                                                                <div
+                                                                    class="kt-menu-item"
+                                                                    data-kt-menu-item-offset="0, 10px"
+                                                                    data-kt-menu-item-placement="bottom-end"
+                                                                    data-kt-menu-item-placement-rtl="bottom-start"
+                                                                    data-kt-menu-item-toggle="dropdown"
+                                                                    data-kt-menu-item-trigger="click"
+                                                                >
+                                                                    <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
+                                                                        <i class="ki-filled ki-dots-vertical text-lg"></i>
+                                                                    </button>
+                                                                    <div class="kt-menu-dropdown kt-menu-default w-full max-w-[175px]" data-kt-menu-dismiss="true">
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-search-list"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">View</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-file-up"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Export</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-separator"></div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-pencil"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Edit</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-copy"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Make a copy</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-separator"></div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-trash"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Remove</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="2" />
+                                                        </td>
+                                                        <td>
+                                                            <div class="flex items-center gap-2.5">
+                                                                <img alt="" class="size-7 shrink-0 rounded-full" src="assets/media/avatars/300-23.png" />
+                                                                <a class="text-mono hover:text-primary text-sm font-medium" href="#">Jane Smith</a>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-foreground flex items-center gap-1.5 font-normal">
+                                                                <i class="ki-filled ki-chrome"></i>
+                                                                Chrome on Windows 7
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-foreground font-normal">70.218.212.162</td>
+                                                        <td>
+                                                            <div class="text-foreground flex items-center gap-1.5 font-normal">
+                                                                <img alt="" class="size-4 shrink-0 rounded-full" src="assets/media/flags/malaysia.svg" />
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-foreground font-normal">Week ago</td>
+                                                        <td>
+                                                            <div class="kt-menu" data-kt-menu="true">
+                                                                <div
+                                                                    class="kt-menu-item"
+                                                                    data-kt-menu-item-offset="0, 10px"
+                                                                    data-kt-menu-item-placement="bottom-end"
+                                                                    data-kt-menu-item-placement-rtl="bottom-start"
+                                                                    data-kt-menu-item-toggle="dropdown"
+                                                                    data-kt-menu-item-trigger="click"
+                                                                >
+                                                                    <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
+                                                                        <i class="ki-filled ki-dots-vertical text-lg"></i>
+                                                                    </button>
+                                                                    <div class="kt-menu-dropdown kt-menu-default w-full max-w-[175px]" data-kt-menu-dismiss="true">
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-search-list"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">View</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-file-up"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Export</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-separator"></div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-pencil"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Edit</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-copy"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Make a copy</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="kt-menu-separator"></div>
+                                                                        <div class="kt-menu-item">
+                                                                            <a class="kt-menu-link" href="#">
+                                                                                <span class="kt-menu-icon">
+                                                                                    <i class="ki-filled ki-trash"></i>
+                                                                                </span>
+                                                                                <span class="kt-menu-title">Remove</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
+                                            <div class="order-2 flex items-center gap-2 md:order-1">
+                                                Show
+                                                <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select="" name="perpage"></select>
+                                                per page
                                             </div>
-                                            <div class="kt-card-table">
-                                                <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="5" id="teams_datatable">
-                                                    <div class="kt-scrollable-x-auto">
-                                                        <table class="kt-table kt-table-border table-fixed" data-kt-datatable-table="true" id="kt_datatable_1">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="w-[50px]">
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-check="true" type="checkbox" />
-                                                                </th>
-                                                                <th class="w-[280px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Team</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                </th>
-                                                                <th class="w-[125px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Rating</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                </th>
-                                                                <th class="w-[135px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Last Modified</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                </th>
-                                                                <th class="w-[125px]">
-                                                                        <span class="kt-table-col">
-                                                                            <span class="kt-table-col-label">Members</span>
-                                                                            <span class="kt-table-col-sort"></span>
-                                                                        </span>
-                                                                </th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="1" />
-                                                                </td>
-                                                                <td>
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Product Management</a>
-                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Product development & lifecycle</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="kt-rating">
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>21 Oct, 2024</td>
-                                                                <td>
-                                                                    <div class="flex -space-x-2">
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-green-500 leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +10
-                                                                                </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="2" />
-                                                                </td>
-                                                                <td>
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Marketing Team</a>
-                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Campaigns & market analysis</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="kt-rating">
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label indeterminate">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>15 Oct, 2024</td>
-                                                                <td>
-                                                                    <div class="flex -space-x-2">
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-yellow-500 leading-none font-semibold text-white uppercase ring-1 hover:z-5"
-                                                                                >
-                                                                                    g
-                                                                                </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="3" />
-                                                                </td>
-                                                                <td>
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">HR Department</a>
-                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Talent acquisition, employee welfare</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="kt-rating">
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>10 Oct, 2024</td>
-                                                                <td>
-                                                                    <div class="flex -space-x-2">
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-violet-500 leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +A
-                                                                                </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="4" />
-                                                                </td>
-                                                                <td>
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Sales Division</a>
-                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Customer relations, sales strategy</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="kt-rating">
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>05 Oct, 2024</td>
-                                                                <td>
-                                                                    <div class="flex -space-x-2">
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-24.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-7.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-row-check="true" type="checkbox" value="5" />
-                                                                </td>
-                                                                <td>
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <a class="text-mono hover:text-primary text-sm leading-none font-medium" href="#">Development Team</a>
-                                                                        <span class="text-2sm text-secondary-foreground leading-3 font-normal">Software development</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="kt-rating">
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label checked">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                        <div class="kt-rating-label indeterminate">
-                                                                            <i class="kt-rating-on ki-solid ki-star text-base leading-none" style="width: 50%"></i>
-                                                                            <i class="kt-rating-off ki-outline ki-star text-base leading-none"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>01 Oct, 2024</td>
-                                                                <td>
-                                                                    <div class="flex -space-x-2">
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-3.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-8.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                            <img
-                                                                                class="ring-background relative size-[30px] shrink-0 rounded-full ring-1 hover:z-5"
-                                                                                src="{{ asset(Storage::url("media/avatars/300-9.png")) }}"
-                                                                                alt=""
-                                                                            />
-                                                                        </div>
-                                                                        <div class="flex">
-                                                                                <span
-                                                                                    class="text-2xs ring-background bg-destructive relative inline-flex size-[30px] shrink-0 items-center justify-center rounded-full leading-none font-semibold text-white ring-1"
-                                                                                >
-                                                                                    +5
-                                                                                </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
-                                                        <div class="order-2 flex items-center gap-2 md:order-1">
-                                                            Show
-                                                            <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select="" name="perpage"></select>
-                                                            per page
-                                                        </div>
-                                                        <div class="order-1 flex items-center gap-4 md:order-2">
-                                                            <span data-kt-datatable-info="true"></span>
-                                                            <div class="kt-datatable-pagination" data-kt-datatable-pagination="true"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="order-1 flex items-center gap-4 md:order-2">
+                                                <span data-kt-datatable-info="true"></span>
+                                                <div class="kt-datatable-pagination" data-kt-datatable-pagination="true"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- end: grid -->
-                            <!-- begin: grid -->
-                            {{--<div class="grid items-stretch gap-5 lg:grid-cols-3 lg:gap-7.5">
-                                <div class="lg:col-span-1">
-                                    <div class="kt-card h-full">
-                                        <div class="kt-card-header">
-                                            <h3 class="kt-card-title">Highlights</h3>
-                                            <div class="kt-menu" data-kt-menu="true">
-                                                <div
-                                                    class="kt-menu-item"
-                                                    data-kt-menu-item-offset="0, 10px"
-                                                    data-kt-menu-item-placement="bottom-start"
-                                                    data-kt-menu-item-toggle="dropdown"
-                                                    data-kt-menu-item-trigger="click"
-                                                >
-                                                    <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
-                                                        <i class="ki-filled ki-dots-vertical text-lg"></i>
-                                                    </button>
-                                                    <div class="kt-menu-dropdown kt-menu-default w-full max-w-[200px]" data-kt-menu-dismiss="true">
-                                                        <div class="kt-menu-item">
-                                                            <a class="kt-menu-link" href="#">
-                                                                <span class="kt-menu-icon">
-                                                                    <i class="ki-filled ki-cloud-change"></i>
-                                                                </span>
-                                                                <span class="kt-menu-title">Activity</span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="kt-menu-item">
-                                                            <a class="kt-menu-link" data-kt-modal-toggle="#share_profile_modal" href="#">
-                                                                <span class="kt-menu-icon">
-                                                                    <i class="ki-filled ki-share"></i>
-                                                                </span>
-                                                                <span class="kt-menu-title">Share</span>
-                                                            </a>
-                                                        </div>
-                                                        <div
-                                                            class="kt-menu-item"
-                                                            data-kt-menu-item-offset="-15px, 0"
-                                                            data-kt-menu-item-placement="right-start"
-                                                            data-kt-menu-item-toggle="dropdown"
-                                                            data-kt-menu-item-trigger="click|lg:hover"
-                                                        >
-                                                            <div class="kt-menu-link">
-                                                                <span class="kt-menu-icon">
-                                                                    <i class="ki-filled ki-notification-status"></i>
-                                                                </span>
-                                                                <span class="kt-menu-title">Notifications</span>
-                                                                <span class="kt-menu-arrow">
-                                                                    <i class="ki-filled ki-right text-xs rtl:rotate-180 rtl:transform"></i>
-                                                                </span>
-                                                            </div>
-                                                            <div class="kt-menu-dropdown kt-menu-default w-full max-w-[175px]">
-                                                                <div class="kt-menu-item">
-                                                                    <a class="kt-menu-link" href="#">
-                                                                        <span class="kt-menu-icon">
-                                                                            <i class="ki-filled ki-sms"></i>
-                                                                        </span>
-                                                                        <span class="kt-menu-title">Email</span>
-                                                                    </a>
-                                                                </div>
-                                                                <div class="kt-menu-item">
-                                                                    <a class="kt-menu-link" href="#">
-                                                                        <span class="kt-menu-icon">
-                                                                            <i class="ki-filled ki-message-notify"></i>
-                                                                        </span>
-                                                                        <span class="kt-menu-title">SMS</span>
-                                                                    </a>
-                                                                </div>
-                                                                <div class="kt-menu-item">
-                                                                    <a class="kt-menu-link" href="#">
-                                                                        <span class="kt-menu-icon">
-                                                                            <i class="ki-filled ki-notification-status"></i>
-                                                                        </span>
-                                                                        <span class="kt-menu-title">Push</span>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="kt-menu-item">
-                                                            <a class="kt-menu-link" data-kt-modal-toggle="#report_user_modal" href="#">
-                                                                <span class="kt-menu-icon">
-                                                                    <i class="ki-filled ki-dislike"></i>
-                                                                </span>
-                                                                <span class="kt-menu-title">Report</span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="kt-menu-separator"></div>
-                                                        <div class="kt-menu-item">
-                                                            <a class="kt-menu-link" href="#">
-                                                                <span class="kt-menu-icon">
-                                                                    <i class="ki-filled ki-setting-3"></i>
-                                                                </span>
-                                                                <span class="kt-menu-title">Settings</span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="kt-card-content flex flex-col gap-4 p-5 lg:p-7.5 lg:pt-4">
-                                            <div class="flex flex-col gap-0.5">
-                                                <span class="text-secondary-foreground text-sm font-normal">All time sales</span>
-                                                <div class="flex items-center gap-2.5">
-                                                    <span class="text-mono text-3xl font-semibold">$295.7k</span>
-                                                    <span class="kt-badge kt-badge-outline kt-badge-success kt-badge-sm">+2.7%</span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-1.5 flex items-center gap-1">
-                                                <div class="h-2 w-full max-w-[60%] rounded-xs bg-green-500"></div>
-                                                <div class="bg-destructive h-2 w-full max-w-[25%] rounded-xs"></div>
-                                                <div class="h-2 w-full max-w-[15%] rounded-xs bg-violet-500"></div>
-                                            </div>
-                                            <div class="mb-1 flex flex-wrap items-center gap-4">
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="kt-badge-success size-2 rounded-full"></span>
-                                                    <span class="text-foreground text-sm font-normal">Metronic</span>
-                                                </div>
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="kt-badge-destructive size-2 rounded-full"></span>
-                                                    <span class="text-foreground text-sm font-normal">Bundle</span>
-                                                </div>
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="kt-badge-info size-2 rounded-full"></span>
-                                                    <span class="text-foreground text-sm font-normal">MetronicNest</span>
-                                                </div>
-                                            </div>
-                                            <div class="border-input border-b"></div>
-                                            <div class="grid gap-3">
-                                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                                    <div class="flex items-center gap-1.5">
-                                                        <i class="ki-filled ki-shop text-muted-foreground text-base"></i>
-                                                        <span class="text-mono text-sm font-normal">Online Store</span>
-                                                    </div>
-                                                    <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">0</span>
-                                                        <span class="lg:text-right">
-                                                            <i class="ki-filled ki-arrow-up text-green-500"></i>
-                                                            3.9%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                                    <div class="flex items-center gap-1.5">
-                                                        <i class="ki-filled ki-facebook text-muted-foreground text-base"></i>
-                                                        <span class="text-mono text-sm font-normal">Facebook</span>
-                                                    </div>
-                                                    <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">0</span>
-                                                        <span class="lg:text-right">
-                                                            <i class="ki-filled ki-arrow-down text-destructive"></i>
-                                                            0.7%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                                    <div class="flex items-center gap-1.5">
-                                                        <i class="ki-filled ki-instagram text-muted-foreground text-base"></i>
-                                                        <span class="text-mono text-sm font-normal">Instagram</span>
-                                                    </div>
-                                                    <div class="text-foreground flex items-center gap-6 text-sm font-medium">
-                                                        <span class="lg:text-right">0</span>
-                                                        <span class="lg:text-right">
-                                                            <i class="ki-filled ki-arrow-up text-green-500"></i>
-                                                            8.2%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>--}}
-                            <!-- end: grid -->
                         </div>
                     </div>
                     <!-- End of Container -->
                 </main>
                 <!-- End of Content -->
-                @livewire("metronic.layouts.constructors.footers")
+                @livewire("metronic.dashboards.layouts.constructors.footers")
             </div>
             <!-- End of Wrapper -->
         </div>
@@ -914,11 +590,7 @@
                                                         <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-3.png")) }}" />
                                                         <div class="flex flex-col">
                                                             <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Tyler Hero</a>
-                                                            <span class="text-2sm text-muted-foreground font-normal">
-                                                                tyler.hero
-                                                                @gmail.com
-                                                                connections
-                                                            </span>
+                                                            <span class="text-2sm text-muted-foreground font-normal">tyler.hero @gmail.com connections</span>
                                                         </div>
                                                     </div>
                                                     <div class="flex items-center gap-2.5">
@@ -938,11 +610,7 @@
                                                         <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-1.png")) }}" />
                                                         <div class="flex flex-col">
                                                             <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Esther Howard</a>
-                                                            <span class="text-2sm text-muted-foreground font-normal">
-                                                                esther.howard
-                                                                @gmail.com
-                                                                connections
-                                                            </span>
+                                                            <span class="text-2sm text-muted-foreground font-normal">esther.howard @gmail.com connections</span>
                                                         </div>
                                                     </div>
                                                     <div class="flex items-center gap-2.5">
@@ -1252,11 +920,7 @@
                                                 <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-3.png")) }}" />
                                                 <div class="flex flex-col">
                                                     <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Tyler Hero</a>
-                                                    <span class="text-2sm text-muted-foreground font-normal">
-                                                        tyler.hero
-                                                        @gmail.com
-                                                        connections
-                                                    </span>
+                                                    <span class="text-2sm text-muted-foreground font-normal">tyler.hero @gmail.com connections</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2.5">
@@ -1276,11 +940,7 @@
                                                 <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-1.png")) }}" />
                                                 <div class="flex flex-col">
                                                     <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Esther Howard</a>
-                                                    <span class="text-2sm text-muted-foreground font-normal">
-                                                        esther.howard
-                                                        @gmail.com
-                                                        connections
-                                                    </span>
+                                                    <span class="text-2sm text-muted-foreground font-normal">esther.howard @gmail.com connections</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2.5">
@@ -1300,11 +960,7 @@
                                                 <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-11.png")) }}" />
                                                 <div class="flex flex-col">
                                                     <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Jacob Jones</a>
-                                                    <span class="text-2sm text-muted-foreground font-normal">
-                                                        jacob.jones
-                                                        @gmail.com
-                                                        connections
-                                                    </span>
+                                                    <span class="text-2sm text-muted-foreground font-normal">jacob.jones @gmail.com connections</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2.5">
@@ -1324,11 +980,7 @@
                                                 <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-5.png")) }}" />
                                                 <div class="flex flex-col">
                                                     <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">TLeslie Alexander</a>
-                                                    <span class="text-2sm text-muted-foreground font-normal">
-                                                        leslie.alexander
-                                                        @gmail.com
-                                                        connections
-                                                    </span>
+                                                    <span class="text-2sm text-muted-foreground font-normal">leslie.alexander @gmail.com connections</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2.5">
@@ -1348,11 +1000,7 @@
                                                 <img alt="" class="size-9 shrink-0 rounded-full" src="{{ asset(Storage::url("media/avatars/300-2.png")) }}" />
                                                 <div class="flex flex-col">
                                                     <a class="text-mono hover:text-primary mb-px text-sm font-semibold" href="#">Cody Fisher</a>
-                                                    <span class="text-2sm text-muted-foreground font-normal">
-                                                        cody.fisher
-                                                        @gmail.com
-                                                        connections
-                                                    </span>
+                                                    <span class="text-2sm text-muted-foreground font-normal">cody.fisher @gmail.com connections</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2.5">

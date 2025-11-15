@@ -26,7 +26,7 @@
         <!--Megamenu Contaoner-->
         <div class="flex items-stretch" id="megaMenuContainer">
             <!--Megamenu Inner-->
-            <div
+            {{--<div
                 class="flex items-stretch [--kt-reparent-mode:prepend] [--kt-reparent-target:body] lg:[--kt-reparent-mode:prepend] lg:[--kt-reparent-target:#megaMenuContainer]"
                 data-kt-reparent="true"
             >
@@ -1307,7 +1307,7 @@
                     <!--End of Megamenu-->
                 </div>
                 <!--End of Megamenu Wrapper-->
-            </div>
+            </div>--}}
             <!--End of Megamenu Inner-->
         </div>
         <!--End of Megamenu Contaoner-->

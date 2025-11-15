@@ -3,6 +3,7 @@
 /** End Do not edit */
 
 @import "../vendors/keenicons/styles.bundle.css";
+@import "../css/mapbox.css";
 @import "@keenthemes/ktui/dist/styles.css";
 @import "apexcharts/dist/apexcharts.css";
 @import "../css/styles.css";
