@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
             laravel({
                 input: [
                     `resources/theme/${theme}/css/app.css`,
-                    `resources/theme/${theme}/js/app.js`,
+                    `resources/theme/${theme}/js/app.ts`,
                 ],
                 refresh: true,
             }),
@@ -51,6 +51,24 @@ export default defineConfig(({ mode }) => {
                 deleteOriginFile: false,
             }),
         ],
+        build: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        const chunks = [
+                            ['vendor-mapbox', ['mapbox-gl', '@mapbox']],
+                            ['vendor-apexcharts', ['apexcharts']],
+                            ['vendor-jquery', ['jquery']],
+                        ];
+
+                        const found = chunks.find(([_, libs]) => libs.some(lib => id.includes(lib)));
+                        if (found) return found[0];
+
+                        return 'vendor';
+                    }
+                }
+            },
+        },
         server : {
             host: '0.0.0.0'
         }

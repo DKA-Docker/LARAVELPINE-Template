@@ -9,10 +9,15 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index;
 use Illuminate\Support\Facades\Route;
 
+/** name Route dashboards */
 Route::prefix('dashboards')->name('dashboards.')->group(function () {
-    Route::resource('/',Index::class);
+    /** Name Route dashboards.apps */
+    Route::resource('/', Index::class);
+    /** Name Group Route dashboards.apps */
     Route::prefix('apps')->name('apps.')->group(function () {
+        /** Name Route dashboards.apps.deliveries */
         Route::prefix('deliveries')->name('deliveries.')->group(function () {
+            /** Name Route dashboards.apps.deliveries member of resource */
             Route::resource('requests', Requests::class);
             Route::resource('tasks', Tasks::class);
             Route::resource('reports', Reports::class);
