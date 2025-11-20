@@ -28,10 +28,7 @@ class RequestsRepository implements RequestsRepositoryInterface {
          * jika data inputan kosong maka semua variable di set null
          */
         $defaults = [
-            'id' => (string) Str::uuid(),
-            'information' => null,
-            'credential' => null,
-            'contact' => null,
+
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
         $data = array_merge($defaults, $args);
