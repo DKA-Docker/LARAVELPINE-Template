@@ -2,15 +2,16 @@ import { defineConfig, loadEnv } from "vite"
 import laravel from "laravel-vite-plugin"
 import tailwindcss from "@tailwindcss/vite"
 import viteTsconfigPaths from "vite-tsconfig-paths"
+import svgr from "@svgr/rollup";
 import viteCompression from "vite-plugin-compression"
 import { ViteMinifyPlugin } from "vite-plugin-minify"
 import obfuscatorPlugin from "vite-plugin-javascript-obfuscator"
 import * as zlib from "node:zlib"
 import * as fs from "node:fs"
-import path from "node:path"
+import * as path from "node:path"
 
 export default defineConfig((config) => {
-    /*const env = loadEnv(config.mode, process.cwd(), '')*/
+    const env = loadEnv(config.mode, process.cwd(), '')
     const rootDir = process.cwd();
     const themesRoot = path.join(rootDir, 'resources/theme');
     const inputAssets = fs.readdirSync(themesRoot, { withFileTypes: true })
@@ -27,7 +28,7 @@ export default defineConfig((config) => {
                 fs.existsSync(path.join(rootDir, relPath)),
             );
         });
-
+    /** returning config **/
     return {
         plugins: [
             laravel({
@@ -36,6 +37,7 @@ export default defineConfig((config) => {
             }),
             tailwindcss(),
             viteTsconfigPaths(),
+            svgr(),
             obfuscatorPlugin({
                 apply: 'build',
                 options: {
@@ -64,26 +66,8 @@ export default defineConfig((config) => {
                 deleteOriginFile: false,
             }),
         ],
-        build: {
-            output: {
-                manualChunks(id) {
-                    if (id.includes('node_modules')) {
-                        const chunks = [
-                            ['vendor-mapbox', ['mapbox-gl', '@mapbox']],
-                            ['vendor-apexcharts', ['apexcharts']],
-                            ['vendor-jquery', ['jquery']],
-                        ];
-
-                        const found = chunks.find(([_, libs]) => libs.some(lib => id.includes(lib)));
-                        if (found) return found[0];
-
-                        return 'vendor';
-                    }
-                }
-            },
-        },
         server : {
             host: '0.0.0.0'
         }
     }
-})
+});
