@@ -2,13 +2,12 @@
 
 namespace App\Repositories\Apps\Deliveries\Requests;
 
-use App\Models\Apps\Deliveries\Requests;
+use App\Models\Apps\Deliveries\AppsDeliveriesRequests;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class RequestsRepository implements RequestsRepositoryInterface {
 
@@ -19,10 +18,10 @@ class RequestsRepository implements RequestsRepositoryInterface {
         $this->faker = Factory::create();
     }
     /**
-     * @param ...$args Requests
-     * @return Requests|Model
+     * @param ...$args AppsDeliveriesRequests
+     * @return AppsDeliveriesRequests|Model
      */
-    public function Create(...$args): Model|Requests
+    public function Create(...$args): Model|AppsDeliveriesRequests
     {
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null
@@ -33,29 +32,29 @@ class RequestsRepository implements RequestsRepositoryInterface {
         /** @var $data $data lakukan merge data untuk payload dengan data default */
         $data = array_merge($defaults, $args);
 
-        return Requests::query()->create($data);
+        return AppsDeliveriesRequests::query()->create($data);
     }
 
     public function ReadAll(): Collection
     {
         /** **/
-        return Requests::all();
+        return AppsDeliveriesRequests::all();
     }
 
     public function query(): Builder
     {
-        return Requests::query();
+        return AppsDeliveriesRequests::query();
     }
 
     public function with(array $relations): Builder
     {
-        return Requests::with($relations);
+        return AppsDeliveriesRequests::with($relations);
     }
 
 
-    public function Find($id) : null|Collection|Requests|Model
+    public function Find($id) : null|Collection|AppsDeliveriesRequests|Model
     {
-        return Requests::query()->findOrFail($id);
+        return AppsDeliveriesRequests::query()->findOrFail($id);
     }
 
     public function Delete($id) : bool|null

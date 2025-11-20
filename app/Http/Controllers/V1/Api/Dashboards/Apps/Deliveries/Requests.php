@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries;
 
+use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -9,6 +10,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Requests extends Controller
 {
+
+    protected RequestsRepository $repository;
+    public function __construct()
+    {
+        $this->repository = new RequestsRepository();
+    }
+
     /**
      * @param Request $request For GET / Requests
      * @return JsonResponse
@@ -17,7 +25,7 @@ class Requests extends Controller
         /**
          * Filtering Request Is JSON Format & header accept is application/json
          */
-        if (! $request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
+        /*if (! $request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
             return response()->json(
                 data: array(
                     'status' => false,
@@ -29,13 +37,14 @@ class Requests extends Controller
                     'Content-Type' => 'application/json',
                 )
             );
-        }
+        }*/
 
         return response()->json(
             data: array(
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
+                'data' => $this->repository->ReadAll(),
             ),
             status: Response::HTTP_OK,
             headers: array(
@@ -52,7 +61,7 @@ class Requests extends Controller
         /**
          * Filtering Request Is JSON Format & header accept is application/json
          */
-        if (!$request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
+        /*if (!$request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
             return response()->json(
                 data: array(
                     'status' => false,
@@ -64,13 +73,14 @@ class Requests extends Controller
                     'Content-Type' => 'application/json',
                 )
             );
-        }
+        }*/
 
         return response()->json(
             data: array(
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
+                'data' => $this->repository->ReadAll()
             ),
             status: Response::HTTP_OK,
             headers: array(
