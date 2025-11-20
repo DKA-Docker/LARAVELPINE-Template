@@ -7,8 +7,10 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index;
+use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use Illuminate\Support\Facades\Route;
 
+Route::resource('/', FrontendIndex::class);
 /** name Route dashboards */
 Route::prefix('dashboards')->name('dashboards.')->group(function () {
     /** Name Route dashboards.apps */

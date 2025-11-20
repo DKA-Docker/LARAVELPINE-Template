@@ -561,7 +561,7 @@
         </div>
 
         @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
-            @vite(["resources/theme/" . config("theme.name", "laravel") . "/js/app.js"])
+            @vite(["resources/theme/" . config("theme.name", "laravel") . "/js/app.ts"])
         @endif
     </body>
 </html>
