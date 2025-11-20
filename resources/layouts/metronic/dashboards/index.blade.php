@@ -30,7 +30,7 @@
         <div class="kt-wrapper flex grow flex-col">
             @livewire(config('theme.name', 'laravel').".dashboards.layouts.constructors.headers")
             <!-- Content -->
-            <main class="grow pt-5" id="content" role="content">
+            <main class="grow pt-5" id="content" role="main">
                 <!-- Container -->
                 <div class="kt-container-fixed" id="contentContainer"></div>
                 <!-- End of Container -->
