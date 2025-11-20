@@ -33,7 +33,7 @@
             data-kt-scrollable-wrappers="#sidebar_content"
             id="sidebar_scrollable"
         >
-            @livewire("metronic.dashboards.layouts.constructors.components.menu")
+            @livewire(config('theme.name', 'laravel').".dashboards.layouts.constructors.components.menu")
         </div>
     </div>
 </div>

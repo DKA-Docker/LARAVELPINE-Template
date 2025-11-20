@@ -54,10 +54,10 @@
         <!-- Page -->
         <!-- Main -->
         <div class="flex grow">
-            @livewire("metronic.dashboards.layouts.constructors.sidebars")
+            @livewire(config('theme.name', 'laravel').".dashboards.layouts.constructors.sidebars")
             <!-- Wrapper -->
             <div class="kt-wrapper flex grow flex-col">
-                @livewire("metronic.dashboards.layouts.constructors.headers")
+                @livewire(config('theme.name', 'laravel').".dashboards.layouts.constructors.headers")
                 <!-- Content -->
                 <main class="grow pt-5" id="content" role="content">
                     <!-- Container -->
@@ -676,7 +676,7 @@
                     <!-- End of Container -->
                 </main>
                 <!-- End of Content -->
-                @livewire("metronic.dashboards.layouts.constructors.footers")
+                @livewire(config('theme.name', 'laravel').".dashboards.layouts.constructors.footers")
             </div>
             <!-- End of Wrapper -->
         </div>
