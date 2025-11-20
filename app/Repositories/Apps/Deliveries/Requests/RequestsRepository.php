@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Apps\Deliveries;
+namespace App\Repositories\Apps\Deliveries\Requests;
 
 use App\Models\Apps\Deliveries\Requests;
 use Faker\Factory;

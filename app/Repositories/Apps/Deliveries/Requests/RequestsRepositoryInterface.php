@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Repositories\Apps\Deliveries;
+namespace App\Repositories\Apps\Deliveries\Requests;
 
-use App\Models\Base\Accounts\Accounts;
-use App\Models\Dashboards\Apps\Deliveries\Requests;
+use App\Models\Apps\Deliveries\Requests;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
