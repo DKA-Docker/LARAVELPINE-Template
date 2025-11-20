@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\V1\Dashboards\Apps;
+namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class Trackings extends Controller
 {
