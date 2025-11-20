@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\V1\Dashboards\Apps\Deliveries\Reports;
-use App\Http\Controllers\V1\Dashboards\Apps\Deliveries\Requests;
-use App\Http\Controllers\V1\Dashboards\Apps\Deliveries\Tasks;
-use App\Http\Controllers\V1\Dashboards\Apps\Trackings;
-use App\Http\Controllers\V1\Dashboards\Index;
+namespace Routes;
+
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Reports;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
+use App\Http\Controllers\V1\Frontend\Dashboards\Index;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('dashboards')->name('dashboards.')->group(function () {
