@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Dashboards;
+namespace App\Http\Controllers\v1\Dashboards\Apps;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
-class Index extends Controller
+class Trackings extends Controller
 {
-    //
     public function index(): Factory|View
     {
-        return view('dashboards.index');
+        return view('dashboards.apps.trackings');
     }
 }

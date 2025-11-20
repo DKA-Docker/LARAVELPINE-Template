@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboards\Apps\Deliveries;
+namespace App\Http\Controllers\v1\Dashboards\Apps\Deliveries;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;

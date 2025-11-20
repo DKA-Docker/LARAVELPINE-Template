@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Dashboards\Apps\Deliveries;
+namespace App\Http\Controllers\v1\Dashboards;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
-class Tasks extends Controller
+class Index extends Controller
 {
+    //
     public function index(): Factory|View
     {
-        return view('dashboards.apps.deliveries.tasks');
+        return view('dashboards.index');
     }
 }
