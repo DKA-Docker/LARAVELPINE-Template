@@ -1,0 +1,54 @@
+name: Action Stagging CI/CD Backend
+
+on:
+  push:
+    branches:
+      - staging
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  # -------------------------------------------------
+  SSH_HOST: ${{ secrets.DEV_SSH_HOST }}
+  SSH_PORT: ${{ secrets.DEV_SSH_PORT }}
+  SSH_USER: ${{ secrets.DEV_SSH_USER }}
+  SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+  # -------------------------------------------------
+  GITHUB_REPO_ID: ${{ github.repository_id }}
+  GITHUB_REPO_NAME: ${{ github.repository }}
+  GITHUB_REF_NAME: ${{ github.ref_name }}
+  GITHUB_SHA_ID: ${{ github.sha }}
+  # -------------------------------------------------
+  COMPOSE_FILE: compose.${{ github.variant }}.yml
+  # -------------------------------------------------
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code dari Git Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login ke Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_TOKEN }}
+
+      - name: Build dan Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          labels: |
+            org.opencontainers.image.title=${{ github.repository }}
+            org.opencontainers.image.description=repository ${{ env.GITHUB_REPO_NAME }} : ${{ env.GITHUB_REF_NAME }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ env.GITHUB_REF_NAME }}-${{ env.GITHUB_SHA_ID }}

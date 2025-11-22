@@ -11,7 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 class Requests extends Controller
 {
 
+    /**
+     * @var RequestsRepository $repository
+     * @desc create request Repository
+     */
     protected RequestsRepository $repository;
+
     public function __construct()
     {
         $this->repository = new RequestsRepository();
@@ -22,23 +27,6 @@ class Requests extends Controller
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse {
-        /**
-         * Filtering Request Is JSON Format & header accept is application/json
-         */
-        /*if (! $request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
-            return response()->json(
-                data: array(
-                    'status' => false,
-                    'code' => Response::HTTP_NOT_ACCEPTABLE,
-                    'msg' => 'Invalid request method.',
-                ),
-                status: Response::HTTP_NOT_ACCEPTABLE,
-                headers: array(
-                    'Content-Type' => 'application/json',
-                )
-            );
-        }*/
-
         return response()->json(
             data: array(
                 'status' => true,
@@ -58,23 +46,6 @@ class Requests extends Controller
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse {
-        /**
-         * Filtering Request Is JSON Format & header accept is application/json
-         */
-        /*if (!$request->isJson() || ! str_contains((string) $request->header('Accept'), 'application/json')) {
-            return response()->json(
-                data: array(
-                    'status' => false,
-                    'code' => Response::HTTP_NOT_ACCEPTABLE,
-                    'msg' => 'Invalid request method.',
-                ),
-                status: Response::HTTP_NOT_ACCEPTABLE,
-                headers: array(
-                    'Content-Type' => 'application/json',
-                )
-            );
-        }*/
-
         return response()->json(
             data: array(
                 'status' => true,

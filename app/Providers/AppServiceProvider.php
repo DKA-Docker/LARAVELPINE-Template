@@ -23,7 +23,11 @@ class AppServiceProvider extends ServiceProvider
         /** @var
          * $paths muat semua migration sub dir dan semua dalam dir migration
          */
-        $paths = File::directories(database_path('migrations'));
+        $paths = array_merge(
+            [database_path('migrations')],                    // root
+            File::allDirectories(database_path('migrations')) // semua subdir rekursif
+        );
+
         $this->loadMigrationsFrom($paths);
     }
 }

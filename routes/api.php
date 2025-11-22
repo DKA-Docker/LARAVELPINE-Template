@@ -7,7 +7,7 @@ use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings;
 use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
-Route::name('api.')->group(function () {
+Route::middleware(['Api'])->name('api.')->group(function () {
     /** name Route api.dashboards */
     Route::prefix('dashboards')->name('dashboards.')->group(function () {
         /** Name Route api.dashboards.apps */

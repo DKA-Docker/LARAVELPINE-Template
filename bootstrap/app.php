@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\Api\JSONCheckRequest;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsCustomer;
 use Illuminate\Foundation\Application;
@@ -14,7 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias(['isAdmin' => IsAdmin::class, 'isCustomer' => IsCustomer::class]);
+        $middleware->alias([
+            'isAdmin' => IsAdmin::class,
+            'isCustomer' => IsCustomer::class,
+        ]);
+
+        $middleware->group('Api', [
+            JSONCheckRequest::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
