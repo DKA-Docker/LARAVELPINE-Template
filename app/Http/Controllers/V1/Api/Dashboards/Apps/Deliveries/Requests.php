@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Requests extends Controller
 {
-
     /**
      * @var RequestsRepository $repository
      * @desc create request Repository
