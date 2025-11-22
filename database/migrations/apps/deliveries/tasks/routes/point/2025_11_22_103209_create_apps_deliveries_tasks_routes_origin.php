@@ -42,14 +42,12 @@ return new class extends Migration
              * Koordinat longitude dari titik origin.
              * Menggunakan tipe double untuk menyimpan presisi koordinat.
              */
-            $table->double('longitude', 15, 8)
-                ->comment('Longitude');
+            $table->double('longitude')->comment('Longitude');
             /**
              * Koordinat latitude dari titik origin.
              * Menggunakan tipe double untuk menyimpan presisi koordinat.
              */
-            $table->double('latitude', 15, 8)
-                ->comment('Latitude');
+            $table->double('latitude')->comment('Latitude');
             /**
              * Urutan origin jika nanti digunakan dalam sequence rute.
              * Default bernilai 0 dan di-index untuk mempermudah pengurutan.
