@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Apps\Deliveries\Tasks;
 
-use App\Models\Apps\Deliveries\AppsDeliveriesTasks;
+use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;

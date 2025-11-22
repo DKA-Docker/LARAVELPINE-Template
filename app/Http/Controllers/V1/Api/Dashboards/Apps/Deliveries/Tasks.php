@@ -15,11 +15,9 @@ class Tasks extends Controller {
      */
     protected TasksRepository $repository;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->repository = new TasksRepository();
     }
-
     /**
      * @param Request $request For GET / Requests
      * @return JsonResponse
@@ -38,7 +36,6 @@ class Tasks extends Controller {
             )
         );
     }
-
     /**
      * @param Request $request For POST / Requests
      * @return JsonResponse
