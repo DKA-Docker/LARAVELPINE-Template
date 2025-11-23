@@ -34,7 +34,7 @@ class AccountsCredentials extends Model
     /**
      * Auto-hash password on set
      */
-    public function setPasswordAttribute($value)
+    public function setPasswordAttribute($value): void
     {
         // Kalau nilainya null atau kosong, abaikan
         if (empty($value)) return;

@@ -7,12 +7,13 @@ use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role;
 
 class AppsDeliveriesTasks extends Model
 {
     /** @use HasFactory<AppsDeliveriesTasksFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType = 'string';

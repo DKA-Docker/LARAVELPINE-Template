@@ -21,7 +21,6 @@ class HelpersExceptionsHttpCode
         1451 => 409, // Cannot delete/update parent row: FK constraint fails
         1452 => 409, // Cannot add or update child row: FK constraint fails
         1213 => 409, // Deadlock found when trying to get lock
-
         // ===== UNPROCESSABLE ENTITY (422) =====
         1048 => 422, // Column cannot be null
         1364 => 422, // Field doesn't have a default value
@@ -33,10 +32,8 @@ class HelpersExceptionsHttpCode
         3819 => 422, // CHECK constraint violated (MySQL 8+)
         3822 => 422, // Validation error for generated column
         4025 => 422, // CONSTRAINT CHECK failed
-
         // ===== SERVICE UNAVAILABLE (503) =====
         1205 => 503, // Lock wait timeout exceeded
-
         // ===== BAD REQUEST (400) =====
         1064 => 400, // SQL syntax error
         1052 => 400, // Column ambiguous
@@ -47,18 +44,15 @@ class HelpersExceptionsHttpCode
         1148 => 400, // Command not allowed
         1690 => 400, // Division by 0
         1365 => 400, // Division by 0 (variant)
-
         // ===== NOT FOUND (404) =====
         1146 => 404, // Table doesn't exist
         1054 => 404, // Unknown column
         1051 => 404, // Unknown table
         1049 => 404, // Unknown database
-
         // ===== AUTH/PERM (dipetakan aman ke 503) =====
         1045 => 503, // Access denied for user
         1142 => 503, // Command denied
         1143 => 503, // Select denied
-
         // ===== INSUFFICIENT STORAGE (507) =====
         1114 => 507, // Table is full
         1021 => 507, // Disk full / write failed

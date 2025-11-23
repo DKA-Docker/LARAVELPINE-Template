@@ -4,9 +4,10 @@ namespace App\Models\Apps\Deliveries\Tasks\Routes\Point;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppsDeliveriesTaskRoutesOrigin extends Model {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType = 'string';
