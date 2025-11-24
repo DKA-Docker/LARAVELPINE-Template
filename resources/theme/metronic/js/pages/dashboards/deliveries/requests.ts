@@ -17,6 +17,10 @@ $(window).on('load', function () {
     axios({
         url: `${FullUriCurrentURL}`,
         method: "GET",
+        headers: {
+            Accept: "application/json",
+
+        }
     }).then((res) => {
         console.log(res.data);
     }).catch((error) => {

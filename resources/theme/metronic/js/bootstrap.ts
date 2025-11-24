@@ -18,6 +18,7 @@ declare global {
 window.$ = window.jQuery = jQuery;
 
 window.axios = axios;
+//window.axios.defaults.headers.common['X-CSRF-TOKEN'] = $("meta[name='csrf-token']").attr("content");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 window.ApexCharts = ApexCharts;
