@@ -26,6 +26,7 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 compose.yml
+package-lock.json
 
 **/caddy
 frankenphp
