@@ -19,6 +19,8 @@ $(window).on('load', function () {
         method: "GET",
     }).then((res) => {
         console.log(res.data);
+    }).catch((error) => {
+        console.error(error);
     })
 
 });
