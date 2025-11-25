@@ -52,7 +52,7 @@ class Requests extends Controller
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
-                'data' => $this->repository->ReadAll()
+                'data' => $this->service->ReadAll()
             ),
             status: Response::HTTP_OK,
             headers: array(
