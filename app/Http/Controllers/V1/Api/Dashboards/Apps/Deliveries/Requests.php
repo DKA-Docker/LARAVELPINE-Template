@@ -33,7 +33,10 @@ class Requests extends Controller
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
-                'data' => $this->service->ReadAll(),
+                'data' => $this->service->ReadAll($request),
+                'meta' => array(
+                    'count' => $this->service->Count(),
+                )
             ),
             status: Response::HTTP_OK,
             headers: array(

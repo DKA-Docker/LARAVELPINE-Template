@@ -4,6 +4,7 @@ namespace App\Services\Resources\Deliveries\Requests;
 
 use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class ResourcesDeliveriesRequestsServices
 {
@@ -19,8 +20,13 @@ class ResourcesDeliveriesRequestsServices
     {
         return $this->repository->create();
     }
-    public function ReadAll(): Collection
+    public function ReadAll(Request $request): Collection
     {
-        return $this->repository->ReadAll();
+        return $this->repository->ReadAll($request);
+    }
+
+    public function Count(): int
+    {
+        return $this->repository->Count();
     }
 }

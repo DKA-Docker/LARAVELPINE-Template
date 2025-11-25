@@ -14,15 +14,18 @@ $(window).on('load', function () {
 
         // 👇 ambil CONTAINER, bukan TABLE
         const container = document.querySelector(
-            '.dashboards-apps-deliveries-requests .kt-scrollable-x-auto'
+            '.table-container'
         ) as HTMLElement;
 
         const datatable = new KTDataTable(container, {
             apiEndpoint: `${FullUriCurrentURL}`,
-            pageSize: 20,
+            pageSize: 5,
             columns: {
-                name: {
+                account: {
                     title: 'Name',
+                    render: (value, row) => {
+                        return `${row.account.information.first_name} ${row.account.information.last_name}`
+                    }
                 },
                 email: {
                     title: 'Email',
@@ -30,13 +33,22 @@ $(window).on('load', function () {
                 },
                 created_at: { title: 'Created At' },
             },
+            mapRequest: (queryParams: URLSearchParams) => {
+                // KTDataTable sudah isi page & size disini
+                const page = queryParams.get('page');
+                const size = queryParams.get('size');
+
+                $(".show_from").html(size);
+                return queryParams;
+            },
             mapResponse: (res) => {
                 // res = response JSON mentah dari API
                 // sesuaikan sama format Laravel kamu
                 // misal: { data: [...], total: 123, ... }
+                $(".show_total").html(res.meta.count)
                 return {
                     data: res.data ?? [],
-                    totalCount: res.data.length ?? 0,
+                    totalCount: res.meta.count ?? 0,
                 };
             },
         });

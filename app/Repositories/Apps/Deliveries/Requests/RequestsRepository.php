@@ -8,6 +8,7 @@ use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class RequestsRepository implements RequestsRepositoryInterface {
 
@@ -35,12 +36,28 @@ class RequestsRepository implements RequestsRepositoryInterface {
         return AppsDeliveriesRequests::query()->create($data);
     }
 
-    public function ReadAll(): Collection
+    public function ReadAll(Request $request): Collection
     {
-        /** **/
-        return AppsDeliveriesRequests::all();
+        // ambil dari query param, kasih default
+        $page = (int) $request->get('page', 1);   // halaman
+        $size = (int) $request->get('size', 10);  // jumlah per halaman
+
+        // guard dikit biar nggak aneh
+        $page = max($page, 1);
+        $size = $size < 1 ? 10 : $size;
+
+        $offset = ($page - 1) * $size;
+
+        return AppsDeliveriesRequests::query()
+            ->skip($offset)   // atau ->offset($offset)
+            ->take($size)     // atau ->limit($size)
+            ->get();
     }
 
+    public function Count(): int
+    {
+        return AppsDeliveriesRequests::query()->count();
+    }
     public function query(): Builder
     {
         return AppsDeliveriesRequests::query();
