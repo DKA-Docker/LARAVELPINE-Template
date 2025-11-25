@@ -11,10 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class TasksRepository implements TasksRepositoryInterface {
 
+    /**
+     * init data faker function for default used data
+     * @var Generator
+     */
     protected Generator $faker;
 
     public function __construct()
     {
+        /**
+         * add faker instance for default used data create
+         */
         $this->faker = Factory::create();
     }
     /**
