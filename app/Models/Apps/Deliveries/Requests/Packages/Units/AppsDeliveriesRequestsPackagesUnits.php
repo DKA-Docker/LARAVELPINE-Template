@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Apps\Deliveries\Requests\Packages;
+namespace App\Models\Apps\Deliveries\Requests\Packages\Units;
 
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnitsFactory;

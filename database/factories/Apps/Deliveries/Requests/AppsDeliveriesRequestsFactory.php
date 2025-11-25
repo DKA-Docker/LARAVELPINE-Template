@@ -15,7 +15,7 @@ class AppsDeliveriesRequestsFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'account' => $account->id,
-            'name' => $this->faker->name()
+            'name' => $this->faker->realText()
         ];
     }
 }
