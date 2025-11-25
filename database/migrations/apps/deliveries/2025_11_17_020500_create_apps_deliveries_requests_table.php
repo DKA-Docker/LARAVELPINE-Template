@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('apps_deliveries_requests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('sender_request')->comment('adalah akun yang melakukan request pengiriman')->constrained('accounts' )->onDelete('cascade');
+            $table->foreignUuid('account')->comment('adalah akun yang melakukan request pengiriman')->constrained('accounts' )->onDelete('cascade');
             $table->string('name')->comment('adalah nama item request yang dilakukan penginputan di sisi CS Admin');
             $table->softDeletes()->comment('parameter soft deleted');
             $table->timestamps();
