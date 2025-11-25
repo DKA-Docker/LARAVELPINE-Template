@@ -41,22 +41,40 @@ class TasksRepository implements TasksRepositoryInterface {
         return AppsDeliveriesTasks::all();
     }
 
+    /**
+     * adalah function untuk melakukan query data builder untuk class model ini
+     * @return Builder
+     */
     public function query(): Builder
     {
         return AppsDeliveriesTasks::query();
     }
 
+    /**
+     * create data with relation data in this model data builder
+     * @param array $relations
+     * @return Builder
+     */
     public function with(array $relations): Builder
     {
         return AppsDeliveriesTasks::with($relations);
     }
 
-
+    /**
+     * for find data in the model data for this data collection
+     * @param $id
+     * @return Collection|AppsDeliveriesTasks|Model|null
+     */
     public function Find($id) : null|Collection|AppsDeliveriesTasks|Model
     {
         return AppsDeliveriesTasks::query()->findOrFail($id);
     }
 
+    /**
+     * add function data for deleted data for this model data
+     * @param $id
+     * @return bool|null
+     */
     public function Delete($id) : bool|null
     {
         $data = $this->Find($id);
