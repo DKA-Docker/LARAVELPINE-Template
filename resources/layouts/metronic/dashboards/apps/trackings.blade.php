@@ -1151,4 +1151,5 @@
     <!-- Scripts -->
     <!-- End of Scripts -->
     </body>
+    <div class="dashboards-apps-trackings"/>
 </x-metronic.dashboards.layouts.container>

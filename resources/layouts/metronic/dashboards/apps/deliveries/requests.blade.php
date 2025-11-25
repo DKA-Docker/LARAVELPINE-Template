@@ -1,4 +1,5 @@
 <x-metronic.dashboards.layouts.container>
+    <div class="dashboards-apps-deliveries-requests"/>
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
     <!-- Theme Mode -->
     <script>
