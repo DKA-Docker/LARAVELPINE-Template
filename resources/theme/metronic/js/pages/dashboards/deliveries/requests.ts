@@ -2,7 +2,7 @@ import axios from "axios";
 import $ from "jquery";
 import URI from "urijs";
 
-const elementExists = $("dashboards-apps-deliveries-requests");
+const elementExists = $("div.dashboards-apps-deliveries-requests");
 
 $(window).on('load', function () {
     if (elementExists.length > 0){

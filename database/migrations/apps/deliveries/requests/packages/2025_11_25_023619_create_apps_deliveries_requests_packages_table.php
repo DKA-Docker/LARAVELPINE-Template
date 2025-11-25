@@ -23,6 +23,18 @@ return new class extends Migration
             $table->bigInteger('qty')->comment("adalah jumlah item yang di request yang akan di kirim di dalam pengiriman");
             /**  table yang relevant ke table unit packages */
             $table->foreignUuid('unit')->comment('adalah unit data yang dipakai untuk mengukur satuan')->constrained('apps_deliveries_requests_packages_units' )->onDelete('cascade');
+            /** Buat Note Untuk Request packages Ini */
+            $table->string("note")->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik')->nullable();
+            /** Adalah Dimensi Panjang (witdh) */
+            $table->integer('dimension_width')->nullable()->comment("adalah dimension width")->default(0);
+            /** Adalah Dimensi Lebar (height) */
+            $table->integer('dimension_height')->nullable()->comment("adalah dimension height")->default(0);
+            /** adalah dimensi Tinggi (weight) */
+            $table->integer('dimension_weight')->nullable()->comment("adalah dimension weight")->default(0);
+            /** adalah satuan berat dalam Ons */
+            $table->integer('heavy')->comment("adalah jumlah Berat Barang Dalam ons")->default(0);
+            /** Menandai packages Ini Sebagai Barang Mudah Pecah */
+            $table->boolean('is_fragile')->comment("Menandai packages ini sebagai Barang Mudah Pecah")->default(false);
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
             $table->softDeletes()->comment('parameter soft deleted');
             /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
