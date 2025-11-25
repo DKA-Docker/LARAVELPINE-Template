@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries;
 
 use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
+use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,14 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 class Requests extends Controller
 {
     /**
-     * @var RequestsRepository $repository
+     * @var ResourcesDeliveriesRequestsServices $service
      * @desc create request Repository
      */
-    protected RequestsRepository $repository;
+    protected ResourcesDeliveriesRequestsServices $service;
 
     public function __construct()
     {
-        $this->repository = new RequestsRepository();
+        $this->service = new ResourcesDeliveriesRequestsServices();
     }
 
     /**
@@ -31,7 +32,7 @@ class Requests extends Controller
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
-                'data' => $this->repository->ReadAll(),
+                'data' => $this->service->ReadAll(),
             ),
             status: Response::HTTP_OK,
             headers: array(
