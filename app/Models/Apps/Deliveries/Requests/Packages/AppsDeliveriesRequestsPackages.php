@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models\Apps\Deliveries\Requests;
+namespace App\Models\Apps\Deliveries\Requests\Packages;
 
-use Database\Factories\Apps\Deliveries\Requests\AppsDeliveriesRequestsFactory;
+use Database\Factories\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackagesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AppsDeliveriesRequests extends Model {
-
-    /** @use HasFactory<AppsDeliveriesRequestsFactory> */
+class AppsDeliveriesRequestsPackages extends Model
+{
+    /** @use HasFactory<AppsDeliveriesRequestsPackagesFactory> */
     use HasFactory, SoftDeletes;
 
     public $incrementing = false;
@@ -28,5 +28,4 @@ class AppsDeliveriesRequests extends Model {
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
 }
