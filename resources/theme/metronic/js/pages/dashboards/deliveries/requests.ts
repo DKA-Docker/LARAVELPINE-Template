@@ -1,12 +1,17 @@
 import axios from "axios";
 import $ from "jquery";
 import URI from "urijs";
+import moment from "moment-timezone";
+import "moment/locale/id.js"
 import { KTDataTable } from "@keenthemes/ktui/lib/esm"
 
 const elementExists = $("div.dashboards-apps-deliveries-requests");
 
 $(window).on('load', function () {
     if (elementExists.length > 0) {
+
+        moment.locale("id")
+
         const FullUriCurrentURL = URI(window.location);
         const segs = FullUriCurrentURL.segment();
         segs.unshift('api');
@@ -14,7 +19,7 @@ $(window).on('load', function () {
 
         // 👇 ambil CONTAINER, bukan TABLE
         const container = document.querySelector(
-            '.table-container'
+            '#table-container'
         ) as HTMLElement;
 
         const datatable = new KTDataTable(container, {
@@ -31,7 +36,12 @@ $(window).on('load', function () {
                     title: 'Email',
                     render: (value, row: any) => row.account?.contact?.email ?? '-'
                 },
-                created_at: { title: 'Created At' },
+                created_at: {
+                    title: 'Dibuat',
+                    render: (value, row) => {
+                        return moment(row.created_at).format("HH:mm DD MMMM YYYY")
+                    }
+                },
             },
             mapRequest: (queryParams: URLSearchParams) => {
                 // KTDataTable sudah isi page & size disini

@@ -1,5 +1,4 @@
 <x-metronic.dashboards.layouts.container>
-    <div class="dashboards-apps-deliveries-requests"/>
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
     <!-- Theme Mode -->
     <script>
@@ -59,7 +58,7 @@
                 <!-- Container -->
                 <div class="kt-container-fixed">
                     <div class="grid gap-5 lg:gap-7.5">
-                        <div class="kt-card kt-card-grid min-w-full table-container">
+                        <div class="kt-card kt-card-grid min-w-full" id="table-container">
                             <div class="kt-card-header flex-wrap gap-2">
                                 <h3 class="kt-card-title text-sm">Showing <span class="show_from">0</span> of <span class="show_total"></span> users</h3>
                                 <div class="flex flex-wrap gap-2 lg:gap-5">
@@ -107,7 +106,7 @@
                                                 </th>
                                                 <th scope="col" data-kt-datatable-column="created_at">
                                                     <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Created At</span>
+                                                        <span class="kt-table-col-label">Dibuat</span>
                                                         <span class="kt-table-col-sort"></span>
                                                     </span>
                                                 </th>
@@ -1215,6 +1214,7 @@
     </div>
     <!-- End of Page -->
     <!-- Scripts -->
+    <div class="dashboards-apps-deliveries-requests"/>
     <!-- End of Scripts -->
     </body>
 </x-metronic.dashboards.layouts.container>
