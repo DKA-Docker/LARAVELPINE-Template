@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignUuid('unit')->comment('adalah unit data yang dipakai untuk mengukur satuan')->constrained('apps_deliveries_requests_packages_units' )->onDelete('cascade');
             /** Buat Note Untuk Request packages Ini */
             $table->string("note")->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik')->nullable();
-            /** Adalah Dimensi Panjang (witdh) */
+            /** Adalah Dimensi Panjang (width) */
             $table->integer('dimension_width')->nullable()->comment("adalah dimension width")->default(0);
             /** Adalah Dimensi Lebar (height) */
             $table->integer('dimension_height')->nullable()->comment("adalah dimension height")->default(0);
