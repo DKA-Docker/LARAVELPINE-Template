@@ -91,7 +91,32 @@
                                 <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="10">
                                     <div class="kt-scrollable-x-auto">
                                         <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true" id="table-delivery-request">
-
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" data-kt-datatable-column="email">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Email</span>
+                                                        <span class="kt-table-col-sort"></span> <!-- boleh dihapus kalau nggak mau sorting -->
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="name">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Name</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="created_at">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Created At</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                     <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
