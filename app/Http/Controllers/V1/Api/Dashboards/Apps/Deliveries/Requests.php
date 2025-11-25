@@ -26,7 +26,8 @@ class Requests extends Controller
      * @param Request $request For GET / Requests
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse {
+    public function index(Request $request)
+    {
         return response()->json(
             data: array(
                 'status' => true,
