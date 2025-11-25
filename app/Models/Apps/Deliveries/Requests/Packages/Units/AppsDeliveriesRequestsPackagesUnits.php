@@ -6,6 +6,7 @@ use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnitsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,10 +35,10 @@ class AppsDeliveriesRequestsPackagesUnits extends Model
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function account(): HasOne
+    public function account(): BelongsTo
     {
-        return $this->hasOne(Accounts::class, 'account')->withDefault();
+        return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 }

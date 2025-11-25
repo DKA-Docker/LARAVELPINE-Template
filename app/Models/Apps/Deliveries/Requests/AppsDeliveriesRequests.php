@@ -32,7 +32,7 @@ class AppsDeliveriesRequests extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account','account.credential'];
+    protected $with = ['account'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
