@@ -14,6 +14,11 @@ class ResourcesDeliveriesRequestsServices
         $this->repository = new RequestsRepository();
     }
 
+
+    public function Create()
+    {
+        return $this->repository->create();
+    }
     public function ReadAll(): Collection
     {
         return $this->repository->ReadAll();
