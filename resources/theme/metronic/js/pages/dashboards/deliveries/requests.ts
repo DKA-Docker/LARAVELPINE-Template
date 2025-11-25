@@ -1,7 +1,7 @@
 import axios from "axios";
 import $ from "jquery";
 import URI from "urijs";
-import { KTDataTable } from "@keenthemes/ktui/src/components/datatable"
+import { KTDataTable } from "@keenthemes/ktui/lib/esm"
 
 const elementExists = $("div.dashboards-apps-deliveries-requests");
 
