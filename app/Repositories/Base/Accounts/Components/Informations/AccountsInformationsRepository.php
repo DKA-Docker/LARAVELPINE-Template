@@ -8,10 +8,19 @@ use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Support\Str;
 
+/**
+ * @class AccountsInformationsRepository AccountsInformationsRepository
+ * @description Halo Ini Adalah Class Repostory
+ */
 class AccountsInformationsRepository implements AccountsInformationsRepositoryInterface {
 
     protected Generator $faker;
 
+    /**
+     * Create a new account information record
+     *
+     *
+     */
     public function __construct()
     {
         $this->faker = Factory::create();
