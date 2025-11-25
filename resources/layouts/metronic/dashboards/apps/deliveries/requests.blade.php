@@ -90,10 +90,39 @@
                             <div class="kt-card-content">
                                 <div class="grid" data-kt-datatable="true" data-kt-datatable-page-size="10">
                                     <div class="kt-scrollable-x-auto">
-                                        <table id="tables-request" class="kt-table table-auto" data-kt-datatable-table="true">
+                                        <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true" id="table-delivery-request">
                                             <thead>
+                                            <tr>
+                                                <th class="w-[60px] text-center">
+                                                    <input class="kt-checkbox kt-checkbox-sm" data-kt-datatable-check="true" type="checkbox" />
+                                                </th>
+                                                <th class="min-w-[200px]">
+                                                            <span class="kt-table-col asc">
+                                                                <span class="kt-table-col-label">Nama Akun</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                </th>
+                                                <th class="min-w-[250px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">Tanggal Di Buat</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                </th>
+                                                <th class="min-w-[190px]">
+                                                            <span class="kt-table-col">
+                                                                <span class="kt-table-col-label">Tanggal Di Edit</span>
+                                                                <span class="kt-table-col-sort"></span>
+                                                            </span>
+                                                </th>
+                                                <th class="w-[160px]">
+                                                    <span class="kt-table-col">
+                                                        <span>Aksi</span>
+                                                    </span>
+                                                </th>
+                                            </tr>
                                             </thead>
                                             <tbody>
+
                                             </tbody>
                                         </table>
                                     </div>
