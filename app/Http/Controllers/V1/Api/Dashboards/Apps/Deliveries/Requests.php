@@ -58,4 +58,22 @@ class Requests extends Controller
             )
         );
     }
+
+    /**
+     * is endpoint for update or patch data for data updating
+     * @param Request $request
+     * @return void
+     */
+    public function update(Request $request) {
+
+    }
+
+    /**
+     * is endpoint for deleted data for this data request
+     * @param Request $request
+     * @return void
+     */
+    public function destroy(Request $request) {
+
+    }
 }
