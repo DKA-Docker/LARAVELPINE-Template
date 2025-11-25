@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Apps\Deliveries;
+namespace App\Models\Apps\Deliveries\Requests;
 
 use Database\Factories\Apps\Deliveries\Requests\AppsDeliveriesRequestsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +14,7 @@ class AppsDeliveriesRequests extends Model {
 
     public $incrementing = false;
     protected $keyType = 'string';
+
 
 
 }

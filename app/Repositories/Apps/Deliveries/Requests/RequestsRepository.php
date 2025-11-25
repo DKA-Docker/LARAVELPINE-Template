@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Apps\Deliveries\Requests;
 
-use App\Models\Apps\Deliveries\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
