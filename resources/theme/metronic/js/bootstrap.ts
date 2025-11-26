@@ -3,6 +3,7 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import jQuery from 'jquery';
+import moment from "moment-timezone";
 
 // Biar TypeScript nggak ngamuk kalau kita tempel ke window
 declare global {
@@ -20,6 +21,9 @@ window.$ = window.jQuery = jQuery;
 window.axios = axios;
 //window.axios.defaults.headers.common['X-CSRF-TOKEN'] = $("meta[name='csrf-token']").attr("content");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+/** Set Locale Menjadi Indonesia **/
+moment.locale("id")
 
 window.ApexCharts = ApexCharts;
 

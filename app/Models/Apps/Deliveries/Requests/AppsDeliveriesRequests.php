@@ -2,11 +2,14 @@
 
 namespace App\Models\Apps\Deliveries\Requests;
 
+use App\Models\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackages;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\AppsDeliveriesRequestsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,7 +35,7 @@ class AppsDeliveriesRequests extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account'];
+    protected $with = ['account','packages'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -41,6 +44,22 @@ class AppsDeliveriesRequests extends Model {
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    /**
+     * Satu Request punya banyak Packages
+     * foreign key di tabel packages = request
+     * local key di tabel ini = id
+     *
+     * @return HasMany
+     */
+    public function packages(): HasMany
+    {
+        return $this->hasMany(
+            AppsDeliveriesRequestsPackages::class,
+            'request',  // foreign key di tabel packages
+            'id'        // local key di tabel requests
+        );
     }
 
 }

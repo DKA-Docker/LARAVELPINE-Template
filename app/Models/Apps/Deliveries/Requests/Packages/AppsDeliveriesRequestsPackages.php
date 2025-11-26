@@ -2,12 +2,13 @@
 
 namespace App\Models\Apps\Deliveries\Requests\Packages;
 
+use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnits;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackagesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppsDeliveriesRequestsPackages extends Model
@@ -41,6 +42,8 @@ class AppsDeliveriesRequestsPackages extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $with = ['account','unit'];
+
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
      * @return BelongsTo
@@ -52,7 +55,12 @@ class AppsDeliveriesRequestsPackages extends Model
 
     public function request(): BelongsTo
     {
-        return $this->BelongsTo(AppsDeliveriesRequestsPackages::class, 'request')->withDefault();
+        return $this->BelongsTo(AppsDeliveriesRequests::class, 'request','id')->withDefault();
+    }
+
+    public function unit(): BelongsTo
+    {
+        return $this->BelongsTo(AppsDeliveriesRequestsPackagesUnits::class, 'unit','id')->withDefault();
     }
 
 }

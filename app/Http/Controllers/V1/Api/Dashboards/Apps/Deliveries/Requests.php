@@ -19,6 +19,9 @@ class Requests extends Controller
 
     public function __construct()
     {
+        /**
+         * Ambil Service Request
+         */
         $this->service = new ResourcesDeliveriesRequestsServices();
     }
 
@@ -33,9 +36,12 @@ class Requests extends Controller
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully Read Data',
-                'data' => $this->service->ReadAll($request),
+                'data' => $this->service->AutomaticallyPaginationTable($request),
                 'meta' => array(
-                    'count' => $this->service->Count(),
+                    'count' => array(
+                        'current' => $this->service->AutomaticallyPaginationTable($request)->count(),
+                        'total' => $this->service->Count(),
+                    ),
                 )
             ),
             status: Response::HTTP_OK,

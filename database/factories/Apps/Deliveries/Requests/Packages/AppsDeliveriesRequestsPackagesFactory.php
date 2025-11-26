@@ -22,7 +22,6 @@ class AppsDeliveriesRequestsPackagesFactory extends Factory
             'request' => $request->id,
             'name' => $this->faker->title(),
             'qty' => $this->faker->numberBetween(1, 100),
-
             'unit' => $unit->id,
             'created_at' => now(),
             'updated_at' => now(),

@@ -15,7 +15,7 @@ interface RequestsRepositoryInterface
 {
     public function Create(...$args): Model|AppsDeliveriesRequests;
 
-    public function ReadAll(Request $request): Collection;
+    public function ReadAll(): Collection;
 
     public function Find($id) : null|Collection|AppsDeliveriesRequests|Model;
 
