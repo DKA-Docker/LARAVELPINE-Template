@@ -50,7 +50,7 @@
                         </div>
                         <div class="flex items-center gap-2.5">
                             <a class="kt-btn kt-btn-outline" href="#">Import CSV</a>
-                            <a class="kt-btn kt-btn-primary" href="#">Add Request</a>
+                            <a class="kt-btn kt-btn-primary" href="{{ route(preg_replace('/\.[^.]+$/', '.create.index', Route::currentRouteName())) }}">Add Request</a>
                         </div>
                     </div>
                 </div>

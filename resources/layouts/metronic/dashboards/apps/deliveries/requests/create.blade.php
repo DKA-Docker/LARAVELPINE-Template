@@ -40,9 +40,6 @@
                         <div class="flex flex-col justify-center gap-2">
                             <h1 class="text-mono text-xl leading-none font-medium">Buat Data Request Baru</h1>
                         </div>
-                        <div class="flex items-center gap-2.5">
-                            <a class="kt-btn kt-btn-primary" href="#">Kembali</a>
-                        </div>
                     </div>
                 </div>
                 <!-- End of Container -->
@@ -67,9 +64,14 @@
                             </div>
                         </div>
                         @livewire("metronic.dashboards.apps.deliveries.requests.components.packages-items-layout")
-                        <div class="flex justify-end">
-                            <button class="kt-btn kt-btn-primary">
-                                Save Changes
+                        <div class="flex gap-4 justify-end">
+                            <a
+                                class="kt-btn kt-btn-destructive"
+                                href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}">
+                                Batalkan
+                            </a>
+                            <button class="kt-btn kt-btn-secondary">
+                                Buat Data
                             </button>
                         </div>
                     </div>
