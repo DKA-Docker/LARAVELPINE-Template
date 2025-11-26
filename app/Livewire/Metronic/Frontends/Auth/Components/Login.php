@@ -5,24 +5,34 @@ namespace App\Livewire\Metronic\Frontends\Auth\Components;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
 
 class Login extends Component
 {
 
+
     public string $username = '';
     public string $password = '';
+    /** @var bool $remember login Auth Credential */
     public bool $remember = false;
+    /** @var AuthAccountsServices
+     * Buat Instance protector untuk Auth Services
+     */
     protected AuthAccountsServices $authServices;
 
     public function __construct(){
+        /**
+         * Memuat service yang di butuhkan di dalam aplikasi service agar dilakukan authentification yang sesuai di dalam aplikasi
+         */
         $this->authServices = new AuthAccountsServices();
     }
 
-    public function store()
+    /**
+     * @return false|RedirectResponse
+     * Disini adalah method yang di parsing dari live:wire agar memicu metode ini di dalam component
+     */
+    public function store(): false|RedirectResponse
     {
         // validasi dulu
         $this->validate([
@@ -37,11 +47,16 @@ class Login extends Component
 
         if (!$result['status']){
             $this->addError('username', 'Nama pengguna atau kata sandi salah.');
+            /** Hentikan logic agar command di bawah tidak berjalan */
             return false;
         }
+        /** Lakukan Redirect ke halaman dashboards jika result.status bernilai true */
         return redirect()->route('dashboards.index');
     }
 
+    /**
+     * @return Factory|View
+     * Function Ini yang digunakan dalam mwerender document di dalam data aplikasi agar diteruskan di livewire di dalam blade component     */
     public function render(): Factory|View
     {
         return view('frontends.auth.components.login');
