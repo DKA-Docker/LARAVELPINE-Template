@@ -8,9 +8,14 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
+use App\Http\Controllers\V1\Frontend\Auth\Index as FrontendAuth;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('/', FrontendIndex::class);
+Route::prefix('auth')->name('auth.')->group(function () {
+    /** Name Route dashboards.apps */
+    Route::resource('/', FrontendAuth::class);
+});
 /** name Route dashboards */
 Route::prefix('dashboards')->name('dashboards.')->group(function () {
     /** Name Route dashboards.apps */
