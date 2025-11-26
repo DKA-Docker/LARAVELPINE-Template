@@ -2868,7 +2868,7 @@
                             </span>
                             <input class="kt-switch" data-kt-theme-switch-state="dark" data-kt-theme-switch-toggle="true" name="check" type="checkbox" value="1" />
                         </div>
-                        <a class="kt-btn kt-btn-outline w-full justify-center" href="#">Log out</a>
+                        @livewire(config('theme.name', 'laravel').".frontends.auth.components.logout")
                     </div>
                 </div>
             </div>

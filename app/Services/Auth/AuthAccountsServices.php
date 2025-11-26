@@ -131,7 +131,7 @@ class AuthAccountsServices {
     public function verify(): array
     {
         /** @var $auth Authenticatable ambil data verification dari data user yang login saat ini. */
-        $auth = Auth::guard('account')->user();
+        $auth = Auth::guard('web')->user();
         /** Check If Auth Exists */
         if ($auth) {
             /** @var  $account Model adalah data load relation  */
@@ -153,32 +153,45 @@ class AuthAccountsServices {
         ];
     }
 
-    public function revoke(Request $request): array
+    public function revoke(): array
     {
-        /** @var  $authenticate Authenticatable get Session Logged */
-        $authenticate = Auth::user();
-        /** Check Logged session is Exists */
-        if ($authenticate){
-            /** @var $account mixed cari id usernya dari session */
-            $account = $this->account->Find($authenticate->getAuthIdentifier());
-            /** Load semua relasi akun */
-            $data = $account->load(['information', 'credential', 'contact']);
-            /** Ambil Data User dari Request. kemudian ambil access token saat ini dan lakukan penghapusan */
-            $request->user()->currentAccessToken()->delete();
-            /** Kembalikan Response Bahwa Data Telah di hapus */
-            return [
-                "status" => true,
-                "code" => 200,
-                "msg" => "Successfully revoke session",
-                "data" => $data, // ubah akun dan relasi ke array
-            ];
-        }else{
-            /** Kembalikan Response bahwa data telah dihapus di dalam sessions */
+        /** @var \Illuminate\Contracts\Auth\Authenticatable|null $authenticate */
+        $authenticate = Auth::guard('web')->user();
+
+        // Kalau nggak ada yang login, balikin info aja
+        if (!$authenticate) {
             return [
                 "status" => false,
-                "code" => 401,
-                "msg" => "Session Not Exists",
+                "code"   => 401,
+                "msg"    => "Session Not Exists",
             ];
         }
+
+        /** @var \App\Models\Base\Accounts\Accounts $account */
+        $account = $this->account->Find($authenticate->getAuthIdentifier());
+        $data    = $account->load(['information', 'credential', 'contact']);
+
+        // Opsional: kalau suatu saat kamu pakai Sanctum juga, tetap aman:
+        if (method_exists($authenticate, 'currentAccessToken')) {
+            $token = $authenticate->currentAccessToken();
+            if ($token) {
+                $token->delete(); // nggak bakal error walau tanpa token
+            }
+        }
+
+        // Logout session web
+        Auth::guard('web')->logout();
+
+        // Invalidate & regenerate CSRF biar clean
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return [
+            "status" => true,
+            "code"   => 200,
+            "msg"    => "Successfully revoke session",
+            "data"   => $data,
+        ];
     }
+
 }
