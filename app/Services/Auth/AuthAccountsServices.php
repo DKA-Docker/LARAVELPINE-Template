@@ -69,7 +69,7 @@ class AuthAccountsServices {
             ];
         }
 
-        Auth::guard('account')->login($account);
+        Auth::guard('web')->login($account);
         request()->session()->regenerate();
 
         return [
