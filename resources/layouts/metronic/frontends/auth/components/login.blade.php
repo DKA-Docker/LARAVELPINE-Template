@@ -39,6 +39,7 @@
                 <input
                     type="text"
                     class="kt-input"
+                    name="username"
                     placeholder="xxxxxxxx"
                     wire:model.defer="username"
                 />
@@ -60,6 +61,7 @@
                     <input
                         type="password"
                         placeholder="Enter Password"
+                        name="password"
                         wire:model.defer="password"
                     />
                     <button
