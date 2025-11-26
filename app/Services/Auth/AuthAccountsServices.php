@@ -155,7 +155,7 @@ class AuthAccountsServices {
 
     public function revoke(): array
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable|null $authenticate */
+        /** @var Authenticatable|null $authenticate */
         $authenticate = Auth::guard('web')->user();
 
         // Kalau nggak ada yang login, balikin info aja
@@ -167,7 +167,7 @@ class AuthAccountsServices {
             ];
         }
 
-        /** @var \App\Models\Base\Accounts\Accounts $account */
+        /** @var Accounts $account */
         $account = $this->account->Find($authenticate->getAuthIdentifier());
         $data    = $account->load(['information', 'credential', 'contact']);
 

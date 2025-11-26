@@ -2,8 +2,6 @@
 
 use App\Http\Middleware\Api\JSONCheckRequest;
 use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\IsAdmin;
-use App\Http\Middleware\IsCustomer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,12 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        /**
+         * Ubah Middleware bawaan dari laravel untuk menjadi alias auth
+         */
         $middleware->alias([
-            'isAdmin' => IsAdmin::class,
             'auth' => Authenticate::class,
-            'isCustomer' => IsCustomer::class,
         ]);
-
+        /** Grouping Route dengan middleware api */
         $middleware->group('Api', [
             JSONCheckRequest::class,
         ]);
