@@ -29,10 +29,9 @@ class Login extends Component
     }
 
     /**
-     * @return false|RedirectResponse
      * Disini adalah method yang di parsing dari live:wire agar memicu metode ini di dalam component
      */
-    public function store(): false|RedirectResponse
+    public function store()
     {
         // validasi dulu
         $this->validate([

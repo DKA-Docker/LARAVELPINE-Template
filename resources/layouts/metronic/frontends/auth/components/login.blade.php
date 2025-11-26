@@ -1,11 +1,14 @@
 <div class="flex items-center justify-center grow bg-center bg-no-repeat page-bg">
-    <div class="kt-card max-w-[370px] w-full">
+    <div class="kt-card max-w-[450px] w-full">
         <form
             wire:submit.prevent="store"
             id="sign_in_form"
             class="kt-card-content flex flex-col gap-5 p-10"
         >
             <div class="text-center mb-2.5">
+                <h1 class="text-lg mb-2.5">
+                    {{ config('app.name', 'Laravel') }}
+                </h1>
                 <h3 class="text-lg font-medium text-mono leading-none mb-2.5">
                     Masuk Untuk Menggunakan Layanan
                 </h3>
