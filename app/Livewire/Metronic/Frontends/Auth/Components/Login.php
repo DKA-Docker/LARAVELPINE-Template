@@ -45,7 +45,7 @@ class Login extends Component
         ));
 
         if (!$result['status']){
-            $this->addError('username', 'Nama pengguna atau kata sandi salah.');
+            $this->addError('errors', $result['msg']);
             /** Hentikan logic agar command di bawah tidak berjalan */
             return false;
         }

@@ -30,8 +30,14 @@
                 <span class="border-t border-border w-full"></span>
                 <span class="text-xs text-muted-foreground font-medium uppercase">Or</span>
                 <span class="border-t border-border w-full"></span>
+
             </div>
 
+            <div class="items-center text-center w-full">
+                @error('errors')
+                <p class="text-lg text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
             <div class="flex flex-col gap-1">
                 <label class="kt-form-label font-normal text-mono">
                     Nama Pengguna
@@ -43,9 +49,6 @@
                     placeholder="xxxxxxxx"
                     wire:model.defer="username"
                 />
-                @error('username')
-                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                @enderror
             </div>
 
             <div class="flex flex-col gap-1">
