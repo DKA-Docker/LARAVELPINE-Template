@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries;
 
-use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +28,7 @@ class Requests extends Controller
      * @param Request $request For GET / Requests
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request) : JsonResponse
     {
         return response()->json(
             data: array(
