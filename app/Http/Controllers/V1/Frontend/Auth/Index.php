@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class Index extends Controller
 {
@@ -14,4 +15,6 @@ class Index extends Controller
     {
         return view('frontends.auth.index');
     }
+
+
 }

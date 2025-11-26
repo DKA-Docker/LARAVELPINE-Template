@@ -11,13 +11,15 @@ use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use App\Http\Controllers\V1\Frontend\Auth\Index as FrontendAuth;
 use Illuminate\Support\Facades\Route;
 
+/** Sumber Halaman Frontend Utama */
 Route::resource('/', FrontendIndex::class);
+/** Grouping Ke Group Auth Di Dalam Web Routes*/
 Route::prefix('auth')->name('auth.')->group(function () {
     /** Name Route dashboards.apps */
     Route::resource('/', FrontendAuth::class);
 });
 /** name Route dashboards */
-Route::prefix('dashboards')->name('dashboards.')->group(function () {
+Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->group(function () {
     /** Name Route dashboards.apps */
     Route::resource('/', Index::class);
     /** Name Group Route dashboards.apps */

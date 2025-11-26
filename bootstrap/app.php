@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\Api\JSONCheckRequest;
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsCustomer;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'isAdmin' => IsAdmin::class,
+            'auth' => Authenticate::class,
             'isCustomer' => IsCustomer::class,
         ]);
 
