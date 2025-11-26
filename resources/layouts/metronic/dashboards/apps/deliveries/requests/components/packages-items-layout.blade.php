@@ -5,6 +5,7 @@
         </h3>
 
         <div class="flex justify-end">
+            {{-- Saat Tombol Tambah item di tekan. maka akan memicu method add menggunakan wire:click --}}
             <button class="kt-btn kt-btn-secondary" type="button" wire:click="add">
                 Tambah Item
             </button>
@@ -13,17 +14,12 @@
 
     <div class="kt-card-content grid gap-5 lg:py-7.5">
         <div class="w-full">
-
             {{-- 1 WRAPPER accordion, di dalamnya banyak item --}}
             <div data-kt-accordion="true"
                  data-kt-accordion-expand-all="true"
                  class="my-3">
 
                 @foreach ($items as $index => $item)
-                    @php
-                        $contentId = "accordion-content-{$index}";
-                    @endphp
-
                     <div class="kt-accordion-item not-last:border-b border-b-border my-3"
                          data-kt-accordion-item="true"
                          wire:key="item-{{ $index }}"
@@ -31,8 +27,8 @@
 
                         {{-- TOGGLE --}}
                         <div class="kt-accordion-toggle py-4 kt-card-header bg-gray-100"
-                             data-kt-accordion-toggle="#{{ $contentId }}"
-                             aria-controls="{{ $contentId }}">
+                             data-kt-accordion-toggle="#{{"accordion-content-$index"}}"
+                             aria-controls="{{"accordion-content-$index"}}">
                             <h3 class="kt-card-title">
                                 Item #{{ $index + 1 }}
                             </h3>
@@ -48,7 +44,7 @@
 
                         {{-- CONTENT --}}
                         <div class="kt-accordion-content hidden p-2 border-b border-b-border"
-                             id="{{ $contentId }}"
+                             id="{{"accordion-content-$index"}}"
                              style="height: 0;">
                             <div class="w-full">
                                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
