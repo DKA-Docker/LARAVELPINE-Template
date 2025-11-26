@@ -44,6 +44,11 @@ $(window).on('load', function () {
         const datatable = new KTDataTable(container, {
             apiEndpoint: `${FullUriCurrentURL}`,
             pageSize: 5,
+            /** wajib **/
+            requestHeaders: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
             columns: {
                 account: {
                     title: 'Name',
