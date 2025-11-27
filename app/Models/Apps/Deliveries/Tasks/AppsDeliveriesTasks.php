@@ -6,6 +6,7 @@ use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role;
@@ -35,10 +36,18 @@ class AppsDeliveriesTasks extends Model
         'time_updated' => 'datetime',
     ];
 
-    public function account(): HasOne
+    protected $with = ['account'];
+
+    /**
+     * Relation Data Account Untuk Table Ini Di dalam database
+     * @return BelongsTo
+     */
+    public function account(): BelongsTo
     {
-        return $this->hasOne(Accounts::class, 'account')->withDefault();
+        return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
+
+
 
 
 }
