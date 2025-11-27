@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\V1\Api\Dashboards\Apps;
+namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class Trackings extends Controller
+class Index extends Controller
 {
     /** is function running if construct
      * Data Is Processing init class Call

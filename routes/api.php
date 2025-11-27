@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
-use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests\Index;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Tasks;
-use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings as Trackings;
 use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
@@ -15,11 +15,13 @@ Route::middleware(['Api'])->name('api.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */
             Route::prefix('deliveries')->name('deliveries.')->group(function () {
                 /** Name Route api.dashboards.apps.deliveries member of resource */
-                Route::resource('requests', Index::class);
+                Route::resource('requests', Requests\Index::class);
                 Route::resource('tasks', Tasks::class);
                 Route::resource('reports', Reports::class);
             });
-            Route::resource('trackings', Trackings::class);
+            Route::prefix('trackings')->name('trackings.')->group(function () {
+                Route::resource('/', Trackings\Index::class);
+            });
         });
     });
 });
