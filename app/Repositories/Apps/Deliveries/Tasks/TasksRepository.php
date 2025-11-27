@@ -87,4 +87,9 @@ class TasksRepository implements TasksRepositoryInterface {
         $data = $this->Find($id);
         return $data->delete();
     }
+
+    public function Count(): int
+    {
+        return AppsDeliveriesTasks::query()->count();
+    }
 }

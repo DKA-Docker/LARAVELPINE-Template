@@ -4,9 +4,9 @@ namespace Routes;
 
 use App\Http\Controllers\V1\Frontend\Auth\Index as FrontendAuth;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Reports;
-use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index as DeliveriesRequest;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Create as DeliveriesRequestCreate;
-use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index as DeliveriesRequest;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
@@ -32,7 +32,11 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 Route::resource('/', DeliveriesRequest::class);
                 Route::resource('create', DeliveriesRequestCreate::class);
             });
-            Route::resource('tasks', Tasks::class);
+            Route::prefix('tasks')->name('tasks.')->group(function () {
+                Route::resource('/',Index::class);
+                Route::resource('tasks', Index::class);
+
+            });
             Route::resource('reports', Reports::class);
         });
         Route::prefix('trackings')->name('trackings.')->group(function () {

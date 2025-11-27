@@ -5,5 +5,6 @@ import "./core.bundle.js";
 import "./pages/dashboards/trackings.ts";
 import "./pages/dashboards/deliveries/requests/index";
 import "./pages/dashboards/deliveries/requests/create";
+import "./pages/dashboards/deliveries/tasks/index";
 //import "./layouts/demo1.js";
 

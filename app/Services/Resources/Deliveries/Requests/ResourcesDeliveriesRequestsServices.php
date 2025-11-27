@@ -37,7 +37,7 @@ class ResourcesDeliveriesRequestsServices
          * default ke 1 kalau orang cuma kirim size
          */
         $page = (int) $request->get('page', 1);
-        $size = $request->get('size');
+        $size = (int) $request->get('size', 1);
 
         /**
          * kalau size nggak dikirim, jangan dipaksa 10 → anggap no limit

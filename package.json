@@ -5,7 +5,9 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "start": "concurrently \"php artisan serve\" \"yarn run dev\" \"php artisan schedule:work\""
+        "start": "concurrently \"php artisan serve\" \"yarn run dev\" \"php artisan schedule:work\"",
+        "start-ryan": "concurrently \"php artisan serve\" \"yarn run dev\" \"php artisan schedule:work\""
+
     },
     "devDependencies": {
         "@svgr/rollup": "^8.1.0",
