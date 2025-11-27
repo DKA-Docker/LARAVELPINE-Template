@@ -16,6 +16,11 @@ class ResourcesDeliveriesTaksServices
         $this->repository = new TasksRepository();
     }
 
+    public function ReadAll(): Collection
+    {
+        return $this->repository->ReadAll();
+    }
+
     public function AutomaticallyPaginationTable(Request $request): Collection
     {
         if (!$request->hasAny(['page', 'size'])) {

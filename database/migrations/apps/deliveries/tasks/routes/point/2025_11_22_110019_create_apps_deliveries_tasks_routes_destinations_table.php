@@ -30,7 +30,6 @@ return new class extends Migration
              * Many-to-one: satu route dapat memiliki banyak destinasi.
              */
             $table->foreignUuid('route')
-                ->nullable()
                 ->index()
                 ->comment('route induk untuk destinasi ini')
                 ->constrained('apps_deliveries_tasks_routes', 'id')

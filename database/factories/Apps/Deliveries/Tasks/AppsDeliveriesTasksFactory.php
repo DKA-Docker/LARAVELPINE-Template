@@ -13,7 +13,7 @@ class AppsDeliveriesTasksFactory extends Factory
     {
 
         $accounts = Accounts::inRandomOrder()->first();
-        $tasksRoutes = AppsDeliveriesTasksRoutes::factory()->create();
+        $tasksRoutes = AppsDeliveriesTasksRoutes::inRandomOrder()->first();
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts->id,

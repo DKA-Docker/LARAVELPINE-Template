@@ -3,6 +3,7 @@
 
 namespace App\Models\Apps\Deliveries\Tasks\Routes;
 
+use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTasksRoutesDestinations;
 use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTasksRoutesOrigins;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesFactory;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,16 +36,21 @@ class AppsDeliveriesTasksRoutes extends Model
         'deleted_at' => 'datetime',
     ];
 
-    protected $with = ['account','origin'];
+    protected $with = ['account','origins','destinations'];
 
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function origin(): BelongsTo
+    public function origins(): HasOne
     {
-        return $this->belongsTo(AppsDeliveriesTasksRoutesOrigins::class, 'id','route')->withDefault();
+        return $this->hasOne(AppsDeliveriesTasksRoutesOrigins::class, 'route', 'id');
+    }
+
+    public function destinations(): HasMany
+    {
+        return $this->hasMany(AppsDeliveriesTasksRoutesDestinations::class,'route','id');
     }
 
 }

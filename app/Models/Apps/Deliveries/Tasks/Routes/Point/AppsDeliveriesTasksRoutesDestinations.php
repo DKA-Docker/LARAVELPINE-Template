@@ -2,10 +2,12 @@
 
 namespace App\Models\Apps\Deliveries\Tasks\Routes\Point;
 
+use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use Database\Factories\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -36,5 +38,14 @@ class AppsDeliveriesTasksRoutesDestinations extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    public function route(): BelongsTo
+    {
+        return $this->belongsTo(
+            AppsDeliveriesTasksRoutes::class,
+            'route',   // foreign key di tabel origins
+            'id'       // primary key di tabel routes
+        );
+    }
 
 }
