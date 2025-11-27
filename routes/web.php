@@ -37,6 +37,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
         });
         Route::prefix('trackings')->name('trackings.')->group(function () {
             Route::resource('/', Trackings::class);
+
         });
     });
 });

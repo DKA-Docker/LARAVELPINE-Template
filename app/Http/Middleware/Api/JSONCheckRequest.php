@@ -15,7 +15,7 @@ class JSONCheckRequest
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->isJson() || !str_contains((string) $request->header('Accept'), 'application/json')) {
+        /*if (!$request->isJson() || !str_contains((string) $request->header('Accept'), 'application/json')) {
             return response()->json(
                 data: array(
                     'status' => false,
@@ -27,7 +27,7 @@ class JSONCheckRequest
                     'Content-Type' => 'application/json',
                 )
             );
-        }
+        }*/
         return $next($request);
     }
 }
