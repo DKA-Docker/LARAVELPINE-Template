@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2.5">
-                            <a class="kt-btn kt-btn-outline" href="{{ route(preg_replace('/\.[^.]+$/', '.import.index', Route::currentRouteName())) }}">Import</a>
+                            <a class="kt-btn kt-btn-outline">Import</a>
                             <a class="kt-btn kt-btn-primary" href="{{ route(preg_replace('/\.[^.]+$/', '.create.index', Route::currentRouteName())) }}">Add Request</a>
                         </div>
                     </div>
