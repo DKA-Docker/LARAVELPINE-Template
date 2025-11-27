@@ -3,6 +3,7 @@
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings as Trackings;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +18,12 @@ Route::middleware(['Api'])->name('api.')->group(function () {
             Route::prefix('deliveries')->name('deliveries.')->group(function () {
                 /** Name Route api.dashboards.apps.deliveries member of resource */
                 Route::resource('requests', Requests\Index::class);
-                Route::resource('tasks', Tasks\Index::class);
+                Route::prefix('tasks')->name('tasks.')->group(function () {
+                    Route::resource('/', Tasks\Index::class);
+                    Route::prefix('routes')->name('routes.')->group(function () {
+                        Route::resource('/', Routes\Index::class);
+                    });
+                });
                 Route::resource('reports', Reports::class);
             });
             Route::prefix('trackings')->name('trackings.')->group(function () {

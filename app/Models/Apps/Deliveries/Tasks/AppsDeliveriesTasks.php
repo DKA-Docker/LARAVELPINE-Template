@@ -5,6 +5,7 @@ namespace App\Models\Apps\Deliveries\Tasks;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Spatie\Permission\Models\Role;
 class AppsDeliveriesTasks extends Model
 {
     /** @use HasFactory<AppsDeliveriesTasksFactory> */
-    use HasFactory, SoftDeletes;
+    use HasUuids, HasFactory, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -52,9 +53,9 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function route(): HasOne
+    public function route(): BelongsTo
     {
-        return $this->hasOne(AppsDeliveriesTasksRoutes::class, 'id','route')->withDefault();
+        return $this->belongsTo(AppsDeliveriesTasksRoutes::class, 'route')->withDefault();
     }
 
 
