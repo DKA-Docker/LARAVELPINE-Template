@@ -148,6 +148,40 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3 w-full">
+                                    <div class="col-span-2">
+                                        <div class="flex flex-col gap-3">
+                                            <label class="kt-form-label font-normal text-mono pl-2">Alamat</label>
+                                            <div class="w-full">
+                                                <div id="map" class="w-full h-[400px]"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <div class="h-full w-full">
+                                            <div class="flex flex-col gap-3">
+                                                <label class="kt-form-label font-normal text-mono pl-2">Alamat</label>
+                                                <input class="kt-input kt-input-lg" id="address" type="text" name="address" placeholder="Alamat"/>
+                                            </div>
+                                            <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
+                                                <div class="col-span-2">
+                                                    <div class="flex flex-col gap-3">
+                                                        <label class="kt-form-label font-normal text-mono pl-2">Latitude</label>
+                                                        <input class="kt-input kt-input-lg" id="lat" type="text" name="latitude" placeholder="Latitude"/>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-span-2">
+                                                    <div class="flex flex-col gap-3">
+                                                        <label class="kt-form-label font-normal text-mono pl-2">Longitude</label>
+                                                        <input class="kt-input kt-input-lg" id="lng" type="text" name="Longitude" placeholder="Longitude"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div> {{-- end content --}}
                     </div> {{-- end item --}}
