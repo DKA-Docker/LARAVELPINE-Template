@@ -36,6 +36,7 @@
                 <!-- End of Container -->
                 <!-- Container -->
                 <div class="kt-container-fixed">
+                    </div>
                     <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                         <div class="flex flex-col justify-center gap-2">
                             <h1 class="text-mono text-xl leading-none font-medium">Buat Data Request Baru</h1>

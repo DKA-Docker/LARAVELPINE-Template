@@ -13,5 +13,10 @@ class Create extends Controller
         return view('dashboards.apps.deliveries.requests.create');
     }
 
+    public function store()
+    {
+
+    }
+
 
 }

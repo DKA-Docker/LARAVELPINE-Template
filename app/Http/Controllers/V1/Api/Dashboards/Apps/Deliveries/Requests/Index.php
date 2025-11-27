@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries;
+namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests;
 
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
 use Illuminate\Http\JsonResponse;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class Requests extends Controller
+class Index extends Controller
 {
     /**
      * @var ResourcesDeliveriesRequestsServices $service
@@ -55,6 +55,8 @@ class Requests extends Controller
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse {
+
+
         return response()->json(
             data: array(
                 'status' => true,
@@ -86,4 +88,5 @@ class Requests extends Controller
     public function destroy(Request $request) {
 
     }
+
 }

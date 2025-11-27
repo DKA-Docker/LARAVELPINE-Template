@@ -23,6 +23,10 @@ return new class extends Migration
                 ->comment('akun pemilik monitor ini ini')
                 ->constrained('accounts', 'id')
                 ->onDelete('cascade');
+            $table->string("device_uuid")
+                ->index()
+                ->unique()
+                ->comment("devices ");
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
             $table->softDeletes()->comment('parameter soft deleted');
             /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
