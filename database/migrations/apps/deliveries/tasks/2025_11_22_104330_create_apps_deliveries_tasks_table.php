@@ -39,19 +39,10 @@ return new class extends Migration
                 ->constrained('apps_deliveries_tasks_routes', 'id')
                 ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
 
-            // === custom timestamps ===
-            $table->timestampTz('time_created')
-                ->useCurrent()
-                ->comment('Waktu Data dibuat');
-
-            $table->timestampTz('time_updated')
-                ->useCurrent()
-                ->useCurrentOnUpdate()
-                ->comment('Waktu Data diupdate');
-
-            $table->timestampTz('time_deleted')
-                ->nullable()
-                ->comment('Waktu Data Dihapus');
+            /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
+            $table->softDeletes()->comment('parameter soft deleted');
+            /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
+            $table->timestamps();
         });
     }
 
