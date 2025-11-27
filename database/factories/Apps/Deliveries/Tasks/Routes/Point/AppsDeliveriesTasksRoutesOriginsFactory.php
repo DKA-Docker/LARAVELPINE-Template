@@ -3,16 +3,13 @@
 namespace Database\Factories\Apps\Deliveries\Tasks\Routes\Point;
 
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
-use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOrigin;
+use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTasksRoutesOrigins;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Apps\Deliveries\Index\Routes\Point\AppsDeliveriesTaskRoutesOrigin>
- */
-class AppsDeliveriesTaskRoutesOriginFactory extends Factory
+class AppsDeliveriesTasksRoutesOriginsFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -34,7 +31,7 @@ class AppsDeliveriesTaskRoutesOriginFactory extends Factory
          */
         if ($unusedRoutes === null) {
             // route yang sudah pernah dipakai di origin
-            $usedRouteIds = AppsDeliveriesTaskRoutesOrigin::pluck('route');
+            $usedRouteIds = AppsDeliveriesTasksRoutesOrigins::pluck('route');
 
             // semua route id yang belum dipakai
             $unusedRoutes = AppsDeliveriesTasksRoutes::query()

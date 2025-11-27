@@ -2,6 +2,7 @@
 
 namespace App\Models\Apps\Deliveries\Tasks;
 
+use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,6 @@ class AppsDeliveriesTasks extends Model
     /** @use HasFactory<AppsDeliveriesTasksFactory> */
     use HasFactory, SoftDeletes;
 
-    public $timestamps = false;
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -27,16 +27,16 @@ class AppsDeliveriesTasks extends Model
         'name',
         'assigned',
         'route',
-        'time_created',
-        'time_updated',
+        'created_at',
+        'delete_at',
     ];
     /** Cast tipe data */
     protected $casts = [
-        'time_created' => 'datetime',
-        'time_updated' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    protected $with = ['account'];
+    protected $with = ['account','assigned','route'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -45,6 +45,16 @@ class AppsDeliveriesTasks extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    public function assigned(): BelongsTo
+    {
+        return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    public function route(): HasOne
+    {
+        return $this->hasOne(AppsDeliveriesTasksRoutes::class, 'id','route')->withDefault();
     }
 
 

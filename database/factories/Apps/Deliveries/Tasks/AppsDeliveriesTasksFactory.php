@@ -20,7 +20,6 @@ class AppsDeliveriesTasksFactory extends Factory
             'name' => $this->faker->name(),
             'assigned' =>  $accounts->id,
             'route' => $tasksRoutes->id,
-
         ];
     }
 }

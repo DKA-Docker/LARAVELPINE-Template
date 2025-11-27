@@ -6,10 +6,9 @@ use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesDestination;
 
 
-class AppsDeliveriesTaskRoutesDestinationFactory extends Factory
+class AppsDeliveriesTasksRoutesDestinationsFactory extends Factory
 {
 
     public function definition(): array

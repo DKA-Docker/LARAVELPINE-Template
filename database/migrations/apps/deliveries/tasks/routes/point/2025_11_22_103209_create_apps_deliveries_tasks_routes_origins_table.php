@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('apps_deliveries_tasks_routes_origin', function (Blueprint $table) {
+        Schema::create('apps_deliveries_tasks_routes_origins', function (Blueprint $table) {
             /**
              * Primary key menggunakan UUID agar konsisten dengan entity TypeORM.
              */
@@ -79,6 +79,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('apps_deliveries_tasks_routes_origin');
+        Schema::dropIfExists('apps_deliveries_tasks_routes_origins');
     }
 };

@@ -57,6 +57,11 @@ class TasksRepository implements TasksRepositoryInterface {
         return AppsDeliveriesTasks::query();
     }
 
+    public function all(): Collection
+    {
+        return AppsDeliveriesTasks::all();
+    }
+
     /**
      * create data with relation data in this model data builder
      * @param array $relations

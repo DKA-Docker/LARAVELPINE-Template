@@ -18,8 +18,8 @@ class ResourcesDeliveriesTaksServices
 
     public function AutomaticallyPaginationTable(Request $request): Collection
     {
-        if (!$request->hasAny(['page', 'perPage'])) {
-            return $this->repository->query()->get();
+        if (!$request->hasAny(['page', 'size'])) {
+            return $this->repository->all();
         }
 
         /** @var $page

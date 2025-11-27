@@ -11,14 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @method static \Illuminate\Database\Eloquent\Builder|static inRandomOrder()
  */
-class AppsDeliveriesTaskRoutesDestination extends Model
+class AppsDeliveriesTasksRoutesDestinations extends Model
 {
     /** @use HasFactory<AppsDeliveriesTasksRoutesFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes, HasUuids;
 
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $table = 'apps_deliveries_tasks_routes_destinations';
 
     protected $fillable = [
         'id',

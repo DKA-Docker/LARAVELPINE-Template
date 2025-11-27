@@ -2,8 +2,6 @@
 
 namespace Database\Factories\Apps\Deliveries\Tasks\Routes;
 
-use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
-use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOrigin;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
