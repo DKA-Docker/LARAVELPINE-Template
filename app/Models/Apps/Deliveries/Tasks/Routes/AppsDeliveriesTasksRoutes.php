@@ -3,6 +3,7 @@
 
 namespace App\Models\Apps\Deliveries\Tasks\Routes;
 
+use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOrigin;
 use Database\Factories\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,13 +26,17 @@ class AppsDeliveriesTasksRoutes extends Model
         'account',
         'time_created',
         'time_updated',
-//        'time_deleted'
     ];
 
     /** Cast tipe data */
     protected $casts = [
         'time_created' => 'datetime',
         'time_updated' => 'datetime',
-//        'time_deleted' => 'datetime'
     ];
+
+    public function origin()
+    {
+        return $this->hasOne(AppsDeliveriesTaskRoutesOrigin::class, 'route');
+    }
+
 }

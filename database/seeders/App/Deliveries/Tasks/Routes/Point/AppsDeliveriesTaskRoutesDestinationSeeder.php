@@ -10,12 +10,13 @@ class AppsDeliveriesTaskRoutesDestinationSeeder extends Seeder
 {
     protected AppsDeliveriesTaskRoutesDestinationFactory $factory;
 
-//    protected function __construct(){
-//        $this->factory = new AppsDeliveriesTaskRoutesDestinationFactory();
-//    }
+    public function __construct(){
+        $this->factory = new AppsDeliveriesTaskRoutesDestinationFactory();
+    }
+
     public function run(): void
     {
-        AppsDeliveriesTaskRoutesDestination::factory()->count(5)->create();
+        $this->factory->count(10)->create();
         $this->command->info('Delivery Task Destination successfully created.');
     }
 }

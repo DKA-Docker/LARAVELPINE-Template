@@ -16,10 +16,7 @@ class AppsDeliveriesTaskRoutesDestinationFactory extends Factory
     {
         $account  = Accounts::inRandomOrder()->first();
         $taskRoute = AppsDeliveriesTasksRoutes::inRandomOrder()->first();
-
-
         return [
-        // Buat relasi terkait
             'id' => (string) Str::uuid(),
             'account'  => $account->id,
             'route' => $taskRoute->id,

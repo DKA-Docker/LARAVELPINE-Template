@@ -88,7 +88,7 @@ return new class extends Migration
              * Timestamp soft delete.
              * Diisi ketika data secara logis dihapus tanpa benar-benar menghilangkan row.
              */
-            $table->timestampTz('time_deleted')
+            $table->softDeletesTz('deleted_at')
                 ->nullable()
                 ->comment('Waktu Data Dihapus');
         });
