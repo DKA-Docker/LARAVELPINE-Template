@@ -27,8 +27,24 @@
                         <div class="kt-accordion-toggle py-4 kt-card-header bg-gray-100"
                              data-kt-accordion-toggle="#{{ 'accordion-content-'.$index }}"
                              aria-controls="{{ 'accordion-content-'.$index }}">
-                            <h3 class="kt-card-title">
-                                Item #{{ $index + 1 }} - {{ $item['name'] ?: 'Belum diberi nama' }}
+                            <h3 class="kt-card-title" id="item-title-{{ $index }}">
+                                <span class="item-title-prefix">#{{ $index + 1 }} - </span>
+                                <span class="item-title-text">
+                                    {{-- default awal pakai data dari server --}}
+                                    @php
+                                        $name = $item['name'] ?? '';
+                                        $address = $item['address'] ?? '';
+                                        $qty = $item['qty'] ?? '';
+                                        $unit = $item['unit'] ?? '';
+                                        $parts = [];
+                                        $parts[] = $name !== '' ? $name : 'Tanpa Judul';
+                                        if ($qty !== '' || $unit !== '') {
+                                            $parts[] = trim(($qty !== '' ? $qty : '') . ' ' . ($unit !== '' ? $unit : ''));
+                                        }
+                                        if ($address !== '') $parts[] = "dikirim ke $address";
+                                    @endphp
+                                    {{ implode(' - ', $parts) }}
+                                </span>
                             </h3>
 
                             <div class="flex justify-end">
@@ -53,10 +69,13 @@
                                                 Nama Paket (Item)
                                             </label>
                                             <input class="kt-input kt-input-lg"
+                                                   id="item-name-{{ $index }}"
                                                    type="text"
                                                    name="title"
                                                    placeholder="Judul Permintaan"
-                                                   wire:model.defer="items.{{ $index }}.name"/>
+                                                   wire:model.defer="items.{{ $index }}.name"
+                                                   data-item-index="{{ $index }}"
+                                                   data-title-field="name"/>
                                         </div>
                                     </div>
 
@@ -70,7 +89,9 @@
                                                    min="0"
                                                    name="qty"
                                                    placeholder="qty"
-                                                   wire:model.defer="items.{{ $index }}.qty"/>
+                                                   wire:model.defer="items.{{ $index }}.qty"
+                                                   data-item-index="{{ $index }}"
+                                                   data-title-field="qty"/>
                                         </div>
                                     </div>
 
@@ -83,7 +104,9 @@
                                                    type="text"
                                                    name="unit"
                                                    placeholder="Unit"
-                                                   wire:model.defer="items.{{ $index }}.unit"/>
+                                                   wire:model.defer="items.{{ $index }}.unit"
+                                                   data-item-index="{{ $index }}"
+                                                   data-title-field="unit"/>
                                         </div>
                                     </div>
                                 </div>
@@ -164,14 +187,21 @@
 
                                     <div class="col-span-2">
                                         <div class="h-full w-full">
-                                            <div class="flex flex-col gap-3">
+                                            <div class="flex flex-col gap-3 relative">
                                                 <label class="kt-form-label font-normal text-mono pl-2">Alamat</label>
                                                 <input class="kt-input kt-input-lg"
                                                        id="address-{{ $index }}"
                                                        type="text"
                                                        name="address"
                                                        placeholder="Alamat"
-                                                       wire:model.live="items.{{ $index }}.address"/>
+                                                       wire:model.defer="items.{{ $index }}.address"
+                                                       data-item-index="{{ $index }}"
+                                                       data-title-field="address"/>
+
+                                                {{-- DROPDOWN SUGGEST ADDRESS --}}
+                                                <div id="address-suggest-{{ $index }}"
+                                                     class="absolute top-full left-0 right-0 mt-1 bg-white border border-border rounded shadow max-h-60 overflow-y-auto text-xs lg:text-sm hidden z-50">
+                                                </div>
                                             </div>
 
                                             <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
@@ -183,7 +213,7 @@
                                                                type="text"
                                                                name="latitude"
                                                                placeholder="Latitude"
-                                                               wire:model.live="items.{{ $index }}.lat"/>
+                                                               wire:model.defer="items.{{ $index }}.lat"/>
                                                     </div>
                                                 </div>
 
@@ -195,12 +225,13 @@
                                                                type="text"
                                                                name="longitude"
                                                                placeholder="Longitude"
-                                                               wire:model.live="items.{{ $index }}.lng"/>
+                                                               wire:model.defer="items.{{ $index }}.lng"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div> {{-- end map+alamat --}}
                             </div>
                         </div> {{-- end content --}}
