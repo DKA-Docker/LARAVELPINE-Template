@@ -2,22 +2,27 @@
 
 namespace App\Models\Apps\Deliveries\Tasks\Routes\Point;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AppsDeliveriesTaskRoutesOrigin extends Model {
-    use HasFactory, SoftDeletes;
+class AppsDeliveriesTaskRoutesDestination extends Model
+{
+    use SoftDeletes, HasUuids, HasFactory;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $table = 'apps_deliveries_task_routes_destinations';
 
-    /** Kolom yang bisa diisi */
     protected $fillable = [
-        'id',
         'account',
+        'route',
+        'address',
+        'longitude',
+        'latitude',
+        'image_received',
+        'time_received',
         'time_created',
-        'time_updated',
+        'time_updated'
     ];
 
     /** Cast tipe data */
@@ -25,4 +30,5 @@ class AppsDeliveriesTaskRoutesOrigin extends Model {
         'time_created' => 'datetime',
         'time_updated' => 'datetime',
     ];
+
 }

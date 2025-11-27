@@ -1,26 +1,22 @@
 <?php
 
-
-namespace Database\Seeders\App\Deliveries\Tasks;
+namespace Database\Seeders\App\Deliveries\Tasks\Routes;
 
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
-use Database\Factories\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesFactory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
-class DeliveriesTasksSeeder extends Seeder
+class AppsDeliveriesTasksRoutesSeeder extends Seeder
 {
+
     protected AppsDeliveriesTasksFactory $factory;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->factory = new AppsDeliveriesTasksFactory();
     }
 
     public function run(): void
     {
         $this->factory->count(5)->create();
-        $this->command->info('Deliveries tasks successfully created');
+        $this->command->info("Tasks Route Success Create");
     }
-
 }
