@@ -13,7 +13,10 @@ class AppsTrackingsMonitors extends Model
     protected $fillable = [
         'id',
         'account',
-
+        'uuid',
+        'latitude',
+        'longitude',
+        'speed',
         'created_at',
         'updated_at',
     ];
