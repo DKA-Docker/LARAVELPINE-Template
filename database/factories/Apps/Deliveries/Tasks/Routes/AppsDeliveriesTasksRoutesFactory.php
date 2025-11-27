@@ -13,18 +13,20 @@ class AppsDeliveriesTasksRoutesFactory extends Factory
     public function definition(): array
     {
         $accounts = Accounts::inRandomOrder()->first();
-        $tasksRoutes = AppsDeliveriesTasksRoutes::inRandomOrder()->first();
+//            ?? Accounts::factory()->create();
+//        $tasksRoutes = AppsDeliveriesTasksRoutes::inRandomOrder()->first();
+//            ?? AppsDeliveriesTasksRoutes::factory()->create();
 
-        static $seq=1;
+//        static $seq=1;
 
         return [
-//            'id' => (string) Str::uuid(),
+            'id' => (string) Str::uuid(),
             'account' => $accounts->id,
-            'route' => $tasksRoutes->id,
-            'address' => $this->faker->address,
-            'longitude' => $this->faker->longitude,
-            'latitude' => $this->faker->latitude,
-            'seq' => $seq++,
+//            'route' => $tasksRoutes->id,
+//            'address' => $this->faker->address,
+//            'longitude' => $this->faker->longitude,
+//            'latitude' => $this->faker->latitude,
+//            'seq' => $seq++,
 
         ];
     }

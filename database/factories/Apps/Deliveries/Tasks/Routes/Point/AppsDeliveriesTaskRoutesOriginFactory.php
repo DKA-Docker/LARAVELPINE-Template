@@ -3,6 +3,7 @@
 namespace Database\Factories\Apps\Deliveries\Tasks\Routes\Point;
 
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
+use App\Models\Apps\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOrigin;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -19,9 +20,9 @@ class AppsDeliveriesTaskRoutesOriginFactory extends Factory
      */
     public function definition(): array
     {
-        static $seq = 1;
         $accounts = Accounts::inRandomOrder()->first();
         $tasksRoutes = AppsDeliveriesTasksRoutes::inRandomOrder()->first();
+        static $seq = 1;
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts->id,

@@ -15,6 +15,7 @@ class AppsDeliveriesTasks extends Model
     /** @use HasFactory<AppsDeliveriesTasksFactory> */
     use HasFactory, SoftDeletes;
 
+    public $timestamps = false;
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -25,13 +26,13 @@ class AppsDeliveriesTasks extends Model
         'name',
         'assigned',
         'route',
-        'created_at',
-        'updated_at',
+        'time_created',
+        'time_updated',
     ];
     /** Cast tipe data */
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'time_created' => 'datetime',
+        'time_updated' => 'datetime',
     ];
 
     public function account(): HasOne

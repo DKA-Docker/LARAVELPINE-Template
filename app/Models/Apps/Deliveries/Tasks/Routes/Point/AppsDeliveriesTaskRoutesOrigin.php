@@ -12,6 +12,10 @@ class AppsDeliveriesTaskRoutesOrigin extends Model {
     public $incrementing = false;
     protected $keyType = 'string';
 
+    public $timestamps = false;
+
+    protected $table = 'apps_deliveries_tasks_routes_origin';
+
     /** Kolom yang bisa diisi */
     protected $fillable = [
         'id',
