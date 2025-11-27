@@ -10,67 +10,71 @@ class PackagesItemsLayout extends Component
 
     public function mount(): void
     {
-        $this->items = [
-            [
-                'name'   => '',
-                'qty'    => 0,
-                'width'  => 0,
-                'height' => 0,
-                'weight' => 0,
-                'heavy'  => 0,
-                'price'  => 0,
-            ],
+        // init 1 item default
+        $this->items = [];
+    }
+
+    protected function defaultItem(): array
+    {
+        return [
+            'name'    => '',
+            'qty'     => 0,
+            'unit'    => '',
+            'width'   => 0,
+            'height'  => 0,
+            'weight'  => 0,
+            'heavy'   => 0,
+            'price'   => 0,
+            'address' => '',
+            'lat'     => null,
+            'lng'     => null,
         ];
     }
 
     public function add(): void
     {
-        $this->items[] = [
-            'name'   => '',
-            'qty'    => 0,
-            'width'  => 0,
-            'height' => 0,
-            'weight' => 0,
-            'heavy'  => 0,
-            'price'  => 0,
-        ];
+        $this->items[] = $this->defaultItem();
+
+        // kasih tau JS kalau DOM items berubah
+        $this->dispatch('packages-items-updated');
     }
 
     public function remove(int $index): void
     {
         unset($this->items[$index]);
         $this->items = array_values($this->items);
+
+        $this->dispatch('packages-items-updated');
     }
 
     /**
-     * Hook setiap field berubah (Livewire v2 & v3 kompatibel).
-     * Di sini kita paksa semua numeric tertentu minimal 0.
+     * Jaga supaya numeric nggak minus.
      */
     public function updated($name): void
     {
-        // hanya proses property "items.*"
         if (!str_starts_with($name, 'items.')) {
             return;
         }
 
-        // ambil field terakhir, contoh:
-        //  items.0.qty -> qty
         $parts = explode('.', $name);
         $field = $parts[array_key_last($parts)];
 
-        $protectedFields = ['qty', 'width', 'height', 'weight', 'heavy'];
+        // HANYA field yang benar-benar nggak boleh minus
+        $protected = ['qty', 'width', 'height', 'weight', 'heavy', 'price'];
 
-        if (!in_array($field, $protectedFields, true)) {
+        if (!in_array($field, $protected, true)) {
             return;
         }
 
         $value = (float) data_get($this, $name);
 
         if ($value < 0) {
-            // paksa jadi 0 kalau minus
-            $this->set($name, 0);
+            // Livewire v3 nggak ada $this->set(), pakai data_set
+            data_set($this, $name, 0);
         }
     }
+
+
 
     public function render()
     {

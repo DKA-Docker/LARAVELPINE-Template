@@ -5,7 +5,6 @@
         </h3>
 
         <div class="flex justify-end">
-            {{-- Saat Tombol Tambah item di tekan. maka akan memicu method add menggunakan wire:click --}}
             <button class="kt-btn kt-btn-secondary" type="button" wire:click="add">
                 Tambah Item
             </button>
@@ -14,7 +13,6 @@
 
     <div class="kt-card-content grid gap-5 lg:py-7.5">
         <div class="w-full">
-            {{-- 1 WRAPPER accordion, di dalamnya banyak item --}}
             <div data-kt-accordion="true"
                  data-kt-accordion-expand-all="true"
                  class="my-3">
@@ -27,10 +25,10 @@
 
                         {{-- TOGGLE --}}
                         <div class="kt-accordion-toggle py-4 kt-card-header bg-gray-100"
-                             data-kt-accordion-toggle="#{{"accordion-content-$index"}}"
-                             aria-controls="{{"accordion-content-$index"}}">
+                             data-kt-accordion-toggle="#{{ 'accordion-content-'.$index }}"
+                             aria-controls="{{ 'accordion-content-'.$index }}">
                             <h3 class="kt-card-title">
-                                Item #{{ $index + 1 }}
+                                Item #{{ $index + 1 }} - {{ $item['name'] ?: 'Belum diberi nama' }}
                             </h3>
 
                             <div class="flex justify-end">
@@ -44,9 +42,10 @@
 
                         {{-- CONTENT --}}
                         <div class="kt-accordion-content hidden p-2 border-b border-b-border"
-                             id="{{"accordion-content-$index"}}"
+                             id="{{ 'accordion-content-'.$index }}"
                              style="height: 0;">
                             <div class="w-full">
+                                {{-- BARIS 1 --}}
                                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
                                     <div class="col-span-2">
                                         <div class="flex flex-col gap-3">
@@ -78,7 +77,7 @@
                                     <div class="col-span-1">
                                         <div class="flex flex-col gap-3">
                                             <label class="kt-form-label font-normal text-mono pl-2">
-                                                Unit (Unit)
+                                                Unit
                                             </label>
                                             <input class="kt-input kt-input-lg"
                                                    type="text"
@@ -91,6 +90,7 @@
 
                                 <span class="border-t border-border w-full"></span>
 
+                                {{-- BARIS 2 --}}
                                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
                                     <div class="col-span-1">
                                         <div class="flex flex-col gap-3">
@@ -149,39 +149,59 @@
                                     </div>
                                 </div>
 
+                                {{-- MAP + ADDRESS --}}
                                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3 w-full">
                                     <div class="col-span-2">
                                         <div class="flex flex-col gap-3">
                                             <label class="kt-form-label font-normal text-mono pl-2">Alamat</label>
                                             <div class="w-full">
-                                                <div id="map" class="w-full h-[400px]"></div>
+                                                <div id="map-{{ $index }}"
+                                                     data-map-index="{{ $index }}"
+                                                     class="w-full h-[400px]"></div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-span-2">
                                         <div class="h-full w-full">
                                             <div class="flex flex-col gap-3">
                                                 <label class="kt-form-label font-normal text-mono pl-2">Alamat</label>
-                                                <input class="kt-input kt-input-lg" id="address" type="text" name="address" placeholder="Alamat"/>
+                                                <input class="kt-input kt-input-lg"
+                                                       id="address-{{ $index }}"
+                                                       type="text"
+                                                       name="address"
+                                                       placeholder="Alamat"
+                                                       wire:model.live="items.{{ $index }}.address"/>
                                             </div>
+
                                             <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
                                                 <div class="col-span-2">
                                                     <div class="flex flex-col gap-3">
                                                         <label class="kt-form-label font-normal text-mono pl-2">Latitude</label>
-                                                        <input class="kt-input kt-input-lg" id="lat" type="text" name="latitude" placeholder="Latitude"/>
+                                                        <input class="kt-input kt-input-lg"
+                                                               id="lat-{{ $index }}"
+                                                               type="text"
+                                                               name="latitude"
+                                                               placeholder="Latitude"
+                                                               wire:model.live="items.{{ $index }}.lat"/>
                                                     </div>
-
                                                 </div>
+
                                                 <div class="col-span-2">
                                                     <div class="flex flex-col gap-3">
                                                         <label class="kt-form-label font-normal text-mono pl-2">Longitude</label>
-                                                        <input class="kt-input kt-input-lg" id="lng" type="text" name="Longitude" placeholder="Longitude"/>
+                                                        <input class="kt-input kt-input-lg"
+                                                               id="lng-{{ $index }}"
+                                                               type="text"
+                                                               name="longitude"
+                                                               placeholder="Longitude"
+                                                               wire:model.live="items.{{ $index }}.lng"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> {{-- end map+alamat --}}
                             </div>
                         </div> {{-- end content --}}
                     </div> {{-- end item --}}
