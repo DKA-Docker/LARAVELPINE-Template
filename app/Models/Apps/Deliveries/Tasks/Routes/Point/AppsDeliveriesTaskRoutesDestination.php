@@ -16,7 +16,6 @@ class AppsDeliveriesTaskRoutesDestination extends Model
     /** @use HasFactory<AppsDeliveriesTasksRoutesFactory> */
     use HasFactory;
 
-    public $timestamps = false;
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'apps_deliveries_tasks_routes_destinations';
@@ -30,14 +29,13 @@ class AppsDeliveriesTaskRoutesDestination extends Model
         'latitude',
         'image_received',
         'time_received',
-        'time_created',
-        'time_updated'
     ];
 
     /** Cast tipe data */
     protected $casts = [
-        'time_created' => 'datetime',
-        'time_updated' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
 }

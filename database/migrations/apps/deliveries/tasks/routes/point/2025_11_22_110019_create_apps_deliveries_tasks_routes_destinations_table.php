@@ -72,29 +72,10 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Waktu Barang Diterima');
 
-            /**
-             * Timestamp waktu data pertama kali dibuat.
-             */
-            $table->timestampTz('time_created')
-                ->useCurrent()
-                ->comment('Waktu Data dibuat');
-
-            /**
-             * Timestamp waktu data terakhir diperbarui.
-             * Akan otomatis ter-update setiap ada perubahan pada row.
-             */
-            $table->timestampTz('time_updated')
-                ->useCurrent()
-                ->useCurrentOnUpdate()
-                ->comment('Waktu Data diupdate');
-
-            /**
-             * Timestamp untuk soft delete.
-             * Diisi ketika data dihapus secara logis, tanpa benar-benar menghapus row dari database.
-             */
-            $table->softDeletesTz('deleted_at')
-                ->nullable()
-                ->comment('Waktu Data Dihapus');
+            /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
+            $table->softDeletes()->comment('parameter soft deleted');
+            /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
+            $table->timestamps();
         });
     }
 

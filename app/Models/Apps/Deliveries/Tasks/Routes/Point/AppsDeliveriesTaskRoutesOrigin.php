@@ -12,21 +12,18 @@ class AppsDeliveriesTaskRoutesOrigin extends Model {
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public $timestamps = false;
-
     protected $table = 'apps_deliveries_tasks_routes_origin';
 
     /** Kolom yang bisa diisi */
     protected $fillable = [
         'id',
         'account',
-        'time_created',
-        'time_updated',
     ];
 
     /** Cast tipe data */
     protected $casts = [
-        'time_created' => 'datetime',
-        'time_updated' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 }

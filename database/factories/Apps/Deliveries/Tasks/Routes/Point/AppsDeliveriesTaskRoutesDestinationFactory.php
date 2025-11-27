@@ -24,8 +24,6 @@ class AppsDeliveriesTaskRoutesDestinationFactory extends Factory
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
             'image_received' => $this->faker->imageUrl(),
-            'time_received' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
-            'time_created' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
         ];
     }
 }
