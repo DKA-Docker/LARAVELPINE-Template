@@ -464,7 +464,6 @@ function initItemTitleWatcher() {
 // Sync semua judul item berdasarkan nilai input yang ada di DOM
 function syncAllItemTitles() {
     if (!elementExists.length) return;
-
     // cari semua title yang ada id-nya item-title-{index}
     $('[id^="item-title-"]').each(function () {
         const id = $(this).attr("id"); // contoh: item-title-0
