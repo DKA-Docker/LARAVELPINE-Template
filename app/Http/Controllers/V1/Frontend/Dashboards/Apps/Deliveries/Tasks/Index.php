@@ -12,4 +12,9 @@ class Index extends Controller
     {
         return view('dashboards.apps.deliveries.tasks.index');
     }
+
+    public function show($id)
+    {
+        return view('dashboards.apps.deliveries.tasks.show');
+    }
 }

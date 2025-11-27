@@ -50,20 +50,46 @@ $(window).on('load', function () {
                 'Accept': 'application/json',
             },
             columns: {
-                account: {
-                    title: 'Name',
+                requested: {
+                    title: 'Requested',
                     render: (value, row) => {
                         return `${row.account.information.first_name} ${row.account.information.last_name}`
                     }
                 },
-                email: {
-                    title: 'Email',
-                    render: (value, row: any) => row.account?.contact?.email ?? '-'
+                name: {
+                    title: 'Name',
+                    render: (value, row) => {
+                        return `<a href="./tasks/${row.id}">${row.name}</a>`;
+                    }
+                },
+                assigned: {
+                    title: 'Assigned',
+                    render: (value, row) => {
+                        return `${row.account.information.first_name} ${row.account.information.last_name}`
+                    }
+                },
+                origin: {
+                    title: 'Origin',
+                    render: (value, row) => {
+                        return row.route.origins.address;
+                    }
+                },
+                destinations: {
+                    title: 'Destinations',
+                    render: (value, row) => {
+                        return `${row.route.destinations.length}`;
+                    }
                 },
                 created_at: {
                     title: 'Dibuat',
                     render: (value, row) => {
                         return moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY")
+                    }
+                },
+                actions: {
+                    title: 'Aksi',
+                    render: (value, row) => {
+                        return `-`;
                     }
                 },
             },

@@ -19,17 +19,17 @@ Route::middleware(['Api'])->name('api.')->group(function () {
                 /** Name Route api.dashboards.apps.deliveries member of resource */
                 Route::resource('requests', Requests\Index::class);
                 Route::prefix('tasks')->name('tasks.')->group(function () {
-                    Route::resource('/', Tasks\Index::class);
+                    Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
                     Route::prefix('routes')->name('routes.')->group(function () {
-                        Route::resource('/', Routes\Index::class);
+                        Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
                 });
                 Route::resource('reports', Reports::class);
             });
             Route::prefix('trackings')->name('trackings.')->group(function () {
-                Route::resource('/', Trackings\Index::class);
+                Route::resource('/', Trackings\Index::class)->parameters(['' => 'id']);
                 Route::prefix('monitors')->name('monitors.')->group(function () {
-                    Route::resource('/', TrackingsMonitors\Index::class);
+                    Route::resource('/', TrackingsMonitors\Index::class)->parameters(['' => 'id']);
                 });
             });
         });

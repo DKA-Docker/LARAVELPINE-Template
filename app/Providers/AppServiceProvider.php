@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
             File::allDirectories(database_path('migrations')) // semua subdir rekursif
         );
 
+        if ($this->app->isLocal()) {
+            Model::preventLazyLoading();
+        }
         $this->loadMigrationsFrom($paths);
     }
 }
