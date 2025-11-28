@@ -55,16 +55,16 @@
                             <div class="kt-card-content grid gap-5 lg:py-7.5">
                                 <div class="w-full">
                                     <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
-                                        <div class="col-span-3">
+                                        <div class="col-span-2">
                                             <div class="flex flex-col gap-3">
-                                                <label class="kt-form-label font-normal text-mono pl-2">Judul Pengiriman</label>
+                                                <label class="kt-form-label font-normal text-mono pl-2">Request</label>
                                                 <input class="kt-input kt-input-lg" type="text" name="title" placeholder="Judul Permintaan"/>
                                             </div>
                                         </div>
-                                        <div class="col-span-1">
+                                        <div class="col-span-2">
                                             <div class="flex flex-col gap-3">
-                                                <label class="kt-form-label font-normal text-mono pl-2">Urgensi</label>
-                                                <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Prioritas"/>
+                                                <label class="kt-form-label font-normal text-mono pl-2">Nama Task</label>
+                                                <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Nama Task"/>
                                             </div>
                                         </div>
                                     </div>

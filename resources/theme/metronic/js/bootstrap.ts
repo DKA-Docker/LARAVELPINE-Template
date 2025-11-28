@@ -19,7 +19,7 @@ declare global {
 // Assign ke window (global)
 window.$ = window.jQuery = jQuery;
 window.axios = axios;
-// 👉 tambahkan ini biar global:
+// 👉 TAMBAHKAN INI BIAR GLOBAL !!!:
 window.Livewire = Livewire
 
 Livewire.start()

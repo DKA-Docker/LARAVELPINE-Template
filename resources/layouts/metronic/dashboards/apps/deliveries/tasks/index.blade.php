@@ -38,20 +38,19 @@
                 <div class="kt-container-fixed">
                     <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                         <div class="flex flex-col justify-center gap-2">
-                            <h1 class="text-mono text-xl leading-none font-medium">Delivery Task</h1>
+                            <h1 class="text-mono text-xl leading-none font-medium">Delivery Tasks</h1>
                             <div class="flex flex-wrap items-center gap-1.5 font-medium">
                                 <span class="text-secondary-foreground text-base">Semua:</span>
-                                <span class="gray-800 me-2 text-base font-semibold">49,053</span>
+                                <span class="gray-800 me-2 text-base font-semibold">0</span>
                                 <span class="text-green-800 text-base">Diterima:</span>
-                                <span class="text-green-600 text-base font-semibold">1724</span>
+                                <span class="text-green-600 text-base font-semibold">0</span>
                                 <span class="text-red-800 text-base">Ditolak:</span>
-                                <span class="text-red-600 text-base font-semibold">1724</span>
+                                <span class="text-red-600 text-base font-semibold">0</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-2.5">
                             <a class="kt-btn kt-btn-outline">Import</a>
-                            <a class="kt-btn kt-btn-primary" href="{{ route(preg_replace('/\.[^.]+$/', '.create.index', Route::currentRouteName())) }}">Add Request</a>
-
+                            <a class="kt-btn kt-btn-primary" href="{{ route(preg_replace('/\.[^.]+$/', '.create.index', Route::currentRouteName())) }}">Add Task</a>
                         </div>
                     </div>
                 </div>
@@ -93,7 +92,7 @@
                                         <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true" data-kt-datatable-page-size="5" id="table-delivery-request">
                                             <thead>
                                             <tr>
-                                                <th scope="col" data-kt-datatable-column="email">
+                                                <th scope="col" data-kt-datatable-column="requested">
                                                     <span class="kt-table-col">
                                                         <span class="kt-table-col-label">Requested</span>
                                                         <span class="kt-table-col-sort"></span> <!-- boleh dihapus kalau nggak mau sorting -->
@@ -101,13 +100,37 @@
                                                 </th>
                                                 <th scope="col" data-kt-datatable-column="name">
                                                     <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Email</span>
+                                                        <span class="kt-table-col-label">Nama Task</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="assigned">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Assigned</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="origin">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Origin</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="destinations">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Destinations</span>
                                                         <span class="kt-table-col-sort"></span>
                                                     </span>
                                                 </th>
                                                 <th scope="col" data-kt-datatable-column="created_at">
                                                     <span class="kt-table-col">
                                                         <span class="kt-table-col-label">Dibuat</span>
+                                                        <span class="kt-table-col-sort"></span>
+                                                    </span>
+                                                </th>
+                                                <th scope="col" data-kt-datatable-column="actions">
+                                                    <span class="kt-table-col">
+                                                        <span class="kt-table-col-label">Aksi</span>
                                                         <span class="kt-table-col-sort"></span>
                                                     </span>
                                                 </th>
