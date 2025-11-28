@@ -8,6 +8,7 @@
 /.fleet
 /.idea
 composer.lock
+artisan
 compose.yml
 /.nova
 /.phpunit.cache
