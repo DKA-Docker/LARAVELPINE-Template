@@ -11,7 +11,7 @@ services:
       - mariadb
     environment:
       APP_NAME: DKA
-      APP_ENV: local
+      APP_ENV: production
       APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar

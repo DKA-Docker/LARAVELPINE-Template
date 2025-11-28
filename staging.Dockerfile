@@ -5,4 +5,5 @@ COPY . .
 # Set permission untuk storage dan bootstrap/cache
 RUN chown -R www-data:www-data storage database bootstrap/cache && chmod -R 775 storage database bootstrap/cache storage/logs
 RUN chown -R www-data:www-data public && chmod -R 775 public
+RUN rm vite.config.js
 RUN composer install && yarn install
