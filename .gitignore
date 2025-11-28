@@ -13,6 +13,7 @@ compose.yml
 /.phpunit.cache
 /.vscode
 /.zed
+package.json.lock
 yarn.lock
 frankenphp
 /auth.json
@@ -26,9 +27,7 @@ frankenphp
 Homestead.json
 Homestead.yaml
 Thumbs.db
-compose.yml
 package-lock.json
 
 **/caddy
-frankenphp
 frankenphp-worker.php

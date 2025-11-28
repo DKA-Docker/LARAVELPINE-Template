@@ -19,7 +19,7 @@ env:
   GITHUB_REF_NAME: ${{ github.ref_name }}
   GITHUB_SHA_ID: ${{ github.sha }}
   # -------------------------------------------------
-  COMPOSE_FILE: compose.${{ github.variant }}.yml
+  COMPOSE_FILE: compose.${{ env.GITHUB_REF_NAME }}.yml
   # -------------------------------------------------
 jobs:
   deploy:
@@ -43,12 +43,75 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./${{ env.GITHUB_REF_NAME }}.Dockerfile
           labels: |
             org.opencontainers.image.title=${{ github.repository }}
             org.opencontainers.image.description=repository ${{ env.GITHUB_REPO_NAME }} : ${{ env.GITHUB_REF_NAME }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
           push: true
-          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ env.GITHUB_REF_NAME }}-${{ env.GITHUB_SHA_ID }}
+
+  pull:
+    runs-on: ubuntu-latest
+    if: false
+    needs: deploy
+    steps:
+      - name: Checkout code dari Git Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Login Docker di Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          script: |
+            echo ${{ env.DOCKER_TOKEN }} | docker login -u ${{ env.DOCKER_USERNAME }} --password-stdin
+
+      - name: Copy Template Compose file ke path Server di dalam server path
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          source: ${{env.COMPOSE_FILE}}
+          overwrite: true
+          target: "./${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}/${{ env.GITHUB_REF_NAME }}/${{ env.GITHUB_SHA_ID }}"
+
+      - name: Menuju Path Di Server, Memuat tar.gz ke system image docker, dan Jalankan Ulang dengan image baru
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          script: |
+            # Overide Server Path Yang dituju di dalam server production valid path
+            cd "./${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}/${{ env.GITHUB_REF_NAME }}/${{ env.GITHUB_SHA_ID }}"
+            # Start new containers
+            docker compose -f ${{ env.COMPOSE_FILE }} up -d
+
+  clean:
+    runs-on: ubuntu-latest
+    if: false
+    needs: pull
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
+
+      - name: Clean Dangling Image in Dev Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          script: |
+            docker image prune -f

@@ -10,6 +10,7 @@ public/build
 package.lock
 node_modules
 compose.*
+staging.Dockerfile
 *.Dockerfile
 .env
 .env.*

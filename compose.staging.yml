@@ -1,0 +1,153 @@
+name: hndgroup-logistech
+
+services:
+  app:
+    image: yovanggaanandhika/laravelpine:8.3-fpm
+    container_name: hndgroup-logistech-staging-app
+    hostname: hndgroup-logistech-staging-app
+    restart: always
+    pull_policy: always
+    depends_on:
+      - mariadb
+    environment:
+      APP_NAME: DKA
+      APP_ENV: local
+      APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
+      APP_DEBUG: true
+      APP_TIMEZONE: Asia/Makassar
+
+      APP_LOCALE: id_ID
+      APP_FALLBACK_LOCALE: id_ID
+      APP_FAKER_LOCALE: id_ID
+      APP_MAINTENANCE_DRIVER: file
+      # APP_MAINTENANCE_STORE:database
+      PHP_CLI_SERVER_WORKERS: 4
+      BCRYPT_ROUNDS: 12
+      LOG_CHANNEL: stack
+      LOG_STACK: single
+      LOG_DEPRECATIONS_CHANNEL: null
+      LOG_LEVEL: debug
+
+      DB_CONNECTION: mariadb
+      DB_HOST: hndgroup-logistech-staging-mariadb
+      DB_PORT: 3306
+      DB_DATABASE: hndgroup_logistech
+      DB_USERNAME: logistech
+      DB_PASSWORD: 'adwjkwjdJDwllj29iu93j932j3jij39j39'
+
+      SESSION_DRIVER: database
+      SESSION_TABLE: sessions_accounts
+      SESSION_LIFETIME: 120
+      SESSION_ENCRYPT: false
+      SESSION_PATH: /
+      SESSION_DOMAIN: null
+
+      BROADCAST_CONNECTION: log
+      FILESYSTEM_DISK: local
+      QUEUE_CONNECTION: database
+
+      CACHE_STORE: database
+      # CACHE_PREFIX:
+
+      MEMCACHED_HOST: 127.0.0.1
+
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: 127.0.0.1
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+
+      MAIL_MAILER: log
+      MAIL_SCHEME: null
+      MAIL_HOST: 127.0.0.1
+      MAIL_PORT: 2525
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_FROM_ADDRESS: "hello@example.com"
+      MAIL_FROM_NAME: "${APP_NAME}"
+
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_BUCKET:
+      AWS_USE_PATH_STYLE_ENDPOINT: false
+
+      VITE_APP_NAME: "${APP_NAME}"
+
+      THEME_NAME: metronic
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+        reservations:
+          cpus: "0.80"
+          memory: 800M
+    ports:
+      - target: 5173
+        published: 5173
+        protocol: tcp
+        host_ip: 0.0.0.0
+      - target: 80
+        published: 80
+        protocol: tcp
+        host_ip: 0.0.0.0
+    #- uncomment for sync project and data in container
+    #- disable if production
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www
+    networks:
+      - default
+
+  mariadb:
+    image: yovanggaanandhika/mariadb:latest
+    container_name: hndgroup-logistech-staging-mariadb
+    # alias name dari container mariadb
+    hostname: hndgroup-logistech-staging-mariadb
+    # lakukan restart container jika kontainer tiba-tiba terhenti
+    restart: always
+    # lakukan pull otomatis image terbaru dari registry
+    pull_policy: always
+    environment:
+      DKA_ROOT_PASSWORD: 'NKDJHkh3ho3hji3hfoi4hjfj4'
+      DKA_DB_NAME: hndgroup_logistech
+      DKA_DB_USERNAME: logistech
+      DKA_DB_PASSWORD: 'adwjkwjdJDwllj29iu93j932j3jij39j39'
+      # enable cron backup
+      DKA_CRON_ENABLE: false
+      # run everyday 3:00 AM
+      DKA_CRON_PRIODIC: '0 3 * * *'
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: '1.0'
+        reservations:
+          memory: 200M
+          cpus: '0.8'
+    ports:
+      # adalah port internal dari docker
+      - target: 3306
+        # adalah port yang dipublish diluar docker
+        published: 3307
+        # adalah protocol yang di forwarding
+        protocol: tcp
+        # adalah allow wishlist ip yang dapat mengakses container
+        host_ip: 0.0.0.0
+    volumes:
+      - type: volume
+        source: mariadb-data
+        target: /var/lib/mysql
+    networks:
+      - default
+
+volumes:
+  mariadb-data:
+    name: hndgroup-logistech-staging-mariadb-data
+    driver: local
+
+networks:
+  default:
+    name: hndgroup-logistech-staging
+    driver: bridge
