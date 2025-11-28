@@ -63,7 +63,7 @@ $(window).on('load', function () {
                 created_at: {
                     title: 'Dibuat',
                     render: (value, row) => {
-                        return moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY")
+                        return row.created_at ? moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY"):'-'
                     }
                 },
             },

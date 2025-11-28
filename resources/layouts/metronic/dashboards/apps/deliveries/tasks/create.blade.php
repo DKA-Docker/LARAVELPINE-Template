@@ -38,20 +38,7 @@
                 <div class="kt-container-fixed">
                     <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                         <div class="flex flex-col justify-center gap-2">
-                            <h1 class="text-mono text-xl leading-none font-medium">Delivery Task</h1>
-                            <div class="flex flex-wrap items-center gap-1.5 font-medium">
-                                <span class="text-secondary-foreground text-base">Semua:</span>
-                                <span class="gray-800 me-2 text-base font-semibold">49,053</span>
-                                <span class="text-green-800 text-base">Diterima:</span>
-                                <span class="text-green-600 text-base font-semibold">1724</span>
-                                <span class="text-red-800 text-base">Ditolak:</span>
-                                <span class="text-red-600 text-base font-semibold">1724</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2.5">
-                            <a class="kt-btn kt-btn-outline">Import</a>
-                            <a class="kt-btn kt-btn-primary" href="{{ route(preg_replace('/\.[^.]+$/', '.create.index', Route::currentRouteName())) }}">Add Request</a>
-
+                            <h1 class="text-mono text-xl leading-none font-medium">Buat Data Task Baru</h1>
                         </div>
                     </div>
                 </div>
@@ -59,79 +46,41 @@
                 <!-- Container -->
                 <div class="kt-container-fixed">
                     <div class="grid gap-5 lg:gap-7.5">
-                        <div class="kt-card kt-card-grid min-w-full" id="table-container">
-                            <div class="kt-card-header flex-wrap gap-2">
-                                <h3 class="kt-card-title text-sm">Showing <span class="show_from">0</span> of <span class="show_total"></span> users</h3>
-                                <div class="flex flex-wrap gap-2 lg:gap-5">
-                                    <div class="flex">
-                                        <label class="kt-input">
-                                            <i class="ki-filled ki-magnifier"></i>
-                                            <input placeholder="Search users" type="text" value="" />
-                                        </label>
-                                    </div>
-                                    <div class="flex flex-wrap gap-2.5">
-                                        <select class="kt-select w-36" data-kt-select="true" data-kt-select-placeholder="Select a status">
-                                            <option value="1">Active</option>
-                                            <option value="2">Disabled</option>
-                                            <option value="2">Pending</option>
-                                        </select>
-                                        <select class="kt-select w-36" data-kt-select="true" data-kt-select-placeholder="Select a sort">
-                                            <option value="1">Latest</option>
-                                            <option value="2">Older</option>
-                                            <option value="3">Oldest</option>
-                                        </select>
-                                        <button class="kt-btn kt-btn-outline kt-btn-primary">
-                                            <i class="ki-filled ki-setting-4"></i>
-                                            Filters
-                                        </button>
-                                    </div>
-                                </div>
+                        <div class="kt-card">
+                            <div class="kt-card-header" id="advanced_settings_preferences">
+                                <h3 class="kt-card-title">
+                                    Informasi Tugas pengiriman
+                                </h3>
                             </div>
-                            <div class="kt-card-content">
-                                <div class="grid">
-                                    <div class="kt-scrollable-x-auto">
-                                        <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true" data-kt-datatable-page-size="5" id="table-delivery-request">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col" data-kt-datatable-column="email">
-                                                    <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Requested</span>
-                                                        <span class="kt-table-col-sort"></span> <!-- boleh dihapus kalau nggak mau sorting -->
-                                                    </span>
-                                                </th>
-                                                <th scope="col" data-kt-datatable-column="name">
-                                                    <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Email</span>
-                                                        <span class="kt-table-col-sort"></span>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" data-kt-datatable-column="created_at">
-                                                    <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Dibuat</span>
-                                                        <span class="kt-table-col-sort"></span>
-                                                    </span>
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="kt-card-footer text-secondary-foreground flex-col justify-center gap-5 text-sm font-medium md:flex-row md:justify-between">
-                                        <div class="order-2 flex items-center gap-2 md:order-1">
-                                            Menampilkan
-                                            <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select="" name="perpage"></select>
-                                            Per Halaman
+                            <div class="kt-card-content grid gap-5 lg:py-7.5">
+                                <div class="w-full">
+                                    <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
+                                        <div class="col-span-3">
+                                            <div class="flex flex-col gap-3">
+                                                <label class="kt-form-label font-normal text-mono pl-2">Judul Pengiriman</label>
+                                                <input class="kt-input kt-input-lg" type="text" name="title" placeholder="Judul Permintaan"/>
+                                            </div>
                                         </div>
-                                        <div class="order-1 flex items-center gap-4 md:order-2">
-                                            <span data-kt-datatable-info="true"></span>
-                                            <div class="kt-datatable-pagination" data-kt-datatable-pagination="true"></div>
+                                        <div class="col-span-1">
+                                            <div class="flex flex-col gap-3">
+                                                <label class="kt-form-label font-normal text-mono pl-2">Urgensi</label>
+                                                <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Prioritas"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        @livewire("metronic.dashboards.apps.deliveries.requests.components.packages-items-layout")
+                        <div class="flex gap-4 justify-end">
+                            <a
+                                class="kt-btn kt-btn-destructive"
+                                href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}">
+                                Batalkan
+                            </a>
+                            <button class="kt-btn kt-btn-secondary">
+                                Buat Data
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -300,21 +249,21 @@
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                     <div class="flex">
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                     <div class="flex">
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                     <div class="flex">
@@ -345,21 +294,21 @@
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-14.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                     <div class="flex">
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-12.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                     <div class="flex">
                                                         <img
                                                             class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                             src="{{ asset(Storage::url("media/avatars/300-9.png")) }}"
-                                                        alt=""
+                                                            alt=""
                                                         />
                                                     </div>
                                                 </div>
@@ -515,21 +464,21 @@
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-4.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-2.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
@@ -560,21 +509,21 @@
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-14.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-12.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-9.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                         </div>
@@ -598,28 +547,28 @@
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-6.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-3.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-1.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-8.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                         </div>
@@ -643,14 +592,14 @@
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-18.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-17.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                         </div>
@@ -674,21 +623,21 @@
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-14.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-20.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                             <div class="flex">
                                                 <img
                                                     class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
                                                     src="{{ asset(Storage::url("media/avatars/300-21.png")) }}"
-                                                alt=""
+                                                    alt=""
                                                 />
                                             </div>
                                         </div>
@@ -1215,7 +1164,7 @@
     </div>
     <!-- End of Page -->
     <!-- Scripts -->
-    <div class="dashboards-apps-deliveries-tasks"/>
+    <div class="dashboards-apps-deliveries-requests-create"/>
     <!-- End of Scripts -->
     </body>
 </x-metronic.dashboards.layouts.container>
