@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Factories\Apps\Deliveries\Requests\Packages\Units;
+namespace Database\Factories\Apps\Deliveries\Requests\Destinations\Packages\Units;
 
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class AppsDeliveriesRequestsPackagesUnitsFactory extends Factory
+class AppsDeliveriesRequestsDestinationsPackagesUnitsFactory extends Factory
 {
 
     public function definition(): array

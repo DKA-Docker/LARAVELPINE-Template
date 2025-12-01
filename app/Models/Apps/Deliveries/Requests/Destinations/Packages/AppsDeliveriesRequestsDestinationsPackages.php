@@ -3,17 +3,17 @@
 namespace App\Models\Apps\Deliveries\Requests\Packages;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
-use App\Models\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnits;
+use App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnits;
 use App\Models\Base\Accounts\Accounts;
-use Database\Factories\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackagesFactory;
+use Database\Factories\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackagesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AppsDeliveriesRequestsPackages extends Model
+class AppsDeliveriesRequestsDestinationsPackages extends Model
 {
-    /** @use HasFactory<AppsDeliveriesRequestsPackagesFactory> */
+    /** @use HasFactory<AppsDeliveriesRequestsDestinationsPackagesFactory> */
     use HasFactory, SoftDeletes;
 
     public $incrementing = false;
@@ -60,7 +60,7 @@ class AppsDeliveriesRequestsPackages extends Model
 
     public function unit(): BelongsTo
     {
-        return $this->BelongsTo(AppsDeliveriesRequestsPackagesUnits::class, 'unit','id')->withDefault();
+        return $this->BelongsTo(AppsDeliveriesRequestsDestinationsPackagesUnits::class, 'unit','id')->withDefault();
     }
 
 }

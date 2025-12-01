@@ -2,7 +2,7 @@
 
 namespace App\Models\Apps\Deliveries\Requests;
 
-use App\Models\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackages;
+use App\Models\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsDestinationsPackages;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\AppsDeliveriesRequestsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,7 +56,7 @@ class AppsDeliveriesRequests extends Model {
     public function packages(): HasMany
     {
         return $this->hasMany(
-            AppsDeliveriesRequestsPackages::class,
+            AppsDeliveriesRequestsDestinationsPackages::class,
             'request',  // foreign key di tabel packages
             'id'        // local key di tabel requests
         );

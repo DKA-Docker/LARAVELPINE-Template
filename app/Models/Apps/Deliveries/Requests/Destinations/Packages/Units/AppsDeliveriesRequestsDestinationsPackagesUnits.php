@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models\Apps\Deliveries\Requests\Packages\Units;
+namespace App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units;
 
 use App\Models\Base\Accounts\Accounts;
-use Database\Factories\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnitsFactory;
+use Database\Factories\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnitsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AppsDeliveriesRequestsPackagesUnits extends Model
+class AppsDeliveriesRequestsDestinationsPackagesUnits extends Model
 {
-    /** @use HasFactory<AppsDeliveriesRequestsPackagesUnitsFactory> */
+    /** @use HasFactory<AppsDeliveriesRequestsDestinationsPackagesUnitsFactory> */
     use HasFactory, SoftDeletes;
 
     public $incrementing = false;

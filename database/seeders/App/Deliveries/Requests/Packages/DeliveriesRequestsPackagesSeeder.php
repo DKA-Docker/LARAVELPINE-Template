@@ -2,16 +2,16 @@
 
 namespace Database\Seeders\App\Deliveries\Requests\Packages;
 
-use Database\Factories\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsPackagesFactory;
+use Database\Factories\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsDestinationsPackagesFactory;
 use Illuminate\Database\Seeder;
 
 class DeliveriesRequestsPackagesSeeder extends Seeder
 {
 
-    protected AppsDeliveriesRequestsPackagesFactory $factory;
+    protected AppsDeliveriesRequestsDestinationsPackagesFactory $factory;
 
     public function __construct(){
-        $this->factory = new AppsDeliveriesRequestsPackagesFactory();
+        $this->factory = new AppsDeliveriesRequestsDestinationsPackagesFactory();
     }
 
     public function run(): void

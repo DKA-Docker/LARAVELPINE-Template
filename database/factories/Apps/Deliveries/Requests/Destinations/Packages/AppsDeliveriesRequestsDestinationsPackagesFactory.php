@@ -1,20 +1,20 @@
 <?php
 
-namespace Database\Factories\Apps\Deliveries\Requests\Packages;
+namespace Database\Factories\Apps\Deliveries\Requests\Destinations\Packages;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
-use App\Models\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsPackagesUnits;
+use App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnits;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class AppsDeliveriesRequestsPackagesFactory extends Factory
+class AppsDeliveriesRequestsDestinationsPackagesFactory extends Factory
 {
 
     public function definition(): array
     {
         $account = Accounts::inRandomOrder()->first();
-        $unit    = AppsDeliveriesRequestsPackagesUnits::inRandomOrder()->first();
+        $unit    = AppsDeliveriesRequestsDestinationsPackagesUnits::inRandomOrder()->first();
         $request = AppsDeliveriesRequests::inRandomOrder()->first();
         return [
             'id' => (string) Str::uuid(),
