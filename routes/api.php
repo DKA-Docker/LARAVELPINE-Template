@@ -23,6 +23,7 @@ Route::middleware(['Api'])->name('api.')->group(function () {
                     Route::prefix('routes')->name('routes.')->group(function () {
                         Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
+
                 });
                 Route::resource('reports', Reports::class);
             });

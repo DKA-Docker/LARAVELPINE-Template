@@ -46,42 +46,48 @@
                 <!-- Container -->
                 <div class="kt-container-fixed">
                     <div class="grid gap-5 lg:gap-7.5">
-                        <div class="kt-card">
-                            <div class="kt-card-header" id="advanced_settings_preferences">
-                                <h3 class="kt-card-title">
-                                    Informasi Tugas pengiriman
-                                </h3>
-                            </div>
-                            <div class="kt-card-content grid gap-5 lg:py-7.5">
-                                <div class="w-full">
-                                    <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
-                                        <div class="col-span-2">
-                                            <div class="flex flex-col gap-3">
-                                                <label class="kt-form-label font-normal text-mono pl-2">Request</label>
-                                                <input class="kt-input kt-input-lg" type="text" name="title" placeholder="Judul Permintaan"/>
+                        <form action="{{ route('api.' . implode('.', array_slice(explode('.', Route::currentRouteName()), 0, -2)).'.store') }}" method="post">
+                            @csrf
+                            <input type="hidden" value="{{ Auth::user()->id }}" name="account" >
+                            <input type="hidden" value="{{ Auth::user()->id }}" name="assigned" >
+                            <div class="kt-card">
+                                <div class="kt-card-header" id="advanced_settings_preferences">
+                                    <h3 class="kt-card-title">
+                                        Informasi Tugas pengiriman
+                                    </h3>
+                                </div>
+                                <div class="kt-card-content grid gap-5 lg:py-7.5">
+                                    <div class="w-full">
+                                        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
+                                            <div class="col-span-2">
+                                                <div class="flex flex-col gap-3">
+                                                    <label class="kt-form-label font-normal text-mono pl-2">Request</label>
+                                                    <input class="kt-input kt-input-lg" type="text" name="title" placeholder="Judul Permintaan"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-span-2">
-                                            <div class="flex flex-col gap-3">
-                                                <label class="kt-form-label font-normal text-mono pl-2">Nama Task</label>
-                                                <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Nama Task"/>
+                                            <div class="col-span-2">
+                                                <div class="flex flex-col gap-3">
+                                                    <label class="kt-form-label font-normal text-mono pl-2">Nama Task</label>
+                                                    <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Nama Task"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        @livewire("metronic.dashboards.apps.deliveries.requests.components.packages-items-layout")
-                        <div class="flex gap-4 justify-end">
-                            <a
-                                class="kt-btn kt-btn-destructive"
-                                href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}">
-                                Batalkan
-                            </a>
-                            <button class="kt-btn kt-btn-secondary">
-                                Buat Data
-                            </button>
-                        </div>
+                            @livewire("metronic.dashboards.apps.deliveries.tasks.components.packages-items-layout")
+                            <div class="flex gap-4 justify-end">
+                                <a
+                                    class="kt-btn kt-btn-destructive"
+                                    href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}">
+                                    Batalkan
+                                </a>
+                                <button class="kt-btn kt-btn-secondary" type="submit">
+                                    Buat Data
+                                </button>
+
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <!-- End of Container -->
@@ -1164,7 +1170,7 @@
     </div>
     <!-- End of Page -->
     <!-- Scripts -->
-    <div class="dashboards-apps-deliveries-requests-create"/>
+    <div class="dashboards-apps-deliveries-tasks-create"/>
     <!-- End of Scripts -->
     </body>
 </x-metronic.dashboards.layouts.container>

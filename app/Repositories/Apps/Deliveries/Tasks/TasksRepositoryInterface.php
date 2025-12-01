@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 interface TasksRepositoryInterface
 {
-    public function Create(...$args): Model|AppsDeliveriesTasks;
+    public function Create(...$args);
 
     public function ReadAll(): Collection;
 

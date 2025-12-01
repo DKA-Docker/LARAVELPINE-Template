@@ -5,6 +5,7 @@ namespace App\Services\Resources\Deliveries\Tasks;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ResourcesDeliveriesTaksServices
 {
@@ -14,6 +15,10 @@ class ResourcesDeliveriesTaksServices
     public function __construct()
     {
         $this->repository = new TasksRepository();
+    }
+
+    public  function Create(...$args){
+        return $this->repository->Create(...$args);
     }
 
     public function ReadAll(): Collection

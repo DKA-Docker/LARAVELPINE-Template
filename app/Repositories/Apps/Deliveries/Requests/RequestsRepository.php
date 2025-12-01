@@ -68,4 +68,11 @@ class RequestsRepository implements RequestsRepositoryInterface {
         $data = $this->Find($id);
         return $data->delete();
     }
+
+    public function Store(Request $request): array
+    {
+        return [
+            'request' => $request
+        ];
+    }
 }

@@ -28,16 +28,15 @@ class TasksRepository implements TasksRepositoryInterface {
      * @param ...$args AppsDeliveriesTasks
      * @return AppsDeliveriesTasks|Model
      */
-    public function Create(...$args): Model|AppsDeliveriesTasks
+    public function Create(...$args)
     {
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null
          */
         $defaults = [
-
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         return AppsDeliveriesTasks::query()->create($data);
     }
@@ -96,5 +95,9 @@ class TasksRepository implements TasksRepositoryInterface {
     public function Count(): int
     {
         return AppsDeliveriesTasks::query()->count();
+    }
+
+    public  function Store(){
+
     }
 }

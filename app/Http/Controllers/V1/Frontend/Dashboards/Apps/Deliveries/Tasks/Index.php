@@ -17,4 +17,5 @@ class Index extends Controller
     {
         return view('dashboards.apps.deliveries.tasks.show');
     }
+
 }
