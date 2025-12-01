@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Seeders\App\Deliveries\Requests\Packages\Units;
+namespace Database\Seeders\App\Deliveries\Requests\Destinations\Packages\Units;
 
-use Database\Factories\Apps\Deliveries\Requests\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnitsFactory;
+use Database\Factories\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnitsFactory;
 use Illuminate\Database\Seeder;
 
-class DeliveriesRequestsPackagesUnitsSeeder extends Seeder
+class DeliveriesRequestsDestinationsPackagesUnitsSeeder extends Seeder
 {
 
     protected AppsDeliveriesRequestsDestinationsPackagesUnitsFactory $factory;
