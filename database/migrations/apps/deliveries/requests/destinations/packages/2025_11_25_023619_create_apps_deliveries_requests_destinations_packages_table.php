@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('apps_deliveries_requests_packages', function (Blueprint $table) {
+        Schema::create('apps_deliveries_requests_destinations_packages', function (Blueprint $table) {
             $table->uuid('id')->primary();
             /** ini adalah row yang berisi id account yang dibuat agar system tau siapa yang melakukan request Di dalam database */
             $table->foreignUuid('account')->comment('adalah akun yang melakukan melakukan Request')->constrained('accounts' )->onDelete('cascade');
             /** Table ini menjadi child dari table request. karna deliveries request bisa memiliki multiple packages */
-            $table->foreignUuid('request')->comment('adalah id parent request Many To One')->constrained('apps_deliveries_requests')->onDelete('cascade');
+            $table->foreignUuid('destination')->comment('adalah id parent destination Many To One')->constrained('apps_deliveries_requests_destinations')->onDelete('cascade');
             /** adalah nama packages yang direquest untuk dilakukan pengiriman di dalam task assigned */
             $table->string('name')->comment("Adalah Nama Packages Yang Akan Di Request Untuk Di kirim");
             /** is a QTY jumlah item yang akan di kirim Di dalam request */
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('apps_deliveries_requests_packages');
+        Schema::dropIfExists('apps_deliveries_requests_destinations_packages');
     }
 };

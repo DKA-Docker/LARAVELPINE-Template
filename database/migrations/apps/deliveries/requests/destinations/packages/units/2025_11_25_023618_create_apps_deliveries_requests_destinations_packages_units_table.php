@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('apps_deliveries_requests_packages_units', function (Blueprint $table) {
+        Schema::create('apps_deliveries_requests_destinations_packages_units', function (Blueprint $table) {
             $table->uuid('id')->primary();
             /** ini adalah row yang berisi id account yang dibuat agar system tau siapa yang melakukan request Di dalam database */
             $table->foreignUuid('account')->comment('adalah akun yang melakukan melakukan Request')->constrained('accounts' )->onDelete('cascade');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('apps_deliveries_requests_packages_units');
+        Schema::dropIfExists('apps_deliveries_requests_destinations_packages_units');
     }
 };
