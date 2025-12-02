@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Apps\Deliveries\Requests\Packages;
+namespace App\Models\Apps\Deliveries\Requests\Destinations\Packages;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnits;

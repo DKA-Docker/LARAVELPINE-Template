@@ -46,7 +46,7 @@
                 <!-- Container -->
                 <div class="kt-container-fixed">
                     <div class="grid gap-5 lg:gap-7.5">
-                        <form action="{{ route($url_create) }}" method="post">
+                        <form action="{{ $url_create }}" method="post">
                             @csrf
                             <input type="hidden" value="{{ Auth::user()->id }}" name="account" >
                             <input type="hidden" value="{{ Auth::user()->id }}" name="assigned" >

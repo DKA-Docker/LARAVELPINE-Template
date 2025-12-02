@@ -18,7 +18,7 @@ class Create extends Controller
     public function index()
     {
         $pass = array(
-            'url_create' => Route::currentRouteName(),
+            'url_create' => route(Route::currentRouteName()),
         );
 
         return view('dashboards.apps.deliveries.tasks.create', $pass);
@@ -33,17 +33,17 @@ class Create extends Controller
 //        return $data;
 
         $endPoint  = route("api.".Route::currentRouteName());
-        Debugbar::log($endPoint);
+        Debugbar::info($endPoint);
         $response = Http::acceptJson()
             ->asForm() // karena di curl pakai -d form-urlencoded
             ->post($endPoint, $data);
-        Debugbar::log($response);
+        Debugbar::info($response);
 
         $body = $response->json(); // atau ->body()
-        Debugbar::log($body);
+        Debugbar::info($body);
 
         if ($body["status"]) {
-            return redirect()->route("api".Route::currentRouteName().".index");
+            return redirect()->route(Route::currentRouteName());
         }
         return redirect()->back()->withErrors(["error" => $body["message"]]);
     }

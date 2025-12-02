@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Database\Seeders\App\Deliveries\Requests\DeliveriesRequestsSeeder;
+use Database\Seeders\App\Deliveries\Requests\Destinations\DeliveriesRequestsDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\Units\DeliveriesRequestsDestinationsPackagesUnitsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksSeeder;
@@ -26,14 +27,13 @@ class DatabaseSeeder extends Seeder
             AccountsSeeder::class,
             SessionsAccountsSeeder::class,
             DeliveriesRequestsSeeder::class,
+            DeliveriesRequestsDestinationsSeeder::class,
             DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
             DeliveriesRequestsDestinationsPackagesSeeder::class,
             // taskroutes
             AppsDeliveriesTasksRoutesSeeder::class,
             // origin destination
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
-            // destination
-            AppsDeliveriesTaskRoutesDestinationsSeeder::class,
             DeliveriesTasksSeeder::class,
 
 

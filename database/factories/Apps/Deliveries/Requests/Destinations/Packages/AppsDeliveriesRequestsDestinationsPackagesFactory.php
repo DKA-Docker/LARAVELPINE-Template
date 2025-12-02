@@ -3,6 +3,7 @@
 namespace Database\Factories\Apps\Deliveries\Requests\Destinations\Packages;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnits;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,11 +16,11 @@ class AppsDeliveriesRequestsDestinationsPackagesFactory extends Factory
     {
         $account = Accounts::inRandomOrder()->first();
         $unit    = AppsDeliveriesRequestsDestinationsPackagesUnits::inRandomOrder()->first();
-        $request = AppsDeliveriesRequests::inRandomOrder()->first();
+        $destination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
         return [
             'id' => (string) Str::uuid(),
             'account' => $account->id,
-            'request' => $request->id,
+            'destination' => $destination->id,
             'name' => $this->faker->title(),
             'qty' => $this->faker->numberBetween(1, 100),
             'unit' => $unit->id,

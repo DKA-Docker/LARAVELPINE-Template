@@ -4,3 +4,6 @@ SHELL := /bin/bash
 
 default:
 	yarn run start
+
+octane:
+	yarn run start-octane

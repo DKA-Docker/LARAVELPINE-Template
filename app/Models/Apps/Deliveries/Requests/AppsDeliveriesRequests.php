@@ -2,8 +2,10 @@
 
 namespace App\Models\Apps\Deliveries\Requests;
 
-use App\Models\Apps\Deliveries\Requests\Packages\AppsDeliveriesRequestsDestinationsPackages;
+use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
+use App\Models\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackages;
 use App\Models\Base\Accounts\Accounts;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Database\Factories\Apps\Deliveries\Requests\AppsDeliveriesRequestsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +37,7 @@ class AppsDeliveriesRequests extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account','packages'];
+    protected $with = ['account','destinations'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -53,10 +55,10 @@ class AppsDeliveriesRequests extends Model {
      *
      * @return HasMany
      */
-    public function packages(): HasMany
+    public function destinations(): HasMany
     {
         return $this->hasMany(
-            AppsDeliveriesRequestsDestinationsPackages::class,
+            AppsDeliveriesRequestsDestinations::class,
             'request',  // foreign key di tabel packages
             'id'        // local key di tabel requests
         );

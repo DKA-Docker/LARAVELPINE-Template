@@ -13,41 +13,43 @@ return new class extends Migration
     {
         Schema::create('apps_deliveries_tasks_routes_destinations_packages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            /** ini adalah row yang berisi id account yang dibuat agar system tau siapa yang melakukan request Di dalam database */
-            $table->foreignUuid('account')->comment('adalah akun yang melakukan melakukan Request')->constrained('accounts' )->onDelete('cascade');
-            /** adalah nama packages yang direquest untuk dilakukan pengiriman di dalam task assigned */
-            $table->string('name')->comment("Adalah Nama Packages Yang Akan Di Request Untuk Di kirim");
-            /** is a QTY jumlah item yang akan di kirim Di dalam request */
-            $table->bigInteger('qty')->comment("adalah jumlah item yang di request yang akan di kirim di dalam pengiriman");
-            /**  table yang relevant ke table unit packages */
-            $table->foreignUuid('unit')->comment('adalah unit data yang dipakai untuk mengukur satuan')->constrained('apps_deliveries_requests_packages_units' )->onDelete('cascade');
-            /**  table yang relevant ke table unit packages */
-            $table->foreignUuid('destination')
-                ->comment('adalah destination data yang dipakai untuk mengambil destinasi');
-            $table->foreign('destination', 'fk_routes_dest')
+
+            /** account yang melakukan request */
+            $table->uuid('account');
+            $table->foreign('account', 'fk_trdp_account')
+                ->references('id')
+                ->on('accounts')
+                ->onDelete('cascade');
+
+            /** nama paket */
+            $table->string('name')->comment('Adalah Nama Packages Yang Akan Di Request Untuk Di kirim');
+
+            /** qty */
+            $table->bigInteger('qty')->comment('adalah jumlah item yang di request yang akan di kirim di dalam pengiriman');
+
+            /** destination */
+            $table->uuid('destination');
+            $table->foreign('destination', 'fk_trdp_destination')
                 ->references('id')
                 ->on('apps_deliveries_tasks_routes_destinations')
                 ->onDelete('cascade');
 
-            /** Buat Note Untuk Request packages Ini */
-            $table->string("note")->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik')->nullable();
-            /** Adalah Dimensi Panjang (width) */
-            $table->integer('dimensionwidth')->nullable()->comment("adalah dimension width")->default(0);
-            /** Adalah Dimensi Lebar (height) */
-            $table->integer('dimension_height')->nullable()->comment("adalah dimension height")->default(0);
-            /** adalah dimensi Tinggi (weight_) */
-            $table->integer('dimension_weight')->nullable()->comment("adalah dimension weight")->default(0);
-            /** adalah satuan berat dalam Ons */
-            $table->integer('heavy')->comment("adalah jumlah Berat Barang Dalam ons")->default(0);
-            /** Menandai packages Ini Sebagai Barang Mudah Pecah */
-            $table->boolean('is_fragile')->comment("Menandai packages ini sebagai Barang Mudah Pecah")->default(false);
-            /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
+            /** note */
+            $table->string('note')->nullable()->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik');
+
+            /** dimensi */
+            $table->integer('dimension_width')->nullable()->default(0)->comment('adalah dimension width');
+            $table->integer('dimension_height')->nullable()->default(0)->comment('adalah dimension height');
+            $table->integer('dimension_weight')->nullable()->default(0)->comment('adalah dimension weight');
+
+            /** berat dalam ons */
+            $table->integer('heavy')->default(0)->comment('adalah jumlah Berat Barang Dalam ons');
+
+            /** fragile flag */
+            $table->boolean('is_fragile')->default(false)->comment('Menandai packages ini sebagai Barang Mudah Pecah');
+
             $table->softDeletes()->comment('parameter soft deleted');
-            /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
-
             $table->timestamps();
-
-
         });
     }
 

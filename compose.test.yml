@@ -1,0 +1,45 @@
+name: kitasulsel
+
+services:
+  app:
+    image: yovanggaanandhika/wordpress:8.3-fpm-maria-alpine
+    container_name: kitasulsel-app
+    hostname: kitasulsel-app
+    restart: always
+    pull_policy: always
+    environment:
+      DKA_WP_DEBUG: true
+      DKA_DB_TABLE_PREFIX: wp_
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: 10
+    volumes:
+      - type: volume
+        source: backup-data
+        target: /backup
+      - type: volume
+        source: mariadb-data
+        target: /var/lib/mysql
+      - type: volume
+        source: content
+        target: /var/www/html/wp-content
+    networks:
+      - default
+
+volumes:
+  backup-data:
+    name: kitasulsel-backup-data
+    external: true
+  mariadb-data:
+    name: kitasulsel-mariadb-data
+    external: true
+  content:
+    name: kitasulsel-content
+    external: true
+
+networks:
+  default:
+    name: kitasulsel-default
+    external: true
