@@ -37,7 +37,7 @@ class AppsDeliveriesRequests extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account'];
+    protected $with = ['account','destinations'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -46,6 +46,22 @@ class AppsDeliveriesRequests extends Model {
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    /**
+     * Satu Request punya banyak Packages
+     * foreign key di tabel packages = request
+     * local key di tabel ini = id
+     *
+     * @return HasMany
+     */
+    public function destinations(): HasMany
+    {
+        return $this->hasMany(
+            AppsDeliveriesRequestsDestinations::class,
+            'request',  // foreign key di tabel packages
+            'id'        // local key di tabel requests
+        );
     }
 
 }
