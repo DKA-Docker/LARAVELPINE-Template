@@ -30,18 +30,34 @@ class Create extends controller {
     }
     public  function store(Request $request)  {
         $data =  $request->all();
-        //$results = $this->service->Create($data);
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'Successfully Read Data',
-                'data' => $data,
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json'
-            )
-        );
+        $results = $this->service->Create($data);
+        if($results){
+            return response()->json(
+                data: array(
+                    'status' => true,
+                    'code' => Response::HTTP_OK,
+                    'msg' => 'Successfully Read Data',
+                    'data' => $results,
+                ),
+                status: Response::HTTP_OK,
+                headers: array(
+                    'Content-Type' => 'application/json'
+                )
+            );
+        }else{
+            return response()->json(
+                data: array(
+                    'status' => false,
+                    'code' => Response::HTTP_UNAUTHORIZED,
+                    'msg' => 'Failed Read Data',
+                    'data' => $data,
+                ),
+                status: Response::HTTP_UNAUTHORIZED,
+                headers: array(
+                    'Content-Type' => 'application/json'
+                )
+            );
+        }
+
     }
 }

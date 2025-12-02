@@ -43,6 +43,7 @@ class Create extends Controller
         Debugbar::info($body);
 
         if ($body["status"]) {
+            dd($body);
             return redirect()->route(Route::currentRouteName());
         }
         return redirect()->back()->withErrors(["error" => $body["message"]]);
