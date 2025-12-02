@@ -37,7 +37,7 @@ class MonitorsRepository implements MonitorsRepositoryInterface {
 
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         return AppsTrackingsMonitors::query()->create($data);
     }

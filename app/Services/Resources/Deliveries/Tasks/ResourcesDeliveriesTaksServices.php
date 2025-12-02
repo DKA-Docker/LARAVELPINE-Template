@@ -29,7 +29,7 @@ class ResourcesDeliveriesTaksServices
     public function AutomaticallyPaginationTable(Request $request): Collection
     {
         if (!$request->hasAny(['page', 'size'])) {
-            return $this->repository->all();
+            return $this->repository->query()->get();
         }
 
         /** @var $page

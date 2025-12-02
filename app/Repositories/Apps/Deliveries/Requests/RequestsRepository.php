@@ -31,7 +31,7 @@ class RequestsRepository implements RequestsRepositoryInterface {
 
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         return AppsDeliveriesRequests::query()->create($data);
     }

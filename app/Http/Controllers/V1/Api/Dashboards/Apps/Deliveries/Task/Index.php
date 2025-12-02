@@ -38,22 +38,7 @@ class Index extends Controller
         );
     }
 
-    public  function store(Request $request)  {
-        $data =  $request->all();
-        $results = $this->service->Create($data);
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'Successfully Read Data',
-                'data' => $results
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json'
-            )
-        );
-    }
+
 }
 
 

@@ -71,13 +71,13 @@ $(window).on('load', function () {
                 origin: {
                     title: 'Origin',
                     render: (value, row) => {
-                        return row.route.origins.address;
+                        return row.route?.origins?.address ?? '-';
                     }
                 },
                 destinations: {
                     title: 'Destinations',
                     render: (value, row) => {
-                        return `${row.route.destinations.length}`;
+                        return `${row.route?.destinations?.length ?? '-'}`;
                     }
                 },
                 created_at: {

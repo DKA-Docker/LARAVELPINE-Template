@@ -28,7 +28,7 @@ class TasksRepository implements TasksRepositoryInterface {
      * @param ...$args AppsDeliveriesTasks
      * @return AppsDeliveriesTasks|Model
      */
-    public function Create(...$args)
+    public function Create(...$args): Model|AppsDeliveriesTasks
     {
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null

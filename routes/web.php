@@ -35,7 +35,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
                 Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
-                Route::resource('create', DeliveriesTasksCreate::class);
+                Route::resource('/create', DeliveriesTasksCreate::class);
             });
             Route::resource('reports', Reports::class);
         });

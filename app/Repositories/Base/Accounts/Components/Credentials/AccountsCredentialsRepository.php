@@ -38,7 +38,7 @@ class AccountsCredentialsRepository implements AccountsCredentialsRepositoryInte
         /**
          * Jika Ada data inputnya maka akan digunakan data inputnya
          */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         /**
          * Kembalikan Create Methodnya

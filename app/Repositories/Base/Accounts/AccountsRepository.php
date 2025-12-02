@@ -34,7 +34,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
             'contact' => null,
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         return Accounts::query()->create($data);
     }

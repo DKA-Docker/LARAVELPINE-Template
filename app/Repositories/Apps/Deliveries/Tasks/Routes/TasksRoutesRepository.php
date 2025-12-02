@@ -39,7 +39,7 @@ class TasksRoutesRepository implements TasksRepositoryInterface {
 
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, $args);
+        $data = array_merge($defaults, ...$args);
 
         return AppsDeliveriesTasksRoutes::query()->create($data);
     }
