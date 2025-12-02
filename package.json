@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "start": "concurrently \"php artisan serve\" \"yarn run dev\" \"php artisan schedule:work\"",
+        "start": "concurrently \"php artisan serve --host=0.0.0.0\" \"yarn run dev\" \"php artisan schedule:work\"",
         "start-octane": "concurrently \"php artisan octane:start --watch\" \"yarn run dev\" \"php artisan schedule:work\"",
         "start-ryan": "concurrently \"php artisan serve\" \"yarn run dev\" \"php artisan schedule:work\""
 
