@@ -28,14 +28,13 @@ class AppsDeliveriesTasks extends Model
         'name',
         'assigned',
         'route',
-        'created_at',
-        'delete_at',
     ];
-    /** Cast tipe data */
+
     protected $casts = [
-        'created_at' => 'datetime',
-        'deleted_at' => 'datetime',
+        'created_at' => 'datetime:+08:00',
+        'updated_at' => 'datetime:+08:00',
     ];
+
 
     protected $with = ['account','assigned','route'];
 

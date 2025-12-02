@@ -30,13 +30,9 @@ class DatabaseSeeder extends Seeder
             DeliveriesRequestsDestinationsSeeder::class,
             DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
             DeliveriesRequestsDestinationsPackagesSeeder::class,
-            // taskroutes
             AppsDeliveriesTasksRoutesSeeder::class,
-            // origin destination
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
             DeliveriesTasksSeeder::class,
-
-
         ]);
     }
 }

@@ -42,7 +42,7 @@ return new class extends Migration
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
             $table->softDeletes()->comment('parameter soft deleted');
             /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

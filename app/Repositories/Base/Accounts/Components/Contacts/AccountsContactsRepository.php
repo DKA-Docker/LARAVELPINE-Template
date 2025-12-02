@@ -34,7 +34,7 @@ class AccountsContactsRepository implements AccountsContactsRepositoryInterface 
             'email' => $this->faker->email,
         ];
 
-        $data = array_merge($defaults, ...$args);
+        $data = array_merge($defaults, $args);
 
         return AccountsContacts::query()->create($data);
     }

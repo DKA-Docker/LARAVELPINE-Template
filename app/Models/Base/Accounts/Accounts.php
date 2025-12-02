@@ -29,7 +29,7 @@ class Accounts extends Authenticatable
 
     /** Kolom yang bisa diisi */
     protected $fillable = [
-//        'id',
+        'id',
         'information',
         'credential',
         'contact',

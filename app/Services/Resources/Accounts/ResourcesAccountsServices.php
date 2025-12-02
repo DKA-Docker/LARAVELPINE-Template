@@ -41,6 +41,7 @@ class ResourcesAccountsServices
     /**
      * Create Account (atomik) + afterCommit
      * @return array{status:bool,code:int,msg:string,data?:mixed,error?:mixed,details?:mixed}
+     * @throws Throwable
      */
     public function Create(array $payload): array
     {

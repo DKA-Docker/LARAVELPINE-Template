@@ -36,7 +36,7 @@ class Create extends controller {
                 data: array(
                     'status' => true,
                     'code' => Response::HTTP_OK,
-                    'msg' => 'Successfully Read Data',
+                    'msg' => 'Successfully Create Data',
                     'data' => $results,
                 ),
                 status: Response::HTTP_OK,

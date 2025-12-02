@@ -42,7 +42,7 @@ class AccountsInformationsRepository implements AccountsInformationsRepositoryIn
             'last_name' => null,
         ];
 
-        $data = array_merge($defaults, ...$args);
+        $data = array_merge($defaults, $args);
 
         return AccountsInformations::query()->create($data);
     }
