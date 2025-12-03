@@ -21,6 +21,7 @@ class Index extends Component
     public function submit(): void
     {
         Debugbar::info('SUBMIT PAYLOAD', $this->data);
+
     }
 
     public function render(): Factory|View

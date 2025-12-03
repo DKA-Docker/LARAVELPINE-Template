@@ -30,6 +30,37 @@
                 </div>
                 <div class="kt-card-content grid gap-5 lg:py-7.5">
                     <div class="w-full">
+                        @if($data['title'] == null)
+                            <div class="flex flex-col gap-5 lg:gap-7.5">
+                                <div class="kt-card-content px-10 py-7.5 lg:pe-12.5">
+                                    <div class="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-10">
+                                        <!-- Kolom teks -->
+                                        <div class="flex flex-col gap-3 max-w-xl">
+                                            <h2 class="text-xl font-semibold text-mono">
+                                                Buat Nama Subject Pengiriman
+                                            </h2>
+                                            <p class="text-sm text-secondary-foreground leading-5.5">
+                                                Tentukan Namanya Yah, Misal. "Pengiriman Hari Ini". Tenang. Ini Adalah Subject. Hanya Sebuah Judul
+                                            </p>
+                                        </div>
+
+                                        <!-- Kolom gambar, dipaksa nempel kanan -->
+                                        <div class="ms-auto flex items-center gap-4">
+                                            <img
+                                                alt="image"
+                                                class="block dark:hidden max-h-[160px]"
+                                                src="{{ asset(Storage::url('media/illustrations/32.svg')) }}"
+                                            >
+                                            <img
+                                                alt="image"
+                                                class="hidden dark:block max-h-[160px]"
+                                                src="{{ asset(Storage::url('media/illustrations/32-dark.svg')) }}"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
                             <div class="col-span-3">
                                 <div class="flex flex-col gap-3">
