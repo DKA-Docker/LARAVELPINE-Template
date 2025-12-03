@@ -59,7 +59,7 @@
                                 <h3 class="kt-card-title text-white" id="destinations-title-{{ $index }}">
                                     <span class="destinations-title-prefix">#{{ $index + 1 }} - </span>
                                     <span class="destinations-title-text">
-                                        Dikirim Ke {{ $destination['receipt_name'] ?? '-' }} Di {{ $destination['receipt_address'] ?? '-' }}
+                                        Dikirim Ke {{ strtoupper($destination['receipt_name'] ?? 'Belum Ada Penerima') }} Di {{ strtoupper($destination['receipt_address'] ?? 'Belum Ada Alamat') }}
                                     </span>
                                 </h3>
 

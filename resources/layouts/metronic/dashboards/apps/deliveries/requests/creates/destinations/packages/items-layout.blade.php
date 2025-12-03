@@ -60,7 +60,7 @@
                             <h3 class="kt-card-title text-white" id="packages-title-{{ $index }}">
                                 <span class="packages-title-prefix">#{{ $index + 1 }} - </span>
                                 <span class="packages-title-text">
-                                    #{{ $index + 1 }}
+                                    Kirim Barang {{ strtoupper($package['name'] ?: "Belum Ada Nama") }} - {{ strtoupper($package['qty'] ?? 0) }} {{ strtoupper($package['unit'] ?: "Unit") }}
                                 </span>
                             </h3>
 
