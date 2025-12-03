@@ -1,12 +1,12 @@
 <div class="kt-card border-1 border-red-700">
     <div class="kt-card-header rounded-t-xl" style="background: linear-gradient(90deg,rgba(150, 5, 5, 1) 0%, rgba(253, 29, 29, 1) 70%, rgba(252, 176, 69, 1) 100%);">
         <h3 class="kt-card-title text-white">
-            Ada {{ array_sum($destinations) }} Tujuan
+            Daftar Destinasi Pengiriman
         </h3>
 
         <div class="flex justify-end">
             <button class="kt-btn kt-btn-secondary" type="button" wire:click="add">
-                Tambah Tujuan
+                Tambah Destinasi
             </button>
         </div>
     </div>
@@ -59,7 +59,7 @@
                                                 class="kt-input kt-input-lg"
                                                 type="text"
                                                 name="receipt_name"
-                                                placeholder="receipt_name"
+                                                placeholder="Nama Penerima Barang"
                                                 wire:model.defer="destinations.{{ $index }}.receipt_name"
                                             />
                                         </div>
@@ -73,7 +73,7 @@
                                                 class="kt-input kt-input-lg"
                                                 type="text"
                                                 name="receipt_address"
-                                                placeholder="receipt_address"
+                                                placeholder="Alamat penerima Barang"
                                                 wire:model.defer="destinations.{{ $index }}.receipt_address"
                                             />
                                         </div>
@@ -86,13 +86,12 @@
                                             <label class="kt-form-label font-normal text-mono pl-2">
                                                 Description
                                             </label>
-                                            <input
-                                                class="kt-input kt-input-lg"
-                                                type="text"
+                                            <textarea
+                                                class="kt-input kt-input-lg min-h-32 max-h-32 p-5"
                                                 name="description"
                                                 placeholder="description"
                                                 wire:model.defer="destinations.{{ $index }}.description"
-                                            />
+                                            ></textarea>
                                         </div>
                                     </div>
                                 </div>

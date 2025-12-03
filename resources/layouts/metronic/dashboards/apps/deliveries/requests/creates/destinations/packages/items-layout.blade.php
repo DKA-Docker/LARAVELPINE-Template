@@ -1,12 +1,12 @@
 <div class="kt-card  border-1 border-blue-800">
     <div class="kt-card-header rounded-t-xl" style="background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);">
         <h3 class="kt-card-title text-white">
-            Barang Di Pengiriman
+            Daftar Barang Yang Ingin Dikirim
         </h3>
 
         <div class="flex justify-end">
             <button class="kt-btn kt-btn-secondary" type="button" wire:click="add">
-                Tambah Item
+                Tambah Barang
             </button>
         </div>
     </div>
