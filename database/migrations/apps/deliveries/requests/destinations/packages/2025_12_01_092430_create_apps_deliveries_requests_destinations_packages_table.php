@@ -35,7 +35,7 @@ return new class extends Migration
             $table->bigInteger('qty')->comment("adalah jumlah item yang di request yang akan di kirim di dalam pengiriman");
 
             /** unit */
-            $table->uuid('unit');
+            $table->uuid('unit')->nullable();
             $table->foreign('unit', 'fk_addrp_unit')
                 ->references('id')
                 ->on('apps_deliveries_requests_destinations_packages_units')
@@ -45,9 +45,9 @@ return new class extends Migration
             $table->string("note")->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik')->nullable();
 
             /** dimensi */
-            $table->integer('dimension_width')->nullable()->default(0)->comment("adalah dimension width");
-            $table->integer('dimension_height')->nullable()->default(0)->comment("adalah dimension height");
-            $table->integer('dimension_weight')->nullable()->default(0)->comment("adalah dimension weight");
+            $table->integer('width')->nullable()->default(0)->comment("adalah dimension width");
+            $table->integer('height')->nullable()->default(0)->comment("adalah dimension height");
+            $table->integer('weight')->nullable()->default(0)->comment("adalah dimension weight");
 
             /** berat dalam ons */
             $table->integer('heavy')->default(0)->comment("adalah jumlah Berat Barang Dalam ons");

@@ -2,33 +2,116 @@
 
 namespace App\Services\Resources\Deliveries\Requests;
 
+use App\Models\Base\Accounts\Accounts;
+use App\Repositories\Apps\Deliveries\Requests\Destinations\Packages\RequestsDestinationsPackagesRepository;
+use App\Repositories\Apps\Deliveries\Requests\Destinations\RequestsDestinationsRepository;
 use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Throwable;
 
 class ResourcesDeliveriesRequestsServices
 {
 
-    protected RequestsRepository $repository;
+    protected RequestsRepository $repositoryRequest;
+    protected RequestsDestinationsRepository $repositoryRequestDestinations;
+    protected RequestsDestinationsPackagesRepository $repositoryRequestsDestinationsPackages;
 
     public function __construct(){
-        $this->repository = new RequestsRepository();
+        $this->repositoryRequest = new RequestsRepository();
+        $this->repositoryRequestDestinations = new RequestsDestinationsRepository();
+        $this->repositoryRequestsDestinationsPackages = new RequestsDestinationsPackagesRepository();
     }
 
-
-    public function Create(Request $request)
+    public function Create(array $args): array
     {
-        return $this->repository->create();
+        /** @var Accounts $account */
+        $account = Auth::user();
+
+        try {
+            DB::beginTransaction();
+
+            /** pisahkan destinations dari payload utama supaya nggak ikut ke mass assignment */
+            $destinationsPayload = $args['destinations'] ?? [];
+            unset($args['destinations']); // buang dari payload utama
+
+            /** buat record request utama */
+            $RequestResponse = $this->repositoryRequest->Create([
+                'id'      => (string) Str::uuid(),
+                'account' => $account->id,
+                ...$args, // sisanya payload request
+            ]);
+
+            /** kalau ada destinasi, proses satu per satu */
+            collect($destinationsPayload)->each(function ($destination) use ($account, $RequestResponse) {
+                // pastikan $destination adalah array biasa
+                $destination = (array) $destination;
+
+                /** pisahkan packages dari data destinasi */
+                $packagesPayload = $destination['packages'] ?? [];
+                unset($destination['packages']);
+
+                $RequestDestinationsResponse = $this->repositoryRequestDestinations->Create([
+                    'id'      => (string) Str::uuid(),
+                    'account' => $account->id,
+                    'request' => $RequestResponse->id,
+                    ...$destination, // isi receipt_name, receipt_phone, dst
+                ]);
+
+                /** kalau ada packages di destinasi ini, buat satu per satu */
+                collect($packagesPayload)->each(function ($package) use ($account, $RequestDestinationsResponse) {
+                    $package = (array) $package;
+
+                    $this->repositoryRequestsDestinationsPackages->Create([
+                        'id'          => (string) Str::uuid(),
+                        'account'     => $account->id,
+                        'destination' => $RequestDestinationsResponse->id,
+                        ...$package, // name, qty, unit, etc
+                    ]);
+                });
+            });
+
+            DB::commit();
+
+            DB::afterCommit(function () use ($RequestResponse) {
+                // taruh dispatch event / job kalau nanti butuh
+            });
+
+            return [
+                'status'  => true,
+                'message' => 'Berhasil membuat request pengiriman.',
+                'data'    => $RequestResponse,
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            // optional: logging
+            // report($e);
+
+            return [
+                'status'  => false,
+                'message' => $e->getMessage(), // dari exception
+            ];
+        }
     }
+
+
+
+
     public function ReadAll(): Collection
     {
-        return $this->repository->ReadAll();
+        return $this->repositoryRequest->ReadAll();
     }
 
     public function AutomaticallyPaginationTable(Request $request): Collection {
         /** kalau nggak ada page & size di query, balikin semua data */
         if (!$request->hasAny(['page', 'size'])) {
-            return $this->repository->query()->get();
+            return $this->repositoryRequest->query()->get();
         }
 
         /** @var $page
@@ -47,7 +130,7 @@ class ResourcesDeliveriesRequestsServices
             $size = $size < 1 ? null : $size;     // kalau dikasih angka aneh (<=0), anggap no limit
         }
 
-        $query = $this->repository->query();
+        $query = $this->repositoryRequest->query();
 
         if ($size !== null) {
             $page   = max($page, 1);
@@ -61,6 +144,6 @@ class ResourcesDeliveriesRequestsServices
 
     public function Count(): int
     {
-        return $this->repository->Count();
+        return $this->repositoryRequest->Count();
     }
 }

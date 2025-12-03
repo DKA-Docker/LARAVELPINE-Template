@@ -8,7 +8,7 @@
             <div class="flex items-center gap-2.5">
                 <a
                     class="kt-btn  kt-btn-lg kt-btn-destructive"
-                    href="{{ route(preg_replace('/\.create\.index$/', '.index', \Illuminate\Support\Facades\Route::currentRouteName())) }}"
+                    href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}"
                 >
                     Batalkan
                 </a>
@@ -19,6 +19,12 @@
         </div>
     </div>
     <!-- End of Container -->
+    @if (session('message'))
+        <div class="alert {{ session('status') ? 'alert-success' : 'alert-danger' }}">
+            {{ session('message') }}
+        </div>
+    @endif
+
     <!-- Container -->
     <div class="kt-container-fixed">
         <div class="grid gap-5 lg:gap-7.5">
@@ -30,7 +36,7 @@
                 </div>
                 <div class="kt-card-content grid gap-5 lg:py-7.5">
                     <div class="w-full">
-                        @if($data['title'] == null)
+                        @if($data['name'] == null)
                             <div class="flex flex-col gap-5 lg:gap-7.5">
                                 <div class="kt-card-content px-10 py-7.5 lg:pe-12.5">
                                     <div class="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-10">
@@ -68,9 +74,9 @@
                                     <input
                                         class="kt-input kt-input-lg"
                                         type="text"
-                                        name="title"
+                                        name="name"
                                         placeholder="Judul Permintaan"
-                                        wire:model.live="data.title"
+                                        wire:model.live="data.name"
                                     />
                                 </div>
                             </div>

@@ -60,7 +60,7 @@
                             <h3 class="kt-card-title text-white" id="packages-title-{{ $index }}">
                                 <span class="packages-title-prefix">#{{ $index + 1 }} - </span>
                                 <span class="packages-title-text">
-                                    Kirim Barang {{ strtoupper($package['name'] ?: "Belum Ada Nama") }} - {{ strtoupper($package['qty'] ?? 0) }} {{ strtoupper($package['unit'] ?: "Unit") }}
+                                    Kirim Barang {{ strtoupper($package['name'] ?: "Belum Ada Nama") }} - {{ strtoupper($package['qty'] ?? 0) }}
                                 </span>
                             </h3>
 
@@ -116,21 +116,7 @@
                                         </div>
                                     </div>
                                     <div class="col-span-1">
-                                        <div class="flex flex-col gap-3">
-                                            <label class="kt-form-label font-normal text-mono pl-2">
-                                                Unit (Satuan)
-                                            </label>
-                                            <input
-                                                class="kt-input kt-input-lg"
-                                                type="number"
-                                                min="0"
-                                                name="unit"
-                                                placeholder="unit"
-                                                wire:model.defer="packages.{{ $index }}.unit"
-                                                data-items-index="{{ $index }}"
-                                                data-title-field="unit"
-                                            />
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3 p-5">

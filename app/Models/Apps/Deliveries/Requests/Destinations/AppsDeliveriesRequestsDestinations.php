@@ -18,6 +18,8 @@ class AppsDeliveriesRequestsDestinations extends Model {
         'id',
         'account',
         'request',
+        'receipt_name',
+        'receipt_address',
         'created_at',
         'updated_at',
     ];

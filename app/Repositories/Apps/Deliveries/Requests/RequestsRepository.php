@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class RequestsRepository implements RequestsRepositoryInterface {
 
@@ -19,21 +21,12 @@ class RequestsRepository implements RequestsRepositoryInterface {
         $this->faker = Factory::create();
     }
     /**
-     * @param ...$args AppsDeliveriesRequests
+     * @param array $args AppsDeliveriesRequests
      * @return AppsDeliveriesRequests|Model
      */
     public function Create(...$args): Model|AppsDeliveriesRequests
     {
-        /** @var $defaults
-         * jika data inputan kosong maka semua variable di set null
-         */
-        $defaults = [
-
-        ];
-        /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, ...$args);
-
-        return AppsDeliveriesRequests::query()->create($data);
+        return AppsDeliveriesRequests::query()->create(...$args);
     }
 
     public function ReadAll(): Collection

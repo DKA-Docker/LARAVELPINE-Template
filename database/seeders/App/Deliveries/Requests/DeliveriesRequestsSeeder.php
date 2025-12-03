@@ -17,7 +17,7 @@ class DeliveriesRequestsSeeder extends Seeder
     public function run(): void
     {
         // Buat 10 akun lengkap
-        $this->factory->count(800)->create();
+        $this->factory->count(2)->create();
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }

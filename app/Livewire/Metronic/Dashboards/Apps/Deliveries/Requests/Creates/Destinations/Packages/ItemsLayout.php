@@ -17,7 +17,6 @@ class ItemsLayout extends Component
         return [
             'name'    => null,
             'qty'     => 0,
-            'unit'    => null,
             'width'   => 0,
             'height'  => 0,
             'weight'  => 0,
