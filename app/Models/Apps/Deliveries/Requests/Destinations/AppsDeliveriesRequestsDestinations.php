@@ -1,10 +1,12 @@
 <?php
 namespace App\Models\Apps\Deliveries\Requests\Destinations;
 
+use App\Models\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackages;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppsDeliveriesRequestsDestinations extends Model {
@@ -29,7 +31,8 @@ class AppsDeliveriesRequestsDestinations extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account'];
+    protected $with = ['account','packages'];
+//    protected $with = ['account'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -38,5 +41,10 @@ class AppsDeliveriesRequestsDestinations extends Model {
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    public function packages(): HasMany
+    {
+        return $this->hasMany(AppsDeliveriesRequestsDestinationsPackages::class, 'destination','id' );
     }
 }

@@ -21,6 +21,11 @@ class ResourcesDeliveriesTaksServices
         return $this->repository->Create(...$args);
     }
 
+    public function ReadAllRequest(): Collection
+    {
+        return $this->repository->GetAllRequest();
+    }
+
     public function ReadAll(): Collection
     {
         return $this->repository->ReadAll();

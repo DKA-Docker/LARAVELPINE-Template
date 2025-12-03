@@ -17,10 +17,12 @@ class Create extends controller {
 
     public  function index()  {
 
+        $data = $this->service->ReadAllRequest();
         return response()->json(
             data: array(
                 'status' => true,
                 'code' => Response::HTTP_OK,
+                'data' => $data
             ),
             status: Response::HTTP_OK,
             headers: array(

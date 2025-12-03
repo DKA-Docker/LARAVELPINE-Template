@@ -26,11 +26,11 @@ $(window).on('load', function () {
          * ['api','dashboards','apps','deliveries'];
          * **/
         segs.unshift('api');
-        /**
-         * ['api','dashboards','apps','deliveries'];
-         * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
-         * /api/dashboards/apps/deliveries
-         * **/
+            /**
+             * ['api','dashboards','apps','deliveries'];
+             * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
+             * /api/dashboards/apps/deliveries
+             * **/
         FullUriCurrentURL.segment(segs);
         /**
          * Pastikan ID Query Selector yang Diambil Membungkus class kt-data-datatable api

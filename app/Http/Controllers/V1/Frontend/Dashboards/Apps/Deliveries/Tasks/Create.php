@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
 
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,10 +11,16 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class Create extends Controller
 {
 
+    protected ResourcesDeliveriesTaksServices $service;
+
+    public function __construct(){
+        $this->service = new ResourcesDeliveriesTaksServices();
+    }
 
     public function index()
     {
@@ -29,24 +36,27 @@ class Create extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data =  $request->all();
+        $results = $this->service->Create($data);
 //        return $data;
-
-        $endPoint  = route("api.".Route::currentRouteName());
-        Debugbar::info($endPoint);
-        $response = Http::acceptJson()
-            ->asForm() // karena di curl pakai -d form-urlencoded
-            ->post($endPoint, $data);
-        Debugbar::info($response);
-
-        $body = $response->json(); // atau ->body()
-        Debugbar::info($body);
-
-        if ($body["status"]) {
-            dd($body);
-            return redirect()->route(Route::currentRouteName());
+        if($results){
+            return redirect()->route(implode('.', array_slice(explode('.', Route::currentRouteName()), 0, -2)).'.index')->with('success', 'Berhasil di Tambahkan');
+        }else{
+            return response()->json(
+                data: array(
+                    'status' => false,
+                    'code' => Response::HTTP_UNAUTHORIZED,
+                    'msg' => 'Failed Read Data',
+                    'data' => $data,
+                ),
+                status: Response::HTTP_UNAUTHORIZED,
+                headers: array(
+                    'Content-Type' => 'application/json'
+                )
+            );
         }
-        return redirect()->back()->withErrors(["error" => $body["message"]]);
+
+
     }
 }
 

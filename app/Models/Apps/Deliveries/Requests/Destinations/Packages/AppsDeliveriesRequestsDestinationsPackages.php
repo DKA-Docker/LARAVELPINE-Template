@@ -3,12 +3,14 @@
 namespace App\Models\Apps\Deliveries\Requests\Destinations\Packages;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Requests\Destinations\Packages\Units\AppsDeliveriesRequestsDestinationsPackagesUnits;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackagesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppsDeliveriesRequestsDestinationsPackages extends Model
@@ -42,6 +44,7 @@ class AppsDeliveriesRequestsDestinationsPackages extends Model
         'updated_at' => 'datetime',
     ];
 
+//    protected $with = ['account','unit','destination'];
     protected $with = ['account','unit'];
 
     /**
@@ -62,5 +65,10 @@ class AppsDeliveriesRequestsDestinationsPackages extends Model
     {
         return $this->BelongsTo(AppsDeliveriesRequestsDestinationsPackagesUnits::class, 'unit','id')->withDefault();
     }
+
+//    public function destination(): BelongsTo
+//    {
+//        return $this->BelongsTo(AppsDeliveriesRequestsDestinations::class, 'destination', 'id');
+//    }
 
 }

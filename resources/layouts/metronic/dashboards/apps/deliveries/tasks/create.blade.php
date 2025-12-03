@@ -58,11 +58,19 @@
                                 </div>
                                 <div class="kt-card-content grid gap-5 lg:py-7.5">
                                     <div class="w-full">
-                                        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
+                                        <div class="grid grid-cols-1 xl:grid-cols-6 gap-5 lg:gap-7.5 py-3">
                                             <div class="col-span-2">
                                                 <div class="flex flex-col gap-3">
                                                     <label class="kt-form-label font-normal text-mono pl-2">Request</label>
-                                                    <input class="kt-input kt-input-lg" type="text" name="title" placeholder="Judul Permintaan"/>
+                                                    <select name="request_id" id="request_id" class="kt-input kt-input-lg">
+                                                        <option value="">Pilih Request</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2">
+                                                <div class="flex flex-col gap-3">
+                                                    <label class="kt-form-label font-normal text-mono pl-2">Request</label>
+                                                    <input class="kt-input kt-input-lg" type="text" name="title" id="title" placeholder="Judul Permintaan"/>
                                                 </div>
                                             </div>
                                             <div class="col-span-2">

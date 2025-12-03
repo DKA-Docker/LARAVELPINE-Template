@@ -2,8 +2,101 @@ import $ from "jquery";
 import "moment/locale/id.js";
 import { KTAccordion } from "@keenthemes/ktui/src";
 import mapboxgl from "mapbox-gl";
+import moment from "moment-timezone";
+import URI from "urijs";
+import axios from "axios";
+import jQuery from "jquery";
 
 const elementExists = $("div.dashboards-apps-deliveries-tasks-create");
+
+
+if(elementExists.length > 0 ){
+    // ubah local menjadi indo
+    moment.locale('id');
+
+    // ambil url dimana saja url ini di muat
+    const FullUriCurrentUrl =  URI(window.location);
+    /**
+     * Ubah URL Menjadi Array Segment
+     * misal /dashboards/apps/deliveries menjadi
+     * ['dashboards','apps','deliveries'];
+     * **/
+    const segs = FullUriCurrentUrl.segment();
+    /**
+     * Tambahkan Data Di Dalam Array
+     * ['api','dashboards','apps','deliveries'];
+     * **/
+    segs.unshift('api');
+    /**
+     * ['api','dashboards','apps','deliveries'];
+     * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
+     * /api/dashboards/apps/deliveries
+     * **/
+    FullUriCurrentUrl.segment(segs);
+
+    // ambil data simpan di dalam array/cache
+    let requestDataCache: object[] = [];
+
+    // sisipkan URL dan panggil data api Request
+    function fetchRequestOptions(FullUriCurrentUrl: string){
+        return fetch(FullUriCurrentUrl)
+            .then(res => res.json())
+            .then(json => {
+                if( !json.status || !json.data) return [];
+
+                // simpan semua data di cache
+                requestDataCache = json.data;
+
+                // // isi select untuk cache
+                // json.data.forEach((item: any) => {
+                //     const label = `${item.name} - ${item.account?.information?.first_name ?? ''}`;
+                //     $('#request_id').append(
+                //         `<option value="${item.id}">${label}</option>`
+                //     );
+                // })
+
+                return json.data.map((item: any)=> {
+                    const id  = item.id;
+                    const title = item.name ?? "(Tanpa Nama)";
+                    const firstName = item.account?.information?.first_name ?? "";
+                    const destinations = item.destinations.length ?? "0";
+                    const label = `${title} - Destinasi : ${destinations}` ;
+                    return  {id, label};
+                } );
+
+
+            });
+
+
+    }
+
+    // Tampilkan data di select - option
+    const apiUrl = FullUriCurrentUrl.toString();
+
+    fetchRequestOptions(apiUrl)
+        .then(axios => {
+            const $select = jQuery("#request_id");
+
+            axios.forEach( opt => {
+                $select.append(
+                    `<option value="${opt.id}">${opt.label}</option>`
+                );
+            });
+        });
+
+    // cache - tampilkan console log data yang di pilih
+    $("#request_id").on('change', function(){
+        const selectedId = $(this).val();
+
+        // cari object data sesuai ID
+        // @ts-ignore
+        const selectedItem = requestDataCache.find(item => item.id === selectedId);
+        $('#title').val(selectedItem.account.contact.email)
+        console.log("Data Terpilih: ", selectedItem);
+    })
+
+
+}
 
 const MAPBOX_TOKEN =
 "pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA";
