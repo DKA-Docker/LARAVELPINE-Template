@@ -20,7 +20,7 @@ class AccountsContactsRepository implements AccountsContactsRepositoryInterface 
     }
 
     /**
-     * Create a new account information record
+     * Creates a new account information record
      * @param array $args Named arguments such as ['email' => ...]
      * @return AccountsContacts
      */

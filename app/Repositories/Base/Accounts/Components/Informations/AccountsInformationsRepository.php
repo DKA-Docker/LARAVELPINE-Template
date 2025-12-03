@@ -17,7 +17,7 @@ class AccountsInformationsRepository implements AccountsInformationsRepositoryIn
     protected Generator $faker;
 
     /**
-     * Create a new account information record
+     * Creates a new account information record
      *
      *
      */
@@ -26,7 +26,7 @@ class AccountsInformationsRepository implements AccountsInformationsRepositoryIn
         $this->faker = Factory::create();
     }
     /**
-     * Create a new account information record
+     * Creates a new account information record
      *
      * @param array $args Named arguments such as ['first_name' => ..., 'last_name' => ...]
      * @return AccountsInformations

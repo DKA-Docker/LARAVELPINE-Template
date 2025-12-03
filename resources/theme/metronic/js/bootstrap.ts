@@ -19,10 +19,7 @@ declare global {
 // Assign ke window (global)
 window.$ = window.jQuery = jQuery;
 window.axios = axios;
-// 👉 TAMBAHKAN INI BIAR GLOBAL !!!:
-window.Livewire = Livewire
 
-Livewire.start()
 //window.axios.defaults.headers.common['X-CSRF-TOKEN'] = $("meta[name='csrf-token']").attr("content");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

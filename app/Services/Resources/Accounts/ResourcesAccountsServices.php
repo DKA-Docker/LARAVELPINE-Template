@@ -39,7 +39,7 @@ class ResourcesAccountsServices
     }
 
     /**
-     * Create Account (atomik) + afterCommit
+     * Creates Account (atomik) + afterCommit
      * @return array{status:bool,code:int,msg:string,data?:mixed,error?:mixed,details?:mixed}
      * @throws Throwable
      */

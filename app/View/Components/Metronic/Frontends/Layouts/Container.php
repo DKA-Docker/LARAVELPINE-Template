@@ -9,7 +9,7 @@ use Illuminate\View\Component;
 class Container extends Component
 {
     /**
-     * Create a new component instance.
+     * Creates a new component instance.
      */
     public function __construct()
     {

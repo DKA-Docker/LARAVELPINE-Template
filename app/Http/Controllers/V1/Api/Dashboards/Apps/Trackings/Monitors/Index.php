@@ -39,7 +39,7 @@ class Index extends Controller
             data: array(
                 'status' => true,
                 'code' => Response::HTTP_OK,
-                'msg' => 'Successfully Create Data',
+                'msg' => 'Successfully Creates Data',
                 'data' => $CreateAct
             ),
             status: Response::HTTP_OK,

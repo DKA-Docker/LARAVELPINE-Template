@@ -19,7 +19,7 @@ class AccountsCredentialsRepository implements AccountsCredentialsRepositoryInte
         $this->faker = Factory::create();
     }
     /**
-     * Create a new account information record
+     * Creates a new account information record
      *
      * @param array $args Named arguments such as ['username' => ..., 'password' => ...]
      * @return AccountsCredentials
@@ -41,7 +41,7 @@ class AccountsCredentialsRepository implements AccountsCredentialsRepositoryInte
         $data = array_merge($defaults, $args);
 
         /**
-         * Kembalikan Create Methodnya
+         * Kembalikan Creates Methodnya
          */
         return AccountsCredentials::query()->create($data);
     }

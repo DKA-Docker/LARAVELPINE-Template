@@ -18,6 +18,6 @@ class AppsDeliveriesTasksRoutesSeeder extends Seeder
     public function run(): void
     {
         $this->factory->count(10)->create();
-        $this->command->info("Index Route Success Create");
+        $this->command->info("Index Route Success Creates");
     }
 }
