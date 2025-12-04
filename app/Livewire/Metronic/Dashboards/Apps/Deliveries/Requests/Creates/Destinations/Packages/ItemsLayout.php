@@ -17,9 +17,9 @@ class ItemsLayout extends Component
         return [
             'name'    => null,
             'qty'     => 0,
-            'width'   => 0,
-            'height'  => 0,
-            'weight'  => 0,
+            'dimension_width'   => 0,
+            'dimension_height'  => 0,
+            'dimension_weight'  => 0,
             'heavy'   => 0
         ];
     }
@@ -76,7 +76,7 @@ class ItemsLayout extends Component
         $parts = explode('.', $name);
         $field = $parts[array_key_last($parts)];
 
-        $protected = ['qty', 'width', 'height', 'weight', 'heavy'];
+        $protected = ['qty', 'dimension_width', 'dimension_height', 'dimension_weight', 'heavy'];
 
         if (!in_array($field, $protected, true)) {
             return;

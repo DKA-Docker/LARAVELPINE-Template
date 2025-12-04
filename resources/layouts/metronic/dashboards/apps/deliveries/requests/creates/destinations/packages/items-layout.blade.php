@@ -128,11 +128,11 @@
                                             <input
                                                 class="kt-input kt-input-lg"
                                                 type="text"
-                                                name="width"
+                                                name="dimension_width"
                                                 placeholder="width"
-                                                wire:model.defer="packages.{{ $index }}.width"
+                                                wire:model.defer="packages.{{ $index }}.dimension_width"
                                                 data-items-index="{{ $index }}"
-                                                data-title-field="width"
+                                                data-title-field="dimension_width"
                                             />
                                         </div>
                                     </div>
@@ -145,11 +145,11 @@
                                                 class="kt-input kt-input-lg"
                                                 type="number"
                                                 min="0"
-                                                name="weight"
+                                                name="dimension_weight"
                                                 placeholder="weight"
-                                                wire:model.defer="packages.{{ $index }}.weight"
+                                                wire:model.defer="packages.{{ $index }}.dimension_weight"
                                                 data-items-index="{{ $index }}"
-                                                data-title-field="weight"
+                                                data-title-field="dimension_weight"
                                             />
                                         </div>
                                     </div>
@@ -162,11 +162,11 @@
                                                 class="kt-input kt-input-lg"
                                                 type="number"
                                                 min="0"
-                                                name="height"
+                                                name="dimension_height"
                                                 placeholder="height"
-                                                wire:model.defer="packages.{{ $index }}.height"
+                                                wire:model.defer="packages.{{ $index }}.dimension_height"
                                                 data-items-index="{{ $index }}"
-                                                data-title-field="height"
+                                                data-title-field="dimension_height"
                                             />
                                         </div>
                                     </div>

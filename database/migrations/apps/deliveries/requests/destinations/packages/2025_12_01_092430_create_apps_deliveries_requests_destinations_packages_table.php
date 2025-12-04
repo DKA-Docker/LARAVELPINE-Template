@@ -45,9 +45,9 @@ return new class extends Migration
             $table->string("note")->comment('adalah catatan yang ditinggalkan oleh Requested kepada logistik')->nullable();
 
             /** dimensi */
-            $table->integer('width')->nullable()->default(0)->comment("adalah dimension width");
-            $table->integer('height')->nullable()->default(0)->comment("adalah dimension height");
-            $table->integer('weight')->nullable()->default(0)->comment("adalah dimension weight");
+            $table->integer('dimension_width')->nullable()->default(0)->comment("adalah dimension width");
+            $table->integer('dimension_height')->nullable()->default(0)->comment("adalah dimension height");
+            $table->integer('dimension_weight')->nullable()->default(0)->comment("adalah dimension weight");
 
             /** berat dalam ons */
             $table->integer('heavy')->default(0)->comment("adalah jumlah Berat Barang Dalam ons");
