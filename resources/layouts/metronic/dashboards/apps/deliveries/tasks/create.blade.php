@@ -69,21 +69,111 @@
                                             </div>
                                             <div class="col-span-2">
                                                 <div class="flex flex-col gap-3">
-                                                    <label class="kt-form-label font-normal text-mono pl-2">Request</label>
-                                                    <input class="kt-input kt-input-lg" type="text" name="title" id="title" placeholder="Judul Permintaan"/>
+                                                    <label class="kt-form-label font-normal text-mono pl-2">Akun</label>
+                                                    <input class="kt-input kt-input-lg" type="text" name="title" id="first_name" placeholder="Judul Permintaan"/>
                                                 </div>
                                             </div>
                                             <div class="col-span-2">
                                                 <div class="flex flex-col gap-3">
                                                     <label class="kt-form-label font-normal text-mono pl-2">Nama Task</label>
-                                                    <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Nama Task"/>
+                                                    <input class="kt-input kt-input-lg" type="text" name="urgency" placeholder="Nama Task" id="task_name"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            @livewire("metronic.dashboards.apps.deliveries.tasks.components.packages-items-layout")
+
+                            <!-- Start card-->
+
+<!--                            <div class="kt-container-fixed">-->
+                            <div class="py-10">
+                                    <div class="kt-card px-0 w-full max-w-[1500px] mx-auto overflow-hidden">
+                                        <div class="h-[8px]" style="background:linear-gradient(90deg,#D618A3 0%,#1951E0 32.67%,#12C79C 67.17%,#DFBB19 100%)">
+                                        </div>
+                                        <div class="py-10 mb-5 ps-6 pe-3 me-3 text-center space-y-5" id="order_receipt_body">
+                                            <div class="flex flex-col items-center gap-3 mb-5 lg:mb-9">
+                                                <a class="dark:hidden" href="html/demo1.html">
+                                                    <img class="default-logo h-[22px]" src="assets/media/app/default-logo.svg"/>
+                                                </a>
+                                                <a class="hidden dark:block" href="html/demo1.html">
+                                                    <img class="default-logo h-[22px]" src="assets/media/app/default-logo-dark.svg"/>
+                                                </a>
+                                                <h3 class="text-2xl text-dark font-semibold mt-6">
+                                                    Order Confirmation
+                                                </h3>
+                                                <span class="text-sm text-secondary-foreground font-medium">
+                                                   Thank you! Your order
+                                                   <span class="text-sm text-dark font-semibold" id="receipt_address">
+
+                                                   </span>
+                                                   is confirmed and being processed.
+                                                </span>
+                                            </div>
+
+                                            <!--tampilkan data packages/ produk disini-->
+                                            <div class="space-y-5 lg:pb-5">
+                                                <!-- bungkus dengan flex biar bisa di-center -->
+                                                <div class="flex justify-center">
+                                                    <div class="kt-card w-full max-w-[700px]">
+                                                            <div
+                                                                id="card-order"
+                                                                class="kt-card-content flex flex-col gap-4 p-4 max-h-80 overflow-y-auto"
+                                                            >
+                                                            </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="kt-card bg-muted/70 text-start px-5 lg:px-7 py-4 shadow-none">
+                                                <div class="flex justify-start gap-9">
+                                                    <div class="flex flex-col gap-1.5">
+                                                        <span class="text-sm font-normal text-secondary-foreground">
+                                                         Order placed
+                                                        </span>
+                                                        <span class="text-sm font-medium text-dark" id="address_destination">
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="flex flex-col gap-1.5">
+                                                        <span class="text-sm font-normal text-secondary-foreground">
+                                                         Ship to
+                                                        </span>
+                                                        <span class="text-sm font-medium text-dark" id="receipt_name">
+
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-1.5">
+                                                        <span class="text-sm font-normal text-secondary-foreground">
+                                                         Estimated Delivery
+                                                        </span>
+                                                        <span class="text-sm font-medium text-dark" id="date_destination">
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a class="kt-btn kt-btn-outline lg:mt-5" href="#">
+                                                <i class="ki-filled ki-questionnaire-tablet">
+                                                </i>
+                                                My Orders
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <style>
+                                    body {
+                                        background-color: #F9F9F9;
+                                    }
+
+                                    .dark body {
+                                        background-color: var(--color-muted-foreground);
+                                    }
+                                </style>
+<!--                            </div>-->
+
+                            <!-- End card-->
+
                             <div class="flex gap-4 justify-end">
                                 <a
                                     class="kt-btn kt-btn-destructive"

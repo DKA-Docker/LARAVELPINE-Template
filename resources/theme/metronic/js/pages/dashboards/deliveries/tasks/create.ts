@@ -64,9 +64,7 @@ if(elementExists.length > 0 ){
                     return  {id, label};
                 } );
 
-
             });
-
 
     }
 
@@ -90,9 +88,94 @@ if(elementExists.length > 0 ){
 
         // cari object data sesuai ID
         // @ts-ignore
-        const selectedItem = requestDataCache.find(item => item.id === selectedId);
-        $('#title').val(selectedItem.account.contact.email)
-        console.log("Data Terpilih: ", selectedItem);
+        let selectedItem = requestDataCache.find(item => item.id === selectedId);
+
+        // kalau nggak ketemu atau nggak ada destinasi -> KOSONGKAN SEMUA & STOP
+        // @ts-ignore
+        if(
+            !selectedItem ||
+            !Array.isArray(selectedItem.destinations) ||
+            selectedItem.destinations.length === 0
+        ){
+            // kosongkan teks & input
+            $('#title').val("-");
+            $('#receipt_address').text("-");
+            $('#address_destination').text("-");
+            $('#date_destination').text("-");
+            $('#receipt_name').text("-");
+            $('#first_name').val("");
+            $('#task_name').val("");
+
+            // kosongkan card order
+            $('#card-order').empty();
+
+            return; // jgn lanjut
+        }
+
+        // @ts-ignore
+        const destination = selectedItem.destinations[0];
+
+        // @ts-ignore
+        $('#title').val(selectedItem ? selectedItem?.account?.contact?.email : "-")
+        // @ts-ignore
+        $('#receipt_address').text(selectedItem ?  ` ${destination?.receipt_name} - ${destination.receipt_address}` : "-");
+        // @ts-ignore
+        $('#address_destination').text(selectedItem ?  ` ${destination.receipt_address}` : "-");
+        // @ts-ignore
+        let dataDestination = moment(destination?.created_at).toDate();
+        // @ts-ignore
+        $('#date_destination').text(selectedItem ? dataDestination : "-");
+        // @ts-ignore
+        $('#receipt_name').text(selectedItem ?  ` ${destination?.receipt_name}` : "-");
+        // @ts-ignore
+        $('#first_name').val(selectedItem ?  ` ${selectedItem?.account?.information.first_name}` : "-");
+        // @ts-ignore
+        $('#task_name').val(selectedItem ?  `${selectedItem?.name}` : "-");
+
+        $('#card-order').empty();
+
+        // isi data dari pilihan select untuk card box - confirmation
+        // @ts-ignore
+        selectedItem.destinations[0].packages.forEach((item: any) => {
+            const label = `${item?.name}`;
+            console.log("Data Terpilih: ", item);
+
+            $('#card-order').append(
+                `
+                 <div class="flex items-start justify-between border-b border-border py-2">
+                    <div class="flex items-center gap-3.5">
+                       <div class="kt-card flex items-center justify-center bg-accent/50 h-[70px] w-[90px] shadow-none">
+                            <!-- <img alt="img" class="cursor-pointer h-[70px]" data-kt-drawer-toggle="#drawers_shop_product_details" src="assets/media/store/client/600x600/11.png"/>-->
+                       </div>
+                       <div class="flex flex-col gap-1">
+                            <span class="hover:text-primary text-sm font-medium text-mono leading-5.5" data-kt-drawer-toggle="#drawers_shop_product_details" >
+                                ${label}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-normal text-secondary-foreground uppercase">
+
+                                    <span class="text-xs font-medium text-foreground">
+                                          ${item.qty}
+                                    </span>
+                                </span>
+                            </div>
+                       </div>
+                  </div>
+                  <div class="flex flex-col gap-1.5">
+                       <span class="text-xs font-normal text-secondary-foreground text-end">
+                                                                   
+                                                                 </span>
+                             <div class="flex items-center flex-wrap gap-1.5">
+                                     <span class="text-sm font-normal text-secondary-foreground line-through">
+                                     </span>
+                                          <span class="text-sm font-semibold text-mono">
+                                                ${item.qty}
+                                          </span>
+                             </div>
+                  </div>
+                </div>`
+            );
+        })
     })
 
 
