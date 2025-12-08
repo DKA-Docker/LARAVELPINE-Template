@@ -59,7 +59,7 @@ $(window).on('load', function () {
                 name: {
                     title: 'Name',
                     render: (value, row) => {
-                        return `<a href="./tasks/${row.id}">${row.name}</a>`;
+                        return row.name ? `<a href="./tasks/${row.id}">${row.name}</a>` : '-';
                     }
                 },
                 assigned: {

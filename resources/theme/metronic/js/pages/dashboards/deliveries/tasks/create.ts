@@ -94,7 +94,9 @@ if(elementExists.length > 0 ){
         // @ts-ignore
         if(
             !selectedItem ||
+            // @ts-ignore
             !Array.isArray(selectedItem.destinations) ||
+            // @ts-ignore
             selectedItem.destinations.length === 0
         ){
             // kosongkan teks & input

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\App\Deliveries\Histories\DeliveriesHistoriesSeeder;
 use Database\Seeders\App\Deliveries\Requests\DeliveriesRequestsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\DeliveriesRequestsDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             DeliveriesRequestsDestinationsPackagesSeeder::class,
             AppsDeliveriesTasksRoutesSeeder::class,
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
+            DeliveriesHistoriesSeeder::class,
             DeliveriesTasksSeeder::class,
         ]);
     }

@@ -31,13 +31,11 @@ return new class extends Migration
                 ->constrained('accounts', 'id')
                 ->onDelete('cascade');
 
-            // route?: IFeaturesTasksDeliveriesRoutes | null (OneToOne)
-            $table->foreignUuid('route')
-                ->nullable()
+            $table->foreignUuid('history')
                 ->index()
-                ->comment('route utama untuk task ini')
-                ->constrained('apps_deliveries_tasks_routes', 'id')
-                ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
+                ->comment('history yang ditugaskan pada task ini')
+                ->constrained('apps_deliveries_histories', 'id')
+                ->onDelete('cascade');
 
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
             $table->softDeletes()->comment('parameter soft deleted');

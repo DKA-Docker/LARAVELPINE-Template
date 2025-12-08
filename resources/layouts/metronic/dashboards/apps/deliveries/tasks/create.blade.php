@@ -45,7 +45,7 @@
                 <!-- End of Container -->
                 <!-- Container -->
                 <div class="kt-container-fixed">
-                    <div class="grid gap-5 lg:gap-7.5">
+                    <div class="Buat Datagrid gap-5 lg:gap-7.5">
                         <form action="{{ $url_create }}" method="post">
                             @csrf
                             <input type="hidden" value="{{ Auth::user()->id }}" name="account" >
@@ -183,7 +183,6 @@
                                 <button class="kt-btn kt-btn-secondary" type="submit">
                                     Buat Data
                                 </button>
-
                             </div>
                         </form>
                     </div>

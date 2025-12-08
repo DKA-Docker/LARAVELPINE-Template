@@ -25,9 +25,9 @@ class AppsDeliveriesTasks extends Model
     protected $fillable = [
         'id',
         'account',
-        'name',
-        'assigned',
-        'route',
+        'name', // keterangan
+        'assigned', // array [] => hasMANY ke tabel akun
+        'history', // to do, checking , delivery,
     ];
 
     protected $with = ['account','assigned','route'];
