@@ -21,7 +21,6 @@ class AppsDeliveriesTasksFactory extends Factory
             'id' => (String) Str::uuid(),
             'account' => $accounts->id,
             'name' => $this->faker->name(),
-            'assigned' =>  $accounts->id,
             'request' => $taskRequest->id,
             'history' => $histories,
         ];

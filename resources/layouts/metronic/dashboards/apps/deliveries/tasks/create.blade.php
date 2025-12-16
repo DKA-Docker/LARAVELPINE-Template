@@ -53,7 +53,7 @@
 
                             {{-- START: Pembungkus Flexbox Baru --}}
                             <div class="flex md:flex-row flex-col gap-5">
-                            <!--  ubah jadi setengah tampilan dengan md:w-1/2-->
+                                <!--  ubah jadi setengah tampilan dengan md:w-1/2-->
                                 <div class="kt-card md:w-1/2 mx-auto">
                                     <div class="kt-card-header" id="advanced_settings_preferences">
                                         <h3 class="kt-card-title">

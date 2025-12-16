@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role;
@@ -28,11 +29,11 @@ class AppsDeliveriesTasks extends Model
         'account',
         'name', // keterangan
         'assigned', // array [] => hasMANY ke tabel akun
-        'request',
+        /*'request',*/
         'history', // to do, checking , delivery,
     ];
 
-    protected $with = ['account','assigned','request'];
+    protected $with = ['account','assigned'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -43,15 +44,15 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function assigned(): BelongsTo
+    public function assigned(): HasMany
     {
-        return $this->belongsTo(Accounts::class, 'account')->withDefault();
+        return $this->hasMany(Accounts::class, 'account')->withDefault();
     }
 
-    public function request(): BelongsTo
+    /*public function request(): BelongsTo
     {
         return $this->belongsTo(AppsDeliveriesRequests::class, 'request')->withDefault();
-    }
+    }*/
 
 
 }
