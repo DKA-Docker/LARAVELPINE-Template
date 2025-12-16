@@ -36,38 +36,6 @@
                 <!-- Map container -->
                 <div class="absolute inset-x-0 top-0 bottom-[10px]">
                     <div id="map" class="h-full w-full"></div>
-
-                    <!-- Toolbar mode peta -->
-                    <div class="absolute left-4 bottom-4 z-10 flex gap-2 rounded-lg bg-background/80 px-2 py-1 shadow-lg backdrop-blur">
-                        <button
-                            type="button"
-                            data-map-style="standard"
-                            class="text-xs px-2 py-1 rounded-md border border-border hover:bg-primary/10"
-                        >
-                            Default
-                        </button>
-                        <button
-                            type="button"
-                            data-map-style="streets"
-                            class="text-xs px-2 py-1 rounded-md border border-border hover:bg-primary/10"
-                        >
-                            Streets
-                        </button>
-                        <button
-                            type="button"
-                            data-map-style="satellite"
-                            class="text-xs px-2 py-1 rounded-md border border-border hover:bg-primary/10"
-                        >
-                            Satellite
-                        </button>
-                        <button
-                            type="button"
-                            data-map-style="dark"
-                            class="text-xs px-2 py-1 rounded-md border border-border hover:bg-primary/10"
-                        >
-                            Dark
-                        </button>
-                    </div>
                 </div>
             </main>
 
