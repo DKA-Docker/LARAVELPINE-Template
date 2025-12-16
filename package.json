@@ -7,7 +7,6 @@
         "dev": "vite",
         "start": "concurrently \"php artisan serve --host=0.0.0.0\" \"yarn run dev\" \"php artisan schedule:work\"",
         "start-octane": "concurrently \"php artisan octane:start --watch\" \"yarn run dev\" \"php artisan schedule:work\""
-
     },
     "devDependencies": {
         "@svgr/rollup": "^8.1.0",
@@ -45,6 +44,7 @@
         "mapbox-gl": "^3.16.0",
         "moment": "^2.30.1",
         "moment-timezone": "^0.6.0",
+        "perfect-scrollbar": "^1.5.6",
         "urijs": "^1.19.11"
     }
 }

@@ -8,3 +8,4 @@ RUN chown -R www-data:www-data storage database bootstrap/cache && chmod -R 775 
 RUN chown -R www-data:www-data public && chmod -R 775 public
 RUN rm vite.config.js
 RUN composer install && yarn install && yarn run build
+RUN php artisan storage:link
