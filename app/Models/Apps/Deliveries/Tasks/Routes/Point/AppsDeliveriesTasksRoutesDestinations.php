@@ -4,6 +4,7 @@ namespace App\Models\Apps\Deliveries\Tasks\Routes\Point;
 
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use Database\Factories\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @method static \Illuminate\Database\Eloquent\Builder|static inRandomOrder()
+ * @method static Builder|static inRandomOrder()
  */
 class AppsDeliveriesTasksRoutesDestinations extends Model
 {
