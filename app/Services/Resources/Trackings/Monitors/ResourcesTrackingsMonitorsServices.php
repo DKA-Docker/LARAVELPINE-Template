@@ -23,12 +23,29 @@ class ResourcesTrackingsMonitorsServices
 
     public function ReadAll(): Collection
     {
+        $driver = config('database.default'); // ambil driver saat ini
+
+        if ($driver === 'pgsql') {
+            // PostgreSQL: DISTINCT ON bisa dipakai langsung
+            return $this->repository
+                ->query()
+                ->selectRaw('DISTINCT ON (uuid) *')
+                ->orderBy('uuid')
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->get();
+        }
+
+        // MariaDB/MySQL: gunakan subquery
         return $this->repository
             ->query()
-            ->selectRaw('DISTINCT ON (uuid) *')
+            ->whereIn('id', function ($query) {
+                $query->selectRaw('MAX(id)')
+                    ->from('your_table_name') // ganti sesuai tabel repo
+                    ->groupBy('uuid');
+            })
             ->orderBy('uuid')
             ->orderByDesc('created_at')
-            ->orderByDesc('id')
             ->get();
     }
 
