@@ -45,7 +45,7 @@
                 <!-- End of Container -->
                 <!-- Container -->
                 <div class="kt-container-fixed">
-                    <div class="Buat Datagrid gap-5 lg:gap-7.5 max-w-4xl mx-auto">
+                    <div class="Buat Datagrid gap-5 lg:gap-7.5 mx-auto">
                         <form action="{{ $url_create }}" method="post">
                             @csrf
                             <input type="hidden" value="{{ Auth::user()->id }}" name="account" >
