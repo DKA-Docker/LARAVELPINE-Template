@@ -20,10 +20,12 @@ class AppsDeliveriesHistoriesFactory extends Factory
     public function definition(): array
     {
         $accounts = Accounts::inRandomOrder()->first();
+        $task = AppsDeliveriesTasks::inRandomOrder()->first();
         $arrayHistory = ['on_delivery', 'delivered', 'failed', 'done'];
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts,
+            'task' => $task->id,
             'to_status' => $arrayHistory[rand(0,3)],
             'title' => $this->faker->title(),
             'description' => $this->faker->text(),

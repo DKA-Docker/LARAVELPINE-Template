@@ -18,6 +18,12 @@ return new class extends Migration
                 ->comment('mengambil data id account yang akan dikirim')
                 ->constrained('accounts', 'id')
                 ->onDelete('cascade');
+            $table->foreignUuid('task')
+                ->nullable()
+                ->index()
+                ->comment('request utama untuk task ini')
+                ->constrained('apps_deliveries_tasks', 'id')
+                ->onDelete('cascade');
             $table->string('to_status')
                 ->comment('Status baru, misal: on_delivery, delivered, failed, done');
             $table->string('title')

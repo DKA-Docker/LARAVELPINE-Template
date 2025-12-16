@@ -17,7 +17,7 @@ class DeliveriesHistoriesSeeder extends Seeder
     public function run(): void
     {
         // Buat 10 akun lengkap
-        $this->factory->count(500)->create();
+        $this->factory->count(80)->create();
         $this->command->info("Deliveries histories table created");
     }
 }

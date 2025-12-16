@@ -34,8 +34,8 @@ class DatabaseSeeder extends Seeder
             DeliveriesRequestsDestinationsPackagesSeeder::class,
             AppsDeliveriesTasksRoutesSeeder::class,
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
-            DeliveriesHistoriesSeeder::class,
             DeliveriesTasksSeeder::class,
+            DeliveriesHistoriesSeeder::class,
             DeliveriesTasksAssignsSeeder::class,
         ]);
     }

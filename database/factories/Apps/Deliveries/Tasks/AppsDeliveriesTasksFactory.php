@@ -17,13 +17,11 @@ class AppsDeliveriesTasksFactory extends Factory
 
         $accounts = Accounts::inRandomOrder()->first();
         $reqDestination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
-        $histories = AppsDeliveriesHistories::inRandomOrder()->first();
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts->id,
             'name' => $this->faker->name(),
             'destination' => $reqDestination->id,
-            'history' => $histories,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Apps\Deliveries\Tasks;
 
+use App\Models\Apps\Deliveries\Histories\AppsDeliveriesHistories;
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
@@ -31,11 +32,13 @@ class AppsDeliveriesTasks extends Model
         'account',
         'name', // keterangan
         'destination',
-        'history', // to do, checking , delivery,
     ];
 
-    protected $with = ['account','assigned', 'destination'];
+    protected $with = ['account','assigned', 'destination', 'history'];
 
+    protected $hidden = [
+        'deleted_at',
+    ];
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
      * @return BelongsTo
@@ -43,6 +46,15 @@ class AppsDeliveriesTasks extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    public function history(): HasMany
+    {
+        return $this->hasMany(
+            AppsDeliveriesHistories::class,
+            'task',   // FK di histories
+            'id'      // PK tasks
+        );
     }
 
     public function assigned(): BelongsToMany
