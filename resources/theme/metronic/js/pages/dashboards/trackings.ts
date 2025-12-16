@@ -1,7 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import $ from "jquery";
 import axios from "axios";
-import URI from "urijs"
+import URI from "urijs";
 
 const elementExists = $("div.dashboards-apps-trackings");
 
@@ -27,41 +27,30 @@ $(window).on('load', async function () {
     });
     map.addControl(geolocate, 'top-right');
 
-    const markers = {}; // key = uuid, value = { marker, popup }
+    const markers: Record<string, { marker: mapboxgl.Marker; popup: mapboxgl.Popup }> = {};
 
     async function fetchTracking() {
         try {
-            /** Ambil URL dimana JS Ini Dimuat**/
+            // Ambil URL JS ini dimuat
             const FullUriCurrentURL = URI(window.location);
-            /**
-             * Ubah URL Menjadi Array Segment
-             * misal /dashboards/apps/deliveries menjadi
-             * ['dashboards','apps','deliveries'];
-             * **/
+
+            // Segment URL, tambah 'api' di depan
             const segs = FullUriCurrentURL.segment();
-            /**
-             * Tambahkan Data Di Dalam Array
-             * ['api','dashboards','apps','deliveries'];
-             * **/
             segs.unshift('api');
-            /**
-             * ['api','dashboards','apps','deliveries'];
-             * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
-             * /api/dashboards/apps/deliveries
-             * **/
-            FullUriCurrentURL.segment([...segs,'monitors']);
+            FullUriCurrentURL.segment([...segs, 'monitors']);
 
             const res = await axios.get(FullUriCurrentURL.toString());
             const drivers = res.data.data;
 
             // Ambil data terakhir per uuid
-            const latestPerUuid = {};
+            const latestPerUuid: Record<string, any> = {};
             drivers.forEach(d => {
                 if (!latestPerUuid[d.uuid] || new Date(d.created_at) > new Date(latestPerUuid[d.uuid].created_at)) {
                     latestPerUuid[d.uuid] = d;
                 }
             });
 
+            // Sync markers: tambah/update
             Object.values(latestPerUuid).forEach((driver: any) => {
                 const coord = [driver.longitude, driver.latitude];
 
@@ -90,7 +79,7 @@ $(window).on('load', async function () {
                     markers[driver.uuid] = { marker, popup };
                 } else {
                     // Update posisi marker
-                    markers[driver.uuid].marker.setLngLat(coord);
+                    markers[driver.uuid].marker.setLngLat(coord as any);
                     markers[driver.uuid].popup.setHTML(`
                         <div style="font-size:12px;">
                             <div><strong>${driver.uuid}</strong></div>
@@ -100,6 +89,15 @@ $(window).on('load', async function () {
                     `);
                 }
             });
+
+            // Hapus marker yang tidak ada di data terbaru
+            Object.keys(markers).forEach(uuid => {
+                if (!latestPerUuid[uuid]) {
+                    markers[uuid].marker.remove();
+                    delete markers[uuid];
+                }
+            });
+
         } catch (error) {
             console.error("Gagal load tracking:", error);
         }
