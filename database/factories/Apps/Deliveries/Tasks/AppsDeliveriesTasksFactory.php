@@ -4,6 +4,7 @@ namespace Database\Factories\Apps\Deliveries\Tasks;
 
 use App\Models\Apps\Deliveries\Histories\AppsDeliveriesHistories;
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,13 +16,13 @@ class AppsDeliveriesTasksFactory extends Factory
     {
 
         $accounts = Accounts::inRandomOrder()->first();
-        $taskRequest = AppsDeliveriesRequests::inRandomOrder()->first();
+        $reqDestination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
         $histories = AppsDeliveriesHistories::inRandomOrder()->first();
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts->id,
             'name' => $this->faker->name(),
-            'request' => $taskRequest->id,
+            'destination' => $reqDestination->id,
             'history' => $histories,
         ];
     }

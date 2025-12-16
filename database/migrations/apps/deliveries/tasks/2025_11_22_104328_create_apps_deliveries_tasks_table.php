@@ -25,11 +25,11 @@ return new class extends Migration
                 ->comment('Name Of Delivery Task');
 
             // route?: IFeaturesTasksDeliveriesRoutes | null (OneToOne)
-            $table->foreignUuid('request')
+            $table->foreignUuid('destination')
                 ->nullable()
                 ->index()
                 ->comment('request utama untuk task ini')
-                ->constrained('apps_deliveries_requests', 'id')
+                ->constrained('apps_deliveries_requests_destinations', 'id')
                 ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
 
             $table->foreignUuid('history')
