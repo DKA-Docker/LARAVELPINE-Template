@@ -19,11 +19,45 @@ class Index extends Controller
     }
     public function index() : JsonResponse
     {
+        $ReadData = $this->services->ReadAll();
+
+        if ($ReadData) {
+            return response()->json(
+                data: array(
+                    'status' => true,
+                    'code' => Response::HTTP_OK,
+                    'msg' => 'OK',
+                    'data' => $ReadData
+                ),
+                status: Response::HTTP_OK,
+                headers: array(
+                    'Content-Type' => 'application/json',
+                )
+            );
+        }else{
+            return response()->json(
+                data: array(
+                    'status' => false,
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'msg' => "Failed To Read Data",
+                ),
+                status: Response::HTTP_OK,
+                headers: array(
+                    'Content-Type' => 'application/json',
+                )
+            );
+        }
+
+    }
+
+    public function show(): JsonResponse
+    {
         return response()->json(
             data: array(
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'OK',
+
             ),
             status: Response::HTTP_OK,
             headers: array(

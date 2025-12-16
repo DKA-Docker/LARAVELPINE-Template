@@ -20,12 +20,13 @@ return new class extends Migration
              */
             $table->foreignUuid('account')
                 ->index()
+                ->nullable()
                 ->comment('akun pemilik monitor ini ini')
                 ->constrained('accounts', 'id')
                 ->onDelete('cascade');
             $table->string("uuid")
                 ->index()
-                ->unique()
+                ->nullable()
                 ->comment("adalah devices unique mobile apps untuk mendeteksi Perangkat Mobile (android & ios) ");
             /**
              * Koordinat longitude dari titik destinasi.
@@ -47,7 +48,7 @@ return new class extends Migration
              * Koordinat speed dari titik kecepatan.
              * Menggunakan tipe double untuk menyimpan presisi kecepatan
              */
-            $table->double('speed')
+            $table->float('speed')
                 ->nullable()
                 ->comment('Speed Of GPS Devices');
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */

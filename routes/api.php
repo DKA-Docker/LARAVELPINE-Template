@@ -3,7 +3,6 @@
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
-use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Show as TaskShow;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings as Trackings;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
@@ -32,9 +31,8 @@ Route::middleware(['Api'])->name('api.')->group(function () {
                 Route::resource('reports', Reports::class);
             });
             Route::prefix('trackings')->name('trackings.')->group(function () {
-                Route::resource('/', Trackings\Index::class)->parameters(['' => 'id']);
                 Route::prefix('monitors')->name('monitors.')->group(function () {
-                    Route::resource('/', TrackingsMonitors\Index::class)->parameters(['' => 'id']);
+                    Route::resource('/', TrackingsMonitors\Index::class);
                 });
             });
         });
