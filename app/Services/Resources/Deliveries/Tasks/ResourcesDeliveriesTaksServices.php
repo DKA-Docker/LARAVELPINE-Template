@@ -54,7 +54,7 @@ class ResourcesDeliveriesTaksServices
             // kalau di kasih angka aneh (<=0), anggap no limit
         }
 
-        $query = $this->repository->query();
+        $query = $this->repository->query()->orderByDesc('created_at');
 
         if ($size !== null) {
             $page = max($page, 1);
@@ -69,6 +69,11 @@ class ResourcesDeliveriesTaksServices
     public function Count():int
     {
         return $this->repository->Count();
+    }
+
+    public function Find($id)
+    {
+        return $this->repository->Find($id);
     }
 
 }

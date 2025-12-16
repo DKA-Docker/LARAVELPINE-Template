@@ -3,6 +3,7 @@
 namespace App\Repositories\Apps\Deliveries\Tasks;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
+use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use Faker\Factory;
 use Faker\Generator;
@@ -27,7 +28,7 @@ class TasksRepository implements TasksRepositoryInterface {
     }
 
     public function GetAllRequest(): Collection{
-       return AppsDeliveriesRequests::all();
+       return AppsDeliveriesRequestsDestinations::all();
     }
 
     /**

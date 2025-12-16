@@ -47,14 +47,6 @@ if(elementExists.length > 0 ){
                 // simpan semua data di cache
                 requestDataCache = json.data;
 
-                // // isi select untuk cache
-                // json.data.forEach((item: any) => {
-                //     const label = `${item.name} - ${item.account?.information?.first_name ?? ''}`;
-                //     $('#request_id').append(
-                //         `<option value="${item.id}">${label}</option>`
-                //     );
-                // })
-
                 return json.data.map((item: any)=> {
                     const id  = item.id;
                     const title = item.name ?? "(Tanpa Nama)";
@@ -73,7 +65,7 @@ if(elementExists.length > 0 ){
 
     fetchRequestOptions(apiUrl)
         .then(axios => {
-            const $select = jQuery("#request_id");
+            const $select = jQuery("#request");
 
             axios.forEach( opt => {
                 $select.append(
@@ -83,7 +75,7 @@ if(elementExists.length > 0 ){
         });
 
     // cache - tampilkan console log data yang di pilih
-    $("#request_id").on('change', function(){
+    $("#request").on('change', function(){
         const selectedId = $(this).val();
 
         // cari object data sesuai ID
@@ -106,7 +98,7 @@ if(elementExists.length > 0 ){
             $('#date_destination').text("-");
             $('#receipt_name').text("-");
             $('#first_name').val("");
-            $('#task_name').val("");
+            $('#name').val("");
 
             // kosongkan card order
             $('#card-order').empty();
@@ -132,7 +124,7 @@ if(elementExists.length > 0 ){
         // @ts-ignore
         $('#first_name').val(selectedItem ?  ` ${selectedItem?.account?.information.first_name}` : "-");
         // @ts-ignore
-        $('#task_name').val(selectedItem ?  `${selectedItem?.name}` : "-");
+        $('#name').val(selectedItem ?  `${selectedItem?.name}` : "-");
 
         $('#card-order').empty();
 

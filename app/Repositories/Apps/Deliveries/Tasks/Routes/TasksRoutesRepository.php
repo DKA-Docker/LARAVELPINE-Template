@@ -99,4 +99,9 @@ class TasksRoutesRepository implements TasksRepositoryInterface {
     {
         return AppsDeliveriesTasksRoutes::query()->count();
     }
+
+    public function GetAllRequest(): Collection
+    {
+        // TODO: Implement GetAllRequest() method.
+    }
 }

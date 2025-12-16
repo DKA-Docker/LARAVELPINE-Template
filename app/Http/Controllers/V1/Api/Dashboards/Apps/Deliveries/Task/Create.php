@@ -16,7 +16,6 @@ class Create extends controller {
     }
 
     public  function index()  {
-
         $data = $this->service->ReadAllRequest();
         return response()->json(
             data: array(

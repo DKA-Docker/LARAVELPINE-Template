@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Create 
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index as DeliveriesRequest;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as DeliveriesTasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as DeliveriesTasksCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Show as DeliveriesTasksShow;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
@@ -36,6 +37,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::prefix('tasks')->name('tasks.')->group(function () {
                 Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
                 Route::resource('/create', DeliveriesTasksCreate::class);
+                Route::resource('/show', DeliveriesTasksShow::class);
             });
             Route::resource('reports', Reports::class);
         });

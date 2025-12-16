@@ -53,13 +53,13 @@ $(window).on('load', function () {
                 requested: {
                     title: 'Requested',
                     render: (value, row) => {
-                        return `${row.account.information.first_name} ${row.account.information.last_name}`
+                        return `${row.request.name} `
                     }
                 },
                 name: {
                     title: 'Name',
                     render: (value, row) => {
-                        return row.name ? `<a href="./tasks/${row.id}">${row.name}</a>` : '-';
+                        return row.name ? `<a href="./tasks/show/${row.id}" class="kt-btn-ghost kt-btn-primary">${row.name}</a>` : '-';
                     }
                 },
                 assigned: {
@@ -89,7 +89,9 @@ $(window).on('load', function () {
                 actions: {
                     title: 'Aksi',
                     render: (value, row) => {
-                        return `-`;
+                        return `<a class="kt-btn kt-btn-ghost kt-btn-destructive" href="#">
+                                    Hapus Task
+                                </a>`;
                     }
                 },
             },

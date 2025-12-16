@@ -38,6 +38,28 @@ class Index extends Controller
         );
     }
 
+//    public function show(Request $request, string $id)
+//    {
+//        return response()->json(
+//        data: array(
+//        'status' => true,
+//        'code' => Response::HTTP_OK,
+//        'msg' => 'Successfully Read Data',
+//        'data' => $this->service->AutomaticallyPaginationTable($request),
+//        'meta' => array(
+//            'count' => array(
+//                'current' => $this->service->AutomaticallyPaginationTable($request)->count(),
+//                'total' =>  $this->service->Count(),
+//            )
+//        )
+//    ),
+//            status: Response::HTTP_OK,
+//            headers: array(
+//                'Content-Type' => 'application/json'
+//            )
+//        );
+//    }
+
 
 }
 

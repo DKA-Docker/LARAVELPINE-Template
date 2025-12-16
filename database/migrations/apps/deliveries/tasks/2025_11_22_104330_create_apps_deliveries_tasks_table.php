@@ -31,8 +31,17 @@ return new class extends Migration
                 ->constrained('accounts', 'id')
                 ->onDelete('cascade');
 
+            // route?: IFeaturesTasksDeliveriesRoutes | null (OneToOne)
+            $table->foreignUuid('request')
+                ->nullable()
+                ->index()
+                ->comment('request utama untuk task ini')
+                ->constrained('apps_deliveries_requests', 'id')
+                ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
+
             $table->foreignUuid('history')
                 ->index()
+                ->nullable()
                 ->comment('history yang ditugaskan pada task ini')
                 ->constrained('apps_deliveries_histories', 'id')
                 ->onDelete('cascade');

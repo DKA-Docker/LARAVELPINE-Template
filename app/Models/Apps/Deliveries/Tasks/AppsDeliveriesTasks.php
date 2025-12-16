@@ -2,6 +2,7 @@
 
 namespace App\Models\Apps\Deliveries\Tasks;
 
+use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
@@ -27,10 +28,11 @@ class AppsDeliveriesTasks extends Model
         'account',
         'name', // keterangan
         'assigned', // array [] => hasMANY ke tabel akun
+        'request',
         'history', // to do, checking , delivery,
     ];
 
-    protected $with = ['account','assigned','route'];
+    protected $with = ['account','assigned','request'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -46,12 +48,10 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function route(): BelongsTo
+    public function request(): BelongsTo
     {
-        return $this->belongsTo(AppsDeliveriesTasksRoutes::class, 'route')->withDefault();
+        return $this->belongsTo(AppsDeliveriesRequests::class, 'request')->withDefault();
     }
-
-
 
 
 }

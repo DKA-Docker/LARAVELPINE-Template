@@ -7,5 +7,6 @@ import "./pages/dashboards/deliveries/requests/index";
 import "./pages/dashboards/deliveries/requests/create";
 import "./pages/dashboards/deliveries/tasks/index";
 import "./pages/dashboards/deliveries/tasks/create";
+import "./pages/dashboards/deliveries/tasks/show";
 //import "./layouts/demo1.js";
 
