@@ -10,13 +10,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role;
 
-class AppsDeliveriesTasks extends Model
+class AppsDeliveriesTasksAssigns extends Model
 {
     /** @use HasFactory<AppsDeliveriesTasksFactory> */
     use HasUuids, HasFactory, SoftDeletes;
@@ -28,11 +27,10 @@ class AppsDeliveriesTasks extends Model
     protected $fillable = [
         'id',
         'account',
-        'name', // keterangan
-        'history', // to do, checking , delivery,
+        'task'
     ];
 
-    protected $with = ['account','assigned'];
+    protected $with = ['account','task'];
 
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
@@ -43,18 +41,10 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function assigned(): BelongsToMany
+    public function task(): BelongsTo
     {
-        return $this->belongsToMany(
-            Accounts::class,                  // related model
-            'apps_deliveries_tasks_assigns',   // pivot table
-            'task',                         // FK ke tasks
-            'account',                      // FK ke accounts
-            'id',                              // PK tasks
-            'id'                               // PK accounts
-        )->withTimestamps();
+        return $this->belongsTo(AppsDeliveriesTasks::class, 'task')->withDefault();
     }
-
 
     /*public function request(): BelongsTo
     {

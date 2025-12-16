@@ -7,6 +7,7 @@ use Database\Seeders\App\Deliveries\Requests\DeliveriesRequestsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\DeliveriesRequestsDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\Units\DeliveriesRequestsDestinationsPackagesUnitsSeeder;
+use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksAssignsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesDestinationsSeeder;
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
             DeliveriesHistoriesSeeder::class,
             DeliveriesTasksSeeder::class,
+            DeliveriesTasksAssignsSeeder::class,
         ]);
     }
 }
