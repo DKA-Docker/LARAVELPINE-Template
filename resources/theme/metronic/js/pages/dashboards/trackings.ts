@@ -11,22 +11,46 @@ const elementExists = $("div.dashboards-apps-trackings");
 $(window).on('load', async function () {
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
-    // --- CSS Injector untuk memastikan hanya 1 container putih dan menambahkan panah ---
+    // --- DAFTAR STYLE MAPBOX ---
+    const styles = {
+        light: 'mapbox://styles/mapbox/light-v11',
+        dark: 'mapbox://styles/mapbox/dark-v11'
+    };
+    let currentStyle = 'light'; // Set default ke mode terang
+
+    // --- CSS Injector untuk style Mapbox dan tombol mode ---
     const style = document.createElement('style');
     style.textContent = `
-        /* Menghapus container default Mapbox (agar tidak ada kotak putih ganda) */
+        /* Menghapus container default Mapbox */
         .driver-info-popup.mapboxgl-popup .mapboxgl-popup-content {
             padding: 0;
-            background: none; /* Transparan */
-            box-shadow: none; /* Bayangan dikontrol oleh popupContainer kustom */
+            background: none;
+            box-shadow: none;
             border-radius: 0;
         }
         /* Mengembalikan Panah (Tip) Mapbox bawaan */
-        /* Kita hanya perlu menargetkan warna latar belakang (border-top-color) */
         .driver-info-popup.mapboxgl-popup .mapboxgl-popup-tip {
-            /* Hapus "border: none;" yang sebelumnya ada di sini */
-            /* Kita ingin panah muncul, jadi kita set warna panah menjadi putih */
             border-top-color: #fff !important;
+        }
+
+        /* Styling untuk tombol Dark/Light Mode BARU */
+        #style-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 50px; /* Geser agar tidak menabrak NavigationControl */
+            z-index: 10;
+            background-color: white;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px 10px;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        #style-toggle-btn:hover {
+            background-color: #f0f0f0;
         }
     `;
     document.head.appendChild(style);
@@ -36,7 +60,7 @@ $(window).on('load', async function () {
 
     const map = new mapboxgl.Map({
         container: "map",
-        style: 'mapbox://styles/mapbox/standard',
+        style: styles[currentStyle], // Menggunakan style default (light)
         projection: 'globe',
         zoom: 12,
         center: [119.4365, -5.1477],
@@ -50,6 +74,29 @@ $(window).on('load', async function () {
         showUserHeading: true,
     });
     map.addControl(geolocate, 'top-right');
+
+    // --- TOMBOL GANTI STYLE ---
+    const styleToggleBtn = document.createElement('button');
+    styleToggleBtn.id = 'style-toggle-btn';
+    styleToggleBtn.innerHTML = '🌙 Mode Gelap';
+    document.getElementById('map')?.appendChild(styleToggleBtn); // Tambahkan tombol ke kontainer peta
+
+    styleToggleBtn.addEventListener('click', () => {
+        if (currentStyle === 'light') {
+            currentStyle = 'dark';
+            map.setStyle(styles.dark);
+            styleToggleBtn.innerHTML = '☀️ Mode Terang';
+            // Pastikan marker dimuat ulang setelah style berubah
+            map.once('style.load', fetchTracking);
+        } else {
+            currentStyle = 'light';
+            map.setStyle(styles.light);
+            styleToggleBtn.innerHTML = '🌙 Mode Gelap';
+            // Pastikan marker dimuat ulang setelah style berubah
+            map.once('style.load', fetchTracking);
+        }
+    });
+    // ----------------------------
 
     const markers: Record<string, { marker: mapboxgl.Marker; popup: mapboxgl.Popup }> = {};
 
@@ -216,7 +263,20 @@ $(window).on('load', async function () {
         }
     }
 
-    await fetchTracking();
-    setInterval(fetchTracking, 1000);
+    // Panggil fetchTracking saat style.load, terutama setelah inisialisasi awal
+    map.on('style.load', async () => {
+        await fetchTracking();
+        // Hanya atur interval setelah pemuatan gaya awal, agar tidak ganda
+        if (!(window as any).trackingInterval) {
+            (window as any).trackingInterval = setInterval(fetchTracking, 1000);
+        }
+    });
+
+    // Panggil fetchTracking untuk pemuatan awal jika style sudah dimuat
+    if (map.isStyleLoaded()) {
+        await fetchTracking();
+        (window as any).trackingInterval = setInterval(fetchTracking, 1000);
+    }
+
     window.addEventListener('resize', () => map.resize());
 });
