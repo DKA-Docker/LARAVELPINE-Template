@@ -32,6 +32,8 @@ class AppsDeliveriesTasksAssigns extends Model
 
     protected $with = ['account','task'];
 
+    protected $hidden = ['pivot'];
+
     /**
      * Relation Data Account Untuk Table Ini Di dalam database
      * @return BelongsTo

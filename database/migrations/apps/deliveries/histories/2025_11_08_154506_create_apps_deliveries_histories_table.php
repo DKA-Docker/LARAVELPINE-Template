@@ -13,11 +13,6 @@ return new class extends Migration
     {
         Schema::create('apps_deliveries_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-//            $table->foreignUuid('task')
-//                ->index()
-//                ->comment('mengambil data task_id yang akan dikirim')
-//                ->constrained('apps_deliveries_tasks', 'id')
-//                ->onDelete('cascade');
             $table->foreignUuid('account')
                ->index()
                 ->comment('mengambil data id account yang akan dikirim')

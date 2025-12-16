@@ -41,6 +41,7 @@ class Accounts extends Authenticatable
     protected $hidden = [
         'remember_token',
         'deleted_at',
+        'pivot',
         'password', // Hide accessor password biar gak bocor hash
     ];
 

@@ -48,13 +48,13 @@ class AppsDeliveriesTasks extends Model
     public function assigned(): BelongsToMany
     {
         return $this->belongsToMany(
-            Accounts::class,                  // related model
-            'apps_deliveries_tasks_assigns',   // pivot table
-            'task',                         // FK ke tasks
-            'account',                      // FK ke accounts
-            'id',                              // PK tasks
-            'id'                               // PK accounts
-        )->withTimestamps();
+            related: Accounts::class,                  // related model
+            table: 'apps_deliveries_tasks_assigns',   // pivot table
+            foreignPivotKey: 'task',                         // FK ke tasks
+            relatedPivotKey: 'account',                      // FK ke accounts
+            parentKey: 'id',                              // PK tasks
+            relatedKey: 'id'                               // PK accounts
+        );
     }
 
 
