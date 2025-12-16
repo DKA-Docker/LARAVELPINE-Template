@@ -11,60 +11,110 @@ const elementExists = $("div.dashboards-apps-trackings");
 $(window).on('load', async function () {
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
-    // --- DAFTAR STYLE MAPBOX ---
+    // --- DAFTAR STYLE MAPBOX & WARNA POPUP ---
     const styles = {
-        light: 'mapbox://styles/mapbox/light-v11',
-        dark: 'mapbox://styles/mapbox/dark-v11'
+        standard: 'mapbox://styles/mapbox/standard',
+        streets: 'mapbox://styles/mapbox/streets-v12',
+        satellite: 'mapbox://styles/mapbox/satellite-v9',
+        dark: 'mapbox://styles/mapbox/dark-v11',
+        light: 'mapbox://styles/mapbox/light-v11'
     };
-    let currentStyle = 'light'; // Set default ke mode terang
 
-    // --- CSS Injector untuk style Mapbox dan tombol mode ---
-    const style = document.createElement('style');
-    style.textContent = `
-        /* Menghapus container default Mapbox */
+    // --- MENDETEKSI THEME AWAL DARI HTML CLASS ---
+    let currentStyleKey;
+    const isInitialDark = document.documentElement.classList.contains('dark');
+    if (isInitialDark) {
+        currentStyleKey = 'dark';
+    } else {
+        currentStyleKey = 'standard';
+    }
+
+    // KONFIGURASI WARNA POPUP DINAMIS
+    const popupColors = {
+        light: { bg: '#fff', text: '#333', shadow: '0 2px 8px rgba(0,0,0,0.2)', tip: '#fff', divider: '#eee' },
+        dark: { bg: '#333', text: '#fff', shadow: '0 2px 8px rgba(0,0,0,0.5)', tip: '#333', divider: '#555' }
+    };
+
+    let dynamicStyleElement: HTMLStyleElement | null = null;
+    let mapInstance: mapboxgl.Map | null = null;
+
+    // FUNGSI UNTUK MEMPERBARUI WARNA KERUCUT (TIP)
+    function updatePopupTipColor(tipColor: string) {
+        if (!dynamicStyleElement) {
+            dynamicStyleElement = document.createElement('style');
+            document.head.appendChild(dynamicStyleElement);
+        }
+
+        dynamicStyleElement.textContent = `
+            .driver-info-popup.mapboxgl-popup .mapboxgl-popup-tip {
+                border-top-color: ${tipColor} !important;
+            }
+        `;
+    }
+
+    // FUNGSI UTAMA UNTUK MENGUPDATE STYLE PETA BERDASARKAN THEME GLOBAL
+    function updateMapStyleByTheme(isDarkMode: boolean) {
+        if (!mapInstance) return;
+
+        const newKey = isDarkMode ? 'dark' : 'standard';
+
+        // Hanya update jika terjadi perubahan nyata dan style yang baru berbeda dari style Mapbox saat ini
+        if (currentStyleKey === newKey) return;
+
+        currentStyleKey = newKey;
+        mapInstance.setStyle(styles[newKey as keyof typeof styles]);
+        updatePopupTipColor(popupColors[isDarkMode ? 'dark' : 'light'].tip);
+        setActiveStyleButton(newKey); // Update tombol yang aktif (Dark atau Default)
+        mapInstance.once('style.load', fetchTracking);
+    }
+
+    // --- SETUP MUTATION OBSERVER (Sebagai Fallback) ---
+    function setupThemeObserver() {
+        if (!document.documentElement) return;
+
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.attributeName === 'class') {
+                    const isDarkMode = document.documentElement.classList.contains('dark');
+                    updateMapStyleByTheme(isDarkMode);
+                    break;
+                }
+            }
+        });
+
+        observer.observe(document.documentElement, { attributes: true });
+    }
+
+    // --- CSS Injector Awal (Struktur & Tombol Aktif) ---
+    const structuralStyle = document.createElement('style');
+    structuralStyle.textContent = `
         .driver-info-popup.mapboxgl-popup .mapboxgl-popup-content {
             padding: 0;
             background: none;
             box-shadow: none;
             border-radius: 0;
         }
-        /* Mengembalikan Panah (Tip) Mapbox bawaan */
-        .driver-info-popup.mapboxgl-popup .mapboxgl-popup-tip {
-            border-top-color: #fff !important;
-        }
 
-        /* Styling untuk tombol Dark/Light Mode BARU */
-        #style-toggle-btn {
-            position: absolute;
-            top: 10px;
-            right: 50px; /* Geser agar tidak menabrak NavigationControl */
-            z-index: 10;
-            background-color: white;
-            color: #333;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 6px 10px;
-            cursor: pointer;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-            font-weight: bold;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        #style-toggle-btn:hover {
-            background-color: #f0f0f0;
+        .active-style {
+            background-color: #3b82f6 !important;
+            color: white !important;
+            border-color: #3b82f6 !important;
         }
     `;
-    document.head.appendChild(style);
-    // ----------------------------------------------------------------------
+    document.head.appendChild(structuralStyle);
+
+    updatePopupTipColor(popupColors[isInitialDark ? 'dark' : 'light'].tip);
 
     mapboxgl.accessToken = 'pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA';
 
     const map = new mapboxgl.Map({
         container: "map",
-        style: styles[currentStyle], // Menggunakan style default (light)
+        style: styles[currentStyleKey as keyof typeof styles],
         projection: 'globe',
         zoom: 12,
         center: [119.4365, -5.1477],
     });
+    mapInstance = map;
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
@@ -75,28 +125,60 @@ $(window).on('load', async function () {
     });
     map.addControl(geolocate, 'top-right');
 
-    // --- TOMBOL GANTI STYLE ---
-    const styleToggleBtn = document.createElement('button');
-    styleToggleBtn.id = 'style-toggle-btn';
-    styleToggleBtn.innerHTML = '🌙 Mode Gelap';
-    document.getElementById('map')?.appendChild(styleToggleBtn); // Tambahkan tombol ke kontainer peta
+    setupThemeObserver(); // Aktifkan Observer sebagai fallback
 
-    styleToggleBtn.addEventListener('click', () => {
-        if (currentStyle === 'light') {
-            currentStyle = 'dark';
-            map.setStyle(styles.dark);
-            styleToggleBtn.innerHTML = '☀️ Mode Terang';
-            // Pastikan marker dimuat ulang setelah style berubah
-            map.once('style.load', fetchTracking);
-        } else {
-            currentStyle = 'light';
-            map.setStyle(styles.light);
-            styleToggleBtn.innerHTML = '🌙 Mode Gelap';
-            // Pastikan marker dimuat ulang setelah style berubah
-            map.once('style.load', fetchTracking);
-        }
-    });
-    // ----------------------------
+    // --- BARU: EVENT LISTENER UNTUK THEME SWITCH HEADER ---
+    const themeSwitchElement = document.querySelector('[data-kt-theme-switch-toggle="true"]');
+    if (themeSwitchElement) {
+        themeSwitchElement.addEventListener('change', () => {
+            // Beri sedikit waktu agar K-Theme script selesai mengaplikasikan class 'dark'/'light' ke <html>
+            setTimeout(() => {
+                const isDarkModeActive = document.documentElement.classList.contains('dark');
+                updateMapStyleByTheme(isDarkModeActive);
+            }, 50);
+        });
+    }
+    // ----------------------------------------------------
+
+    // --- FUNGSIONALITAS TOOLBAR MODE PETA ---
+    function setActiveStyleButton(key: string) {
+        document.querySelectorAll('[data-map-style]').forEach(btn => {
+            btn.classList.remove('active-style');
+        });
+        const activeBtn = document.querySelector(`[data-map-style="${key}"]`);
+        activeBtn?.classList.add('active-style');
+    }
+
+    // Event Delegation pada kontainer peta
+    const mapContainer = document.getElementById('map')?.parentElement;
+    if (mapContainer) {
+        mapContainer.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            const newStyleKey = target.dataset.mapStyle;
+
+            if (newStyleKey && newStyleKey !== currentStyleKey) {
+
+                // Jika tombol Dark/Standard ditekan, jangan override theme global.
+                // Tombol ini hanya berguna untuk Streets dan Satellite.
+                if (newStyleKey === 'dark' || newStyleKey === 'standard') return;
+
+                const styleUrl = styles[newStyleKey as keyof typeof styles];
+                if (styleUrl) {
+                    currentStyleKey = newStyleKey;
+                    map.setStyle(styleUrl);
+                    setActiveStyleButton(newStyleKey);
+
+                    // Warna popup tetap mengikuti theme global (dark/light)
+                    const colorKey = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    updatePopupTipColor(popupColors[colorKey].tip);
+                    map.once('style.load', fetchTracking);
+                }
+            }
+        });
+    }
+
+    // Set status tombol awal
+    setActiveStyleButton(currentStyleKey);
 
     const markers: Record<string, { marker: mapboxgl.Marker; popup: mapboxgl.Popup }> = {};
 
@@ -118,6 +200,12 @@ $(window).on('load', async function () {
 
             const BUTTON_SIZE = 30;
 
+            // Mendapatkan konfigurasi warna yang sesuai dengan mode saat ini atau mode default jika style bukan dark/light
+            const isDarkActive = currentStyleKey === 'dark' || document.documentElement.classList.contains('dark');
+            const colorKey = isDarkActive ? 'dark' : 'light';
+            const currentColors = popupColors[colorKey];
+
+
             Object.values(latestPerUuid).forEach((driver: any) => {
                 const coord = [driver.longitude, driver.latitude];
                 const lastUpdate = moment(driver.created_at).format('HH:mm:ss DD MMMM YYYY');
@@ -134,14 +222,15 @@ $(window).on('load', async function () {
                 }
                 // -----------------------------
 
-                // Container popup KUSTOM
+                // Container popup KUSTOM (Warna dinamis)
                 const popupContainer = document.createElement('div');
                 popupContainer.style.fontSize = '13px';
                 popupContainer.style.minWidth = '280px';
                 popupContainer.style.padding = '10px';
-                popupContainer.style.background = '#fff';
+                popupContainer.style.background = currentColors.bg;
+                popupContainer.style.color = currentColors.text;
                 popupContainer.style.borderRadius = '8px';
-                popupContainer.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+                popupContainer.style.boxShadow = currentColors.shadow;
                 popupContainer.style.position = 'relative';
                 popupContainer.style.overflow = 'visible';
 
@@ -195,7 +284,8 @@ $(window).on('load', async function () {
                     row.style.display = 'flex';
                     row.style.justifyContent = 'space-between';
                     row.style.padding = '2px 0';
-                    row.style.borderBottom = '1px solid #eee';
+                    // Garis pemisah dinamis
+                    row.style.borderBottom = `1px solid ${currentColors.divider}`;
 
                     const label = document.createElement('span');
                     label.style.fontWeight = 'bold';
@@ -266,7 +356,7 @@ $(window).on('load', async function () {
     // Panggil fetchTracking saat style.load, terutama setelah inisialisasi awal
     map.on('style.load', async () => {
         await fetchTracking();
-        // Hanya atur interval setelah pemuatan gaya awal, agar tidak ganda
+        // Hanya atur interval setelah pemuatan gaya awal
         if (!(window as any).trackingInterval) {
             (window as any).trackingInterval = setInterval(fetchTracking, 1000);
         }
