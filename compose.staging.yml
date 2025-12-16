@@ -88,10 +88,6 @@ services:
         published: 80
         protocol: tcp
         host_ip: 0.0.0.0
-    volumes:
-      - type: bind
-        source: .
-        target: /var/www
     networks:
       - default
 
