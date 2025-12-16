@@ -1,6 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import $ from "jquery";
 import axios from "axios";
+import URI from "urijs"
 
 const elementExists = $("div.dashboards-apps-trackings");
 
@@ -30,7 +31,27 @@ $(window).on('load', async function () {
 
     async function fetchTracking() {
         try {
-            const res = await axios.get('http://localhost/api/dashboards/apps/trackings/monitors');
+            /** Ambil URL dimana JS Ini Dimuat**/
+            const FullUriCurrentURL = URI(window.location);
+            /**
+             * Ubah URL Menjadi Array Segment
+             * misal /dashboards/apps/deliveries menjadi
+             * ['dashboards','apps','deliveries'];
+             * **/
+            const segs = FullUriCurrentURL.segment();
+            /**
+             * Tambahkan Data Di Dalam Array
+             * ['api','dashboards','apps','deliveries'];
+             * **/
+            segs.unshift('api');
+            /**
+             * ['api','dashboards','apps','deliveries'];
+             * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
+             * /api/dashboards/apps/deliveries
+             * **/
+            FullUriCurrentURL.segment([...segs,'monitors']);
+
+            const res = await axios.get(FullUriCurrentURL.toString());
             const drivers = res.data.data;
 
             // Ambil data terakhir per uuid
