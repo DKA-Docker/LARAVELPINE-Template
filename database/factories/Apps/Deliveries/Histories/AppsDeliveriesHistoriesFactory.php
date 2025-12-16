@@ -21,7 +21,7 @@ class AppsDeliveriesHistoriesFactory extends Factory
     {
         $accounts = Accounts::inRandomOrder()->first();
         $task = AppsDeliveriesTasks::inRandomOrder()->first();
-        $arrayHistory = ['on_delivery', 'delivered', 'failed', 'done'];
+        $arrayHistory = ['on_delivery', 'delivered', 'failed', 'done','todo'];
         return [
             'id' => (String) Str::uuid(),
             'account' => $accounts,

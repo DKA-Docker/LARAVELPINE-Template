@@ -33,38 +33,38 @@ class ResourcesDeliveriesTaksServices
 
     public function AutomaticallyPaginationTable(Request $request): Collection
     {
+        $query = $this->repository
+            ->query()
+            ->when(
+                $request->filled('assigned'),
+                fn ($q) => $q->whereHas(
+                    'assigned',
+                    fn ($a) => $a->where('accounts.id', $request->get('assigned'))
+                )
+            )
+            ->when(
+                $request->filled('status'),
+                fn ($q) => $q->whereHas(
+                    'history',
+                    fn ($h) => $h->where('to_status', $request->get('status'))
+                )
+            )
+            ->orderByDesc('created_at');
+
         if (!$request->hasAny(['page', 'size'])) {
-            return $this->repository->query()->get();
+            return $query->get();
         }
 
-        /** @var $page
-         *
-         * mulai pagination manual kalau ada page/size
-         * default ke 1 kalau orang cuma kirim size
-         */
-        $page = (int)  $request->get('page', 1);
-        $size = (int) $request->get('size', 1);
+        $page = max((int) $request->get('page', 1), 1);
+        $size = (int) $request->get('size');
 
-        /**
-         * kalau size nggak dikirim, jangan dipaksa 10 → anggap no limit
-         */
-        if ($size != null) {
-            $size = (int) $size;
-            $size = $size < 1  ? null : $size;
-            // kalau di kasih angka aneh (<=0), anggap no limit
-        }
-
-        $query = $this->repository->query()->orderByDesc('created_at');
-
-        if ($size !== null) {
-            $page = max($page, 1);
-            $offset = ($page - 1) * $size;
-
-            $query->skip($offset)->take($size);
+        if ($size > 0) {
+            $query->skip(($page - 1) * $size)->take($size);
         }
 
         return $query->get();
     }
+
 
     public function Count():int
     {

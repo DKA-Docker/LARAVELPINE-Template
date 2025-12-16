@@ -14,13 +14,23 @@ class AppsDeliveriesTasksFactory extends Factory
 {
     public function definition(): array
     {
-
         $accounts = Accounts::inRandomOrder()->first();
         $reqDestination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
+
+        $taskTitles = [
+            'Pengantaran hari ini',
+            'Pengiriman barang',
+            'Antar paket pelanggan',
+            'Distribusi stok gudang',
+            'Pengiriman pesanan toko',
+            'Antar barang ke tujuan',
+            'Pengantaran express',
+        ];
+
         return [
-            'id' => (String) Str::uuid(),
+            'id' => (string) Str::uuid(),
             'account' => $accounts->id,
-            'name' => $this->faker->name(),
+            'name' => $this->faker->randomElement($taskTitles),
             'destination' => $reqDestination->id,
         ];
     }
