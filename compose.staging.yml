@@ -13,6 +13,8 @@ services:
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar
 
+      DKA_DEV_DISABLED_NPM_SERVE: true
+
       APP_LOCALE: id_ID
       APP_FALLBACK_LOCALE: id_ID
       APP_FAKER_LOCALE: id_ID
