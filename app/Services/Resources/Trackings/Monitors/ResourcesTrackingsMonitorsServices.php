@@ -41,7 +41,7 @@ class ResourcesTrackingsMonitorsServices
             ->query()
             ->whereIn('id', function ($query) {
                 $query->selectRaw('MAX(id)')
-                    ->from('your_table_name') // ganti sesuai tabel repo
+                    ->from('apps_trackings_monitors') // ganti sesuai tabel repo
                     ->groupBy('uuid');
             })
             ->orderBy('uuid')
