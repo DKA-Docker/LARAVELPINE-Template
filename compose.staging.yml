@@ -2,16 +2,13 @@ name: hndgroup-logistech
 
 services:
   app:
-    image: yovanggaanandhika/laravelpine:8.3-fpm
-    container_name: hndgroup-logistech-staging-app
-    hostname: hndgroup-logistech-staging-app
-    restart: always
+    image: yovanggaanandhika/laravelpine:8.3
+    container_name: hndgroup-logistech-app
+    hostname: hndgroup-logistech-app
     pull_policy: always
-    depends_on:
-      - mariadb
     environment:
       APP_NAME: 'Logistech'
-      APP_ENV: production
+      APP_ENV: local
       APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
       APP_DEBUG: true
       APP_TIMEZONE: Asia/Makassar
@@ -28,12 +25,12 @@ services:
       LOG_DEPRECATIONS_CHANNEL: null
       LOG_LEVEL: debug
 
-      DB_CONNECTION: mariadb
-      DB_HOST: hndgroup-logistech-staging-mariadb
-      DB_PORT: 3306
+      DB_CONNECTION: pgsql
+      DB_HOST: hndgroup-logistech-postgresql
+      DB_PORT: 5432
       DB_DATABASE: hndgroup_logistech
-      DB_USERNAME: logistech
-      DB_PASSWORD: 'adwjkwjdJDwllj29iu93j932j3jij39j39'
+      DB_USERNAME: postgres
+      DB_PASSWORD: '@Thedarkangels2010'
 
       SESSION_DRIVER: database
       SESSION_TABLE: sessions_accounts
@@ -91,63 +88,56 @@ services:
         published: 80
         protocol: tcp
         host_ip: 0.0.0.0
-    #- uncomment for sync project and data in container
-    #- disable if production
-    #volumes:
-    #  - type: bind
-    #    source: .
-    #    target: /var/www
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www
     networks:
       - default
 
-  mariadb:
-    image: yovanggaanandhika/mariadb:latest
-    container_name: hndgroup-logistech-staging-mariadb
-    # alias name dari container mariadb
-    hostname: hndgroup-logistech-staging-mariadb
-    # lakukan restart container jika kontainer tiba-tiba terhenti
-    restart: always
-    # lakukan pull otomatis image terbaru dari registry
+  postgresql:
+    image: yovanggaanandhika/postgresql:latest
+    container_name: hndgroup-logistech-postgresql
+    hostname: hndgroup-logistech-postgresql
     pull_policy: always
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 2
     environment:
-      DKA_ROOT_PASSWORD: 'NKDJHkh3ho3hji3hfoi4hjfj4'
+      DKA_ROOT_PASSWORD: '@Thedarkangels2010'
       DKA_DB_NAME: hndgroup_logistech
-      DKA_DB_USERNAME: logistech
-      DKA_DB_PASSWORD: 'adwjkwjdJDwllj29iu93j932j3jij39j39'
-      # enable cron backup
       DKA_CRON_ENABLE: false
-      # run everyday 3:00 AM
-      DKA_CRON_PRIODIC: '0 3 * * *'
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        host_ip: 0.0.0.0
     deploy:
       resources:
         limits:
-          memory: 500M
-          cpus: '1.0'
+          memory: 800M
+          #cpus: '0.8'
         reservations:
           memory: 200M
-          cpus: '0.8'
-    ports:
-      # adalah port internal dari docker
-      - target: 3306
-        # adalah port yang dipublish diluar docker
-        published: 3307
-        # adalah protocol yang di forwarding
-        protocol: tcp
-        # adalah allow wishlist ip yang dapat mengakses container
-        host_ip: 0.0.0.0
+          #cpus: '0.3'
     volumes:
       - type: volume
-        source: mariadb-data
-        target: /var/lib/mysql
+        source: postgres-data
+        target: /var/lib/postgresql
     networks:
       - default
 
 volumes:
   mariadb-data:
-    name: hndgroup-logistech-staging-mariadb-data
+    name: hndgroup-logistech-mariadb-data
+    driver: local
+  postgres-data:
+    name: hndgroup-logistech-postgres-data
     driver: local
 
 networks:
   default:
-    name: hndgroup-logistech-staging
+    name: hndgroup-logistech
     driver: bridge
