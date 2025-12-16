@@ -1,5 +1,5 @@
 # Menggunakan image custom PHP 8.3 FPM
-FROM yovanggaanandhika/laravelpine:8.3-fpm
+FROM yovanggaanandhika/laravelpine:8.3
 # Copy semua file ke dalam container
 COPY . .
 # Set permission untuk storage dan bootstrap/cache
