@@ -53,6 +53,8 @@ class Index extends Controller
 
     }
 
+
+
     public function token(Request $request) {
         // Ambil data dari Vite
         $token = $request->token;

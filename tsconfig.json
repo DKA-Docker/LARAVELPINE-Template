@@ -1,9 +1,22 @@
 {
     "compilerOptions": {
-        "target": "ES2019",
-        "baseUrl": ".",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-        "esModuleInterop": true
-    }
+        "target": "ESNext",
+        "module": "ESNext",
+        /* Tambahkan atau pastikan baris di bawah ini ada */
+        "moduleResolution": "bundler", // Sangat disarankan untuk Vite/ESNext
+        "useDefineForClassFields": true,
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+
+        /* Agar TS tidak bingung dengan import.meta */
+        "types": ["vite/client", "node"],
+
+        /* Pengaturan lainnya */
+        "strict": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "noEmit": true,
+        "resolveJsonModule": true
+    },
+    "include": ["resources/ts/**/*"]
 }

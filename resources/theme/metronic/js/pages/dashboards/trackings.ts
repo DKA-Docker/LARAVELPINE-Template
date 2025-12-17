@@ -243,6 +243,18 @@ $(window).on('load', async function () {
         fetchTracking();
     });
 
+    // @ts-ignore
+    window.Echo.channel('dashboards.apps.trackings.monitors')
+        .listen('.dashboards/apps/trackings/monitors', (response: { data: any; }) => {
+            console.log("Data Monitoring Baru:", response.data);
+
+            // Contoh aksi: Tampilkan notifikasi toast
+            alert("Ada data monitor baru masuk!");
+
+            // Contoh aksi: Update table secara real-time
+            // updateTableData(response.data);
+        });
+
     setInterval(fetchTracking, 2000);
 
     // E. Inject Custom CSS

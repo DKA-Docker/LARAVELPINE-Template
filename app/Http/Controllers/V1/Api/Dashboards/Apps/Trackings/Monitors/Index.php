@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Symfony\Component\HttpFoundation\Response;
+use App\Events\Dashboards\Apps\Trackings\Monitors\Index as MonitorEvent;
 
 class Index extends Controller
 {
@@ -26,6 +27,10 @@ class Index extends Controller
     {
         // 1. Simpan data ke Database melalui Service
         $CreateAct = $this->services->Create($request);
+
+        // Memicu broadcast ke frontend
+        broadcast(new MonitorEvent($CreateAct));
+
         return response()->json(
             data: array(
                 'status' => true,
