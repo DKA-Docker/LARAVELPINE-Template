@@ -26,7 +26,7 @@ class Index extends Controller
          */
         $AuthVerification = $this->auth->verify();
         /**
-         * @var object $AuthVerification
+         *
          * if response status === false.
          * show the login.
          */

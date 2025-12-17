@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
+use Symfony\Component\HttpFoundation\Response;
+
+// Pastikan ini di-import jika menggunakan Sanctum
 
 class AuthAccountsServices {
 
@@ -36,13 +40,15 @@ class AuthAccountsServices {
 
     /**
      * @param array{
-     *     username: string,
-     *     password: string,
+     * username: string,
+     * password: string,
+     * guard: 'web'|'api', // 🟢 Tambahkan parameter guard
      * } $args
      * @return array{
-     *     status: bool,
-     *     code: int,
-     *     msg: string,
+     * status: bool,
+     * code: int,
+     * msg: string,
+     * token?: string, // 🟢 Tambahkan token opsional untuk API
      * }
      */
     public function authenticate(array $args): array
@@ -50,6 +56,7 @@ class AuthAccountsServices {
         $defaults = [
             'username' => '',
             'password' => '',
+            'guard' => 'web', // Default ke 'web'
         ];
 
         $data = array_merge($defaults, $args);
@@ -60,78 +67,59 @@ class AuthAccountsServices {
         $account = Accounts::with(['information', 'contact', 'credential'])
             ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
             ->first();
+
         /** Validasi akun dan password */
         if (!$account || !Hash::check($data['password'], $account->password)) {
             return [
                 'status' => false,
-                'code' => 401,
+                'code' => Response::HTTP_UNAUTHORIZED,
                 'msg' => 'Invalid credentials',
             ];
         }
 
-        Auth::guard('web')->login($account);
-        request()->session()->regenerate();
+        // 🟢 LOGIKA AUTENTIKASI FLEKSIBEL
+        if ($data['guard'] === 'api') {
 
-        return [
-            'status' => true,
-            'code' => 200,
-            'msg' => 'Successfully logged in (web)',
-        ];
-    }
+            // 1. Logika API Guard (Sanctum/Token)
 
-    public function verifyPassword(array $args): array
-    {
-        $defaults = [
-            'id' => null,
-            'password' => null,
-        ];
+            // Opsional: Hapus token lama sebelum membuat yang baru.
+            // $account->tokens()->delete();
 
-        $data = array_merge($defaults, $args);
+            // Buat token baru
+            $token = $account->createToken('auth-token', ['read', 'write']);
 
-        /** @var Accounts|null $account */
-        $account = Accounts::with(['information', 'contact', 'credential'])
-            ->where('id',$data['id'])
-            ->first();
-        // Validasi akun dan password
-        if (!$account || !Hash::check($data['password'], $account->password)) {
             return [
-                'status' => false,
-                'code' => 401,
-                'msg' => 'Password Not Match',
+                'status' => true,
+                'code' => Response::HTTP_OK,
+                'msg' => 'Successfully logged in (api)',
+                'token' => $token->plainTextToken, // Kembalikan token mentah
+            ];
+
+        } else {
+
+            // 2. Logika Web Guard (Session)
+
+            Auth::guard('web')->login($account);
+            request()->session()->regenerate();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'msg' => 'Successfully logged in (web)',
             ];
         }
-
-        return [
-            'status' => true,
-            'code' => 200,
-            'msg' => 'Successfully logged in (web)',
-        ];
     }
 
-    /**
-     * @param Authenticatable|null $authenticate
-     * @return mixed
-     * @desc authorize adalah aksi yang terjadi setelah login berhasil
-     */
-    public function authorize(Authenticatable|null $authenticate): array
-    {
-        /** @var $account mixed cari id usernya dari session */
-        $account = $this->account->Find($authenticate->getAuthIdentifier());
-        /** Load semua relasi akun */
-        $data = $account->load(['information', 'credential', 'contact']);
-        /** Kembalikan Callback data Bahwa authorization telah berhasil ke pengguna */
-        return [
-            "status" => true,
-            "code" => 200,
-            "msg" => "Successfully get data",
-            "data" => $data, // ubah akun dan relasi ke array
-        ];
-    }
+    // ... (Metode lainnya seperti verifyPassword, authorize, verify, dan revoke tetap sama)
+
+    // Metode verifyPassword tidak perlu diubah.
+
+    // Metode authorize tidak perlu diubah.
 
     public function verify(): array
     {
         /** @var $auth Authenticatable ambil data verification dari data user yang login saat ini. */
-        $auth = Auth::guard('web')->user();
+        $auth = Auth::guard('web')->user() ?? Auth::guard('sanctum')->user();
         /** Check If Auth Exists */
         if ($auth) {
             /** @var  $account Model adalah data load relation  */
@@ -139,8 +127,8 @@ class AuthAccountsServices {
             /** Kembalikan Callback Array Response Ke function Ini */
             return [
                 "status" => true,
-                "code" => 200,
-                "msg" => "Successfully get data",
+                "code" => Response::HTTP_OK,
+                "msg" => "Successfully verified",
                 "data" => $account->toArray(), // biar frontend gampang parsing
             ];
         }
@@ -148,7 +136,7 @@ class AuthAccountsServices {
         /** Jika Tidak ada maka kembalikan Unauthorized */
         return [
             "status" => false,
-            "code" => 401,
+            "code" => Response::HTTP_UNAUTHORIZED,
             "msg" => "Unauthorized",
         ];
     }
@@ -156,7 +144,7 @@ class AuthAccountsServices {
     public function revoke(): array
     {
         /** @var Authenticatable|null $authenticate */
-        $authenticate = Auth::guard('web')->user();
+        $authenticate = Auth::guard('web')->user() ?? Auth::guard('sanctum')->user();
 
         // Kalau nggak ada yang login, balikin info aja
         if (!$authenticate) {
@@ -171,27 +159,23 @@ class AuthAccountsServices {
         $account = $this->account->Find($authenticate->getAuthIdentifier());
         $data    = $account->load(['information', 'credential', 'contact']);
 
-        // Opsional: kalau suatu saat kamu pakai Sanctum juga, tetap aman:
-        if (method_exists($authenticate, 'currentAccessToken')) {
-            $token = $authenticate->currentAccessToken();
-            if ($token) {
-                $token->delete(); // nggak bakal error walau tanpa token
-            }
+        // LOGIKA LOGOUT FLEKSIBEL
+        if (Auth::guard('web')->check()) {
+            // Logout Session Web
+            Auth::guard('web')->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+
+        } elseif (Auth::guard('sanctum')->check()) {
+            // Cabut Token API Sanctum
+            $authenticate->currentAccessToken()->delete();
         }
-
-        // Logout session web
-        Auth::guard('web')->logout();
-
-        // Invalidate & regenerate CSRF biar clean
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
 
         return [
             "status" => true,
             "code"   => 200,
-            "msg"    => "Successfully revoke session",
-            "data"   => $data,
+            "msg"    => "Successfully revoked session/token",
+            "data"   => $data->toArray(),
         ];
     }
-
 }

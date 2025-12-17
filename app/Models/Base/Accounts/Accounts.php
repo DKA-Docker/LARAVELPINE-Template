@@ -25,8 +25,6 @@ class Accounts extends Authenticatable
     /** Auto-load relasi credential, contact, dan information */
     protected $with = ['credential', 'contact', 'information'];
 
-    protected $guard_name = 'web';
-
     /** Kolom yang bisa diisi */
     protected $fillable = [
         'id',

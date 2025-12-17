@@ -6,12 +6,20 @@ use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
+use App\Http\Controllers\V1\Api\Auth\Index as ApiAuth;
 use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
 Route::middleware(['Api'])->name('api.')->group(function () {
+    /** Grouping Ke Group Auth Di Dalam Web Routes*/
+    Route::prefix('auth')->name('auth.')->group(function () {
+        /** Name Route dashboards.apps */
+        Route::resource('/', ApiAuth::class)->parameters(['' => 'id']);
+        Route::post('/', [ApiAuth::class, "login"]);
+        Route::delete('/', [ApiAuth::class, "logout"]);
+    });
     /** name Route api.dashboards */
-    Route::prefix('dashboards')->name('dashboards.')->group(function () {
+    Route::middleware(['Api','auth:sanctum'])->prefix('dashboards')->name('dashboards.')->group(function () {
         /** Name Route api.dashboards.apps */
         Route::prefix('apps')->name('apps.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */

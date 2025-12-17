@@ -42,6 +42,7 @@ class Login extends Component
         $result = $this->authServices->authenticate(array(
             'username' => $this->username,
             'password' => $this->password,
+            'guard' => 'web', // 🟢 PASTIKAN INI DITAMBAHKAN UNTUK MENDAPATKAN TOKEN
         ));
 
         if (!$result['status']){
