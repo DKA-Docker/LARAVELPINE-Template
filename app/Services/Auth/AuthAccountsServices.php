@@ -92,7 +92,7 @@ class AuthAccountsServices {
                 'status' => true,
                 'code' => Response::HTTP_OK,
                 'msg' => 'Successfully logged in (api)',
-                'token' => $token->plainTextToken, // Kembalikan token mentah
+                'data' => $token->plainTextToken, // Kembalikan token mentah
             ];
 
         } else {

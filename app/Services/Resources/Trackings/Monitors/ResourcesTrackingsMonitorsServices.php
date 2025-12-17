@@ -25,13 +25,27 @@ class ResourcesTrackingsMonitorsServices
     {
         $driver = config('database.default'); // ambil driver saat ini
 
-        // PostgreSQL: DISTINCT ON bisa dipakai langsung
+        if ($driver === 'pgsql') {
+            // PostgreSQL: DISTINCT ON bisa dipakai langsung
+            return $this->repository
+                ->query()
+                ->selectRaw('DISTINCT ON (account) *')
+                ->orderBy('account')
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->get();
+        }
+
+        // MariaDB/MySQL: gunakan subquery
         return $this->repository
             ->query()
-            ->selectRaw('DISTINCT ON (account) *')
-            ->orderBy('account')
+            ->whereIn('id', function ($query) {
+                $query->selectRaw('MAX(id)')
+                    ->from('apps_trackings_monitors') // ganti sesuai tabel repo
+                    ->groupBy('uuid');
+            })
+            ->orderBy('uuid')
             ->orderByDesc('created_at')
-            ->orderByDesc('id')
             ->get();
     }
 
