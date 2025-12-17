@@ -15,15 +15,17 @@ class AccountsSeeder extends Seeder
     public function __construct()
     {
         $this->account = new ResourcesAccountsServices();
-        $this->factory = new AccountsFactory();
+        //$this->factory = new AccountsFactory();
     }
+
     /**
      * Run the database seeds.
+     * @throws \Throwable
      */
     public function run(): void
     {
         // Buat 10 akun lengkap
-        $this->account->Create([
+        $create = $this->account->Create([
             "information" => [
                 "first_name" => "Super",
                 "last_name" => "Admin"
@@ -34,8 +36,12 @@ class AccountsSeeder extends Seeder
             ],
             "contact" => [
                 "email" => "superadmin@example.com"
+            ],
+            "firebase" => [
+                "token" => null
             ]
         ]);
+        $this->command->info(json_encode($create));
         $this->account->Create([
             "information" => [
                 "first_name" => "Ryan",
@@ -47,6 +53,9 @@ class AccountsSeeder extends Seeder
             ],
             "contact" => [
                 "email" => "ryanpratama@example.com"
+            ],
+            "firebase" => [
+                "token" => null
             ]
         ]);
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');

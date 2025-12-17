@@ -4,6 +4,7 @@ namespace App\Models\Base\Accounts;
 
 use App\Models\Base\Accounts\Components\AccountsContacts;
 use App\Models\Base\Accounts\Components\AccountsCredentials;
+use App\Models\Base\Accounts\Components\AccountsFirebases;
 use App\Models\Base\Accounts\Components\AccountsInformations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ class Accounts extends Authenticatable
     protected $keyType = 'string';
 
     /** Auto-load relasi credential, contact, dan information */
-    protected $with = ['credential', 'contact', 'information'];
+    protected $with = ['credential', 'contact', 'information', 'firebase'];
 
     /** Kolom yang bisa diisi */
     protected $fillable = [
@@ -31,6 +32,7 @@ class Accounts extends Authenticatable
         'information',
         'credential',
         'contact',
+        'firebase',
         'created_at',
         'updated_at',
     ];
@@ -61,6 +63,11 @@ class Accounts extends Authenticatable
     public function contact(): BelongsTo
     {
         return $this->belongsTo(AccountsContacts::class, 'contact')->withDefault();
+    }
+
+    public function firebase(): BelongsTo
+    {
+        return $this->belongsTo(AccountsFirebases::class, 'firebase')->withDefault();
     }
 
     public function role(): HasOne

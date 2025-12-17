@@ -13,11 +13,9 @@ class AppsDeliveriesRequestsFactory extends Factory
     public function definition(): array
     {
         $accountData = Accounts::inRandomOrder()->first();
-
-        Log::info($accountData);
         return [
             'id' => (string) Str::uuid(),
-            'account' => $accountData->id,
+            'account' => $accountData,
             'name' => $this->faker->realText(50)
         ];
     }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('information')->constrained('accounts_informations')->onDelete('cascade');
             $table->foreignUuid('credential')->constrained('accounts_credentials')->onDelete('cascade');
             $table->foreignUuid('contact')->constrained('accounts_contacts')->onDelete('cascade');
+            $table->foreignUuid('firebase')->constrained('accounts_firebases')->onDelete('cascade');
             $table->rememberToken();
             $table->softDeletes()->comment('adalah parameter soft deleted');
             $table->timestamps();

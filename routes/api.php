@@ -46,7 +46,7 @@ Route::name('api.')->group(function () {
         });
     });
 
-    Route::prefix('base')->name('base.')->group(function () {
+    Route::middleware(['Api'])->prefix('base')->name('base.')->group(function () {
         Route::prefix('/accounts')->name('account.')->group(function () {
             Route::get('/', [Accounts\Index::class, 'index']);
         });

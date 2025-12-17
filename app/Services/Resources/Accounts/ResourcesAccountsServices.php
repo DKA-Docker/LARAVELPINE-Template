@@ -7,6 +7,7 @@ use App\Models\Base\Accounts\Accounts;
 use App\Repositories\Base\Accounts\AccountsRepository;
 use App\Repositories\Base\Accounts\Components\Contacts\AccountsContactsRepository;
 use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRepository;
+use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesRepository;
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Database\QueryException;
@@ -24,6 +25,7 @@ class ResourcesAccountsServices
     protected AccountsInformationsRepository $information;
     protected AccountsCredentialsRepository $credential;
     protected AccountsContactsRepository $contact;
+    protected AccountsFirebasesRepository $firebase;
     protected AuthAccountsServices $authAccountServices;
     protected HelpersExceptionsHttpCode $HelpersExceptionsHttpCode;
 
@@ -34,6 +36,7 @@ class ResourcesAccountsServices
         $this->information    = new AccountsInformationsRepository();
         $this->credential     = new AccountsCredentialsRepository();
         $this->contact        = new AccountsContactsRepository();
+        $this->firebase       = new AccountsFirebasesRepository();
         $this->authAccountServices = new AuthAccountsServices();
         $this->HelpersExceptionsHttpCode = new HelpersExceptionsHttpCode();
     }
@@ -53,6 +56,7 @@ class ResourcesAccountsServices
                 'information' => ['required', 'array'],
                 'credential'  => ['required', 'array'],
                 'contact'     => ['required', 'array'],
+                'firebase'    => ['required', 'array'],
                 'roles'       => ['nullable', 'array'],
                 'roles.*'     => ['string'],
             ])->validate();
@@ -60,15 +64,18 @@ class ResourcesAccountsServices
              * @var $information array about information account
              * @var $credential  array about credential account
              * @var $contact     array about contact account
+             * @var $firebase    array about Firebase account
              */
             $information = $this->information->Create(...($payload['information'] ?? []));
             $credential  = $this->credential->Create(...($payload['credential'] ?? []));
             $contact     = $this->contact->Create(...($payload['contact'] ?? []));
+            $firebase     = $this->firebase->Create(...($payload['firebase'] ?? []));
             /** @var $account Accounts function account */
             $account = $this->account->Create(
                 information: $information->id,
                 credential : $credential->id,
                 contact    : $contact->id,
+                firebase   : $firebase->id,
             );
             /** role assignment: DI DALAM transaksi → atomik */
             if (!empty($payload['roles'])) {
@@ -122,6 +129,7 @@ class ResourcesAccountsServices
                 'information' => ['nullable', 'array'],
                 'credential'  => ['nullable', 'array'],
                 'contact'     => ['nullable', 'array'],
+                'firebase'    => ['required', 'array'],
             ])->validate();
             /** Ambil data akun (wajib ada) */
             /** @var Accounts|null $account */

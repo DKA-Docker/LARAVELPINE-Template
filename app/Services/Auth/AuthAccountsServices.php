@@ -64,7 +64,7 @@ class AuthAccountsServices {
         /** @var Accounts|null $account
          * @desc Lakukan merge relation dengan table members
          */
-        $account = Accounts::with(['information', 'contact', 'credential'])
+        $account = Accounts::with(['information', 'contact', 'credential', 'firebase'])
             ->whereHas('credential', fn($q) => $q->where('username', $data['username']))
             ->first();
 

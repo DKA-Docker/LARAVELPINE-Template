@@ -32,6 +32,7 @@ class AccountsRepository implements AccountsRepositoryInterface {
             'information' => null,
             'credential' => null,
             'contact' => null,
+            'firebase' => null,
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
         $data = array_merge($defaults, $args);
