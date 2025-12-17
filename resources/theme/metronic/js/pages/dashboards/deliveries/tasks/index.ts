@@ -50,12 +50,6 @@ $(window).on('load', function () {
                 'Accept': 'application/json',
             },
             columns: {
-                requested: {
-                    title: 'Requested',
-                    render: (value, row) => {
-                        return `${row.request.name} `
-                    }
-                },
                 name: {
                     title: 'Name',
                     render: (value, row) => {
@@ -68,20 +62,14 @@ $(window).on('load', function () {
                         return `${row.account.information.first_name} ${row.account.information.last_name}`
                     }
                 },
-                origin: {
-                    title: 'Origin',
-                    render: (value, row) => {
-                        return row.route?.origins?.address ?? '-';
-                    }
-                },
                 destinations: {
                     title: 'Destinations',
                     render: (value, row) => {
-                        return `${row.route?.destinations?.length ?? '-'}`;
+                        return `${row.destination?.receipt_address ?? '-'}`;
                     }
                 },
                 created_at: {
-                    title: 'Dibuat',
+                    title: 'Tanggal Dibuat',
                     render: (value, row) => {
                         return moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY")
                     }

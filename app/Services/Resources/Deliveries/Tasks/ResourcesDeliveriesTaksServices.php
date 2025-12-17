@@ -17,7 +17,18 @@ class ResourcesDeliveriesTaksServices
         $this->repository = new TasksRepository();
     }
 
-    public  function Create(...$args){
+    public function GetAllRequest(): Collection
+    {
+        return $this->repository->GetAllRequest();
+    }
+
+    public function GetAccount()
+    {
+        return $this->repository->GetAccount();
+    }
+
+    public function Create(...$args)
+    {
         return $this->repository->Create(...$args);
     }
 
@@ -37,16 +48,16 @@ class ResourcesDeliveriesTaksServices
             ->query()
             ->when(
                 $request->filled('assigned'),
-                fn ($q) => $q->whereHas(
+                fn($q) => $q->whereHas(
                     'assigned',
-                    fn ($a) => $a->where('accounts.id', $request->get('assigned'))
+                    fn($a) => $a->where('accounts.id', $request->get('assigned'))
                 )
             )
             ->when(
                 $request->filled('status'),
-                fn ($q) => $q->whereHas(
+                fn($q) => $q->whereHas(
                     'history',
-                    fn ($h) => $h->where('to_status', $request->get('status'))
+                    fn($h) => $h->where('to_status', $request->get('status'))
                 )
             )
             ->orderByDesc('created_at');
@@ -55,8 +66,8 @@ class ResourcesDeliveriesTaksServices
             return $query->get();
         }
 
-        $page = max((int) $request->get('page', 1), 1);
-        $size = (int) $request->get('size');
+        $page = max((int)$request->get('page', 1), 1);
+        $size = (int)$request->get('size');
 
         if ($size > 0) {
             $query->skip(($page - 1) * $size)->take($size);
@@ -66,7 +77,7 @@ class ResourcesDeliveriesTaksServices
     }
 
 
-    public function Count():int
+    public function Count(): int
     {
         return $this->repository->Count();
     }

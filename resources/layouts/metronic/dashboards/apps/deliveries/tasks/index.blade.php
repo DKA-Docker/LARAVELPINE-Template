@@ -92,12 +92,6 @@
                                         <table class="kt-table kt-table-border table-auto" data-kt-datatable-table="true" data-kt-datatable-page-size="5" id="table-delivery-request">
                                             <thead>
                                             <tr>
-                                                <th scope="col" data-kt-datatable-column="requested">
-                                                    <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Requested</span>
-                                                        <span class="kt-table-col-sort"></span> <!-- boleh dihapus kalau nggak mau sorting -->
-                                                    </span>
-                                                </th>
                                                 <th scope="col" data-kt-datatable-column="name">
                                                     <span class="kt-table-col">
                                                         <span class="kt-table-col-label">Nama Task</span>
@@ -110,12 +104,6 @@
                                                         <span class="kt-table-col-sort"></span>
                                                     </span>
                                                 </th>
-                                                <th scope="col" data-kt-datatable-column="origin">
-                                                    <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Origin</span>
-                                                        <span class="kt-table-col-sort"></span>
-                                                    </span>
-                                                </th>
                                                 <th scope="col" data-kt-datatable-column="destinations">
                                                     <span class="kt-table-col">
                                                         <span class="kt-table-col-label">Destinations</span>
@@ -124,7 +112,7 @@
                                                 </th>
                                                 <th scope="col" data-kt-datatable-column="created_at">
                                                     <span class="kt-table-col">
-                                                        <span class="kt-table-col-label">Dibuat</span>
+                                                        <span class="kt-table-col-label">Tanggal dibuat</span>
                                                         <span class="kt-table-col-sort"></span>
                                                     </span>
                                                 </th>

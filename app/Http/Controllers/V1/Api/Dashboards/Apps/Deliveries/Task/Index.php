@@ -26,8 +26,8 @@ class Index extends Controller
                 'data' => $this->service->AutomaticallyPaginationTable($request),
                 'meta' => array(
                     'count' => array(
-                        'current' => $this->service->AutomaticallyPaginationTable($request)->count(),
-                        'total' =>  $this->service->Count(),
+//                        'current' => $this->service->AutomaticallyPaginationTable($request)->count(),
+//                        'total' =>  $this->service->Count(),
                         )
                 )
             ),

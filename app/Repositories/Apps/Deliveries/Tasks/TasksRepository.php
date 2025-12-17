@@ -5,6 +5,7 @@ namespace App\Repositories\Apps\Deliveries\Tasks;
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
+use App\Models\Base\Accounts\Accounts;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,6 +30,10 @@ class TasksRepository implements TasksRepositoryInterface {
 
     public function GetAllRequest(): Collection{
        return AppsDeliveriesRequestsDestinations::all();
+    }
+
+    public function GetAccount(): Collection{
+        return Accounts::all();
     }
 
     /**

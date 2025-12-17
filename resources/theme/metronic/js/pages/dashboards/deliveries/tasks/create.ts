@@ -9,7 +9,6 @@ import jQuery from "jquery";
 
 const elementExists = $("div.dashboards-apps-deliveries-tasks-create");
 
-
 if(elementExists.length > 0 ){
     // ubah local menjadi indo
     moment.locale('id');
@@ -36,6 +35,87 @@ if(elementExists.length > 0 ){
 
     // ambil data simpan di dalam array/cache
     let requestDataCache: object[] = [];
+    let requestDestinatCache: object[] = [];
+    let requestDriverCache: object[] = [];
+
+    // Tampilkan data di select - option
+    const apiUrl = FullUriCurrentUrl.toString();
+
+    // MEMBUAT URL KEDUA (Accounts) ---
+    // Gunakan .clone() agar FullUriCurrentUrl yang asli tidak terganggu
+    const accountsUrl = FullUriCurrentUrl.clone()
+        .path('/api/base/accounts') //Langsung timpa path-nya
+        .toString();
+
+    // panggil data appDeliveryRequest
+    async function fetchRequestsDestinations(apiUrl: string){
+        try{
+            const res = await fetch(apiUrl);
+            const json = await res.json();
+            if(!json.status || !json.data){
+                requestDestinatCache = [];
+            }else{
+                requestDestinatCache = json.data;
+            }
+
+            return requestDestinatCache;
+        }catch (e) {
+            console.error("fetch error", e);
+            return [];
+        }
+    }
+
+    async function fetchDrivers(accountsUrl: string){
+        try{
+            const res = await fetch(accountsUrl);
+            const json = await res.json();
+            if(!json.status || !json.data){
+                requestDriverCache = [];
+            }else{
+                requestDriverCache = json.data;
+            }
+
+            return requestDriverCache;
+        }catch (e) {
+            console.error("fetch error", e);
+            return [];
+        }
+    }
+
+    (async() => {
+    // tampilkan semua data destination
+        const $dataDestinats = $("#destination");
+        const dataDestinations = await fetchRequestsDestinations(apiUrl);
+
+        $dataDestinats.empty();
+        $dataDestinats.append(`<option value="">Pilih Destinasi</option>`)
+
+        dataDestinations.forEach(request => {
+            // @ts-ignore
+            $dataDestinats.append(`<option value="${request.id}">${request.receipt_name} - ${request.receipt_address}</option>`)
+        })
+
+        // tampilkan semua data driver
+        const $datDrivs = $("#account");
+        const dataDrivers = await fetchDrivers(accountsUrl);
+
+        $datDrivs.empty();
+        $datDrivs.append(`<option value="">Pilih Driver</option>`)
+        console.log(dataDrivers);
+
+        dataDrivers.forEach(request => {
+            // @ts-ignore
+            $datDrivs.append(`<option value="${request.id}">${request.credential.username}</option>`)
+        })
+
+
+    })()
+
+    // destination ketika di klik
+    $("#destination").on("change", function(){
+        const selectedId = $(this).val();
+
+    })
 
     // sisipkan URL dan panggil data api Request
     function fetchRequestOptions(FullUriCurrentUrl: string){
@@ -51,7 +131,7 @@ if(elementExists.length > 0 ){
                     const id  = item.id;
                     const title = item.name ?? "(Tanpa Nama)";
                     const firstName = item.account?.information?.first_name ?? "";
-                    const destinations = item.destinations.length ?? "0";
+                    const destinations = item.destinations?.length ?? "0";
                     const label = `${title} - Destinasi : ${destinations}` ;
                     return  {id, label};
                 } );
@@ -59,9 +139,6 @@ if(elementExists.length > 0 ){
             });
 
     }
-
-    // Tampilkan data di select - option
-    const apiUrl = FullUriCurrentUrl.toString();
 
     fetchRequestOptions(apiUrl)
         .then(axios => {

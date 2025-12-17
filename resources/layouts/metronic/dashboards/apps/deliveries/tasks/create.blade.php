@@ -38,7 +38,7 @@
                 <div class="kt-container-fixed">
                     <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                         <div class="flex flex-col justify-center gap-2">
-                            <h1 class="text-mono text-xl leading-none font-medium">Buat Data Task Baru</h1>
+                            <h1 class="text-mono text-xl leading-none font-medium">Buat Data Task Baru 📝</h1>
                         </div>
                     </div>
                 </div>
@@ -48,8 +48,6 @@
                     <div class="Buat Datagrid gap-5 lg:gap-7.5 mx-auto">
                         <form action="{{ $url_create }}" method="post">
                             @csrf
-                            <input type="hidden" value="{{ Auth::user()->id }}" name="account" >
-                            <input type="hidden" value="{{ Auth::user()->id }}" name="assigned" >
 
                             {{-- START: Pembungkus Flexbox Baru --}}
                             <div class="flex md:flex-row flex-col gap-5">
@@ -57,17 +55,23 @@
                                 <div class="kt-card md:w-1/2 mx-auto">
                                     <div class="kt-card-header" id="advanced_settings_preferences">
                                         <h3 class="kt-card-title">
-                                            Informasi Tugas pengiriman
+                                            Informasi Tugas pengiriman 🚀
                                         </h3>
                                     </div>
                                     <div class="kt-card-content grid gap-5 lg:py-7.5">
                                         <div class="w-full">
+                                            <div>
+                                                <h2 class="text-2xl font-semibold text-mono">
+                                                    Tentukan destinasi pengiriman
+                                                </h2>
+                                            </div>
+                                            <br>
                                             <div class="grid grid-cols-1 xl:grid-cols-6 gap-5 lg:gap-7.5 py-3">
                                                 <div class="col-span-2">
                                                     <div class="flex flex-col gap-3">
                                                         <label class="kt-form-label font-normal text-mono pl-2">Destinasi</label>
-                                                        <select name="request" id="request" class="kt-input kt-input-lg">
-                                                            <option value="">Pilih Destinasi</option>
+                                                        <select name="destination" id="destination" class="kt-input kt-input-lg">
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -98,7 +102,7 @@
                                 <div class="kt-card md:w-1/2 mx-auto">
                                     <div class="kt-card-header" id="advanced_settings_preferences">
                                         <h3 class="kt-card-title">
-                                            Informasi Tugas pengiriman
+                                            Informasi Driver
                                         </h3>
                                     </div>
                                     <div class="kt-card-content grid gap-5 lg:py-7.5">
@@ -106,16 +110,10 @@
                                             <div class="grid grid-cols-1 xl:grid-cols-6 gap-5 lg:gap-7.5 py-3">
                                                 <div class="col-span-2">
                                                     <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Request</label>
-                                                        <select name="request" id="request" class="kt-input kt-input-lg">
-                                                            <option value="">Pilih Request</option>
+                                                        <label class="kt-form-label font-normal text-mono pl-2">Driver</label>
+                                                        <select name="account" id="account" class="kt-input kt-input-lg">
+
                                                         </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Akun</label>
-                                                        <input class="kt-input kt-input-lg" type="text" name="title" id="first_name" placeholder="Judul Permintaan"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-2">

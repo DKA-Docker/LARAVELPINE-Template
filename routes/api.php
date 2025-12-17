@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\V1\Api\Base\Accounts as Accounts;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
-use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings as Trackings;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +35,12 @@ Route::middleware(['Api'])->name('api.')->group(function () {
                     Route::resource('/', TrackingsMonitors\Index::class);
                 });
             });
+        });
+    });
+
+    Route::prefix('base')->name('base.')->group(function () {
+        Route::prefix('/accounts')->name('account.')->group(function () {
+            Route::get('/', [Accounts\Index::class, 'index']);
         });
     });
 });
