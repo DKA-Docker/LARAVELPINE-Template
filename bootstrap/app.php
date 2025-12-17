@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\Api\CheckAuthorizationHeader;
 use App\Http\Middleware\Api\JSONCheckRequest;
+use App\Http\Middleware\Api\VerifyBearerTokenAuthorization;
 use App\Http\Middleware\Frontend\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -23,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
         /** Grouping Route dengan middleware api */
         $middleware->group('Api', [
             JSONCheckRequest::class,
+            CheckAuthorizationHeader::class,
+            VerifyBearerTokenAuthorization::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

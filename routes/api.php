@@ -10,7 +10,7 @@ use App\Http\Controllers\V1\Api\Auth\Index as ApiAuth;
 use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
-Route::middleware(['Api'])->name('api.')->group(function () {
+Route::name('api.')->group(function () {
     /** Grouping Ke Group Auth Di Dalam Web Routes*/
     Route::prefix('auth')->name('auth.')->group(function () {
         /** Name Route dashboards.apps */
@@ -19,7 +19,7 @@ Route::middleware(['Api'])->name('api.')->group(function () {
         Route::delete('/', [ApiAuth::class, "logout"]);
     });
     /** name Route api.dashboards */
-    Route::middleware(['Api','auth:sanctum'])->prefix('dashboards')->name('dashboards.')->group(function () {
+    Route::middleware(['Api'])->prefix('dashboards')->name('dashboards.')->group(function () {
         /** Name Route api.dashboards.apps */
         Route::prefix('apps')->name('apps.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */
