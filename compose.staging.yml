@@ -18,9 +18,10 @@ services:
       ASSET_URL: https://dev.logistech.hnd.web.id
       # ----------------------------------------------------------
       DKA_DEV_DISABLED_NPM_SERVE: true
-      # simpan credential
+
       FIREBASE_CREDENTIALS: storage/app/firebase-auth.json
       #-----------------------------------------------------------
+
       APP_LOCALE: id_ID
       APP_FALLBACK_LOCALE: id_ID
       APP_FAKER_LOCALE: id_ID
@@ -76,7 +77,19 @@ services:
       AWS_BUCKET:
       AWS_USE_PATH_STYLE_ENDPOINT: false
 
+      REVERB_APP_ID: 582743
+      REVERB_APP_KEY: 7cjuaglts0v6pvazjcjx
+      REVERB_APP_SECRET: fatogha3s1idhtg1mtfv
+      REVERB_HOST: "dev.logistech.hnd.web.id"
+      REVERB_PORT: 443
+      REVERB_SCHEME: https
+
       VITE_APP_NAME: "${APP_NAME}"
+      VITE_REVERB_APP_KEY: "${REVERB_APP_KEY}"
+      VITE_REVERB_HOST: "${REVERB_HOST}"
+      # UBAH INI JUGA:
+      VITE_REVERB_PORT: "${REVERB_PORT}"
+      VITE_REVERB_SCHEME: "${REVERB_SCHEME}"
 
       THEME_NAME: metronic
     deploy:

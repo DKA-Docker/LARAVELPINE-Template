@@ -31,3 +31,4 @@ package-lock.json
 
 **/caddy
 frankenphp-worker.php
+/resources/js/echo.js

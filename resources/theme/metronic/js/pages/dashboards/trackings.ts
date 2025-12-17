@@ -6,9 +6,31 @@ import moment from "moment";
 import { initializeApp } from "firebase/app";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+declare global {
+    interface Window {
+        $: typeof jQuery;
+        jQuery: typeof jQuery;
+        axios: typeof axios;
+        Pusher: typeof Pusher;
+        Echo: Echo<"reverb">;
+    }
+}
+
+window.Pusher = Pusher;
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+    forceTLS: false,
+    enabledTransports: ['ws', 'wss'],
+});
 
 // ==========================================
-// 1. KONFIGURASI & INISIALISASI DASAR
+// 1. KONFIGURASI & STATE
 // ==========================================
 const FIREBASE_CONFIG = {
     apiKey: "AIzaSyBy_jmKX6mIQOVSUSxra5DnVfFSAel3RIE",
@@ -27,29 +49,25 @@ const MAP_STYLES = {
     dark: 'mapbox://styles/mapbox/dark-v11',
 };
 
-// State Global
 let mapInstance: mapboxgl.Map | null = null;
 const markers: Record<string, {
     marker: mapboxgl.Marker;
     popup: mapboxgl.Popup;
     contentElement?: HTMLElement;
+    containerElement?: HTMLElement;
 }> = {};
 
 // ==========================================
-// 2. FUNGSI LOGIKA DATA (API & TRACKING)
+// 2. LOGIKA DATA & ANIMASI
 // ==========================================
 
-/**
- * Mengambil data koordinat terbaru dari server dan memperbarui marker di peta
- */
-async function fetchTracking() {
+async function fetchTracking(highlightUuid: string | null = null) {
     try {
         const fullUri = URI(window.location);
         const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors']).toString();
         const res = await axios.get(fetchUrl);
         const drivers = res.data.data;
 
-        // Filter: Hanya ambil data terbaru per UUID
         const latestPerUuid: Record<string, any> = {};
         drivers.forEach((d: any) => {
             if (!latestPerUuid[d.uuid] || new Date(d.created_at) > new Date(latestPerUuid[d.uuid].created_at)) {
@@ -57,54 +75,70 @@ async function fetchTracking() {
             }
         });
 
-        updateMarkersOnMap(latestPerUuid);
+        updateMarkersOnMap(latestPerUuid, highlightUuid);
     } catch (error) {
         console.error("Gagal update tracking:", error);
     }
 }
 
-/**
- * Mengirim perintah ke Laravel untuk memicu driver melakukan update lokasi (FCM)
- */
-async function sendReloadNotification(fcmToken: string, driverName: string, uuid: string) {
-    if (!fcmToken) {
-        alert(`Driver ${driverName} tidak memiliki token FCM.`);
-        return;
-    }
-    try {
-        const fullUri = URI(window.location);
-        const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
-        const response = await axios.post(fetchUrl, {
-            token: fcmToken,
-            driver_name: driverName
-        });
+function updateMarkersOnMap(latestPerUuid: Record<string, any>, highlightUuid: string | null = null) {
+    const isDark = document.documentElement.classList.contains('dark');
+    const colors = isDark ?
+        { bg: '#2b2b2b', text: '#ffffff', divider: '#444' } :
+        { bg: '#ffffff', text: '#333333', divider: '#eee' };
 
-        if (response.data.status === 'success') {
-            alert(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
+    Object.values(latestPerUuid).forEach((driver: any) => {
+        const coord: [number, number] = [driver.longitude, driver.latitude];
+        const fullName = `${driver.account.information.first_name} ${driver.account.information.last_name}`;
+        const fcmToken = driver.account?.firebase?.token;
 
-            // Animasi Kamera: Fokus ke target setelah reload berhasil
-            if (markers[uuid] && mapInstance) {
-                mapInstance.flyTo({
-                    center: markers[uuid].marker.getLngLat(),
-                    zoom: 16,
-                    speed: 1.2,
-                    essential: true
-                });
+        if (!markers[driver.uuid]) {
+            const popupData = createPopupContainer(driver, fullName, fcmToken, colors);
+            const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, className: 'custom-tracking-popup' })
+                .setDOMContent(popupData.container);
+
+            const el = document.createElement('div');
+            el.innerHTML = '🚗';
+            el.style.fontSize = '28px';
+            el.style.cursor = 'pointer';
+
+            markers[driver.uuid] = {
+                marker: new mapboxgl.Marker(el).setLngLat(coord).setPopup(popup).addTo(mapInstance!),
+                popup,
+                contentElement: popupData.contentElement,
+                containerElement: popupData.container
+            };
+        } else {
+            const target = markers[driver.uuid];
+            target.marker.setLngLat(coord);
+
+            if (target.contentElement) {
+                target.contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
+            }
+
+            // TRIGGER ANIMASI JIKA ADA UPDATE DARI ECHO
+            if (driver.uuid === highlightUuid) {
+                // Animasi Marker
+                const el = target.marker.getElement();
+                el.classList.remove('animate-marker-ping');
+                void el.offsetWidth;
+                el.classList.add('animate-marker-ping');
+
+                // Animasi Popup
+                if (target.containerElement) {
+                    target.containerElement.classList.remove('animate-popup-glow');
+                    void target.containerElement.offsetWidth;
+                    target.containerElement.classList.add('animate-popup-glow');
+                }
             }
         }
-    } catch (error: any) {
-        console.error("FCM Error via Laravel:", error);
-        alert("Gagal mengirim perintah reload.");
-    }
+    });
 }
 
 // ==========================================
-// 3. FUNGSI UI & MARKER (TAMPILAN)
+// 3. UI GENERATORS (ISI DATA TETAP SAMA)
 // ==========================================
 
-/**
- * Template untuk konten di dalam popup marker
- */
 const generatePopupHTML = (driver: any, name: string, colors: any) => `
     <div style="border-bottom: 1px solid ${colors.divider}; margin-bottom: 8px; padding-bottom: 5px;">
         <strong style="font-size: 14px;">${name}</strong>
@@ -126,55 +160,13 @@ const generatePopupHTML = (driver: any, name: string, colors: any) => `
     </div>
 `;
 
-/**
- * Merender atau memperbarui posisi marker di Mapbox
- */
-function updateMarkersOnMap(latestPerUuid: Record<string, any>) {
-    const isDark = document.documentElement.classList.contains('dark');
-    const colors = isDark ?
-        { bg: '#2b2b2b', text: '#ffffff', divider: '#444' } :
-        { bg: '#ffffff', text: '#333333', divider: '#eee' };
-
-    Object.values(latestPerUuid).forEach((driver: any) => {
-        const coord: [number, number] = [driver.longitude, driver.latitude];
-        const fullName = `${driver.account.information.first_name} ${driver.account.information.last_name}`;
-        const fcmToken = driver.account?.firebase?.token;
-
-        if (!markers[driver.uuid]) {
-            // Pembuatan Marker Baru
-            const popupContainer = createPopupContainer(driver, fullName, fcmToken, colors);
-
-            const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, className: 'custom-tracking-popup' })
-                .setDOMContent(popupContainer.container);
-
-            const el = document.createElement('div');
-            el.innerHTML = '🚗'; el.style.fontSize = '28px'; el.style.cursor = 'pointer';
-
-            markers[driver.uuid] = {
-                marker: new mapboxgl.Marker(el).setLngLat(coord).setPopup(popup).addTo(mapInstance!),
-                popup,
-                contentElement: popupContainer.contentElement
-            };
-        } else {
-            // Update Marker yang sudah ada
-            const target = markers[driver.uuid];
-            target.marker.setLngLat(coord);
-            if (target.contentElement) {
-                target.contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
-            }
-        }
-    });
-}
-
-/**
- * Helper untuk membuat elemen DOM Popup (Tombol Reload, Close, & Konten)
- */
 function createPopupContainer(driver: any, fullName: string, fcmToken: string, colors: any) {
     const container = document.createElement('div');
     Object.assign(container.style, {
         padding: '12px', background: colors.bg, color: colors.text,
         borderRadius: '8px', position: 'relative', minWidth: '260px',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.2)', fontFamily: 'sans-serif'
+        boxShadow: '0 4px 15px rgba(0,0,0,0.2)', fontFamily: 'sans-serif',
+        border: '2px solid transparent' // Placeholder untuk animasi glow
     });
 
     const reloadBtn = document.createElement('button');
@@ -203,18 +195,27 @@ function createPopupContainer(driver: any, fullName: string, fcmToken: string, c
     return { container, contentElement };
 }
 
+async function sendReloadNotification(fcmToken: string, driverName: string, uuid: string) {
+    if (!fcmToken) return alert(`Driver ${driverName} tidak memiliki token FCM.`);
+    try {
+        const fullUri = URI(window.location);
+        const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
+        const response = await axios.post(fetchUrl, { token: fcmToken, driver_name: driverName });
+        if (response.data.status === 'success') alert(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
+    } catch (error: any) {
+        alert("Gagal mengirim perintah reload.");
+    }
+}
+
 // ==========================================
-// 4. MAIN ENTRY POINT (WINDOW LOAD)
+// 4. MAIN ENTRY POINT
 // ==========================================
 
 $(window).on('load', async function () {
     const elementExists = $("div.dashboards-apps-trackings");
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
-    // A. Init Firebase
     initializeApp(FIREBASE_CONFIG);
-
-    // B. Init Mapbox
     mapboxgl.accessToken = 'pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA';
 
     let currentStyleKey = document.documentElement.classList.contains('dark') ? 'dark' : 'standard';
@@ -227,7 +228,33 @@ $(window).on('load', async function () {
         projection: 'globe'
     });
 
-    // C. Pindah Tema Otomatis (Dark/Light)
+    // INJECT CSS ANIMASI
+    $('<style>').text(`
+        .custom-tracking-popup .mapboxgl-popup-content { padding: 0; background: none; box-shadow: none; border: none; }
+        .custom-tracking-popup .mapboxgl-popup-tip { display: none; }
+
+        @keyframes popup-glow {
+            0% { border-color: transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+            50% { border-color: #007bff; box-shadow: 0 0 25px rgba(0,123,255,0.6); }
+            100% { border-color: transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        }
+        .animate-popup-glow { animation: popup-glow 1.2s ease-in-out; }
+    `).appendTo('head');
+
+    window.Echo.channel('dashboards.apps.trackings.monitors')
+        .listen('.dashboards.apps.trackings.monitors', (response: any) => {
+            mapInstance?.flyTo({
+                center: [response.data.longitude, response.data.latitude],
+                zoom: 16,
+                speed: 1.2,
+                essential: true
+            });
+            // Jalankan update dan beri sinyal animasi untuk UUID tersebut
+            fetchTracking(response.data.uuid);
+        });
+
+    mapInstance.on('style.load', () => fetchTracking());
+
     const themeObserver = new MutationObserver(() => {
         const isDark = document.documentElement.classList.contains('dark');
         const newKey = isDark ? 'dark' : 'standard';
@@ -237,31 +264,6 @@ $(window).on('load', async function () {
         }
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-    // D. Event Map Load & Loop Interval
-    mapInstance.on('style.load', () => {
-        fetchTracking();
-    });
-
-    // @ts-ignore
-    window.Echo.channel('dashboards.apps.trackings.monitors')
-        .listen('.dashboards/apps/trackings/monitors', (response: { data: any; }) => {
-            console.log("Data Monitoring Baru:", response.data);
-
-            // Contoh aksi: Tampilkan notifikasi toast
-            alert("Ada data monitor baru masuk!");
-
-            // Contoh aksi: Update table secara real-time
-            // updateTableData(response.data);
-        });
-
-    setInterval(fetchTracking, 2000);
-
-    // E. Inject Custom CSS
-    $('<style>').text(`
-        .custom-tracking-popup .mapboxgl-popup-content { padding: 0; background: none; box-shadow: none; border: none; }
-        .custom-tracking-popup .mapboxgl-popup-tip { display: none; }
-    `).appendTo('head');
 
     window.addEventListener('resize', () => mapInstance?.resize());
 });
