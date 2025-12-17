@@ -30,6 +30,12 @@ export default defineConfig((config) => {
         });
     /** returning config **/
     return {
+        define: {
+            'import.meta.env.VITE_REVERB_APP_KEY': JSON.stringify(env.VITE_REVERB_APP_KEY),
+            'import.meta.env.VITE_REVERB_HOST': JSON.stringify(env.VITE_REVERB_HOST),
+            'import.meta.env.VITE_REVERB_PORT': JSON.stringify(env.VITE_REVERB_PORT),
+            'import.meta.env.VITE_REVERB_SCHEME': JSON.stringify(env.VITE_REVERB_SCHEME),
+        },
         plugins: [
             laravel({
                 input: inputAssets,
