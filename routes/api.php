@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\V1\Api\Base\Accounts as Accounts;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings as Trackings;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
 use App\Http\Controllers\V1\Api\Auth\Index as ApiAuth;
 use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
-Route::name('api.')->group(function () {
+Route::middleware(['Api'])->name('api.')->group(function () {
     /** Grouping Ke Group Auth Di Dalam Web Routes*/
     Route::prefix('auth')->name('auth.')->group(function () {
         /** Name Route dashboards.apps */
@@ -19,7 +19,7 @@ Route::name('api.')->group(function () {
         Route::delete('/', [ApiAuth::class, "logout"]);
     });
     /** name Route api.dashboards */
-    Route::middleware(['Api'])->prefix('dashboards')->name('dashboards.')->group(function () {
+    Route::middleware(['Api','auth:sanctum'])->prefix('dashboards')->name('dashboards.')->group(function () {
         /** Name Route api.dashboards.apps */
         Route::prefix('apps')->name('apps.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */
@@ -43,12 +43,6 @@ Route::name('api.')->group(function () {
                     Route::resource('/', TrackingsMonitors\Index::class);
                 });
             });
-        });
-    });
-
-    Route::prefix('base')->name('base.')->group(function () {
-        Route::prefix('/accounts')->name('account.')->group(function () {
-            Route::get('/', [Accounts\Index::class, 'index']);
         });
     });
 });
