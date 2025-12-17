@@ -177,7 +177,7 @@ class ResourcesAccountsServices
                 $this->contact->Update($account->contact, $payload['contact']);
             }
             if (!empty($payload['firebase'])) {
-                $this->firebase->Update($account->contact, $payload['firebase']);
+                $this->firebase->Update($account->firebase, $payload['firebase']);
             }
             /** Reload relasi untuk response */
             $account->load(['information', 'credential', 'contact', 'firebase']);

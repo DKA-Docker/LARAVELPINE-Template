@@ -18,7 +18,9 @@ services:
       ASSET_URL: https://dev.logistech.hnd.web.id
       # ----------------------------------------------------------
       DKA_DEV_DISABLED_NPM_SERVE: true
-
+      # simpan credential
+      FIREBASE_CREDENTIALS: storage/app/firebase-auth.json
+      #-----------------------------------------------------------
       APP_LOCALE: id_ID
       APP_FALLBACK_LOCALE: id_ID
       APP_FAKER_LOCALE: id_ID

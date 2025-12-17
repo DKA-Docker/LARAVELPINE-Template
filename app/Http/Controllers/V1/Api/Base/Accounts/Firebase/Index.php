@@ -2,23 +2,37 @@
 
 namespace App\Http\Controllers\V1\Api\Base\Accounts\Firebase;
 
+use App\Services\Auth\AuthAccountsServices;
 use App\Services\Resources\Accounts\ResourcesAccountsServices;
-use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index
 {
 
     protected ResourcesAccountsServices $service;
+    protected AuthAccountsServices $authService;
 
     public function __construct()
     {
         $this->service = new ResourcesAccountsServices();
+        $this->authService = new AuthAccountsServices();
     }
 
     public function edit(Request $request){
-        $data = $request->all();
+        $req = $request->all();
+        $session = $this->authService->verify();
+        /** @var $defaults
+         * jika data inputan kosong maka semua variable di set null
+         */
+        $defaults = [
+            'id' => $session['data']['id'],
+        ];
+        /** @var $req $data lakukan merge data untuk payload dengan data default */
+        $data = array_merge($defaults, $req);
+
         $responseUpdate = $this->service->Update($data);
 
         if (!$responseUpdate['status']){

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors;
 
 use App\Services\Resources\Trackings\Monitors\ResourcesTrackingsMonitorsServices;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Controller
@@ -17,57 +21,10 @@ class Index extends Controller
     {
         $this->services = new ResourcesTrackingsMonitorsServices();
     }
-    public function index() : JsonResponse
-    {
-        $ReadData = $this->services->ReadAll();
-
-        if ($ReadData) {
-            return response()->json(
-                data: array(
-                    'status' => true,
-                    'code' => Response::HTTP_OK,
-                    'msg' => 'OK',
-                    'data' => $ReadData
-                ),
-                status: Response::HTTP_OK,
-                headers: array(
-                    'Content-Type' => 'application/json',
-                )
-            );
-        }else{
-            return response()->json(
-                data: array(
-                    'status' => false,
-                    'code' => Response::HTTP_BAD_REQUEST,
-                    'msg' => "Failed To Read Data",
-                ),
-                status: Response::HTTP_OK,
-                headers: array(
-                    'Content-Type' => 'application/json',
-                )
-            );
-        }
-
-    }
-
-    public function show(): JsonResponse
-    {
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'OK',
-
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json',
-            )
-        );
-    }
 
     public function store(Request $request)
     {
+        // 1. Simpan data ke Database melalui Service
         $CreateAct = $this->services->Create($request);
         return response()->json(
             data: array(
@@ -76,10 +33,7 @@ class Index extends Controller
                 'msg' => 'Successfully Creates Data',
                 'data' => $CreateAct
             ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json',
-            )
+            status: Response::HTTP_OK
         );
     }
 }

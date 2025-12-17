@@ -45,6 +45,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::get('/', [Trackings\Index::class,'index'])->name('index');
             Route::prefix('monitors')->name('monitors.')->group(function () {
                 Route::resource('/', Trackings\Monitors\Index::class);
+                Route::post('/token',[Trackings\Monitors\Index::class, 'token'])->name('token');
             });
         });
     });

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings\Monitors;
 
 use App\Services\Resources\Trackings\Monitors\ResourcesTrackingsMonitorsServices;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Controller
@@ -50,36 +53,20 @@ class Index extends Controller
 
     }
 
-    public function show(): JsonResponse
-    {
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'OK',
+    public function token(Request $request) {
+        // Ambil data dari Vite
+        $token = $request->token;
+        $name = $request->driver_name;
 
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json',
-            )
-        );
-    }
+        $messaging = Firebase::messaging();
+        $message = CloudMessage::withTarget('token', $token)
+            ->withData(['action' => 'RELOAD_GPS']); // Data khusus untuk aplikasi driver
 
-    public function store(Request $request)
-    {
-        $CreateAct = $this->services->Create($request);
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'Successfully Creates Data',
-                'data' => $CreateAct
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json',
-            )
-        );
+        try {
+            $messaging->send($message);
+            return response()->json(['status' => 'success']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

@@ -3,369 +3,253 @@ import $ from "jquery";
 import axios from "axios";
 import URI from "urijs";
 import moment from "moment";
+import { initializeApp } from "firebase/app";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-const elementExists = $("div.dashboards-apps-trackings");
+// ==========================================
+// 1. KONFIGURASI & INISIALISASI DASAR
+// ==========================================
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBy_jmKX6mIQOVSUSxra5DnVfFSAel3RIE",
+    authDomain: "hndgs-65ce6.firebaseapp.com",
+    projectId: "hndgs-65ce6",
+    storageBucket: "hndgs-65ce6.firebasestorage.app",
+    messagingSenderId: "1078964933148",
+    appId: "1:1078964933148:web:6f733f7f2264c0f8f245d9",
+    measurementId: "G-W472DNVMSB"
+};
+
+const MAP_STYLES = {
+    standard: 'mapbox://styles/mapbox/standard',
+    streets: 'mapbox://styles/mapbox/streets-v12',
+    satellite: 'mapbox://styles/mapbox/satellite-v9',
+    dark: 'mapbox://styles/mapbox/dark-v11',
+};
+
+// State Global
+let mapInstance: mapboxgl.Map | null = null;
+const markers: Record<string, {
+    marker: mapboxgl.Marker;
+    popup: mapboxgl.Popup;
+    contentElement?: HTMLElement;
+}> = {};
+
+// ==========================================
+// 2. FUNGSI LOGIKA DATA (API & TRACKING)
+// ==========================================
+
+/**
+ * Mengambil data koordinat terbaru dari server dan memperbarui marker di peta
+ */
+async function fetchTracking() {
+    try {
+        const fullUri = URI(window.location);
+        const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors']).toString();
+        const res = await axios.get(fetchUrl);
+        const drivers = res.data.data;
+
+        // Filter: Hanya ambil data terbaru per UUID
+        const latestPerUuid: Record<string, any> = {};
+        drivers.forEach((d: any) => {
+            if (!latestPerUuid[d.uuid] || new Date(d.created_at) > new Date(latestPerUuid[d.uuid].created_at)) {
+                latestPerUuid[d.uuid] = d;
+            }
+        });
+
+        updateMarkersOnMap(latestPerUuid);
+    } catch (error) {
+        console.error("Gagal update tracking:", error);
+    }
+}
+
+/**
+ * Mengirim perintah ke Laravel untuk memicu driver melakukan update lokasi (FCM)
+ */
+async function sendReloadNotification(fcmToken: string, driverName: string, uuid: string) {
+    if (!fcmToken) {
+        alert(`Driver ${driverName} tidak memiliki token FCM.`);
+        return;
+    }
+    try {
+        const fullUri = URI(window.location);
+        const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
+        const response = await axios.post(fetchUrl, {
+            token: fcmToken,
+            driver_name: driverName
+        });
+
+        if (response.data.status === 'success') {
+            alert(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
+
+            // Animasi Kamera: Fokus ke target setelah reload berhasil
+            if (markers[uuid] && mapInstance) {
+                mapInstance.flyTo({
+                    center: markers[uuid].marker.getLngLat(),
+                    zoom: 16,
+                    speed: 1.2,
+                    essential: true
+                });
+            }
+        }
+    } catch (error: any) {
+        console.error("FCM Error via Laravel:", error);
+        alert("Gagal mengirim perintah reload.");
+    }
+}
+
+// ==========================================
+// 3. FUNGSI UI & MARKER (TAMPILAN)
+// ==========================================
+
+/**
+ * Template untuk konten di dalam popup marker
+ */
+const generatePopupHTML = (driver: any, name: string, colors: any) => `
+    <div style="border-bottom: 1px solid ${colors.divider}; margin-bottom: 8px; padding-bottom: 5px;">
+        <strong style="font-size: 14px;">${name}</strong>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px;">
+        <div style="display: flex; justify-content: space-between;">
+            <span style="font-weight: bold;">Latitude:</span> <span>${driver.latitude}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span style="font-weight: bold;">Longitude:</span> <span>${driver.longitude}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span style="font-weight: bold;">Kecepatan:</span> <span>${parseFloat(driver.speed).toFixed(2)} km/h</span>
+        </div>
+        <div style="display: flex; flex-direction: column; margin-top: 6px; border-top: 1px dashed ${colors.divider}; padding-top: 6px;">
+            <span style="font-weight: bold; color: #888; margin-bottom: 2px;">Last Updated:</span>
+            <span>${moment(driver.created_at).format('DD MMM YYYY, HH:mm:ss')}</span>
+        </div>
+    </div>
+`;
+
+/**
+ * Merender atau memperbarui posisi marker di Mapbox
+ */
+function updateMarkersOnMap(latestPerUuid: Record<string, any>) {
+    const isDark = document.documentElement.classList.contains('dark');
+    const colors = isDark ?
+        { bg: '#2b2b2b', text: '#ffffff', divider: '#444' } :
+        { bg: '#ffffff', text: '#333333', divider: '#eee' };
+
+    Object.values(latestPerUuid).forEach((driver: any) => {
+        const coord: [number, number] = [driver.longitude, driver.latitude];
+        const fullName = `${driver.account.information.first_name} ${driver.account.information.last_name}`;
+        const fcmToken = driver.account?.firebase?.token;
+
+        if (!markers[driver.uuid]) {
+            // Pembuatan Marker Baru
+            const popupContainer = createPopupContainer(driver, fullName, fcmToken, colors);
+
+            const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, className: 'custom-tracking-popup' })
+                .setDOMContent(popupContainer.container);
+
+            const el = document.createElement('div');
+            el.innerHTML = '🚗'; el.style.fontSize = '28px'; el.style.cursor = 'pointer';
+
+            markers[driver.uuid] = {
+                marker: new mapboxgl.Marker(el).setLngLat(coord).setPopup(popup).addTo(mapInstance!),
+                popup,
+                contentElement: popupContainer.contentElement
+            };
+        } else {
+            // Update Marker yang sudah ada
+            const target = markers[driver.uuid];
+            target.marker.setLngLat(coord);
+            if (target.contentElement) {
+                target.contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
+            }
+        }
+    });
+}
+
+/**
+ * Helper untuk membuat elemen DOM Popup (Tombol Reload, Close, & Konten)
+ */
+function createPopupContainer(driver: any, fullName: string, fcmToken: string, colors: any) {
+    const container = document.createElement('div');
+    Object.assign(container.style, {
+        padding: '12px', background: colors.bg, color: colors.text,
+        borderRadius: '8px', position: 'relative', minWidth: '260px',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.2)', fontFamily: 'sans-serif'
+    });
+
+    const reloadBtn = document.createElement('button');
+    reloadBtn.innerHTML = '↻';
+    Object.assign(reloadBtn.style, {
+        position: 'absolute', top: '-12px', left: '-12px', background: '#007bff',
+        color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px',
+        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'
+    });
+    reloadBtn.onclick = () => sendReloadNotification(fcmToken, fullName, driver.uuid);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    Object.assign(closeBtn.style, {
+        position: 'absolute', top: '-12px', right: '-12px', background: '#dc3545',
+        color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px',
+        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px'
+    });
+    closeBtn.onclick = () => markers[driver.uuid].popup.remove();
+
+    const contentElement = document.createElement('div');
+    contentElement.style.paddingTop = '5px';
+    contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
+
+    container.append(reloadBtn, closeBtn, contentElement);
+    return { container, contentElement };
+}
+
+// ==========================================
+// 4. MAIN ENTRY POINT (WINDOW LOAD)
+// ==========================================
 
 $(window).on('load', async function () {
+    const elementExists = $("div.dashboards-apps-trackings");
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
-    // --- DAFTAR STYLE MAPBOX & WARNA POPUP ---
-    const styles = {
-        standard: 'mapbox://styles/mapbox/standard',
-        streets: 'mapbox://styles/mapbox/streets-v12',
-        satellite: 'mapbox://styles/mapbox/satellite-v9',
-        dark: 'mapbox://styles/mapbox/dark-v11',
-        light: 'mapbox://styles/mapbox/light-v11'
-    };
+    // A. Init Firebase
+    initializeApp(FIREBASE_CONFIG);
 
-    // --- MENDETEKSI THEME AWAL DARI HTML CLASS ---
-    let currentStyleKey;
-    const isInitialDark = document.documentElement.classList.contains('dark');
-    if (isInitialDark) {
-        currentStyleKey = 'dark';
-    } else {
-        currentStyleKey = 'standard';
-    }
-
-    // KONFIGURASI WARNA POPUP DINAMIS
-    const popupColors = {
-        light: { bg: '#fff', text: '#333', shadow: '0 2px 8px rgba(0,0,0,0.2)', tip: '#fff', divider: '#eee' },
-        dark: { bg: '#333', text: '#fff', shadow: '0 2px 8px rgba(0,0,0,0.5)', tip: '#333', divider: '#555' }
-    };
-
-    let dynamicStyleElement: HTMLStyleElement | null = null;
-    let mapInstance: mapboxgl.Map | null = null;
-
-    // FUNGSI UNTUK MEMPERBARUI WARNA KERUCUT (TIP)
-    function updatePopupTipColor(tipColor: string) {
-        if (!dynamicStyleElement) {
-            dynamicStyleElement = document.createElement('style');
-            document.head.appendChild(dynamicStyleElement);
-        }
-
-        dynamicStyleElement.textContent = `
-            .driver-info-popup.mapboxgl-popup .mapboxgl-popup-tip {
-                border-top-color: ${tipColor} !important;
-            }
-        `;
-    }
-
-    // FUNGSI UTAMA UNTUK MENGUPDATE STYLE PETA BERDASARKAN THEME GLOBAL
-    function updateMapStyleByTheme(isDarkMode: boolean) {
-        if (!mapInstance) return;
-
-        const newKey = isDarkMode ? 'dark' : 'standard';
-
-        // Hanya update jika terjadi perubahan nyata dan style yang baru berbeda dari style Mapbox saat ini
-        if (currentStyleKey === newKey) return;
-
-        currentStyleKey = newKey;
-        mapInstance.setStyle(styles[newKey as keyof typeof styles]);
-        updatePopupTipColor(popupColors[isDarkMode ? 'dark' : 'light'].tip);
-        setActiveStyleButton(newKey); // Update tombol yang aktif (Dark atau Default)
-        mapInstance.once('style.load', fetchTracking);
-    }
-
-    // --- SETUP MUTATION OBSERVER (Sebagai Fallback) ---
-    function setupThemeObserver() {
-        if (!document.documentElement) return;
-
-        const observer = new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.attributeName === 'class') {
-                    const isDarkMode = document.documentElement.classList.contains('dark');
-                    updateMapStyleByTheme(isDarkMode);
-                    break;
-                }
-            }
-        });
-
-        observer.observe(document.documentElement, { attributes: true });
-    }
-
-    // --- CSS Injector Awal (Struktur & Tombol Aktif) ---
-    const structuralStyle = document.createElement('style');
-    structuralStyle.textContent = `
-        .driver-info-popup.mapboxgl-popup .mapboxgl-popup-content {
-            padding: 0;
-            background: none;
-            box-shadow: none;
-            border-radius: 0;
-        }
-
-        .active-style {
-            background-color: #3b82f6 !important;
-            color: white !important;
-            border-color: #3b82f6 !important;
-        }
-    `;
-    document.head.appendChild(structuralStyle);
-
-    updatePopupTipColor(popupColors[isInitialDark ? 'dark' : 'light'].tip);
-
+    // B. Init Mapbox
     mapboxgl.accessToken = 'pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA';
 
-    const map = new mapboxgl.Map({
+    let currentStyleKey = document.documentElement.classList.contains('dark') ? 'dark' : 'standard';
+
+    mapInstance = new mapboxgl.Map({
         container: "map",
-        style: styles[currentStyleKey as keyof typeof styles],
-        projection: 'globe',
-        zoom: 12,
+        style: MAP_STYLES[currentStyleKey as keyof typeof MAP_STYLES],
         center: [119.4365, -5.1477],
+        zoom: 12,
+        projection: 'globe'
     });
-    mapInstance = map;
 
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-    const geolocate = new mapboxgl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
-        trackUserLocation: true,
-        showUserHeading: true,
-    });
-    map.addControl(geolocate, 'top-right');
-
-    setupThemeObserver(); // Aktifkan Observer sebagai fallback
-
-    // --- BARU: EVENT LISTENER UNTUK THEME SWITCH HEADER ---
-    const themeSwitchElement = document.querySelector('[data-kt-theme-switch-toggle="true"]');
-    if (themeSwitchElement) {
-        themeSwitchElement.addEventListener('change', () => {
-            // Beri sedikit waktu agar K-Theme script selesai mengaplikasikan class 'dark'/'light' ke <html>
-            setTimeout(() => {
-                const isDarkModeActive = document.documentElement.classList.contains('dark');
-                updateMapStyleByTheme(isDarkModeActive);
-            }, 50);
-        });
-    }
-    // ----------------------------------------------------
-
-    // --- FUNGSIONALITAS TOOLBAR MODE PETA ---
-    function setActiveStyleButton(key: string) {
-        document.querySelectorAll('[data-map-style]').forEach(btn => {
-            btn.classList.remove('active-style');
-        });
-        const activeBtn = document.querySelector(`[data-map-style="${key}"]`);
-        activeBtn?.classList.add('active-style');
-    }
-
-    // Event Delegation pada kontainer peta
-    const mapContainer = document.getElementById('map')?.parentElement;
-    if (mapContainer) {
-        mapContainer.addEventListener('click', (e) => {
-            const target = e.target as HTMLElement;
-            const newStyleKey = target.dataset.mapStyle;
-
-            if (newStyleKey && newStyleKey !== currentStyleKey) {
-
-                // Jika tombol Dark/Standard ditekan, jangan override theme global.
-                // Tombol ini hanya berguna untuk Streets dan Satellite.
-                if (newStyleKey === 'dark' || newStyleKey === 'standard') return;
-
-                const styleUrl = styles[newStyleKey as keyof typeof styles];
-                if (styleUrl) {
-                    currentStyleKey = newStyleKey;
-                    map.setStyle(styleUrl);
-                    setActiveStyleButton(newStyleKey);
-
-                    // Warna popup tetap mengikuti theme global (dark/light)
-                    const colorKey = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                    updatePopupTipColor(popupColors[colorKey].tip);
-                    map.once('style.load', fetchTracking);
-                }
-            }
-        });
-    }
-
-    // Set status tombol awal
-    setActiveStyleButton(currentStyleKey);
-
-    const markers: Record<string, { marker: mapboxgl.Marker; popup: mapboxgl.Popup }> = {};
-
-    async function fetchTracking() {
-        try {
-            const FullUriCurrentURL = URI(window.location);
-            const segs = FullUriCurrentURL.segment();
-            FullUriCurrentURL.segment([...segs, 'monitors']);
-            const res = await axios.get(FullUriCurrentURL.toString());
-            const drivers = res.data.data;
-
-            const latestPerUuid: Record<string, any> = {};
-            drivers.forEach(d => {
-                if (!latestPerUuid[d.uuid] || new Date(d.created_at) > new Date(latestPerUuid[d.uuid].created_at)) {
-                    latestPerUuid[d.uuid] = d;
-                }
-            });
-
-            const BUTTON_SIZE = 30;
-
-            // Mendapatkan konfigurasi warna yang sesuai dengan mode saat ini atau mode default jika style bukan dark/light
-            const isDarkActive = currentStyleKey === 'dark' || document.documentElement.classList.contains('dark');
-            const colorKey = isDarkActive ? 'dark' : 'light';
-            const currentColors = popupColors[colorKey];
-
-
-            Object.values(latestPerUuid).forEach((driver: any) => {
-                const coord = [driver.longitude, driver.latitude];
-                const lastUpdate = moment(driver.created_at).format('HH:mm:ss DD MMMM YYYY');
-
-                // --- LOGIKA KECEPATAN ---
-                let speedDisplay;
-                const speedKmH = parseFloat(driver.speed);
-
-                if (speedKmH >= 1) {
-                    speedDisplay = `${speedKmH.toFixed(2)} km/h`;
-                } else {
-                    const speedMH = speedKmH * 1000;
-                    speedDisplay = `${speedMH.toFixed(0)} m/h`;
-                }
-                // -----------------------------
-
-                // Container popup KUSTOM (Warna dinamis)
-                const popupContainer = document.createElement('div');
-                popupContainer.style.fontSize = '13px';
-                popupContainer.style.minWidth = '280px';
-                popupContainer.style.padding = '10px';
-                popupContainer.style.background = currentColors.bg;
-                popupContainer.style.color = currentColors.text;
-                popupContainer.style.borderRadius = '8px';
-                popupContainer.style.boxShadow = currentColors.shadow;
-                popupContainer.style.position = 'relative';
-                popupContainer.style.overflow = 'visible';
-
-                // Tombol close custom (BULAT dan DI LUAR KOTAK)
-                const closeBtn = document.createElement('button');
-                closeBtn.innerHTML = '<span style="font-size: 16px; line-height: 1;">&times;</span>';
-
-                closeBtn.style.position = 'absolute';
-                closeBtn.style.top = `${-BUTTON_SIZE / 2}px`;
-                closeBtn.style.right = `${-BUTTON_SIZE / 2}px`;
-
-                closeBtn.style.background = 'red';
-                closeBtn.style.color = 'white';
-                closeBtn.style.border = 'none';
-                closeBtn.style.borderRadius = '50%';
-                closeBtn.style.width = `${BUTTON_SIZE}px`;
-                closeBtn.style.height = `${BUTTON_SIZE}px`;
-                closeBtn.style.cursor = 'pointer';
-                closeBtn.style.padding = '0';
-                closeBtn.style.display = 'flex';
-                closeBtn.style.alignItems = 'center';
-                closeBtn.style.justifyContent = 'center';
-                closeBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-
-                closeBtn.addEventListener('click', () => {
-                    if (markers[driver.uuid] && markers[driver.uuid].popup.isOpen()) {
-                        markers[driver.uuid].popup.remove();
-                    }
-                });
-
-                // Konten 2 kolom
-                const content = document.createElement('div');
-                content.style.display = 'flex';
-                content.style.flexDirection = 'column';
-                content.style.gap = '4px';
-                content.style.maxHeight = '160px';
-                content.style.overflowY = 'auto';
-                content.style.paddingTop = '5px';
-                content.style.paddingRight = '5px';
-
-                const fields = [
-                    { label: 'Driver', value: `${driver.account.information.first_name} ${driver.account.information.last_name}` },
-                    { label: 'Longitude', value: driver.longitude.toFixed(4) },
-                    { label: 'Latitude', value: driver.latitude.toFixed(4) },
-                    { label: 'Speed', value: speedDisplay },
-                    { label: 'Last Update', value: lastUpdate },
-                ];
-
-                fields.forEach(f => {
-                    const row = document.createElement('div');
-                    row.style.display = 'flex';
-                    row.style.justifyContent = 'space-between';
-                    row.style.padding = '2px 0';
-                    // Garis pemisah dinamis
-                    row.style.borderBottom = `1px solid ${currentColors.divider}`;
-
-                    const label = document.createElement('span');
-                    label.style.fontWeight = 'bold';
-                    label.textContent = f.label;
-
-                    const value = document.createElement('span');
-                    value.textContent = f.value;
-                    value.style.textAlign = 'right';
-                    value.style.flex = '1';
-                    value.style.marginLeft = '8px';
-                    value.style.wordBreak = 'break-all';
-
-                    row.appendChild(label);
-                    row.appendChild(value);
-                    content.appendChild(row);
-                });
-
-                popupContainer.appendChild(closeBtn);
-                popupContainer.appendChild(content);
-
-                new PerfectScrollbar(content, { wheelPropagation: false });
-
-                // Inisialisasi Popup Mapbox
-                let popup = new mapboxgl.Popup({
-                    offset: 25,
-                    closeButton: false,
-                    closeOnClick: false,
-                    className: 'driver-info-popup'
-                }).setDOMContent(popupContainer);
-
-
-                if (!markers[driver.uuid]) {
-                    const el = document.createElement('div');
-                    el.className = 'driver-marker';
-                    el.style.display = 'flex';
-                    el.style.alignItems = 'center';
-                    el.style.justifyContent = 'center';
-                    el.style.fontSize = '32px';
-                    el.style.cursor = 'pointer';
-                    el.style.transform = 'translate(-50%, -50%)';
-                    el.innerHTML = '🚗';
-
-                    const marker = new mapboxgl.Marker(el)
-                        .setLngLat(coord as any)
-                        .setPopup(popup)
-                        .addTo(map);
-
-                    markers[driver.uuid] = { marker, popup };
-                } else {
-                    markers[driver.uuid].marker.setLngLat(coord as any);
-                    markers[driver.uuid].popup.setDOMContent(popupContainer);
-                }
-            });
-
-            // Hapus marker yang tidak ada
-            Object.keys(markers).forEach(uuid => {
-                if (!latestPerUuid[uuid]) {
-                    markers[uuid].marker.remove();
-                    delete markers[uuid];
-                }
-            });
-
-        } catch (error) {
-            console.error("Gagal load tracking:", error);
-        }
-    }
-
-    // Panggil fetchTracking saat style.load, terutama setelah inisialisasi awal
-    map.on('style.load', async () => {
-        await fetchTracking();
-        // Hanya atur interval setelah pemuatan gaya awal
-        if (!(window as any).trackingInterval) {
-            (window as any).trackingInterval = setInterval(fetchTracking, 1000);
+    // C. Pindah Tema Otomatis (Dark/Light)
+    const themeObserver = new MutationObserver(() => {
+        const isDark = document.documentElement.classList.contains('dark');
+        const newKey = isDark ? 'dark' : 'standard';
+        if (newKey !== currentStyleKey) {
+            currentStyleKey = newKey;
+            mapInstance?.setStyle(MAP_STYLES[currentStyleKey as keyof typeof MAP_STYLES]);
         }
     });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // Panggil fetchTracking untuk pemuatan awal jika style sudah dimuat
-    if (map.isStyleLoaded()) {
-        await fetchTracking();
-        (window as any).trackingInterval = setInterval(fetchTracking, 1000);
-    }
+    // D. Event Map Load & Loop Interval
+    mapInstance.on('style.load', () => {
+        fetchTracking();
+    });
 
-    window.addEventListener('resize', () => map.resize());
+    setInterval(fetchTracking, 2000);
+
+    // E. Inject Custom CSS
+    $('<style>').text(`
+        .custom-tracking-popup .mapboxgl-popup-content { padding: 0; background: none; box-shadow: none; border: none; }
+        .custom-tracking-popup .mapboxgl-popup-tip { display: none; }
+    `).appendTo('head');
+
+    window.addEventListener('resize', () => mapInstance?.resize());
 });
