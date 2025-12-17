@@ -87,7 +87,6 @@ services:
       VITE_APP_NAME: "${APP_NAME}"
       VITE_REVERB_APP_KEY: "${REVERB_APP_KEY}"
       VITE_REVERB_HOST: "${REVERB_HOST}"
-      # UBAH INI JUGA:
       VITE_REVERB_PORT: "${REVERB_PORT}"
       VITE_REVERB_SCHEME: "${REVERB_SCHEME}"
 
@@ -101,8 +100,8 @@ services:
           cpus: "0.80"
           memory: 800M
     ports:
-      - target: 5173
-        published: 5173
+      - target: 443
+        published: 443
         protocol: tcp
         host_ip: 0.0.0.0
       - target: 80
