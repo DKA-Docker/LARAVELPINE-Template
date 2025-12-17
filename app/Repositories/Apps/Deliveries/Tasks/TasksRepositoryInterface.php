@@ -14,7 +14,6 @@ interface TasksRepositoryInterface
 {
     public function GetAllRequest(): Collection;
 
-    public function GetAccount(): Collection;
 
     public function Create(...$args): Model|AppsDeliveriesTasks;
 

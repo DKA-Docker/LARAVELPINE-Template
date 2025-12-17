@@ -32,10 +32,6 @@ class TasksRepository implements TasksRepositoryInterface {
        return AppsDeliveriesRequestsDestinations::all();
     }
 
-    public function GetAccount(): Collection{
-        return Accounts::all();
-    }
-
     /**
      * @param ...$args AppsDeliveriesTasks
      * @return AppsDeliveriesTasks|Model

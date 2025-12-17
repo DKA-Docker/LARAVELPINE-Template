@@ -22,11 +22,6 @@ class ResourcesDeliveriesTaksServices
         return $this->repository->GetAllRequest();
     }
 
-    public function GetAccount()
-    {
-        return $this->repository->GetAccount();
-    }
-
     public function Create(...$args)
     {
         return $this->repository->Create(...$args);

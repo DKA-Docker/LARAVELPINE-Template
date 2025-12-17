@@ -11,6 +11,7 @@ use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesReposit
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -82,7 +83,7 @@ class ResourcesAccountsServices
                 $this->account->Find($account->id)?->assignRole($payload['roles']);
             }
             /** Muat Relations Data */
-            $account->load(['information', 'credential', 'contact']);
+            $account->load(['information', 'credential', 'contact', 'firebase']);
             /** daftar efek samping yang harus nunggu commit */
             DB::afterCommit(function () use ($account) {
                 // Contoh: event(new \App\Events\AccountCreated($account->id));
@@ -175,8 +176,11 @@ class ResourcesAccountsServices
             if (!empty($payload['contact'])) {
                 $this->contact->Update($account->contact, $payload['contact']);
             }
+            if (!empty($payload['firebase'])) {
+                $this->firebase->Update($account->contact, $payload['firebase']);
+            }
             /** Reload relasi untuk response */
-            $account->load(['information', 'credential', 'contact']);
+            $account->load(['information', 'credential', 'contact', 'firebase']);
             /** Side-effect yang harus nunggu commit */
             DB::afterCommit(function () use ($account) {
                 // Contoh: event(new \App\Events\AccountUpdated($account->id));
@@ -186,7 +190,7 @@ class ResourcesAccountsServices
             DB::commit();
             return [
                 'status' => true,
-                'code'   => 200,
+                'code'   => Response::HTTP_OK,
                 'msg'    => 'Account Successfully Updated',
                 'data'   => $account,
             ];

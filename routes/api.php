@@ -47,8 +47,11 @@ Route::name('api.')->group(function () {
     });
 
     Route::middleware(['Api'])->prefix('base')->name('base.')->group(function () {
-        Route::prefix('/accounts')->name('account.')->group(function () {
+        Route::prefix('accounts')->name('account.')->group(function () {
             Route::get('/', [Accounts\Index::class, 'index']);
+            Route::prefix('firebase')->name('firebase.')->group(function () {
+                Route::patch('/', [Accounts\Firebase\Index::class, 'edit']);
+            });
         });
     });
 });
