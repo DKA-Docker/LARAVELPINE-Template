@@ -3,11 +3,13 @@
 namespace App\Repositories\Apps\Trackings\Monitors;
 
 use App\Models\Apps\Trackings\Monitors\AppsTrackingsMonitors;
+use App\Services\Auth\AuthAccountsServices;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MonitorsRepository implements MonitorsRepositoryInterface {
@@ -17,6 +19,7 @@ class MonitorsRepository implements MonitorsRepositoryInterface {
      * @var Generator
      */
     protected Generator $faker;
+    protected AuthAccountsServices $auth;
 
     public function __construct()
     {
@@ -24,6 +27,7 @@ class MonitorsRepository implements MonitorsRepositoryInterface {
          * add faker instance for default used data create
          */
         $this->faker = Factory::create();
+        $this->auth = new AuthAccountsServices();
     }
     /**
      * @param ...$args array
@@ -31,11 +35,14 @@ class MonitorsRepository implements MonitorsRepositoryInterface {
      */
     public function Create(...$args): Model|AppsTrackingsMonitors
     {
+        $account = $this->auth->verify();
+        Log::info(json_encode($account));
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null
          */
         $defaults = [
             'id' => (String) Str::uuid(),
+            'account' => $account['data']['id'],
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
         $data = array_merge($defaults, ...$args);

@@ -186,7 +186,6 @@ $(window).on('load', async function () {
         try {
             const FullUriCurrentURL = URI(window.location);
             const segs = FullUriCurrentURL.segment();
-            segs.unshift('api');
             FullUriCurrentURL.segment([...segs, 'monitors']);
             const res = await axios.get(FullUriCurrentURL.toString());
             const drivers = res.data.data;
@@ -272,7 +271,7 @@ $(window).on('load', async function () {
                 content.style.paddingRight = '5px';
 
                 const fields = [
-                    { label: 'Driver', value: driver.uuid },
+                    { label: 'Driver', value: `${driver.account.information.first_name} ${driver.account.information.last_name}` },
                     { label: 'Longitude', value: driver.longitude.toFixed(4) },
                     { label: 'Latitude', value: driver.latitude.toFixed(4) },
                     { label: 'Speed', value: speedDisplay },

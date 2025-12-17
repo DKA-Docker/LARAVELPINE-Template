@@ -42,8 +42,10 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::resource('reports', Reports::class);
         });
         Route::prefix('trackings')->name('trackings.')->group(function () {
-            Route::resource('/', Trackings::class)->parameters(['' => 'id']);
-
+            Route::get('/', [Trackings\Index::class,'index'])->name('index');
+            Route::prefix('monitors')->name('monitors.')->group(function () {
+                Route::resource('/', Trackings\Monitors\Index::class);
+            });
         });
     });
 });

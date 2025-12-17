@@ -29,8 +29,8 @@ class ResourcesTrackingsMonitorsServices
             // PostgreSQL: DISTINCT ON bisa dipakai langsung
             return $this->repository
                 ->query()
-                ->selectRaw('DISTINCT ON (uuid) *')
-                ->orderBy('uuid')
+                ->selectRaw('DISTINCT ON (account) *')
+                ->orderBy('account')
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
                 ->get();
