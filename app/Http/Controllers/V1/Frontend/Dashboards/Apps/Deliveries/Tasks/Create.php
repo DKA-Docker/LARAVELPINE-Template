@@ -38,7 +38,6 @@ class Create extends Controller
     {
         $data =  $request->all();
         $results = $this->service->Create($data);
-//        return $data;
         if($results){
             return redirect()->route(implode('.', array_slice(explode('.', Route::currentRouteName()), 0, -2)).'.index')->with('success', 'Berhasil di Tambahkan');
         }else{

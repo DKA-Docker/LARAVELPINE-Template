@@ -20,12 +20,7 @@ class Index extends Controller
     public function index(Request $request){
         $data = $this->service->ReadAll();
         return response()->json(
-            array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'msg' => 'Successfully Read Data',
-                'data' => $data,
-            )
+            $data
         );
     }
 }

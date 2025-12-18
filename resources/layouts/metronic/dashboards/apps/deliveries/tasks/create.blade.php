@@ -75,26 +75,6 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-2">
-                                                    <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Request</label>
-                                                        <select name="request" id="request" class="kt-input kt-input-lg">
-                                                            <option value="">Pilih Request</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Akun</label>
-                                                        <input class="kt-input kt-input-lg" type="text" name="title" id="first_name" placeholder="Judul Permintaan"/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Nama Task</label>
-                                                        <input class="kt-input kt-input-lg" type="text" name="name" placeholder="Nama Task" id="name"/>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -109,11 +89,20 @@
                                         <div class="w-full">
                                             <div class="grid grid-cols-1 xl:grid-cols-6 gap-5 lg:gap-7.5 py-3">
                                                 <div class="col-span-2">
-                                                    <div class="flex flex-col gap-3">
-                                                        <label class="kt-form-label font-normal text-mono pl-2">Driver</label>
-                                                        <select name="account" id="account" class="kt-input kt-input-lg">
+                                                    <div class="flex flex-col gap-3 relative" id="driver-wrapper">
+                                                        <label class="kt-form-label font-normal text-mono pl-2">Driver (Multi-select)</label>
 
-                                                        </select>
+                                                        <div id="selected_drivers_container" class="flex flex-wrap gap-2 mb-1">
+                                                        </div>
+
+                                                        <div class="relative">
+                                                            <input type="text" id="driver_search_input" class="kt-input kt-input-lg" placeholder="Ketik untuk tambah driver..." autocomplete="off">
+
+                                                            <div id="driver_suggestions" class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto hidden">
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="hidden_inputs_container"></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-2">

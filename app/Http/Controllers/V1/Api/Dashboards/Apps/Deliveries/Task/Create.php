@@ -31,6 +31,19 @@ class Create extends controller {
     }
     public  function store(Request $request)  {
         $data =  $request->all();
+//        // --- CARA 1: Pengecekan Sederhana (Apakah array kosong?) ---
+//        if (empty($data)) {
+//            return response()->json(
+//                data: array(
+//                    'status' => false,
+//                    'code' => Response::HTTP_BAD_REQUEST, // 400
+//                    'msg' => 'Data input tidak boleh kosong', // Pesan error
+//                    'data' => null,
+//                ),
+//                status: Response::HTTP_BAD_REQUEST,
+//                headers: ['Content-Type' => 'application/json']
+//            );
+//        }
         $results = $this->service->Create($data);
         if($results){
             return response()->json(

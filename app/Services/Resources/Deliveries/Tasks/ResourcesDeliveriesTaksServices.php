@@ -2,10 +2,12 @@
 
 namespace App\Services\Resources\Deliveries\Tasks;
 
+use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ResourcesDeliveriesTaksServices
 {
@@ -22,9 +24,42 @@ class ResourcesDeliveriesTaksServices
         return $this->repository->GetAllRequest();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function Create(...$args)
     {
-        return $this->repository->Create(...$args);
+        // 1. Ambil ID User yang sedang login (Pembuat Task)
+        $currentUserId = Auth::id();
+
+        // 2. Ambil List Driver dari inputan (sebelum kita timpa)
+        // Ini adalah array [id_driver_1, id_driver_2] dari form multi-select
+        $driverList = $args[0]['account'] ?? [];
+
+        // 3. MANIPULASI $args untuk Repository (Main Task)
+        // Repository butuh 'account' sebagai ID Pembuat, bukan Array Driver.
+        // Jadi kita timpa index 'account' di dalam $args.
+        if (isset($args[0])) {
+            $args[0]['account'] = $currentUserId;
+        }
+        DB::beginTransaction();
+
+        // 4. Simpan Main Task (Sekarang 'account' isinya $currentUserId)
+        $taskCreated = $this->repository->Create(...$args);
+
+        // 5. Simpan Data Assign (Looping Driver yang tadi kita simpan di $driverList)
+        if ($taskCreated && !empty($driverList) && is_array($driverList)) {
+
+            foreach ($driverList as $driverId) {
+                AppsDeliveriesTasksAssigns::create([
+                    'task'    => $taskCreated->id, // ID Task baru
+                    'account' => $driverId,        // ID Driver dari inputan asli
+                ]);
+            }
+        }
+        DB::commit();
+        return $taskCreated;
+
     }
 
     public function ReadAllRequest(): Collection
