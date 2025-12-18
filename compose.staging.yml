@@ -19,9 +19,6 @@ services:
       # ----------------------------------------------------------
       DKA_DEV_DISABLED_NPM_SERVE: true
 
-      FIREBASE_CREDENTIALS: storage/app/firebase-auth.json
-      #-----------------------------------------------------------
-
       APP_LOCALE: id_ID
       APP_FALLBACK_LOCALE: id_ID
       APP_FAKER_LOCALE: id_ID
@@ -81,19 +78,19 @@ services:
       REVERB_APP_ID: 582743
       REVERB_APP_KEY: 7cjuaglts0v6pvazjcjx
       REVERB_APP_SECRET: fatogha3s1idhtg1mtfv
-      REVERB_HOST: "dev.logistech.hnd.web.id"
-      REVERB_PORT: 443
-      REVERB_SCHEME: https
+      REVERB_HOST: 127.0.0.1
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
 
       # Reverb Server Internal (Di belakang Nginx)
       REVERB_SERVER_HOST: 0.0.0.0
       REVERB_SERVER_PORT: 8080
 
       # Client Side (Vite/Meta Tag)
-      VITE_REVERB_APP_KEY: '${REVERB_APP_KEY}'
-      VITE_REVERB_HOST: "${REVERB_HOST}"
-      VITE_REVERB_PORT: "${REVERB_PORT}"
-      VITE_REVERB_SCHEME: "${REVERB_SCHEME}"
+      VITE_REVERB_APP_KEY: 7cjuaglts0v6pvazjcjx
+      VITE_REVERB_HOST: "dev.logistech.hnd.web.id"
+      VITE_REVERB_PORT: 443
+      VITE_REVERB_SCHEME: https
 
       THEME_NAME: metronic
     deploy:

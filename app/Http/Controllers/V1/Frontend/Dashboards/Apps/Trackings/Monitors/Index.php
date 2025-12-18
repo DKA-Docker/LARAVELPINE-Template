@@ -58,12 +58,10 @@ class Index extends Controller
     public function token(Request $request) {
         // Ambil data dari Vite
         $token = $request->token;
-        $name = $request->driver_name;
 
         $messaging = Firebase::messaging();
         $message = CloudMessage::withTarget('token', $token)
             ->withData(['action' => 'RELOAD_GPS']); // Data khusus untuk aplikasi driver
-
         try {
             $messaging->send($message);
             return response()->json(['status' => 'success']);

@@ -29,12 +29,13 @@ const getCfg = (name: string): string => {
 
 window.Pusher = Pusher;
 
-// Inisialisasi Echo menggunakan Meta Tags dari Config Laravel
+// Inisialisasi Echo metalanguage Meta Tags dari Config Laravel
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: getCfg('reverb-key'),
     wsHost: getCfg('reverb-host'),
     wsPort: parseInt(getCfg('reverb-port')) || 80,
+    wssPort: parseInt(getCfg('reverb-port')) || 443,
     forceTLS: getCfg('reverb-scheme') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
@@ -272,6 +273,8 @@ $(window).on('load', async function () {
             }
 
             fetchTracking(incomingUuid);
+        }).error((err: any) => {
+            console.error('❌ Echo Error:', err);
         });
 
     mapInstance.on('style.load', () => fetchTracking());
