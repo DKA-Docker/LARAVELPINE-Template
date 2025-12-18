@@ -8,6 +8,7 @@
         <meta name="reverb-host" content="{{ env('VITE_REVERB_HOST') }}">
         <meta name="reverb-port" content="{{ env('VITE_REVERB_PORT') }}">
         <meta name="reverb-scheme" content="{{ env('VITE_REVERB_SCHEME') }}">
+        <meta name="mapbox-token" content="{{ config('services.mapbox.token') }}">
         <meta content="follow, index" name="robots" />
         <link href="#" rel="canonical" />
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
