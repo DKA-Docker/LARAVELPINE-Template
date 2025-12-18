@@ -29,7 +29,18 @@ class Index extends Controller
         $CreateAct = $this->services->Create($request);
 
         // Memicu broadcast ke frontend
-        broadcast(new MonitorEvent($CreateAct));
+        // 2. Memicu broadcast dengan proteksi Exception
+        try {
+            // Karena menggunakan ShouldQueue, ini akan mengirim job ke background worker
+            broadcast(new MonitorEvent($CreateAct));
+        } catch (Exception $e) {
+            // Jika broadcast/queue gagal, kita hanya mencatat log.
+            // Proses utama (simpan data) TIDAK akan terhenti (rollback).
+            Log::error("Broadcast MonitorEvent failed: " . $e->getMessage(), [
+                'data' => $CreateAct,
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
 
         return response()->json(
             data: array(

@@ -42,7 +42,7 @@ class AccountsSeeder extends Seeder
             ]
         ]);
         $this->command->info(json_encode($create));
-        $this->account->Create([
+        $create = $this->account->Create([
             "information" => [
                 "first_name" => "Ryan",
                 "last_name" => "Pratama"
@@ -58,6 +58,7 @@ class AccountsSeeder extends Seeder
                 "token" => null
             ]
         ]);
+        $this->command->info(json_encode($create));
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }

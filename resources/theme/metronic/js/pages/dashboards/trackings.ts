@@ -19,13 +19,23 @@ declare global {
     }
 }
 
+/**
+ * Helper untuk mengambil nilai dari Meta Tag agar kebal Obfuscation
+ */
+const getCfg = (name: string): string => {
+    const meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+    return meta ? meta.content : '';
+};
+
 window.Pusher = Pusher;
+
+// Inisialisasi Echo menggunakan Meta Tags dari Config Laravel
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    key: getCfg('reverb-key'),
+    wsHost: getCfg('reverb-host'),
+    wsPort: parseInt(getCfg('reverb-port')) || 80,
+    forceTLS: getCfg('reverb-scheme') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
 
@@ -118,13 +128,11 @@ function updateMarkersOnMap(latestPerUuid: Record<string, any>, highlightUuid: s
 
             // TRIGGER ANIMASI JIKA ADA UPDATE DARI ECHO
             if (driver.uuid === highlightUuid) {
-                // Animasi Marker
                 const el = target.marker.getElement();
                 el.classList.remove('animate-marker-ping');
                 void el.offsetWidth;
                 el.classList.add('animate-marker-ping');
 
-                // Animasi Popup
                 if (target.containerElement) {
                     target.containerElement.classList.remove('animate-popup-glow');
                     void target.containerElement.offsetWidth;
@@ -166,7 +174,7 @@ function createPopupContainer(driver: any, fullName: string, fcmToken: string, c
         padding: '12px', background: colors.bg, color: colors.text,
         borderRadius: '8px', position: 'relative', minWidth: '260px',
         boxShadow: '0 4px 15px rgba(0,0,0,0.2)', fontFamily: 'sans-serif',
-        border: '2px solid transparent' // Placeholder untuk animasi glow
+        border: '2px solid transparent'
     });
 
     const reloadBtn = document.createElement('button');
@@ -201,7 +209,7 @@ async function sendReloadNotification(fcmToken: string, driverName: string, uuid
         const fullUri = URI(window.location);
         const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
         const response = await axios.post(fetchUrl, { token: fcmToken, driver_name: driverName });
-        if (response.data.status === 'success') alert(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
+        if (response.data.status === 'success') console.debug(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
     } catch (error: any) {
         alert("Gagal mengirim perintah reload.");
     }
@@ -216,7 +224,9 @@ $(window).on('load', async function () {
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
     initializeApp(FIREBASE_CONFIG);
-    mapboxgl.accessToken = 'pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA';
+
+    // Ambil Access Token Mapbox dari Meta Tag
+    mapboxgl.accessToken = getCfg('mapbox-token');
 
     let currentStyleKey = document.documentElement.classList.contains('dark') ? 'dark' : 'standard';
 
@@ -228,7 +238,6 @@ $(window).on('load', async function () {
         projection: 'globe'
     });
 
-    // INJECT CSS ANIMASI
     $('<style>').text(`
         .custom-tracking-popup .mapboxgl-popup-content { padding: 0; background: none; box-shadow: none; border: none; }
         .custom-tracking-popup .mapboxgl-popup-tip { display: none; }
@@ -243,14 +252,26 @@ $(window).on('load', async function () {
 
     window.Echo.channel('dashboards.apps.trackings.monitors')
         .listen('.dashboards.apps.trackings.monitors', (response: any) => {
+            const incomingUuid = response.data.uuid;
+
             mapInstance?.flyTo({
                 center: [response.data.longitude, response.data.latitude],
-                zoom: 16,
-                speed: 1.2,
+                zoom: 19,
+                speed: 3,
                 essential: true
             });
-            // Jalankan update dan beri sinyal animasi untuk UUID tersebut
-            fetchTracking(response.data.uuid);
+
+            Object.values(markers).forEach(m => {
+                if (m.popup.isOpen()) {
+                    m.popup.remove();
+                }
+            });
+
+            if (markers[incomingUuid]) {
+                markers[incomingUuid].popup.addTo(mapInstance!);
+            }
+
+            fetchTracking(incomingUuid);
         });
 
     mapInstance.on('style.load', () => fetchTracking());

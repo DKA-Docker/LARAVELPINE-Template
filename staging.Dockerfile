@@ -7,10 +7,5 @@ COPY . .
 RUN chown -R www-data:www-data storage database bootstrap/cache && chmod -R 775 storage database bootstrap/cache storage/logs
 RUN chown -R www-data:www-data public && chmod -R 775 public
 RUN rm vite.config.js
-# Set Manual Environment Variables untuk Vite
-ENV VITE_REVERB_APP_KEY="7cjuaglts0v6pvazjcjx"
-ENV VITE_REVERB_HOST="dev.logistech.hnd.web.id"
-ENV VITE_REVERB_PORT=8080
-ENV VITE_REVERB_SCHEME="http"
 RUN composer install && yarn install && yarn run build
 RUN php artisan storage:link
