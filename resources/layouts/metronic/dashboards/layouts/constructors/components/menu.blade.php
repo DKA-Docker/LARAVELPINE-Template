@@ -91,6 +91,7 @@
         <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Management</span>
     </div>
     <div class="kt-menu-item">
+        <a href="{{ request()->getSchemeAndHttpHost() . route('dashboards.manajements.accounts.index', [], false) }}">
         <div class="kt-menu-label gap-[10px] border border-transparent py-[6px] ps-[10px] pe-[10px]" tabindex="0">
             <span class="kt-menu-icon text-muted-foreground w-[20px] items-start">
                 <i class="ki-duotone ki-user text-lg"></i>
