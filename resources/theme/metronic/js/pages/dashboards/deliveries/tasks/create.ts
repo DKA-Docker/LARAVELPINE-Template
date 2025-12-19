@@ -85,7 +85,8 @@ if(elementExists.length > 0 ){
     (async() => {
     // tampilkan semua data destination
         const $dataDestinats = $("#destination");
-        const dataDestinations = await fetchRequestsDestinations(apiUrl);
+        const urlReqDestination = "/api/dashboards/apps/deliveries/requests/destinations";
+        const dataDestinations = await fetchRequestsDestinations(urlReqDestination);
 
         $dataDestinats.empty();
         $dataDestinats.append(`<option value="">Pilih Destinasi</option>`)

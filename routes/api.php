@@ -3,6 +3,7 @@
 use App\Http\Controllers\V1\Api\Base\Accounts as Accounts;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests\Destinations as Destinations;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
@@ -25,7 +26,13 @@ Route::name('api.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */
             Route::prefix('deliveries')->name('deliveries.')->group(function () {
                 /** Name Route api.dashboards.apps.deliveries member of resource */
-                Route::resource('requests', Requests\Index::class);
+                Route::prefix('requests')->name('requests.')->group(function () {
+                    Route::resource('/', Requests\Index::class);
+                    Route::prefix('destinations')->name('destinations.')->group(function () {
+                        Route::resource('/', Destinations\Index::class);
+
+                    });
+                });
                 Route::prefix('tasks')->name('tasks.')->group(function () {
                     Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
                     Route::resource('/create', Tasks\Create::class)->parameters(['' => 'id']);

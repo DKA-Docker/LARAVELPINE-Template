@@ -26,8 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         /** Grouping Route dengan middleware api */
         $middleware->group('Api', [
             JSONCheckRequest::class,
-            CheckAuthorizationHeader::class,
-            VerifyBearerTokenAuthorization::class
+            /*CheckAuthorizationHeader::class,
+            VerifyBearerTokenAuthorization::class*/
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

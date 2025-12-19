@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role;
 
@@ -74,7 +75,7 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
     }
 
-    public function geos()
+    public function geos(): HasOne
     {
         return $this->hasOne(AppsDeliveriesTasksGeos::class, 'task', // Foreign Key di tabel geos (sesuai migration sebelumnya)
             'id' // Local Key di tabel tasks
