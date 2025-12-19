@@ -31,13 +31,16 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
         Route::prefix('deliveries')->name('deliveries.')->group(function () {
             /** Name Route dashboards.apps.deliveries member of resource */
             Route::prefix('requests')->name('requests.')->group(function () {
-                Route::resource('/', DeliveriesRequest::class)->parameters(['' => 'id']);
-                Route::resource('create', DeliveriesRequestCreate::class);
+                Route::resource('/', DeliveriesRequest::class);
+                Route::prefix('create')->name('create.')->group(function () {
+                    Route::resource('create', DeliveriesRequestCreate::class);
+                });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
-                Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
-                Route::resource('/create', DeliveriesTasksCreate::class);
-                Route::resource('/show', DeliveriesTasksShow::class);
+                Route::resource('/', DeliveriesTasks::class);
+                Route::prefix('create')->name('create.')->group(function () {
+                    Route::resource('/', DeliveriesTasksCreate::class);
+                });
             });
             Route::resource('reports', Reports::class);
         });

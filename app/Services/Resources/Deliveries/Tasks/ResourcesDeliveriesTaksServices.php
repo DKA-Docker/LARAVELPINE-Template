@@ -2,6 +2,7 @@
 
 namespace App\Services\Resources\Deliveries\Tasks;
 
+use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class ResourcesDeliveriesTaksServices
     /**
      * @throws \Throwable
      */
-    public function Create(...$args)
+    public function Create(...$args): AppsDeliveriesTasks
     {
         // 1. Ambil ID User yang sedang login (Pembuat Task)
         $currentUserId = Auth::id();
@@ -60,11 +61,6 @@ class ResourcesDeliveriesTaksServices
         DB::commit();
         return $taskCreated;
 
-    }
-
-    public function ReadAllRequest(): Collection
-    {
-        return $this->repository->GetAllRequest();
     }
 
     public function ReadAll(): Collection

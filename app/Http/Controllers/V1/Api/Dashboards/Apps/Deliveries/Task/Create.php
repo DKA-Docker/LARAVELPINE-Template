@@ -15,35 +15,11 @@ class Create extends controller {
         $this->service = new ResourcesDeliveriesTaksServices();
     }
 
-    public  function index()  {
-        $data = $this->service->ReadAllRequest();
-        return response()->json(
-            data: array(
-                'status' => true,
-                'code' => Response::HTTP_OK,
-                'data' => $data
-            ),
-            status: Response::HTTP_OK,
-            headers: array(
-                'Content-Type' => 'application/json'
-            )
-        );
-    }
-    public  function store(Request $request)  {
+    /**
+     * @throws \Throwable
+     */
+    public  function store(Request $request) {
         $data =  $request->all();
-//        // --- CARA 1: Pengecekan Sederhana (Apakah array kosong?) ---
-//        if (empty($data)) {
-//            return response()->json(
-//                data: array(
-//                    'status' => false,
-//                    'code' => Response::HTTP_BAD_REQUEST, // 400
-//                    'msg' => 'Data input tidak boleh kosong', // Pesan error
-//                    'data' => null,
-//                ),
-//                status: Response::HTTP_BAD_REQUEST,
-//                headers: ['Content-Type' => 'application/json']
-//            );
-//        }
         $results = $this->service->Create($data);
         if($results){
             return response()->json(

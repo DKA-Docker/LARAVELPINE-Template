@@ -30,14 +30,10 @@ Route::name('api.')->group(function () {
                     Route::resource('/', Requests\Index::class);
                     Route::prefix('destinations')->name('destinations.')->group(function () {
                         Route::resource('/', Destinations\Index::class);
-
                     });
                 });
                 Route::prefix('tasks')->name('tasks.')->group(function () {
-                    Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
-                    Route::resource('/create', Tasks\Create::class)->parameters(['' => 'id']);
-                    Route::resource('/show', Tasks\Show::class)->parameters(['' => 'id']);
-
+                    Route::resource('/', Tasks\Index::class);
                     Route::prefix('routes')->name('routes.')->group(function () {
                         Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
