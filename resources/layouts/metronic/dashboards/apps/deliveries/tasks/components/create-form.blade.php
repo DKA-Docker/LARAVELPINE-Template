@@ -1,11 +1,13 @@
 <div class="space-y-6">
-    {{-- CARD 1: INFORMASI TUGAS & MAPBOX --}}
+
+    {{-- SECTION 1: INFORMASI TUGAS & MAPBOX --}}
     <div class="kt-card">
         <div class="kt-card-header">
             <h3 class="kt-card-title">Informasi Utama & Lokasi Koordinat</h3>
         </div>
         <div class="kt-card-content p-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
                 <div class="space-y-5">
                     <div class="flex flex-col gap-2">
                         <label class="kt-form-label text-[11px] font-bold text-gray-500 uppercase tracking-wider">Nama Task</label>
@@ -22,7 +24,6 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                 <i class="ki-outline ki-magnifier text-lg"></i>
                             </div>
-
                             <div id="autocomplete-results" class="hidden absolute z-[110] w-full mt-1 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
                             </div>
                         </div>
@@ -49,7 +50,8 @@
     </div>
 
     <div class="flex md:flex-row flex-col gap-5">
-        {{-- CARD 2: DESTINASI & WILAYAH --}}
+
+        {{-- SECTION 2: DESTINASI & WILAYAH (GEO-CASCADING) --}}
         <div class="kt-card md:w-1/2">
             <div class="kt-card-header">
                 <h3 class="kt-card-title">Lokasi Tujuan & Wilayah</h3>
@@ -120,7 +122,7 @@
             </div>
         </div>
 
-        {{-- CARD 3: DRIVER (ASSIGNED) --}}
+        {{-- SECTION 3: DRIVER ASSIGNMENT --}}
         <div class="kt-card md:w-1/2">
             <div class="kt-card-header">
                 <h3 class="kt-card-title">Personel Driver</h3>
@@ -128,6 +130,7 @@
             <div class="kt-card-content p-6">
                 <div class="flex flex-col gap-3 relative">
                     <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Cari Driver</label>
+
                     <div class="flex flex-wrap gap-2 mb-1">
                         @foreach($formData['assigned'] as $id => $name)
                             <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-lg shadow-sm">
@@ -138,6 +141,7 @@
                             </span>
                         @endforeach
                     </div>
+
                     <input wire:model.live.debounce.300ms="driverSearch" type="text" class="kt-input kt-input-lg" placeholder="Ketik nama driver...">
 
                     @if(strlen($driverSearch) >= 1)
@@ -209,6 +213,7 @@
                             </thead>
                             <tbody class="divide-y divide-gray-50">
                             @php
+                                // Manual Pagination karena data dari array Service, bukan Eloquent Builder
                                 $allPkgs = collect($currentDest['packages']);
                                 $totalItems = $allPkgs->count();
                                 $totalPages = ceil($totalItems / $perPage);
@@ -220,14 +225,14 @@
                                         {{ (($currentPage - 1) * $perPage) + $loop->iteration }}
                                     </td>
                                     <td class="px-4 py-2">
-                                        <span class="text-[11px] font-bold text-gray-700 uppercase leading-tight break-words block max-w-md">
-                                            {{ $pkg['name'] }}
-                                        </span>
+                                            <span class="text-[11px] font-bold text-gray-700 uppercase leading-tight break-words block max-w-md">
+                                                {{ $pkg['name'] }}
+                                            </span>
                                     </td>
                                     <td class="px-4 py-2 text-center">
-                                        <span class="px-2 py-0.5 rounded bg-gray-100 text-[9px] font-black text-gray-400 uppercase">
-                                            {{ $pkg['unit']['name'] ?? 'PCS' }}
-                                        </span>
+                                            <span class="px-2 py-0.5 rounded bg-gray-100 text-[9px] font-black text-gray-400 uppercase">
+                                                {{ $pkg['unit']['name'] ?? 'PCS' }}
+                                            </span>
                                     </td>
                                     <td class="px-4 py-2 text-right">
                                         <span class="text-xs font-black text-gray-900">{{ $pkg['qty'] }}</span>
@@ -275,7 +280,7 @@
         </div>
     </div>
 
-    {{-- BUTTON ACTION --}}
+    {{-- SECTION 5: BUTTON ACTION --}}
     <div class="flex gap-4 justify-end pt-4">
         <button type="button" class="kt-btn kt-btn-light font-bold text-xs uppercase tracking-widest">Batalkan</button>
         <button wire:click="submit" wire:loading.attr="disabled" class="kt-btn kt-btn-secondary font-bold text-xs uppercase tracking-widest px-8 shadow-lg" type="button">
