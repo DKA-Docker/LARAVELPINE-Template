@@ -34,7 +34,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::prefix('requests')->name('requests.')->group(function () {
                 Route::resource('/', DeliveriesRequest::class);
                 Route::prefix('create')->name('create.')->group(function () {
-                    Route::resource('create', DeliveriesRequestCreate::class);
+                    Route::resource('/', DeliveriesRequestCreate::class);
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {

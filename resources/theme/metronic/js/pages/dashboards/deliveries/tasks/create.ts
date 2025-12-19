@@ -198,7 +198,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             $container.empty().removeClass('hidden');
             data.features.forEach((feature: any) => {
                 const $item = $(`
-                    <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-neutral-800 cursor-pointer border-b border-gray-100 dark:border-neutral-800 last:border-0 transition-colors">
+                    <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors">
                         <div class="flex flex-col pointer-events-none">
                             <span class="text-[11px] font-bold text-gray-800 dark:text-neutral-100">${feature.text}</span>
                             <span class="text-[9px] text-gray-400 line-clamp-1">${feature.place_name}</span>
