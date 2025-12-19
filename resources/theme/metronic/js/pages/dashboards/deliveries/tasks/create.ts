@@ -12,6 +12,7 @@ interface TaskCreateModuleInterface {
     getThemeMode(): string;
     getMapStyle(): string;
     setupAutocomplete(): void;
+    setupThemeObserver(): void;
     fetchSuggestions(query: string, $container: JQuery<HTMLElement>): void;
     geocodeAddress(address: string): void;
     reverseGeocoding(lng: number, lat: number): void;
@@ -229,15 +230,17 @@ const TaskCreateModule: TaskCreateModuleInterface = {
     },
 
     syncToLivewire(lng, lat) {
-        // Update tampilan input latitude longitude agar user melihat angka berubah
-        $('#lat-display').val(lat.toFixed(6)).trigger('input');
-        $('#lng-display').val(lng.toFixed(6)).trigger('input');
+        // Update visual input agar user tahu angka berubah
+        $('#lat-display').val(lat.toFixed(6));
+        $('#lng-display').val(lng.toFixed(6));
 
         const componentId = $('#map').closest('[wire\\:id]').attr('wire:id');
         const lw = Livewire.find(componentId);
+
         if (lw) {
-            lw.set('formData.longitude', lng.toFixed(6));
-            lw.set('formData.latitude', lat.toFixed(6));
+            // DISESUAIKAN: Mengarah ke properti 'geos' sesuai revisi model terbaru
+            lw.set('formData.geos.longitude', lng.toFixed(6));
+            lw.set('formData.geos.latitude', lat.toFixed(6));
         }
     }
 };
