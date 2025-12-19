@@ -48,9 +48,9 @@ $(window).on('load', async function () {
         enabledTransports: ['ws', 'wss'],
     });
 
-// ==========================================
-// 1. KONFIGURASI & STATE
-// ==========================================
+    // ==========================================
+    // 1. KONFIGURASI & STATE
+    // ==========================================
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyBy_jmKX6mIQOVSUSxra5DnVfFSAel3RIE",
         authDomain: "hndgs-65ce6.firebaseapp.com",
@@ -170,7 +170,7 @@ $(window).on('load', async function () {
         <div style="display: flex; justify-content: space-between;">
             <span style="font-weight: bold;">Kecepatan:</span> <span>${parseFloat(driver.speed).toFixed(2)} km/h</span>
         </div>
-        <div style="display: flex; flex-direction: column; margin-top: 6px; border-top: 1px dashed ${colors.divider}; padding-top: 6px;">
+        <div style="display: flex; flex-direction: column; margin-top: 6px; border-top: 1px dashed " + "${colors.divider}" + "; padding-top: 6px;">
             <span style="font-weight: bold; color: #888; margin-bottom: 2px;">Last Updated:</span>
             <span>${moment(driver.created_at).format('DD MMM YYYY, HH:mm:ss')}</span>
         </div>
