@@ -25,19 +25,19 @@ class AppsDeliveriesTasksGeosFactory extends Factory
     {
 
         $task = AppsDeliveriesTasks::inRandomOrder()->first();
-        $province = DataGeosProvinces::inRandomOrder()->first();
-        $district = DataGeosDistricts::inRandomOrder()->first();
         $village = DataGeosVillages::inRandomOrder()->first();
-        $regencies = DataGeosRegencies::inRandomOrder()->first();
+        $district = DataGeosDistricts::where("id", $village->district_id)->inRandomOrder()->first();
+        $regency = DataGeosRegencies::where("id", $district->regency_id)->inRandomOrder()->first();
+        $province = DataGeosProvinces::where("id", $regency->province_id)->inRandomOrder()->first();
 
         return [
             'task'=> $task->id,
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
-            'province' => $province->id, //provinsi
-            'district' => $district->id, //kecamatan
-            'village' => $village->id,
-            'regencies' => $regencies->id,
+            'province' => $province, //provinsi
+            'regency' => $regency,
+            'district' => $district, //kecamatan
+            'village' => $village,
             'postal_code' => $this->faker->postcode(),
         ];
     }
