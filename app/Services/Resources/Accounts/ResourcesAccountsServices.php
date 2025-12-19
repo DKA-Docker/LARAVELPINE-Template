@@ -10,6 +10,7 @@ use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRep
 use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesRepository;
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -224,12 +225,11 @@ class ResourcesAccountsServices
         try {
             $account = $this->account->ReadAll();
             if ($account->count() > 0) {
-                $account->load(['information', 'credential', 'contact']);
                 return [
                     'status' => true,
                     'code'   => 200,
                     'msg'    => 'Accounts Successfully Reads',
-                    'data'   => $account,
+                    'data'   => $account->toArray(),
                 ];
             }
             return [
@@ -248,9 +248,63 @@ class ResourcesAccountsServices
             ];
         }
     }
+
+
+    /**
+     * Mencari akun berdasarkan nama (First Name, Last Name, atau Username)
+     * Menggunakan builder mentah dari repository.
+     * @param string $name
+     * @return array
+     */
+    public function FindByName(string $name): array
+    {
+        try {
+            $term = '%' . $name . '%';
+
+            // Menggunakan method query() dari AccountsRepository
+            $query = $this->account->query()
+                ->whereHas('information', function ($q) use ($term) {
+                    $q->where('first_name', 'ilike', $term)
+                        ->orWhere('last_name', 'ilike', $term);
+                })
+                ->orWhereHas('credential', function ($q) use ($term) {
+                    $q->where('username', 'ilike', $term);
+                });
+
+            // Eksekusi dengan eager load dan limit
+            $accounts = $query->with(['information', 'credential', 'contact', 'firebase'])
+                ->limit(5)
+                ->get();
+
+            if ($accounts->isNotEmpty()) {
+                return [
+                    'status' => true,
+                    'code'   => 200,
+                    'msg'    => 'Accounts successfully found',
+                    'data'   => $accounts->toArray(), // Penting: toArray agar Livewire lancar
+                ];
+            }
+
+            return [
+                'status' => true,
+                'code'   => 404,
+                'msg'    => 'No accounts found',
+                'data'   => [],
+            ];
+        } catch (QueryException $e) {
+            return $this->HelpersExceptionsHttpCode->fromSQLError($e);
+        } catch (Throwable $e) {
+            return [
+                'status' => false,
+                'code'   => 500,
+                'msg'    => 'Unexpected error: ' . $e->getMessage(),
+            ];
+        }
+    }
     /**
      * Delete (atomik) + afterCommit
      * @return array{status:bool,code:int,msg:string,data?:mixed}
+     * @throws Throwable
      */
     public function Delete(string $id): array
     {

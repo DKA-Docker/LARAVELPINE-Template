@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Index extends Controller
 {
     /**
-     * @var ResourcesDeliveriesRequestsServices $service
+     * @var ResourcesDeliveriesRequestsDestinationsServices $service
      * @desc create request Repository
      */
     protected ResourcesDeliveriesRequestsDestinationsServices $service;

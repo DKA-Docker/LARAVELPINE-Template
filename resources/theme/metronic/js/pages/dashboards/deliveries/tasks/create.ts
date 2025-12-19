@@ -1,978 +1,228 @@
 import $ from "jquery";
-import "moment/locale/id.js";
-import { KTAccordion } from "@keenthemes/ktui/src";
 import mapboxgl from "mapbox-gl";
 import moment from "moment-timezone";
-import URI from "urijs";
-import axios from "axios";
-import jQuery from "jquery";
-
-const elementExists = $("div.dashboards-apps-deliveries-tasks-create");
-
-if(elementExists.length > 0 ){
-    // ubah local menjadi indo
-    moment.locale('id');
-
-    // ambil url dimana saja url ini di muat
-    const FullUriCurrentUrl =  URI(window.location);
-    /**
-     * Ubah URL Menjadi Array Segment
-     * misal /dashboards/apps/deliveries menjadi
-     * ['dashboards','apps','deliveries'];
-     * **/
-    const segs = FullUriCurrentUrl.segment();
-    /**
-     * Tambahkan Data Di Dalam Array
-     * ['api','dashboards','apps','deliveries'];
-     * **/
-    segs.unshift('api');
-    /**
-     * ['api','dashboards','apps','deliveries'];
-     * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
-     * /api/dashboards/apps/deliveries
-     * **/
-    FullUriCurrentUrl.segment(segs);
-
-    // ambil data simpan di dalam array/cache
-    let requestDataCache: object[] = [];
-    let requestDestinatCache: object[] = [];
-    let requestDriverCache: object[] = [];
-
-    // Tampilkan data di select - option
-    const apiUrl = FullUriCurrentUrl.toString();
-
-    // MEMBUAT URL KEDUA (Accounts) ---
-    // Gunakan .clone() agar FullUriCurrentUrl yang asli tidak terganggu
-    const accountsUrl = FullUriCurrentUrl.clone()
-        .path('/api/base/accounts') //Langsung timpa path-nya
-        .toString();
-
-    // panggil data appDeliveryRequest
-    async function fetchRequestsDestinations(apiUrl: string){
-        try{
-            const res = await fetch(apiUrl);
-            const json = await res.json();
-            if(!json.status || !json.data){
-                requestDestinatCache = [];
-            }else{
-                requestDestinatCache = json.data;
-            }
-
-            return requestDestinatCache;
-        }catch (e) {
-            console.error("fetch error", e);
-            return [];
-        }
-    }
-
-    async function fetchDrivers(accountsUrl: string){
-        try{
-            const res = await fetch(accountsUrl);
-            const json = await res.json();
-            if(!json.status || !json.data){
-                requestDriverCache = [];
-            }else{
-                requestDriverCache = json.data;
-            }
-
-            return requestDriverCache;
-        }catch (e) {
-            console.error("fetch error", e);
-            return [];
-        }
-    }
-
-    (async() => {
-    // tampilkan semua data destination
-        const $dataDestinats = $("#destination");
-        const urlReqDestination = "/api/dashboards/apps/deliveries/requests/destinations";
-        const dataDestinations = await fetchRequestsDestinations(urlReqDestination);
-
-        $dataDestinats.empty();
-        $dataDestinats.append(`<option value="">Pilih Destinasi</option>`)
-
-        dataDestinations.forEach(request => {
-            // @ts-ignore
-            $dataDestinats.append(`<option value="${request.id}">${request.receipt_name} - ${request.receipt_address}</option>`)
-        })
-
-        // ---------------------------------------------------------
-        // LOGIC BARU: MULTI-SELECT DRIVER
-        // ---------------------------------------------------------
-
-        const dataDrivers = await fetchDrivers(accountsUrl);
-        requestDriverCache = dataDrivers;
-
-        // State untuk menampung driver yang dipilih
-        let selectedDrivers: any[] = [];
-
-        const $driverInput = $("#driver_search_input");
-        const $suggestionsBox = $("#driver_suggestions");
-        const $selectedContainer = $("#selected_drivers_container");
-        const $hiddenContainer = $("#hidden_inputs_container");
-
-        // Fungsi 1: Update Tampilan Chips & Input Hidden
-        function updateSelectedUI() {
-            $selectedContainer.empty();
-            $hiddenContainer.empty();
-
-            selectedDrivers.forEach((driver, index) => {
-                const username = driver.credential?.username || "Tanpa Nama";
-
-                // A. Buat Visual Chip (Tag)
-                const $chip = $(`
-                    <div class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-100 text-gray-800 text-sm font-medium border border-gray-200">
-                        ${username}
-                        <span class="cursor-pointer text-gray-500 hover:text-red-500 ml-1 remove-driver" data-id="${driver.id}">
-                            &times; </span>
-                    </div>
-                `);
-
-                // B. Buat Input Hidden (account[])
-                // Ini penting agar Laravel membacanya sebagai array
-                const $hiddenInput = $(`<input type="hidden" name="account[]" value="${driver.id}">`);
-
-                $selectedContainer.append($chip);
-                $hiddenContainer.append($hiddenInput);
-            });
-        }
-
-        // Fungsi 2: Render List Dropdown (Filter yang sudah dipilih)
-        function renderDriverList(drivers: any[]) {
-            $suggestionsBox.empty();
-
-            // Filter: Jangan tampilkan driver yang SUDAH dipilih
-            // @ts-ignore
-            const availableDrivers = drivers.filter(d => !selectedDrivers.some(selected => selected.id === d.id));
-
-            if (availableDrivers.length === 0) {
-                $suggestionsBox.append(`<div class="px-4 py-3 text-gray-500 text-sm">Tidak ada driver lain</div>`);
-                $suggestionsBox.removeClass("hidden");
-                return;
-            }
-
-            availableDrivers.forEach(driver => {
-                const username = driver.credential?.username || "Tanpa Nama";
-                const email = driver.contact?.email || "";
-
-                const $item = $(`
-                    <div class="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-0">
-                        <div class="text-sm font-semibold text-gray-800">${username}</div>
-                        <div class="text-xs text-gray-500">${email}</div>
-                    </div>
-                `);
-
-                // Klik Item -> Tambahkan ke Selection
-                $item.on("click", function() {
-                    selectedDrivers.push(driver); // Masukkan ke array
-                    updateSelectedUI(); // Update tampilan chip
-
-                    $driverInput.val(""); // Kosongkan search box
-                    $suggestionsBox.addClass("hidden"); // Tutup dropdown
-                    $driverInput.focus(); // Balikin fokus biar bisa ngetik lagi
-                });
-
-                $suggestionsBox.append($item);
-            });
-
-            $suggestionsBox.removeClass("hidden");
-        }
-
-        // ... (kode renderDriverList dan logic sebelumnya) ...
-
-        // Fungsi Helper: Tampilkan sisa data (Reusable)
-        function showRemainingData() {
-            // Cek apakah data sudah dimuat
-            // @ts-ignore
-            if (requestDriverCache.length > 0) {
-                // Panggil render dengan semua data cache
-                // (renderDriverList sudah otomatis memfilter yang sudah dipilih)
-                // @ts-ignore
-                renderDriverList(requestDriverCache);
-            }
-        }
-
-        // 1. EVENT KLIK 2 KALI (DOUBLE CLICK) - Sesuai Request
-        $driverInput.on("dblclick", function() {
-            showRemainingData();
-        });
-
-        // 2. EVENT KLIK BIASA (SINGLE CLICK) - Solusi Tambahan
-        // Ini mengatasi masalah "harus klik di luar dulu".
-        // Dengan ini, meski sudah fokus, kalau diklik lagi dropdown akan muncul.
-        $driverInput.on("click", function() {
-            const query = ($(this).val() as string);
-
-            // Hanya munculkan jika dropdown sedang tertutup
-            if ($suggestionsBox.hasClass("hidden")) {
-                // Jika input kosong, tampilkan semua sisa data
-                if(query === ""){
-                    showRemainingData();
-                } else {
-                    // Jika ada teks, trigger pencarian ulang (opsional)
-                    $(this).trigger("input");
-                }
-            }
-        });
-
-        // Update event Focus yang lama agar menggunakan fungsi helper yang sama
-        $driverInput.on("focus", function() {
-            const query = ($(this).val() as string);
-            if(query === ""){
-                showRemainingData();
-            }
-        });
-
-        // Event: Remove Driver (Klik tanda silang di chip)
-        $(document).on("click", ".remove-driver", function() {
-            const idToRemove = $(this).data("id");
-            // Hapus dari array
-            // @ts-ignore
-            selectedDrivers = selectedDrivers.filter(d => d.id !== idToRemove);
-            updateSelectedUI();
-        });
-
-        // Event: Typing Search
-        $driverInput.on("input", function() {
-            const query = ($(this).val() as string).toLowerCase();
-            if (query === "") {
-                $suggestionsBox.addClass("hidden");
-                return;
-            }
-
-            // @ts-ignore
-            const filteredDrivers = requestDriverCache.filter(driver => {
-                // @ts-ignore
-                const name = driver.credential?.username?.toLowerCase() || "";
-                return name.includes(query);
-            });
-
-            renderDriverList(filteredDrivers);
-        });
-
-        // Event: Focus (Show suggestions)
-        $driverInput.on("focus", function() {
-            const query = ($(this).val() as string).toLowerCase();
-            if(query === "" && requestDriverCache.length > 0){
-                // @ts-ignore
-                renderDriverList(requestDriverCache); // Tampilkan list sisa
-            }
-        });
-
-        // Event: Close dropdown click outside
-        $(document).on("click", function(e) {
-            // @ts-ignore
-            if (!$(e.target).closest("#driver-wrapper").length) {
-                $suggestionsBox.addClass("hidden");
-            }
-        });
-
-
-    })()
-
-    // destination ketika di klik
-    // Event Listener: Ketika Dropdown Destinasi Berubah
-    $("#destination").on("change", function(){
-        const selectedId = $(this).val();
-        const $cardOrder = $("#card-order");
-        const $totalProduct = $("#total-product");
-
-        // 1. Reset Tampilan (Kosongkan data lama)
-        $cardOrder.empty();
-        $totalProduct.empty();
-        $('#receipt_address').text("-");
-        $('#address_destination').text("-");
-        $('#receipt_name').text("-");
-        $('#date_destination').text("-");
-
-        // Jika user memilih opsi default ("Pilih Destinasi"), hentikan proses
-        if(!selectedId) return;
-
-        // 2. Cari Data Spesifik di Cache berdasarkan ID yang dipilih
-        // Kita menggunakan .find() untuk mengambil 1 objek yang cocok
-        // @ts-ignore
-        const selectedData = requestDestinatCache.find(item => item.id === selectedId);
-
-        if(selectedData){
-            // 3. Update Informasi Header (Nama Penerima, Alamat, Tanggal)
-            // @ts-ignore
-            $('#receipt_address').text(selectedData.receipt_address || "-");
-            // @ts-ignore
-            $('#address_destination').text(selectedData.receipt_address || "-");
-            // @ts-ignore
-            $('#receipt_name').text(selectedData.receipt_name || "-");
-            // @ts-ignore
-            $totalProduct.text(selectedData.packages.length|| "-");
-
-            // Format tanggal (menggunakan moment.js)
-            // @ts-ignore
-            if(selectedData.created_at){
-                // @ts-ignore
-                const date = moment(selectedData.created_at).format('DD MMMM YYYY, HH:mm');
-                $('#date_destination').text(date);
-            }
-
-            // 4. Render Packages (Hanya milik destinasi yang dipilih)
-            // @ts-ignore
-            if(selectedData.packages && Array.isArray(selectedData.packages) && selectedData.packages.length > 0){
-                // @ts-ignore
-                selectedData.packages.forEach((pkg: any) => {
-                    const unitName = pkg.unit?.name || 'Unit'; // Fallback jika unit null
-
-                    // HTML Item Paket
-                    const htmlItem = `
-                     <div class="flex items-start justify-between border-b border-gray-200 py-3 last:border-0">
-                        <div class="flex items-center gap-3.5">
-                           <div class="flex items-center justify-center bg-gray-100 h-[50px] w-[50px] rounded-lg">
-                                <i class="ki-filled ki-package text-xl text-gray-400"></i>
-                           </div>
-
-                           <div class="flex flex-col gap-1">
-                                <span class="text-sm font-semibold text-gray-800 leading-snug">
-                                    ${pkg.name}
-                                </span>
-                                <div class="flex items-center gap-2 text-xs text-gray-500">
-                                    <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium border border-blue-100">
-                                        Qty: ${pkg.qty}
-                                    </span>
-                                    <span class="bg-gray-50 text-gray-600 px-2 py-0.5 rounded border border-gray-200">
-                                        ${unitName}
-                                    </span>
-                                </div>
-                           </div>
-                        </div>
-                     </div>`;
-
-                    $cardOrder.append(htmlItem);
-                });
-            } else {
-                // Tampilan jika destinasi dipilih tapi tidak punya packages
-                $cardOrder.append(`
-                    <div class="text-center py-5">
-                        <span class="text-sm text-gray-400">Tidak ada paket terdaftar untuk destinasi ini.</span>
-                    </div>
-                 `);
-            }
-        }
-    });
-
-    // sisipkan URL dan panggil data api Request
-    function fetchRequestOptions(FullUriCurrentUrl: string){
-        return fetch(FullUriCurrentUrl)
-            .then(res => res.json())
-            .then(json => {
-                if( !json.status || !json.data) return [];
-
-                // simpan semua data di cache
-                requestDataCache = json.data;
-
-                return json.data.map((item: any)=> {
-                    const id  = item.id;
-                    const title = item.name ?? "(Tanpa Nama)";
-                    const firstName = item.account?.information?.first_name ?? "";
-                    const destinations = item.destinations?.length ?? "0";
-                    const label = `${title} - Destinasi : ${destinations}` ;
-                    return  {id, label};
-                } );
-
-            });
-
-    }
-
-    fetchRequestOptions(apiUrl)
-        .then(axios => {
-            const $select = jQuery("#request");
-
-            // @ts-ignore
-            axios.forEach( opt => {
-                $select.append(
-                    `<option value="${opt.id}">${opt.label}</option>`
-                );
-            });
-        });
-
-    // cache - tampilkan console log data yang di pilih
-    $("#request").on('change', function(){
-        const selectedId = $(this).val();
-
-        // cari object data sesuai ID
-        // @ts-ignore
-        let selectedItem = requestDataCache.find(item => item.id === selectedId);
-
-        // kalau nggak ketemu atau nggak ada destinasi -> KOSONGKAN SEMUA & STOP
-        // @ts-ignore
-        if(
-            !selectedItem ||
-            // @ts-ignore
-            !Array.isArray(selectedItem.destinations) ||
-            // @ts-ignore
-            selectedItem.destinations.length === 0
-        ){
-            // kosongkan teks & input
-            $('#title').val("-");
-            $('#receipt_address').text("-");
-            $('#address_destination').text("-");
-            $('#date_destination').text("-");
-            $('#receipt_name').text("-");
-            $('#first_name').val("");
-            $('#name').val("");
-
-            // kosongkan card order
-            $('#card-order').empty();
-
-            return; // jgn lanjut
-        }
-
-        // @ts-ignore
-        const destination = selectedItem.destinations[0];
-
-        // @ts-ignore
-        $('#title').val(selectedItem ? selectedItem?.account?.contact?.email : "-")
-        // @ts-ignore
-        $('#receipt_address').text(selectedItem ?  ` ${destination?.receipt_name} - ${destination.receipt_address}` : "-");
-        // @ts-ignore
-        $('#address_destination').text(selectedItem ?  ` ${destination.receipt_address}` : "-");
-        // @ts-ignore
-        let dataDestination = moment(destination?.created_at).toDate();
-        // @ts-ignore
-        $('#date_destination').text(selectedItem ? dataDestination : "-");
-        // @ts-ignore
-        $('#receipt_name').text(selectedItem ?  ` ${destination?.receipt_name}` : "-");
-        // @ts-ignore
-        $('#first_name').val(selectedItem ?  ` ${selectedItem?.account?.information.first_name}` : "-");
-        // @ts-ignore
-        $('#name').val(selectedItem ?  `${selectedItem?.name}` : "-");
-
-        $('#card-order').empty();
-
-        // isi data dari pilihan select untuk card box - confirmation
-        // @ts-ignore
-        selectedItem.destinations[0].packages.forEach((item: any) => {
-            const label = `${item?.name}`;
-            console.log("Data Terpilih: ", item);
-
-            $('#card-order').append(
-                `
-                 <div class="flex items-start justify-between border-b border-border py-2">
-                    <div class="flex items-center gap-3.5">
-                       <div class="kt-card flex items-center justify-center bg-accent/50 h-[70px] w-[90px] shadow-none">
-                            <!-- <img alt="img" class="cursor-pointer h-[70px]" data-kt-drawer-toggle="#drawers_shop_product_details" src="assets/media/store/client/600x600/11.png"/>-->
-                       </div>
-                       <div class="flex flex-col gap-1">
-                            <span class="hover:text-primary text-sm font-medium text-mono leading-5.5" data-kt-drawer-toggle="#drawers_shop_product_details" >
-                                ${label}
-                            </span>
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-xs font-normal text-secondary-foreground uppercase">
-
-                                    <span class="text-xs font-medium text-foreground">
-                                          ${item.qty}
-                                    </span>
-                                </span>
-                            </div>
-                       </div>
-                  </div>
-                  <div class="flex flex-col gap-1.5">
-                       <span class="text-xs font-normal text-secondary-foreground text-end">
-                                                                   
-                                                                 </span>
-                             <div class="flex items-center flex-wrap gap-1.5">
-                                     <span class="text-sm font-normal text-secondary-foreground line-through">
-                                     </span>
-                                          <span class="text-sm font-semibold text-mono">
-                                                ${item.qty}
-                                          </span>
-                             </div>
-                  </div>
-                </div>`
-            );
-        })
-    })
-
-
+// @ts-ignore
+import { Livewire } from '../../../../vendor/livewire/livewire/dist/livewire.esm'
+import "moment/locale/id.js";
+
+interface TaskCreateModuleInterface {
+    map: mapboxgl.Map | null;
+    marker: mapboxgl.Marker | null;
+    accessToken: string;
+    init(): void;
+    addSearchAutocomplete(): void;
+    fetchSuggestions(query: string, $container: JQuery<HTMLElement>): void;
+    moveToLocation(lng: number, lat: number): void;
+    performGeocoding(address: string): void;
+    syncToLivewire(lng: number, lat: number): void;
 }
 
-const MAPBOX_TOKEN =
-"pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA";
-mapboxgl.accessToken = MAPBOX_TOKEN;
+const getCfg = (name: string): string => {
+    const $meta = $(`meta[name="${name}"]`);
+    return $meta.length ? ($meta.attr('content') as string) : '';
+};
 
-/**
-* mapInstances
-* - map instance per ID container (misal: map-0, map-1)
-* - marker sekarang
-* - index item
-* - reference ke input address/lat/lng
-*/
-const mapInstances: {
-[id: string]: {
-map: mapboxgl.Map;
-marker: mapboxgl.Marker | null;
-index: number;
-$address: JQuery<HTMLElement>;
-    $lat: JQuery<HTMLElement>;
-        $lng: JQuery<HTMLElement>;
-            };
-            } = {};
+const TaskCreateModule: TaskCreateModuleInterface = {
+    map: null,
+    marker: null,
+    accessToken: getCfg('mapbox-token'),
 
-            /**
-            * Bersihkan semua map lama (dipanggil setiap Livewire update).
-            * Biar nggak nyangkut ke DOM lama yang sudah dibuang.
-            */
-            function resetMapsRegistry() {
-            Object.keys(mapInstances).forEach((id) => {
-            const ctx = mapInstances[id];
-            if (ctx && ctx.map && typeof ctx.map.remove === "function") {
-            ctx.map.remove();
+    init() {
+        const self = this;
+        const $mapElement = $('#map');
+
+        if (!$mapElement.length || !self.accessToken) return;
+
+        moment.locale('id');
+        mapboxgl.accessToken = self.accessToken;
+
+        const initialLng = parseFloat($mapElement.data('lng') || '106.8456');
+        const initialLat = parseFloat($mapElement.data('lat') || '-6.2088');
+
+        // 1. Setup Map dengan Style Kontras & Pitch 3D
+        self.map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/navigation-guidance-day-v4',
+            center: [initialLng, initialLat],
+            zoom: 14,
+            pitch: 45,
+            antialias: true
+        });
+
+        self.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+        // 2. Setup Marker Draggable
+        self.marker = new mapboxgl.Marker({
+            draggable: true,
+            scale: 1.2,
+            color: "#2563eb"
+        })
+            .setLngLat([initialLng, initialLat])
+            .addTo(self.map);
+
+        // 3. Tambahkan UI Autocomplete Search di Atas Map
+        self.addSearchAutocomplete();
+
+        // 4. Event: Marker Drag
+        self.marker.on('dragend', () => {
+            if (self.marker) {
+                const lngLat = self.marker.getLngLat();
+                self.syncToLivewire(lngLat.lng, lngLat.lat);
             }
-            delete mapInstances[id];
-            });
+        });
+
+        // 5. Event: Listener dari Dropdown Destinasi Livewire
+        $(window).on('search-location', (event: any) => {
+            const address = event.detail?.address;
+            if (address) self.performGeocoding(address);
+        });
+    },
+
+    /**
+     * Membuat Search Bar Floating dengan Autocomplete
+     */
+    addSearchAutocomplete() {
+        const self = this;
+        const $searchContainer = $('<div class="absolute top-4 left-4 z-20 w-80 md:w-96"></div>');
+
+        $searchContainer.html(`
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600">
+                    <i class="ki-outline ki-magnifier text-lg"></i>
+                </div>
+                <input type="text" id="map-search-input"
+                    class="block w-full pl-10 pr-3 py-2.5 bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl shadow-xl text-xs font-bold placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                    placeholder="Cari jalan atau nama tempat..." autocomplete="off">
+
+                <div id="autocomplete-results" class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden z-30">
+                </div>
+            </div>
+        `);
+
+        $('#map').append($searchContainer);
+
+        const $input = $('#map-search-input');
+        const $resultsContainer = $('#autocomplete-results');
+
+        $input.on('input', (e: JQuery.TriggeredEvent) => {
+            const query = $(e.target).val() as string;
+            if (query.length < 3) {
+                $resultsContainer.addClass('hidden');
+                return;
             }
+            self.fetchSuggestions(query, $resultsContainer);
+        });
 
-            /**
-            * Helper: bikin / dapetin container dropdown autocomplete
-            * di bawah input address-{index}.
-            */
-            function getAddressDropdown(index: number, $addressInput: JQuery<HTMLElement>) {
-                let $dropdown = $(`#address-suggest-${index}`);
-                if (!$dropdown.length) {
-                $dropdown = $("<div/>", {
-                id: `address-suggest-${index}`,
-                class:
-                "absolute z-50 mt-1 bg-white border border-gray-200 rounded shadow max-h-60 overflow-y-auto text-sm w-full",
+        $(document).on('click', (e: JQuery.ClickEvent) => {
+            if (!$searchContainer.is(e.target) && $searchContainer.has(e.target).length === 0) {
+                $resultsContainer.addClass('hidden');
+            }
+        });
+    },
+
+    /**
+     * API Suggestion: Mencari Alamat, Jalan, dan Nama Tempat (POI)
+     */
+    fetchSuggestions(query: string, $container: JQuery<HTMLElement>) {
+        const self = this;
+        // Penambahan 'address,poi' memastikan hasil pencarian spesifik ke jalan & gedung
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${self.accessToken}&limit=5&country=ID&types=address,poi,place&language=id`;
+
+        $.getJSON(url, (data) => {
+            $container.empty();
+            if (data.features && data.features.length > 0) {
+                $container.removeClass('hidden');
+                data.features.forEach((feature: any) => {
+                    const placeName = feature.text; // Nama Gedung/Jalan
+                    const fullAddress = feature.place_name; // Alamat Lengkap
+
+                    const $item = $(`
+                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors">
+                            <div class="flex items-start gap-3">
+                                <i class="ki-outline ki-geolocation text-blue-500 mt-1"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold text-gray-800 line-clamp-1">${placeName}</span>
+                                    <span class="text-[9px] text-gray-400 line-clamp-2 leading-relaxed">${fullAddress}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+
+                    $item.on('click', () => {
+                        $('#map-search-input').val(fullAddress);
+                        $container.addClass('hidden');
+                        self.moveToLocation(feature.center[0], feature.center[1]);
+                    });
+
+                    $container.append($item);
                 });
-
-                const parent = $addressInput.parent();
-                if (!parent.hasClass("relative")) {
-                parent.css("position", "relative");
-                }
-
-                $addressInput.after($dropdown);
-
-                // blokir bubbling ke header accordion dari area dropdown
-                $dropdown.on("mousedown click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                });
-                }
-                return $dropdown;
-                }
-
-                /**
-                * Helper: sembunyikan dropdown autocomplete
-                */
-                function hideAddressDropdown(index: number) {
-                const $dropdown = $(`#address-suggest-${index}`);
-                if ($dropdown.length) {
-                $dropdown.empty().hide();
-                }
-                }
-
-                /**
-                * Setup autocomplete Mapbox untuk satu item (per index).
-                * - Listen input di address-{index}
-                * - Call forward geocoding Mapbox
-                * - Tampilkan suggestion di dropdown
-                * - Klik suggestion -> set marker + lat/lng + map.flyTo
-                */
-                function setupAddressAutocomplete(
-                id: string,
-                ctx: {
-                map: mapboxgl.Map;
-                marker: mapboxgl.Marker | null;
-                index: number;
-                $address: JQuery<HTMLElement>;
-                    $lat: JQuery<HTMLElement>;
-                        $lng: JQuery<HTMLElement>;
-                            }
-                            ) {
-                            const { map, index, $address, $lat, $lng } = ctx;
-
-                            // matikan autocomplete browser biar nggak bentrok
-                            $address.attr("autocomplete", "off");
-
-                            // klik di input jangan dianggap klik accordion header
-                            $address.on("mousedown", (e) => {
-                            e.stopPropagation();
-                            });
-
-                            let typingTimer: number | undefined;
-
-                            $address.off("input.map-autocomplete").on("input.map-autocomplete", function () {
-                            const query = ($(this).val() as string) ?? "";
-
-                            if (typingTimer) {
-                            window.clearTimeout(typingTimer);
-                            }
-
-                            if (!query || query.trim().length < 3) {
-                            hideAddressDropdown(index);
-                            return;
-                            }
-
-                            typingTimer = window.setTimeout(() => {
-                            const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-                            query
-                            )}.json`;
-
-                            const params = $.param({
-                            access_token: MAPBOX_TOKEN,
-                            autocomplete: true,
-                            language: "id",
-                            limit: 5,
-                            });
-
-                            fetch(`${endpoint}?${params}`)
-                            .then((res) => res.json())
-                            .then((data) => {
-                            const features = data && data.features ? data.features : [];
-
-                            if (!features.length) {
-                            hideAddressDropdown(index);
-                            return;
-                            }
-
-                            const $dropdown = getAddressDropdown(index, $address);
-                            $dropdown.empty().show();
-
-                            features.forEach((feature: any) => {
-                            const placeName = feature.place_name || "";
-                            const center = feature.center || []; // [lng, lat]
-
-                            const $item = $("<div/>", {
-                            class:
-                            "px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 text-xs lg:text-sm",
-                            text: placeName,
-                            });
-
-                            // klik suggestion: jangan bubble ke header
-                            $item.on("mousedown click", (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            const lng = center[0];
-                            const lat = center[1];
-
-                            if (typeof lng === "number" && typeof lat === "number") {
-                            // update input
-                            $lat.val(lat).trigger("input");
-                            $lng.val(lng).trigger("input");
-                            $address.val(placeName).trigger("input");
-
-                            const currentCtx = mapInstances[id];
-                            const currentMarker = currentCtx ? currentCtx.marker : null;
-
-                            if (currentMarker) {
-                            currentMarker.remove();
-                            }
-
-                            const newMarker = new mapboxgl.Marker()
-                            .setLngLat([lng, lat])
-                            .addTo(map);
-
-                            if (currentCtx) {
-                            currentCtx.marker = newMarker;
-                            }
-
-                            map.flyTo({
-                            center: [lng, lat],
-                            zoom: 15,
-                            });
-                            }
-
-                            hideAddressDropdown(index);
-                            });
-
-                            $dropdown.append($item);
-                            });
-                            })
-                            .catch((err) => {
-                            console.error("Gagal forward geocode (autocomplete):", err);
-                            hideAddressDropdown(index);
-                            });
-                            }, 400); // debounce ~400ms
-                            });
-
-                            // klik di luar (dimanapun di dokumen) -> tutup dropdown
-                            $(document)
-                            .off(`click.map-autocomplete-${index}`)
-                            .on(`click.map-autocomplete-${index}`, function (e) {
-                            const target = e.target as unknown as HTMLElement;
-                            const dropdown = $(`#address-suggest-${index}`);
-                            const isInsideDropdown =
-                            dropdown.length && ($(target).is(dropdown) || $.contains(dropdown[0], target));
-                            const isInsideInput =
-                            $(target).is($address) || $.contains($address.parent()[0], target);
-
-                            if (!isInsideDropdown && !isInsideInput) {
-                            hideAddressDropdown(index);
-                            }
-                            });
-
-                            // ESC buat nutup dropdown juga (optional nice UX)
-                            $(document)
-                            .off(`keydown.map-autocomplete-${index}`)
-                            .on(`keydown.map-autocomplete-${index}`, function (e) {
-                            if ((e).key === "Escape") {
-                            hideAddressDropdown(index);
-                            }
-                            });
-                            }
-
-                            /**
-                            * Init map untuk semua elemen yang punya data-map-index
-                            * tapi belum pernah di-init di registry.
-                            */
-                            function initAllItemMaps() {
-                            if (!elementExists.length) return;
-
-                            $("[data-map-index]").each(function () {
-                            const el = this as HTMLElement;
-                            const id = el.id; // contoh: "map-0"
-                            if (!id) return;
-
-                            // kalau sudah pernah dibuat untuk id ini (setelah reset), skip
-                            if (mapInstances[id]) return;
-
-                            const index = $(el).data("map-index") as number; // 0, 1, 2, ...
-
-                            // ambil input yang sesuai index-nya pakai jQuery
-                            const $addressInput = $(`#address-${index}`);
-                            const $latInput = $(`#lat-${index}`);
-                            const $lngInput = $(`#lng-${index}`);
-
-                            if (!$addressInput.length || !$latInput.length || !$lngInput.length) {
-                            console.warn("Input address/lat/lng belum ketemu untuk index", index);
-                            }
-
-                            // BACA KOORDINAT YANG SUDAH ADA DARI INPUT
-                            const rawLat = ($latInput.val() as string) ?? "";
-                            const rawLng = ($lngInput.val() as string) ?? "";
-
-                            const existingLat = parseFloat(rawLat);
-                            const existingLng = parseFloat(rawLng);
-
-                            let center: [number, number] = [119.4365, -5.1477]; // default Makassar
-                            let zoom = 12;
-                            let hasExisting = false;
-
-                            if (!Number.isNaN(existingLat) && !Number.isNaN(existingLng)) {
-                            center = [existingLng, existingLat]; // mapbox = [lng, lat]
-                            zoom = 15;
-                            hasExisting = true;
-                            }
-
-                            // buat map baru
-                            const map = new mapboxgl.Map({
-                            container: el,
-                            style: "mapbox://styles/mapbox/standard",
-                            projection: "globe",
-                            zoom,
-                            center,
-                            });
-
-                            let currentMarker: mapboxgl.Marker | null = null;
-
-                            // KALAU SUDAH ADA KOORDINAT → PASANG MARKER DARI AWAL
-                            if (hasExisting) {
-                            currentMarker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-                            }
-
-                            // simpan di registry
-                            mapInstances[id] = {
-                            map,
-                            marker: currentMarker,
-                            index,
-                            $address: $addressInput,
-                            $lat: $latInput,
-                            $lng: $lngInput,
-                            };
-
-                            // kontrol dasar
-                            map.addControl(new mapboxgl.NavigationControl(), "top-right");
-                            const geolocate = new mapboxgl.GeolocateControl({
-                            positionOptions: { enableHighAccuracy: true },
-                            trackUserLocation: true,
-                            showUserHeading: true,
-                            });
-                            map.addControl(geolocate, "top-right");
-
-                            // penting buat container yang pakai grid/accordion
-                            map.on("load", () => {
-                            map.resize();
-                            });
-
-                            // click: update marker + input + reverse geocode
-                            map.on("click", function (e) {
-                            const lng = e.lngLat.lng;
-                            const lat = e.lngLat.lat;
-
-                            const ctx = mapInstances[id];
-                            const marker = ctx ? ctx.marker : null;
-
-                            if (marker) {
-                            marker.remove();
-                            }
-
-                            const newMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-
-                            if (ctx) {
-                            ctx.marker = newMarker;
-                            }
-
-                            if ($latInput.length) {
-                            $latInput.val(lat).trigger("input");
-                            }
-                            if ($lngInput.length) {
-                            $lngInput.val(lng).trigger("input");
-                            }
-
-                            const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json`;
-                            const params = $.param({
-                            access_token: MAPBOX_TOKEN,
-                            language: "id",
-                            limit: 1,
-                            });
-
-                            fetch(`${endpoint}?${params}`)
-                            .then((res) => res.json())
-                            .then((data) => {
-                            const feature =
-                            data && data.features && data.features[0] ? data.features[0] : null;
-                            const address = feature ? feature.place_name : "";
-
-                            if ($addressInput.length) {
-                            $addressInput.val(address).trigger("input");
-                            }
-                            })
-                            .catch((err) => {
-                            console.error("Gagal reverse geocode:", err);
-                            });
-                            });
-
-                            // setup autocomplete address <-> map
-                            setupAddressAutocomplete(id, mapInstances[id]);
-                            });
-                            }
-
-                            function resizeMapsInContent(contentEl: HTMLElement) {
-                            $(contentEl)
-                            .find("[data-map-index]")
-                            .each(function () {
-                            const id = (this as HTMLElement).id;
-                            if (!id) return;
-                            const ctx = mapInstances[id];
-                            const map = ctx ? ctx.map : null;
-                            if (map && typeof map.resize === "function") {
-                            map.resize();
-                            }
-                            });
-                            }
-
-                            /** Menunggu Semua Assets Load **/
-                            $(window).on("load", function () {
-                            if (!elementExists.length) return;
-                            KTAccordion.init();
-                            initItemTitleWatcher();
-                            initAllItemMaps();
-                            syncAllItemTitles();
-                            });
-
-                            $(document).on("click", ".kt-accordion-toggle", function () {
-                            const $toggle = $(this);
-                            const targetSelector = $toggle.data("kt-accordion-toggle"); // contoh: "#accordion-content-0"
-                            if (!targetSelector) return;
-
-                            const contentEl = document.querySelector(targetSelector as string) as HTMLElement | null;
-                            if (!contentEl) return;
-
-                            setTimeout(() => {
-                            resizeMapsInContent(contentEl);
-                            }, 250);
-                            });
-
-                            // Sinkronkan judul accordion dengan input nama paket
-                            // Rebuild teks judul untuk satu item accordion
-                            function recomputeItemTitle(index: number) {
-                            const $titleText = $(`#item-title-${index} .item-title-text`);
-                            if (!$titleText.length) return;
-
-                            const name = String($(`#item-name-${index}`).val() ?? "").trim();
-                            const address = String($(`#address-${index}`).val() ?? "").trim();
-
-                            const $qtyInput = $(`input[data-item-index="${index}"][data-title-field="qty"]`);
-                            const $unitInput = $(`input[data-item-index="${index}"][data-title-field="unit"]`);
-
-                            const qty = String($qtyInput.val() ?? "").trim();
-                            const unit = String($unitInput.val() ?? "").trim();
-
-                            const parts: string[] = [];
-
-                            // Nama (wajib, ada fallback)
-                            parts.push(name.length ? name : "Tanpa Judul");
-
-                            // Qty + Unit (opsional)
-                            if (qty.length || unit.length) {
-                            const label = `${qty || ""} ${unit || "unit"}`.trim();
-                            if (label.length) {
-                            parts.push(label);
-                            }
-                            }
-
-                            // Address (opsional)
-                            if (address.length) {
-                            parts.push(`dikirim ke ${address}`);
-                            }
-
-
-
-                            // Gabung: "Nama - Alamat - 1 unit"
-                            $titleText.text(parts.join(" - "));
-                            }
-
-                            // Listen semua input yang mempengaruhi judul
-                            function initItemTitleWatcher() {
-                            if (!elementExists.length) return;
-
-                            // bersihin handler lama biar nggak dobel
-                            $(document).off("input.item-title-sync");
-
-                            $(document).on(
-                            "input.item-title-sync",
-                            'input[data-item-index][data-title-field]',
-                            function () {
-                            const $input = $(this);
-                            const index = $input.data("item-index");
-
-                            recomputeItemTitle(index);
-                            }
-                            );
-                            }
-
-                            // Sync semua judul item berdasarkan nilai input yang ada di DOM
-                            function syncAllItemTitles() {
-                            if (!elementExists.length) return;
-                            // cari semua title yang ada id-nya item-title-{index}
-                            $('[id^="item-title-"]').each(function () {
-                            const id = $(this).attr("id"); // contoh: item-title-0
-                            if (!id) return;
-
-                            const match = id.match(/^item-title-(\d+)$/);
-                            if (!match) return;
-
-                            const index = parseInt(match[1], 10);
-                            if (Number.isNaN(index)) return;
-
-                            recomputeItemTitle(index);
-                            });
-                            }
-
-                            // Listen browser event dari Livewire (v2/v3) -> "packages-items-updated"
-                            window.addEventListener("packages-items-updated", () => {
-                            setTimeout(() => {
-                            resetMapsRegistry();
-                            initAllItemMaps();
-                            initItemTitleWatcher();
-                            syncAllItemTitles();
-                            KTAccordion.init();
-                            }, 50);
-                            });
+            } else {
+                $container.addClass('hidden');
+            }
+        });
+    },
+
+    /**
+     * Pindah Kamera & Sinkronisasi
+     */
+    moveToLocation(lng: number, lat: number) {
+        const self = this;
+        self.map?.flyTo({
+            center: [lng, lat],
+            zoom: 17, // Zoom lebih dekat untuk akurasi jalan
+            speed: 1.5,
+            essential: true
+        });
+        self.marker?.setLngLat([lng, lat]);
+        self.syncToLivewire(lng, lat);
+    },
+
+    /**
+     * Geocoding untuk Address dari Dropdown Livewire
+     */
+    performGeocoding(address: string) {
+        const self = this;
+        const query = encodeURIComponent(address);
+        // Memastikan pencarian otomatis tetap mencakup detail spesifik
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${self.accessToken}&limit=1&country=ID&types=address,poi,place`;
+
+        $.getJSON(url, (data) => {
+            if (data.features && data.features.length > 0) {
+                const [lng, lat] = data.features[0].center;
+                self.moveToLocation(lng, lat);
+            }
+        });
+    },
+
+    /**
+     * Mengirim Koordinat ke Livewire Component
+     */
+    syncToLivewire(lng: number, lat: number) {
+        const $mapElement = $('#map');
+        const componentId = $mapElement.closest('[wire\\:id]').attr('wire:id');
+
+        // @ts-ignore
+        const lwComponent = window.Livewire.find(componentId);
+
+        if (lwComponent) {
+            lwComponent.set('formData.longitude', lng.toFixed(6), true);
+            lwComponent.set('formData.latitude', lat.toFixed(6), true);
+        }
+    }
+};
+
+$(function() {
+    const selector = "div.dashboards-apps-deliveries-tasks-create";
+
+    const runInit = () => {
+        if ($(selector).length > 0) {
+            TaskCreateModule.init();
+        }
+    };
+
+    runInit();
+
+    $(document).on('livewire:navigated', () => {
+        runInit();
+    });
+});

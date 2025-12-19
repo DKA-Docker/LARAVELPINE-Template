@@ -25,6 +25,7 @@ class ResourcesDeliveriesRequestsDestinationsServices
 
     public function ReadAll(): Collection
     {
+
         return $this->repository->ReadAll();
     }
 
