@@ -10,9 +10,6 @@ class AppsDeliveriesTasksGeos extends Model
 {
     use HasUuids, softDeletes;
 
-    // Nama tabel sesuai migration yang kita buat sebelumnya
-    protected $table = 'apps_deliveries_tasks_geos';
-
     protected $fillable = [
         'task',
         'latitude',
