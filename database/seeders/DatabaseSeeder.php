@@ -15,6 +15,10 @@ use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesD
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOriginsSeeder;
 use Database\Seeders\Base\Accounts\AccountsSeeder;
 use Database\Seeders\Base\Sessions\SessionsAccountsSeeder;
+use Database\Seeders\Data\Geo\DataGeoDistrictsSeeder;
+use Database\Seeders\Data\Geo\DataGeoProvincesSeeder;
+use Database\Seeders\Data\Geo\DataGeoRegenciesSeeder;
+use Database\Seeders\Data\Geo\DataGeoVillagesSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -38,6 +42,10 @@ class DatabaseSeeder extends Seeder
             DeliveriesTasksSeeder::class,
             DeliveriesHistoriesSeeder::class,
             DeliveriesTasksAssignsSeeder::class,
+            DataGeoProvincesSeeder::class,
+            DataGeoRegenciesSeeder::class,
+            DataGeoDistrictsSeeder::class,
+            DataGeoVillagesSeeder::class,
             DeliveriesTasksGeosSeeder::class
         ]);
     }

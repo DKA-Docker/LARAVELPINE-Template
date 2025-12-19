@@ -21,13 +21,10 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8)->nullable();
 
             // Detail Wilayah (Tambahan Request Anda)
-            $table->string('province')->nullable(); // Provinsi
-            $table->string('district')->nullable(); // Kecamatan
-            $table->string('village')->nullable();  // Kelurahan
-
-            // Opsional: Kota/Kabupaten seringkali dibutuhkan juga
-            $table->string('city')->nullable();
-
+            $table->foreignId('province')->comment('Memuat Id parentnya')->constrained('data_geos_provinces' )->onDelete('cascade');
+            $table->foreignId('regency')->comment('Memuat Id parentnya')->constrained('data_geos_regencies' )->onDelete('cascade');
+            $table->foreignId('district')->comment('Memuat Id parentnya')->constrained('data_geos_districts' )->onDelete('cascade');
+            $table->foreignId('village')->comment('Memuat Id parentnya')->constrained('data_geos_villages' )->onDelete('cascade');
             $table->string('postal_code', 10)->nullable();
             $table->softDeletes();
             $table->timestamps();

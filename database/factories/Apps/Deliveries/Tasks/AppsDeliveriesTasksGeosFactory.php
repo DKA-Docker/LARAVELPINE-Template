@@ -4,6 +4,7 @@ namespace Database\Factories\Apps\Deliveries\Tasks;
 
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksGeos;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
+use App\Models\Data\Geos\DataGeosProvinces;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -21,12 +22,13 @@ class AppsDeliveriesTasksGeosFactory extends Factory
     {
 
         $task = AppsDeliveriesTasks::inRandomOrder()->first();
+        $provices = DataGeosProvinces::inRandomOrder()->first();
 
         return [
             'task'=> $task->id,
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
-            'province' => $this->faker->randomElement, //provinci
+            'province' => $provices->id, //provinci
             'district' => $this->faker->randomElement, //kecamatan
             'village' => $this->faker->randomElement,
             'city' => $this->faker->city(),
