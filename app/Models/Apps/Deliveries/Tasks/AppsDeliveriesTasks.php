@@ -34,7 +34,7 @@ class AppsDeliveriesTasks extends Model
         'destination',
     ];
 
-    protected $with = ['account','assigned', 'destination', 'history'];
+    protected $with = ['account','assigned', 'destination', 'history','geos'];
 
     protected $hidden = [
         'deleted_at',
@@ -73,6 +73,13 @@ class AppsDeliveriesTasks extends Model
     public function destination(): BelongsTo
     {
         return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
+    }
+
+    public function geos()
+    {
+        return $this->hasOne(AppsDeliveriesTasksGeos::class, 'task', // Foreign Key di tabel geos (sesuai migration sebelumnya)
+            'id' // Local Key di tabel tasks
+        )->withDefault();
     }
 
 

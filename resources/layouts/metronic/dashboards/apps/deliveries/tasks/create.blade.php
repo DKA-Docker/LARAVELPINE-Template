@@ -144,16 +144,26 @@
                                                 </span>
                                             </div>
 
+                                            <!-- Tampilan jumlah product-->
+                                            <div class="space-y-5 lg:pb-5">
+                                                <div class="flex justify-center">
+                                                     <span class="text-sm text-secondary-foreground font-medium">
+                                                        Total Product :
+                                                         <span id="total-product"></span>
+                                                     </span>
+                                                </div>
+                                            </div>
+
                                             <!--tampilkan data packages/ produk disini-->
                                             <div class="space-y-5 lg:pb-5">
                                                 <!-- bungkus dengan flex biar bisa di-center -->
                                                 <div class="flex justify-center">
                                                     <div class="kt-card w-full max-w-[700px]">
-                                                            <div
+                                                         <span
                                                                 id="card-order"
                                                                 class="kt-card-content flex flex-col gap-4 p-4 max-h-80 overflow-y-auto"
-                                                            >
-                                                            </div>
+                                                            ></span>
+                                                         </span>
                                                     </div>
                                                 </div>
 

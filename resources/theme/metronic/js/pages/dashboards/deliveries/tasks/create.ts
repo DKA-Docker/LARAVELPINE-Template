@@ -95,8 +95,6 @@ if(elementExists.length > 0 ){
             $dataDestinats.append(`<option value="${request.id}">${request.receipt_name} - ${request.receipt_address}</option>`)
         })
 
-        // ... (Kode destination biarkan saja) ...
-
         // ---------------------------------------------------------
         // LOGIC BARU: MULTI-SELECT DRIVER
         // ---------------------------------------------------------
@@ -272,10 +270,90 @@ if(elementExists.length > 0 ){
     })()
 
     // destination ketika di klik
+    // Event Listener: Ketika Dropdown Destinasi Berubah
     $("#destination").on("change", function(){
         const selectedId = $(this).val();
+        const $cardOrder = $("#card-order");
+        const $totalProduct = $("#total-product");
 
-    })
+        // 1. Reset Tampilan (Kosongkan data lama)
+        $cardOrder.empty();
+        $totalProduct.empty();
+        $('#receipt_address').text("-");
+        $('#address_destination').text("-");
+        $('#receipt_name').text("-");
+        $('#date_destination').text("-");
+
+        // Jika user memilih opsi default ("Pilih Destinasi"), hentikan proses
+        if(!selectedId) return;
+
+        // 2. Cari Data Spesifik di Cache berdasarkan ID yang dipilih
+        // Kita menggunakan .find() untuk mengambil 1 objek yang cocok
+        // @ts-ignore
+        const selectedData = requestDestinatCache.find(item => item.id === selectedId);
+
+        if(selectedData){
+            // 3. Update Informasi Header (Nama Penerima, Alamat, Tanggal)
+            // @ts-ignore
+            $('#receipt_address').text(selectedData.receipt_address || "-");
+            // @ts-ignore
+            $('#address_destination').text(selectedData.receipt_address || "-");
+            // @ts-ignore
+            $('#receipt_name').text(selectedData.receipt_name || "-");
+            // @ts-ignore
+            $totalProduct.text(selectedData.packages.length|| "-");
+
+            // Format tanggal (menggunakan moment.js)
+            // @ts-ignore
+            if(selectedData.created_at){
+                // @ts-ignore
+                const date = moment(selectedData.created_at).format('DD MMMM YYYY, HH:mm');
+                $('#date_destination').text(date);
+            }
+
+            // 4. Render Packages (Hanya milik destinasi yang dipilih)
+            // @ts-ignore
+            if(selectedData.packages && Array.isArray(selectedData.packages) && selectedData.packages.length > 0){
+                // @ts-ignore
+                selectedData.packages.forEach((pkg: any) => {
+                    const unitName = pkg.unit?.name || 'Unit'; // Fallback jika unit null
+
+                    // HTML Item Paket
+                    const htmlItem = `
+                     <div class="flex items-start justify-between border-b border-gray-200 py-3 last:border-0">
+                        <div class="flex items-center gap-3.5">
+                           <div class="flex items-center justify-center bg-gray-100 h-[50px] w-[50px] rounded-lg">
+                                <i class="ki-filled ki-package text-xl text-gray-400"></i>
+                           </div>
+
+                           <div class="flex flex-col gap-1">
+                                <span class="text-sm font-semibold text-gray-800 leading-snug">
+                                    ${pkg.name}
+                                </span>
+                                <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium border border-blue-100">
+                                        Qty: ${pkg.qty}
+                                    </span>
+                                    <span class="bg-gray-50 text-gray-600 px-2 py-0.5 rounded border border-gray-200">
+                                        ${unitName}
+                                    </span>
+                                </div>
+                           </div>
+                        </div>
+                     </div>`;
+
+                    $cardOrder.append(htmlItem);
+                });
+            } else {
+                // Tampilan jika destinasi dipilih tapi tidak punya packages
+                $cardOrder.append(`
+                    <div class="text-center py-5">
+                        <span class="text-sm text-gray-400">Tidak ada paket terdaftar untuk destinasi ini.</span>
+                    </div>
+                 `);
+            }
+        }
+    });
 
     // sisipkan URL dan panggil data api Request
     function fetchRequestOptions(FullUriCurrentUrl: string){
