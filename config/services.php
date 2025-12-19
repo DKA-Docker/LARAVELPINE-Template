@@ -38,5 +38,10 @@ return [
     'mapbox' => [
         'token' => env('MAPBOX_ACCESS_TOKEN', 'pk.eyJ1IjoieW92YW5nZ2EiLCJhIjoiY2tmNXZ3bG0wMHFzMzJxbnkwbmNybXVpaiJ9.cfXmJlhcnmnc-PFtWyFnzA'),
     ],
+    'google' => [
+        'map' => [
+            'token' => env('GOOGLE_MAP_ACCESS_TOKEN'),
+        ]
+    ],
 
 ];

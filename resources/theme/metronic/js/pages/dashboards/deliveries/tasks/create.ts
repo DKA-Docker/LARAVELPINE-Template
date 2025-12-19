@@ -1,11 +1,7 @@
 /**
  * MODUL: TaskCreateModule
- * Deskripsi: Handler utama untuk peta interaktif menggunakan Mapbox GL JS.
- * Tugas Utama:
- * 1. Visualisasi peta dengan dukungan Dark Mode otomatis.
- * 2. Fitur Geocoding (Cari alamat -> Gerakkan marker).
- * 3. Fitur Reverse Geocoding (Tarik marker -> Update alamat teks).
- * 4. Jembatan (Bridge) antara UI Peta dan State di Server melalui Livewire.
+ * Deskripsi: Handler peta interaktif dengan Triple-Provider Geocoding.
+ * Logika: Jika Google API Key tidak ada, sistem tetap berjalan menggunakan Mapbox & OSM.
  */
 
 import $ from "jquery";
@@ -17,30 +13,26 @@ interface TaskCreateModuleInterface {
     map: mapboxgl.Map | null;
     marker: mapboxgl.Marker | null;
     accessToken: string;
-    isAutoFilling: boolean; // Flag untuk mencegah loop tak terbatas saat update alamat
+    googleApiKey: string;
+    isAutoFilling: boolean;
     init(): void;
     getThemeMode(): string;
     getMapStyle(): string;
     setupAutocomplete(): void;
     setupThemeObserver(): void;
     fetchSuggestions(query: string, $container: JQuery<HTMLElement>): void;
+    renderSuggestionItem($container: JQuery<HTMLElement>, data: any): void;
     geocodeAddress(address: string): void;
     reverseGeocoding(lng: number, lat: number): void;
     moveToLocation(lng: number, lat: number, updateAddress?: boolean): void;
     syncToLivewire(lng: number, lat: number): void;
 }
 
-/**
- * Helper untuk mengambil token Mapbox dari meta tag HTML
- */
 const getCfg = (name: string): string => {
     const $meta = $(`meta[name="${name}"]`);
     return $meta.length ? ($meta.attr('content') as string) : '';
 };
 
-/**
- * Konfigurasi URL Style Mapbox berdasarkan tema Metronic
- */
 const MAP_STYLES = {
     standard: 'mapbox://styles/mapbox/streets-v12',
     dark: 'mapbox://styles/mapbox/dark-v11'
@@ -50,36 +42,27 @@ const TaskCreateModule: TaskCreateModuleInterface = {
     map: null,
     marker: null,
     accessToken: getCfg('mapbox-token'),
+    googleApiKey: getCfg('google-maps-key'), // Akan kosong jika tidak diset di meta
     isAutoFilling: false,
 
-    /** Mendeteksi apakah user sedang menggunakan mode Dark atau Light */
     getThemeMode() {
         return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
     },
 
-    /** Mengembalikan URL style mapbox yang sesuai dengan tema saat ini */
     getMapStyle() {
         return this.getThemeMode() === 'dark' ? MAP_STYLES.dark : MAP_STYLES.standard;
     },
 
-    /**
-     * FUNGSI INIT
-     * Titik awal eksekusi. Menyiapkan peta, marker, dan event listener.
-     */
     init() {
         const self = this;
         const $mapElement = $('#map');
-
-        // Batalkan jika elemen peta tidak ditemukan atau token tidak ada
         if (!$mapElement.length || !self.accessToken) return;
 
         mapboxgl.accessToken = self.accessToken;
 
-        // Ambil koordinat awal dari atribut data- HTML (default ke Jakarta)
-        let initialLng = parseFloat($mapElement.attr('data-lng') || '106.8456');
-        let initialLat = parseFloat($mapElement.attr('data-lat') || '-6.2088');
+        let initialLng = parseFloat($mapElement.attr('data-lng') || '119.4173');
+        let initialLat = parseFloat($mapElement.attr('data-lat') || '-5.1476');
 
-        /** Inner function untuk me-render peta setelah koordinat didapat */
         const renderMap = (lng: number, lat: number) => {
             self.map = new mapboxgl.Map({
                 container: 'map',
@@ -88,10 +71,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
                 zoom: 14,
             });
 
-            // Tambahkan kontrol navigasi (Zoom in/out)
             self.map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-            // Tambahkan tombol "Lokasi Saya" (GPS)
             const geolocate = new mapboxgl.GeolocateControl({
                 positionOptions: { enableHighAccuracy: true },
                 trackUserLocation: true,
@@ -99,39 +79,28 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             });
             self.map.addControl(geolocate, 'top-right');
 
-            // Jika user menekan tombol GPS, update posisi marker dan sync ke server
             geolocate.on('geolocate', (e: any) => {
                 self.moveToLocation(e.coords.longitude, e.coords.latitude, true);
             });
 
-            // Buat marker yang bisa ditarik (draggable)
             self.marker = new mapboxgl.Marker({ draggable: true, color: "#2563eb" })
                 .setLngLat([lng, lat])
                 .addTo(self.map);
 
-            self.setupAutocomplete();    // Aktifkan fitur pencarian alamat
-            self.setupThemeObserver();   // Aktifkan fitur auto-switch dark mode map
+            self.setupAutocomplete();
+            self.setupThemeObserver();
 
-            /**
-             * LISTENER LIVEWIRE EVENT
-             * Penting: Ini mendengarkan sinyal dari CreateForm.php (Updated Hook)
-             */
             Livewire.on('search-location', (event: any) => {
-                const address = event.address;
-                if (address) {
-                    self.geocodeAddress(address); // Cari koordinat berdasarkan alamat dari database
-                }
+                if (event.address) self.geocodeAddress(event.address);
             });
 
-            /** Event saat user selesai menarik marker secara manual */
             self.marker.on('dragend', () => {
                 const lngLat = self.marker!.getLngLat();
-                self.reverseGeocoding(lngLat.lng, lngLat.lat); // Cari nama jalan berdasarkan titik baru
-                self.syncToLivewire(lngLat.lng, lngLat.lat);  // Update data di Livewire
+                self.reverseGeocoding(lngLat.lng, lngLat.lat);
+                self.syncToLivewire(lngLat.lng, lngLat.lat);
             });
         };
 
-        /** Logika penentuan posisi awal: Coba GPS User dulu, baru fallback ke default */
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => renderMap(pos.coords.longitude, pos.coords.latitude),
@@ -143,9 +112,6 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         }
     },
 
-    /**
-     * Memantau perubahan class di tag <html> untuk mengganti tema map secara real-time
-     */
     setupThemeObserver() {
         const self = this;
         let currentStyleKey = self.getThemeMode();
@@ -155,7 +121,6 @@ const TaskCreateModule: TaskCreateModuleInterface = {
                 currentStyleKey = newKey;
                 if (self.map) {
                     self.map.setStyle(self.getMapStyle());
-                    // Pasang kembali marker setelah style map di-load ulang
                     self.map.once('style.load', () => self.marker?.addTo(self.map!));
                 }
             }
@@ -163,16 +128,13 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     },
 
-    /**
-     * Menyiapkan Input Pencarian Alamat (Autocomplete)
-     */
     setupAutocomplete() {
         const self = this;
         const $input = $('#map-search-input');
         const $resultsContainer = $('#autocomplete-results');
 
         $input.on('input', function() {
-            if (self.isAutoFilling) return; // Jangan cari jika sedang mengisi otomatis (mencegah loop)
+            if (self.isAutoFilling) return;
             const query = $(this).val() as string;
             if (query.length < 3) {
                 $resultsContainer.addClass('hidden');
@@ -181,52 +143,125 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             self.fetchSuggestions(query, $resultsContainer);
         });
 
-        // Klik di luar area search akan menutup dropdown
         $(document).on('click', (e: any) => {
             if (!$(e.target).closest('#map-search-container').length) $resultsContainer.addClass('hidden');
         });
     },
 
-    /**
-     * Memanggil Mapbox Geocoding API untuk mendapatkan saran tempat
-     */
     fetchSuggestions(query, $container) {
         const self = this;
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${self.accessToken}&limit=5&country=ID&language=id`;
+        const center = self.map ? self.map.getCenter() : { lng: 119.4173, lat: -5.1476 };
 
-        $.getJSON(url, (data) => {
-            $container.empty().removeClass('hidden');
-            data.features.forEach((feature: any) => {
-                const $item = $(`
-                    <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors">
-                        <div class="flex flex-col pointer-events-none">
-                            <span class="text-[11px] font-bold text-gray-800 dark:text-neutral-100">${feature.text}</span>
-                            <span class="text-[9px] text-gray-400 line-clamp-1">${feature.place_name}</span>
-                        </div>
-                    </div>
-                `);
+        // 1. Google (Hanya jika API Key ada)
+        const googlePromise = self.googleApiKey
+            ? $.getJSON(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(query)}&key=${self.googleApiKey}&location=${center.lat},${center.lng}&radius=20000&language=id&components=country:id`)
+            : Promise.resolve({ predictions: [] });
 
-                // Saat item dipilih
-                $item.on('mousedown', (e) => {
-                    e.preventDefault();
-                    self.isAutoFilling = true;
-                    $('#map-search-input').val(feature.place_name).trigger('input');
-                    $container.addClass('hidden');
-                    self.moveToLocation(feature.center[0], feature.center[1], false);
-                    setTimeout(() => { self.isAutoFilling = false; }, 300);
+        // 2. Mapbox
+        const mapboxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${self.accessToken}&limit=4&country=ID&language=id&types=address,poi&proximity=${center.lng},${center.lat}`;
+
+        // 3. OpenStreetMap
+        const osmUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=4&countrycodes=id`;
+
+        $container.empty().removeClass('hidden');
+
+        Promise.all([
+            // @ts-ignore
+            googlePromise.catch(() => ({ predictions: [] })),
+            $.getJSON(mapboxUrl).catch(() => ({ features: [] })),
+            $.getJSON(osmUrl).catch(() => [])
+        ]).then(([googleData, mapboxData, osmData]) => {
+
+            // Render Google
+            if (googleData && googleData.predictions) {
+                googleData.predictions.forEach((p: any) => {
+                    self.renderSuggestionItem($container, {
+                        title: p.structured_formatting.main_text,
+                        subtitle: p.description,
+                        placeId: p.place_id,
+                        source: 'Google'
+                    });
                 });
+            }
 
-                $container.append($item);
-            });
+            // Render Mapbox
+            if (mapboxData.features) {
+                mapboxData.features.forEach((f: any) => {
+                    self.renderSuggestionItem($container, {
+                        title: f.text,
+                        subtitle: f.place_name,
+                        lng: f.center[0],
+                        lat: f.center[1],
+                        source: 'Mapbox'
+                    });
+                });
+            }
+
+            // Render OSM
+            if (Array.isArray(osmData)) {
+                osmData.forEach((p: any) => {
+                    self.renderSuggestionItem($container, {
+                        title: p.address.road || p.display_name.split(',')[0],
+                        subtitle: p.display_name,
+                        lng: parseFloat(p.lon),
+                        lat: parseFloat(p.lat),
+                        source: 'OSM'
+                    });
+                });
+            }
+
+            if ($container.is(':empty')) {
+                $container.append('<div class="px-4 py-3 text-[10px] text-gray-400 italic text-center">Lokasi tidak ditemukan...</div>');
+            }
         });
     },
 
-    /**
-     * Mengonversi Teks menjadi Koordinat (Forward Geocoding)
-     */
+    renderSuggestionItem($container, data) {
+        const self = this;
+        const sourceColor = data.source === 'Google' ? 'text-green-600 bg-green-50' : (data.source === 'Mapbox' ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-gray-50');
+
+        const $item = $(`
+            <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors border-b border-gray-100 dark:border-neutral-800 last:border-0">
+                <div class="flex items-start justify-between gap-3 pointer-events-none">
+                    <div class="flex flex-col flex-1">
+                        <span class="text-[11px] font-bold text-gray-800 dark:text-neutral-100 leading-tight mb-1">${data.subtitle}</span>
+                        <div class="flex items-center gap-1.5 text-gray-400">
+                             <i class="ki-outline ki-geolocation text-[10px]"></i>
+                             <span class="text-[9px] line-clamp-1">${data.title}</span>
+                        </div>
+                    </div>
+                    <span class="text-[8px] font-bold px-1.5 py-0.5 rounded ${sourceColor} dark:bg-neutral-700 dark:text-gray-300 uppercase shrink-0">${data.source}</span>
+                </div>
+            </div>
+        `);
+
+        $item.on('mousedown', (e) => {
+            e.preventDefault();
+            self.isAutoFilling = true;
+            $('#map-search-input').val(data.subtitle).trigger('input');
+            $container.addClass('hidden');
+
+            if (data.source === 'Google' && data.placeId) {
+                const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${data.placeId}&key=${self.googleApiKey}&fields=geometry`;
+                $.getJSON(detailsUrl, (res) => {
+                    if (res.result?.geometry?.location) {
+                        const loc = res.result.geometry.location;
+                        self.moveToLocation(loc.lng, loc.lat, false);
+                    }
+                });
+            } else {
+                self.moveToLocation(data.lng, data.lat, false);
+            }
+
+            setTimeout(() => { self.isAutoFilling = false; }, 300);
+        });
+
+        $container.append($item);
+    },
+
     geocodeAddress(address) {
         const self = this;
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${self.accessToken}&limit=1&country=ID&language=id`;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${self.accessToken}&limit=1&country=ID&language=id&types=address,poi`;
 
         $.getJSON(url, (data) => {
             if (data.features && data.features.length > 0) {
@@ -239,9 +274,6 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         });
     },
 
-    /**
-     * Mengonversi Koordinat menjadi Teks Alamat (Reverse Geocoding)
-     */
     reverseGeocoding(lng, lat) {
         const self = this;
         const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${this.accessToken}&limit=1&language=id`;
@@ -255,52 +287,28 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         });
     },
 
-    /**
-     * Animasi pindah lokasi di peta, update posisi marker, dan sinkronkan data
-     */
     moveToLocation(lng, lat, updateAddress = false) {
         if (!this.map) return;
-
-        this.map.flyTo({
-            center: [lng, lat],
-            zoom: 16,
-            essential: true,
-            speed: 1.2
-        });
-
+        this.map.flyTo({ center: [lng, lat], zoom: 17, essential: true, speed: 1.2 });
         if (this.marker) this.marker.setLngLat([lng, lat]);
-
         this.syncToLivewire(lng, lat);
         if (updateAddress) this.reverseGeocoding(lng, lat);
     },
 
-    /**
-     * MENGIRIM DATA KE BACKEND
-     * Fungsi ini mencari komponen Livewire terdekat dan memperbarui properti 'formData.geos'
-     */
     syncToLivewire(lng, lat) {
-        // Update tampilan input latitude/longitude (visual saja)
         $('#lat-display').val(lat.toFixed(6));
         $('#lng-display').val(lng.toFixed(6));
-
-        // Cari ID komponen Livewire dari DOM
         const componentId = $('#map').closest('[wire\\:id]').attr('wire:id');
         const lw = Livewire.find(componentId);
-
         if (lw) {
-            // Push data koordinat ke property Livewire secara real-time
             lw.set('formData.geos.longitude', lng.toFixed(6));
             lw.set('formData.geos.latitude', lat.toFixed(6));
         }
     }
 };
 
-/**
- * ENTRY POINT
- * Memastikan script berjalan saat halaman pertama kali load atau saat navigasi SPA Livewire terjadi
- */
 $(() => {
     const run = () => { if ($("#map").length > 0) TaskCreateModule.init(); };
     run();
-    $(document).on('livewire:navigated', run); // Kompatibel dengan Livewire 3 SPA mode
+    $(document).on('livewire:navigated', run);
 });
