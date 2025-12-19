@@ -20,6 +20,11 @@ class CreateForm extends Component
     ];
     public $currentPage = 1; // Tambahkan ini
     public $destinations = [];
+    // Properti di dalam class
+    public $provinces = [];
+    public $regencies = [];
+    public $districts = [];
+    public $villages  = [];
     public $driverSearch = '';
 
     protected ResourcesDeliveriesRequestsDestinationsServices $destService;

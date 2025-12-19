@@ -1,49 +1,78 @@
 <div class="space-y-6">
     {{-- CARD 1: INFORMASI TUGAS & MAPBOX --}}
-    <div class="kt-card px-0 mx-auto overflow-hidden">
+    <div class="kt-card">
         <div class="kt-card-header">
-            <h3 class="kt-card-title">Informasi Utama & Lokasi Koordinat</h3>
+            <h3 class="kt-card-title">
+                Informasi Utama & Lokasi Koordinat
+            </h3>
         </div>
         <div class="kt-card-content p-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {{-- Form Input --}}
+                {{-- Sisi Kiri: Form Input --}}
                 <div class="space-y-5">
                     <div class="flex flex-col gap-2">
-                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Nama Task</label>
-                        <input wire:model="formData.task_name" class="kt-input kt-input-lg" type="text" placeholder="Contoh: Pengiriman Elektronik Batch A"/>
+                        <label class="kt-form-label text-[11px] font-bold text-gray-500 dark:text-neutral-500 uppercase tracking-wider">Nama Task</label>
+                        <input wire:model="formData.task_name"
+                               class="kt-input kt-input-lg"
+                               type="text" placeholder="Contoh: Pengiriman Elektronik Batch A"/>
+                    </div>
+
+                    {{-- Search Geocoding --}}
+                    <div class="flex flex-col gap-2 relative" id="map-search-container">
+                        <label class="kt-form-label text-[11px] font-bold text-blue-600 dark:text-blue-500 uppercase tracking-wider flex items-center gap-2">
+                            <i class="ki-filled ki-geolocation text-blue-600"></i> Cari Alamat / Lokasi
+                        </label>
+                        <div class="relative">
+                            {{-- Perhatikan: Menghapus bg-white agar mengikuti tema kt-input --}}
+                            <input type="text" id="map-search-input"
+                                   class="kt-input kt-input-lg pl-10"
+                                   placeholder="Ketik nama jalan, gedung, atau tempat..." autocomplete="off">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <i class="ki-outline ki-magnifier text-lg"></i>
+                            </div>
+                        </div>
+                        {{-- Dropdown Suggestion --}}
+                        <div id="autocomplete-results" class="hidden absolute left-0 right-0 mt-[75px] bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl shadow-2xl overflow-hidden z-[110]">
+                        </div>
+                        <p class="text-[9px] text-gray-400 dark:text-neutral-500 italic mt-1">*Ketik minimal 3 karakter untuk memunculkan saran alamat.</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Latitude</label>
-                            <input type="text" wire:model="formData.latitude" class="kt-input bg-gray-50 font-mono text-xs" readonly>
+                            <label class="text-[11px] font-bold text-gray-500 dark:text-neutral-500 uppercase tracking-wider">Latitude</label>
+                            <input type="text" id="lat-display" wire:model="formData.latitude"
+                                   class="kt-input font-mono text-xs" readonly>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Longitude</label>
-                            <input type="text" wire:model="formData.longitude" class="kt-input bg-gray-50 font-mono text-xs" readonly>
+                            <label class="text-[11px] font-bold text-gray-500 dark:text-neutral-500 uppercase tracking-wider">Longitude</label>
+                            <input type="text" id="lng-display" wire:model="formData.longitude"
+                                   class="kt-input font-mono text-xs" readonly>
                         </div>
                     </div>
 
-                    <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl">
+                    {{-- Info Box --}}
+                    <div class="p-4 rounded-xl border transition-colors duration-200
+            bg-info/10 border-info/20 dark:bg-info/5 dark:border-info/10">
                         <div class="flex gap-3">
-                            <i class="ki-filled ki-information-2 text-amber-500 text-lg"></i>
-                            <p class="text-[11px] text-amber-700 leading-relaxed">
-                                <b>Cara Menentukan Lokasi:</b> Geser marker berwarna biru pada peta di samping untuk menyesuaikan titik koordinat pengiriman secara presisi.
+                            {{-- Menggunakan class text-info agar mengikuti warna aksen tema --}}
+                            <i class="ki-filled ki-information-2 text-info text-lg"></i>
+                            <p class="text-mono text-sm leading-none font-medium">
+                                <b class="text-info-active dark:text-info">Tips:</b>
+                                Anda bisa mencari alamat pada kolom di atas, atau
+                                <b class="text-info-active dark:text-info">geser marker biru</b>
+                                pada peta untuk titik yang lebih akurat.
                             </p>
                         </div>
                     </div>
                 </div>
 
-                {{-- Mapbox Container --}}
-                <div class="lg:col-span-2">
-                    {{-- Ganti container map di Blade menjadi seperti ini --}}
-                    <div
-                        wire:ignore
-                        id="map"
-                        class="w-full h-[350px] rounded-2xl border border-gray-200 shadow-inner overflow-hidden"
-                        data-lng="{{ $formData['longitude'] }}"
-                        data-lat="{{ $formData['latitude'] }}"
-                    ></div>
+                {{-- Sisi Kanan: Map --}}
+                <div class="lg:col-span-2 relative">
+                    <div wire:ignore id="map"
+                         class="w-full h-[450px] shadow-inner overflow-hidden"
+                         data-lng="{{ $formData['longitude'] }}"
+                         data-lat="{{ $formData['latitude'] }}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,7 +85,7 @@
                 <h3 class="kt-card-title">Lokasi Tujuan</h3>
             </div>
             <div class="kt-card-content p-6">
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4 mb-4">
                     <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pilih Destinasi</label>
                     <select wire:model.live="formData.destination" class="form-select kt-input kt-input-lg">
                         <option value="">-- Pilih Alamat Tujuan --</option>
@@ -66,6 +95,26 @@
                             </option>
                         @endforeach
                     </select>
+                </div>
+
+                {{-- Hidden atau Readonly Region Fields (Sesuai Migrasi Geos) --}}
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2 my-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Provinsi</label>
+                        <input type="text" wire:model="formData.province" class="kt-input text-xs bg-gray-50" readonly placeholder="Auto-fill">
+                    </div>
+                    <div class="flex flex-col gap-2 my-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Kota/Kab</label>
+                        <input type="text" wire:model="formData.regency" class="kt-input text-xs bg-gray-50" readonly placeholder="Auto-fill">
+                    </div>
+                    <div class="flex flex-col gap-2 my-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Kecamatan</label>
+                        <input type="text" wire:model="formData.district" class="kt-input text-xs bg-gray-50" readonly placeholder="Auto-fill">
+                    </div>
+                    <div class="flex flex-col gap-2 my-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Desa/Kel</label>
+                        <input type="text" wire:model="formData.village" class="kt-input text-xs bg-gray-50" readonly placeholder="Auto-fill">
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,8 +171,8 @@
 
             <div class="p-6">
                 @if($currentDest)
-                    <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
-                        <div class="text-left">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="flex-1">
                             <h3 class="text-lg font-black text-gray-900 uppercase tracking-tight">Rincian Barang Elektronik</h3>
                             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                                 Tujuan: <span class="text-blue-600">{{ $currentDest['receipt_name'] }}</span>
@@ -131,17 +180,27 @@
                         </div>
 
                         <div class="flex items-center gap-3">
-                            <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">
-                                <span class="text-[9px] font-black text-gray-400 uppercase">Tampilkan:</span>
-                                <select wire:model.live="perPage" class="bg-transparent text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                </select>
+                            {{-- Widget Modern Total Qty --}}
+                            <div class="relative flex items-center bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-1 pr-4 shadow-sm">
+                                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-none">
+                                    <i class="ki-filled ki-vial text-white text-lg"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <span class="text-[9px] font-black text-gray-400 uppercase leading-none block">Total Quantity</span>
+                                    <span class="text-lg font-black text-gray-900 dark:text-white leading-none">
+                    {{ number_format(collect($currentDest['packages'])->sum('qty'), 0, ',', '.') }}
+                </span>
+                                </div>
                             </div>
-                            <div class="bg-gray-900 rounded-lg px-4 py-1.5">
-                                <span class="text-[8px] font-bold text-gray-400 uppercase block leading-none mb-1">Total Qty</span>
-                                <span class="text-xs font-black text-white leading-none">{{ collect($currentDest['packages'])->sum('qty') }}</span>
+
+                            {{-- Select Per Page --}}
+                            <div class="flex flex-col bg-gray-50 dark:bg-neutral-800/50 px-3 py-2 rounded-xl border border-gray-200 dark:border-neutral-800">
+                                <span class="text-[8px] font-black text-gray-400 uppercase mb-0.5">Tampilkan</span>
+                                <select wire:model.live="perPage" class="bg-transparent text-xs font-bold text-gray-700 dark:text-neutral-200 outline-none cursor-pointer">
+                                    <option value="5">5 Rows</option>
+                                    <option value="10">10 Rows</option>
+                                    <option value="20">20 Rows</option>
+                                </select>
                             </div>
                         </div>
                     </div>

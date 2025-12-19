@@ -1,19 +1,21 @@
 import $ from "jquery";
 import mapboxgl from "mapbox-gl";
-import moment from "moment-timezone";
 // @ts-ignore
-import { Livewire } from '../../../../vendor/livewire/livewire/dist/livewire.esm'
-import "moment/locale/id.js";
+import { Livewire } from '../../../../../../../../vendor/livewire/livewire/dist/livewire.esm'
 
 interface TaskCreateModuleInterface {
     map: mapboxgl.Map | null;
     marker: mapboxgl.Marker | null;
     accessToken: string;
+    isAutoFilling: boolean;
     init(): void;
-    addSearchAutocomplete(): void;
+    getThemeMode(): string;
+    getMapStyle(): string;
+    setupAutocomplete(): void;
     fetchSuggestions(query: string, $container: JQuery<HTMLElement>): void;
-    moveToLocation(lng: number, lat: number): void;
-    performGeocoding(address: string): void;
+    geocodeAddress(address: string): void;
+    reverseGeocoding(lng: number, lat: number): void;
+    moveToLocation(lng: number, lat: number, updateAddress?: boolean): void;
     syncToLivewire(lng: number, lat: number): void;
 }
 
@@ -22,90 +24,116 @@ const getCfg = (name: string): string => {
     return $meta.length ? ($meta.attr('content') as string) : '';
 };
 
+const MAP_STYLES = {
+    standard: 'mapbox://styles/mapbox/streets-v12',
+    dark: 'mapbox://styles/mapbox/dark-v11'
+};
+
 const TaskCreateModule: TaskCreateModuleInterface = {
     map: null,
     marker: null,
     accessToken: getCfg('mapbox-token'),
+    isAutoFilling: false,
+
+    getThemeMode() {
+        return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    },
+
+    getMapStyle() {
+        return this.getThemeMode() === 'dark' ? MAP_STYLES.dark : MAP_STYLES.standard;
+    },
 
     init() {
         const self = this;
         const $mapElement = $('#map');
-
         if (!$mapElement.length || !self.accessToken) return;
 
-        moment.locale('id');
         mapboxgl.accessToken = self.accessToken;
 
-        const initialLng = parseFloat($mapElement.data('lng') || '106.8456');
-        const initialLat = parseFloat($mapElement.data('lat') || '-6.2088');
+        // Default Jakarta
+        let initialLng = parseFloat($mapElement.attr('data-lng') || '106.8456');
+        let initialLat = parseFloat($mapElement.attr('data-lat') || '-6.2088');
 
-        // 1. Setup Map dengan Style Kontras & Pitch 3D
-        self.map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/navigation-guidance-day-v4',
-            center: [initialLng, initialLat],
-            zoom: 14,
-            pitch: 45,
-            antialias: true
-        });
+        const renderMap = (lng: number, lat: number) => {
+            self.map = new mapboxgl.Map({
+                container: 'map',
+                style: self.getMapStyle(),
+                center: [lng, lat],
+                zoom: 14,
+            });
 
-        self.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+            self.map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-        // 2. Setup Marker Draggable
-        self.marker = new mapboxgl.Marker({
-            draggable: true,
-            scale: 1.2,
-            color: "#2563eb"
-        })
-            .setLngLat([initialLng, initialLat])
-            .addTo(self.map);
+            const geolocate = new mapboxgl.GeolocateControl({
+                positionOptions: { enableHighAccuracy: true },
+                trackUserLocation: true,
+                showUserHeading: true
+            });
+            self.map.addControl(geolocate, 'top-right');
 
-        // 3. Tambahkan UI Autocomplete Search di Atas Map
-        self.addSearchAutocomplete();
+            geolocate.on('geolocate', (e: any) => {
+                self.moveToLocation(e.coords.longitude, e.coords.latitude, true);
+            });
 
-        // 4. Event: Marker Drag
-        self.marker.on('dragend', () => {
-            if (self.marker) {
-                const lngLat = self.marker.getLngLat();
+            self.marker = new mapboxgl.Marker({ draggable: true, color: "#2563eb" })
+                .setLngLat([lng, lat])
+                .addTo(self.map);
+
+            self.setupAutocomplete();
+            self.setupThemeObserver();
+
+            // SINKRONISASI DARI LIVEWIRE (EVENT 'search-location')
+            // Dipicu saat updatedFormDataDestination di PHP berjalan
+            Livewire.on('search-location', (event: any) => {
+                const address = event.address;
+                if (address) {
+                    self.geocodeAddress(address);
+                }
+            });
+
+            self.marker.on('dragend', () => {
+                const lngLat = self.marker!.getLngLat();
+                self.reverseGeocoding(lngLat.lng, lngLat.lat);
                 self.syncToLivewire(lngLat.lng, lngLat.lat);
-            }
-        });
+            });
+        };
 
-        // 5. Event: Listener dari Dropdown Destinasi Livewire
-        $(window).on('search-location', (event: any) => {
-            const address = event.detail?.address;
-            if (address) self.performGeocoding(address);
-        });
+        // Get Initial Position (My Location)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => renderMap(pos.coords.longitude, pos.coords.latitude),
+                () => renderMap(initialLng, initialLat),
+                { timeout: 5000 }
+            );
+        } else {
+            renderMap(initialLng, initialLat);
+        }
     },
 
-    /**
-     * Membuat Search Bar Floating dengan Autocomplete
-     */
-    addSearchAutocomplete() {
+    setupThemeObserver() {
         const self = this;
-        const $searchContainer = $('<div class="absolute top-4 left-4 z-20 w-80 md:w-96"></div>');
+        let currentStyleKey = self.getThemeMode();
+        const themeObserver = new MutationObserver(() => {
+            const newKey = self.getThemeMode();
+            if (newKey !== currentStyleKey) {
+                currentStyleKey = newKey;
+                if (self.map) {
+                    self.map.setStyle(self.getMapStyle());
+                    self.map.once('style.load', () => self.marker?.addTo(self.map!));
+                }
+            }
+        });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    },
 
-        $searchContainer.html(`
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600">
-                    <i class="ki-outline ki-magnifier text-lg"></i>
-                </div>
-                <input type="text" id="map-search-input"
-                    class="block w-full pl-10 pr-3 py-2.5 bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl shadow-xl text-xs font-bold placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-                    placeholder="Cari jalan atau nama tempat..." autocomplete="off">
-
-                <div id="autocomplete-results" class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden z-30">
-                </div>
-            </div>
-        `);
-
-        $('#map').append($searchContainer);
-
+    setupAutocomplete() {
+        const self = this;
         const $input = $('#map-search-input');
         const $resultsContainer = $('#autocomplete-results');
 
-        $input.on('input', (e: JQuery.TriggeredEvent) => {
-            const query = $(e.target).val() as string;
+        $input.on('input', function() {
+            if (self.isAutoFilling) return;
+            const query = $(this).val() as string;
             if (query.length < 3) {
                 $resultsContainer.addClass('hidden');
                 return;
@@ -113,116 +141,109 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             self.fetchSuggestions(query, $resultsContainer);
         });
 
-        $(document).on('click', (e: JQuery.ClickEvent) => {
-            if (!$searchContainer.is(e.target) && $searchContainer.has(e.target).length === 0) {
-                $resultsContainer.addClass('hidden');
-            }
+        $(document).on('click', (e: any) => {
+            if (!$(e.target).closest('#map-search-container').length) $resultsContainer.addClass('hidden');
         });
     },
 
-    /**
-     * API Suggestion: Mencari Alamat, Jalan, dan Nama Tempat (POI)
-     */
-    fetchSuggestions(query: string, $container: JQuery<HTMLElement>) {
+    fetchSuggestions(query, $container) {
         const self = this;
-        // Penambahan 'address,poi' memastikan hasil pencarian spesifik ke jalan & gedung
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${self.accessToken}&limit=5&country=ID&types=address,poi,place&language=id`;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${self.accessToken}&limit=5&country=ID&language=id`;
 
         $.getJSON(url, (data) => {
-            $container.empty();
-            if (data.features && data.features.length > 0) {
-                $container.removeClass('hidden');
-                data.features.forEach((feature: any) => {
-                    const placeName = feature.text; // Nama Gedung/Jalan
-                    const fullAddress = feature.place_name; // Alamat Lengkap
-
-                    const $item = $(`
-                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors">
-                            <div class="flex items-start gap-3">
-                                <i class="ki-outline ki-geolocation text-blue-500 mt-1"></i>
-                                <div class="flex flex-col">
-                                    <span class="text-[11px] font-bold text-gray-800 line-clamp-1">${placeName}</span>
-                                    <span class="text-[9px] text-gray-400 line-clamp-2 leading-relaxed">${fullAddress}</span>
-                                </div>
-                            </div>
+            $container.empty().removeClass('hidden');
+            data.features.forEach((feature: any) => {
+                const $item = $(`
+                    <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-neutral-800 cursor-pointer border-b border-gray-100 dark:border-neutral-800 last:border-0 transition-colors">
+                        <div class="flex flex-col pointer-events-none">
+                            <span class="text-[11px] font-bold text-gray-800 dark:text-neutral-100">${feature.text}</span>
+                            <span class="text-[9px] text-gray-400 line-clamp-1">${feature.place_name}</span>
                         </div>
-                    `);
+                    </div>
+                `);
 
-                    $item.on('click', () => {
-                        $('#map-search-input').val(fullAddress);
-                        $container.addClass('hidden');
-                        self.moveToLocation(feature.center[0], feature.center[1]);
-                    });
-
-                    $container.append($item);
+                $item.on('mousedown', (e) => {
+                    e.preventDefault();
+                    self.isAutoFilling = true;
+                    $('#map-search-input').val(feature.place_name).trigger('input');
+                    $container.addClass('hidden');
+                    self.moveToLocation(feature.center[0], feature.center[1], false);
+                    setTimeout(() => { self.isAutoFilling = false; }, 300);
                 });
-            } else {
-                $container.addClass('hidden');
-            }
+
+                $container.append($item);
+            });
         });
     },
 
     /**
-     * Pindah Kamera & Sinkronisasi
+     * Mengonversi Teks Alamat menjadi Koordinat (Digunakan saat pilih destinasi)
      */
-    moveToLocation(lng: number, lat: number) {
+    geocodeAddress(address) {
         const self = this;
-        self.map?.flyTo({
-            center: [lng, lat],
-            zoom: 17, // Zoom lebih dekat untuk akurasi jalan
-            speed: 1.5,
-            essential: true
-        });
-        self.marker?.setLngLat([lng, lat]);
-        self.syncToLivewire(lng, lat);
-    },
-
-    /**
-     * Geocoding untuk Address dari Dropdown Livewire
-     */
-    performGeocoding(address: string) {
-        const self = this;
-        const query = encodeURIComponent(address);
-        // Memastikan pencarian otomatis tetap mencakup detail spesifik
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${self.accessToken}&limit=1&country=ID&types=address,poi,place`;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${self.accessToken}&limit=1&country=ID&language=id`;
 
         $.getJSON(url, (data) => {
             if (data.features && data.features.length > 0) {
                 const [lng, lat] = data.features[0].center;
-                self.moveToLocation(lng, lat);
+
+                // Set flag agar input address tidak memunculkan suggest saat terisi otomatis
+                self.isAutoFilling = true;
+                $('#map-search-input').val(data.features[0].place_name).trigger('input');
+
+                // Terbang ke lokasi
+                self.moveToLocation(lng, lat, false);
+
+                setTimeout(() => { self.isAutoFilling = false; }, 500);
             }
         });
     },
 
-    /**
-     * Mengirim Koordinat ke Livewire Component
-     */
-    syncToLivewire(lng: number, lat: number) {
-        const $mapElement = $('#map');
-        const componentId = $mapElement.closest('[wire\\:id]').attr('wire:id');
+    reverseGeocoding(lng, lat) {
+        const self = this;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${this.accessToken}&limit=1&language=id`;
+        $.getJSON(url, (data) => {
+            if (data.features && data.features.length > 0) {
+                const address = data.features[0].place_name;
+                self.isAutoFilling = true;
+                $('#map-search-input').val(address).trigger('input');
+                setTimeout(() => { self.isAutoFilling = false; }, 300);
+            }
+        });
+    },
 
-        // @ts-ignore
-        const lwComponent = window.Livewire.find(componentId);
+    moveToLocation(lng, lat, updateAddress = false) {
+        if (!this.map) return;
 
-        if (lwComponent) {
-            lwComponent.set('formData.longitude', lng.toFixed(6), true);
-            lwComponent.set('formData.latitude', lat.toFixed(6), true);
+        this.map.flyTo({
+            center: [lng, lat],
+            zoom: 16,
+            essential: true,
+            speed: 1.2
+        });
+
+        if (this.marker) this.marker.setLngLat([lng, lat]);
+
+        this.syncToLivewire(lng, lat);
+        if (updateAddress) this.reverseGeocoding(lng, lat);
+    },
+
+    syncToLivewire(lng, lat) {
+        // Update tampilan input latitude longitude agar user melihat angka berubah
+        $('#lat-display').val(lat.toFixed(6)).trigger('input');
+        $('#lng-display').val(lng.toFixed(6)).trigger('input');
+
+        const componentId = $('#map').closest('[wire\\:id]').attr('wire:id');
+        const lw = Livewire.find(componentId);
+        if (lw) {
+            lw.set('formData.longitude', lng.toFixed(6));
+            lw.set('formData.latitude', lat.toFixed(6));
         }
     }
 };
 
-$(function() {
-    const selector = "div.dashboards-apps-deliveries-tasks-create";
-
-    const runInit = () => {
-        if ($(selector).length > 0) {
-            TaskCreateModule.init();
-        }
-    };
-
-    runInit();
-
-    $(document).on('livewire:navigated', () => {
-        runInit();
-    });
+$(() => {
+    const run = () => { if ($("#map").length > 0) TaskCreateModule.init(); };
+    run();
+    $(document).on('livewire:navigated', run);
 });
