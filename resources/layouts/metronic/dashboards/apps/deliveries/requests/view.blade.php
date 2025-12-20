@@ -2,22 +2,22 @@
     <div class="grid gap-5 lg:gap-7.5">
 
         {{-- SECTION FILTER --}}
-        <div class="bg-white rounded-2xl shadow-sm px-6 py-4 flex flex-wrap items-center gap-4">
-            <label class="kt-input bg-gray-100 rounded-xl px-3 py-2 flex items-center gap-2">
-                <i class="ki-filled ki-magnifier text-gray-400"></i>
+        <div class="rounded-2xl shadow-sm px-6 py-4 flex flex-wrap items-center gap-4">
+            <label class="kt-input  rounded-xl px-3 py-2 flex items-center gap-2">
+                <i class="ki-filled ki-magnifier "></i>
                 <input wire:model.live.debounce.300ms="search" class="bg-transparent border-none focus:ring-0 text-xs placeholder-gray-400 w-40" placeholder="Cari request..." type="text" />
             </label>
 
             <div class="flex flex-wrap gap-2 items-center">
-                <input wire:model.live.debounce.500ms="customerName" type="text" placeholder="Nama Customer..." class="bg-gray-100 border-none rounded-xl text-xs font-medium py-2 px-3 focus:ring-2 focus:ring-primary/10 w-40" />
+                <input wire:model.live.debounce.500ms="customerName" type="text" placeholder="Nama Customer..." class=" border-none rounded-xl text-xs font-medium py-2 px-3 focus:ring-2 focus:ring-primary/10 w-40" />
 
-                <select wire:model.live="status" class="bg-gray-100 border-none rounded-xl text-xs font-semibold py-2 px-3 focus:ring-2 focus:ring-primary/10 w-36">
+                <select wire:model.live="status" class=" border-none rounded-xl text-xs font-semibold py-2 px-3 focus:ring-2 focus:ring-primary/10 w-36">
                     <option value="">Semua Status</option>
                     <option value="active">Active</option>
                     <option value="pending">Pending</option>
                 </select>
 
-                <select wire:model.live="sort" class="bg-gray-100 border-none rounded-xl text-xs font-semibold py-2 px-3 focus:ring-0 w-28">
+                <select wire:model.live="sort" class=" border-none rounded-xl text-xs font-semibold py-2 px-3 focus:ring-0 w-28">
                     <option value="latest">Terbaru</option>
                     <option value="oldest">Terlama</option>
                 </select>
@@ -32,11 +32,11 @@
         </div>
 
         {{-- TABLE CARD --}}
-        <div class="kt-card kt-card-grid min-w-full shadow-sm bg-white rounded-2xl overflow-hidden">
-            <div class="kt-card-header px-8 py-5 bg-gray-50/30">
+        <div class="kt-card kt-card-grid min-w-full shadow-sm rounded-2xl overflow-hidden">
+            <div class="kt-card-header px-8 py-5">
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-sm font-bold text-gray-800">Daftar Request Pengiriman</h3>
-                    <p class="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">
+                    <h3 class="text-sm font-bold ">Daftar Request Pengiriman</h3>
+                    <p class="text-[10px]  font-medium uppercase tracking-tighter">
                         Menampilkan {{ $deliveries->firstItem() ?? 0 }}-{{ $deliveries->lastItem() ?? 0 }} dari {{ $deliveries->total() }} Data
                     </p>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="kt-scrollable-x-auto">
                     <table class="kt-table table-auto w-full align-middle border-collapse">
                         <thead>
-                        <tr class="text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                        <tr class=" font-bold text-[10px] uppercase tracking-widest">
                             <th class="px-6 py-5 text-left">Nama Request</th>
                             <th class="px-6 py-5 text-left">Muatan (Dest/Pkt)</th> {{-- KOLOM GABUNGAN --}}
                             <th class="px-6 py-5 text-left">Requested By</th>
@@ -56,25 +56,25 @@
                         </thead>
                         <tbody>
                         @forelse($deliveries as $item)
-                            <tr class="group hover:bg-gray-50/80 transition-all duration-300 border-b border-gray-100 last:border-0">
+                            <tr class="group transition-all duration-300">
 
                                 {{-- MODERNIZED: Kolom Nama Request --}}
                                 <td class="px-6 py-5">
                                     <div class="flex items-center gap-4">
                                         {{-- Icon Decorative: Membuat tampilan lebih premium --}}
                                         <div class="hidden sm:flex w-10 h-10 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 shadow-sm group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
-                                            <i class="ki-filled ki-delivery-2 text-gray-400 group-hover:text-primary transition-colors text-lg"></i>
+                                            <i class="ki-filled ki-delivery-2  group-hover:text-primary transition-colors text-lg"></i>
                                         </div>
 
                                         <div class="flex flex-col min-w-0">
-                    <span class="font-bold text-gray-800 text-sm tracking-tight group-hover:text-primary transition-colors truncate leading-tight">
+                    <span class="font-bold  text-sm tracking-tight group-hover:text-primary transition-colors truncate leading-tight">
                         {{ $item->name ?? 'Unnamed Request' }}
                     </span>
                                             <div class="flex items-center gap-1.5 mt-1">
-                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-100 px-1.5 py-0.5 rounded">
+                        <span class="text-[9px] font-bold  uppercase tracking-widest  px-1.5 py-0.5 rounded">
                             REQ-ID
                         </span>
-                                                <span class="text-[10px] text-gray-400 font-medium truncate">
+                                                <span class="text-[10px]  font-medium truncate">
                             #{{ substr($item->id, 0, 8) }}
                         </span>
                                             </div>
@@ -104,7 +104,7 @@
                                     <div class="flex items-center gap-3">
                                         <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-white shadow-sm flex items-center justify-center text-gray-500 overflow-hidden">
                                             {{-- Bisa diganti Initials jika mau lebih pro --}}
-                                            <span class="text-[10px] font-bold text-gray-400 uppercase">
+                                            <span class="text-[10px] font-bold  uppercase">
                         {{ substr($item->account->information->first_name ?? 'U', 0, 1) }}
                     </span>
                                         </div>
@@ -113,7 +113,7 @@
                         {{ $item->account->information->first_name ?? 'N/A' }}
                         {{ $item->account->information->last_name ?? '' }}
                     </span>
-                                            <span class="text-[10px] text-gray-400 font-medium mt-0.5">
+                                            <span class="text-[10px]  font-medium mt-0.5">
                         {{ $item->account->contact->email ?? '-' }}
                     </span>
                                         </div>
@@ -137,8 +137,8 @@
                                     </td>
                                     <td class="px-6 py-5 text-right">
                                         <div class="flex flex-col items-end gap-1">
-                                            <span class="font-bold text-[11px] text-gray-800">{{ $item->created_at->format('d M Y') }}</span>
-                                            <span class="px-1.5 py-0.5 bg-gray-100 rounded text-[9px] text-gray-400 font-bold tracking-tight">
+                                            <span class="font-bold text-[11px] ">{{ $item->created_at->format('d M Y') }}</span>
+                                            <span class="px-1.5 py-0.5  rounded text-[9px]  font-bold tracking-tight">
                                                 {{ $item->created_at->format('H:i') }} WIB
                                             </span>
                                         </div>
@@ -151,7 +151,7 @@
                                         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center border border-dashed border-gray-200 text-gray-300">
                                             <i class="ki-filled ki-dropbox fs-1"></i>
                                         </div>
-                                        <p class="text-gray-400 font-bold italic text-xs">Opps! Data tidak ditemukan.</p>
+                                        <p class=" font-bold italic text-xs">Opps! Data tidak ditemukan.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -162,7 +162,7 @@
             </div>
 
             <div class="kt-card-footer px-8 py-5 bg-gray-50/30 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3 text-xs font-bold text-gray-400">
+                <div class="flex items-center gap-3 text-xs font-bold ">
                     Tampilkan
                     <select wire:model.live="perPage" class="bg-white border-none shadow-sm rounded-lg text-xs font-bold px-2 py-1 cursor-pointer">
                         <option value="5">5</option>
