@@ -22,6 +22,8 @@ class Index extends Component
         'urgent'       => null,
         'destinations' => [], // ini akan di-bind ke child Destinations\ItemsLayout
     ];
+    // Properti untuk mengecek izin tanpa throw error
+    public bool $isAuthorized = true;
 
     public function boot()
     {
@@ -31,7 +33,7 @@ class Index extends Component
     {
         // Langsung lempar exception jika tidak punya izin
         if (!Auth::user()->can('dashboards.apps.deliveries.requests.create')) {
-            throw new AuthorizationException("Unauthorized access to this scope.");
+            $this->isAuthorized = false;
         }
     }
 
@@ -62,6 +64,10 @@ class Index extends Component
 
     public function render(): Factory|View
     {
+        // Jika tidak ada izin, langsung kembalikan view khusus unauthorized
+        if (!$this->isAuthorized) {
+            return view('dashboards.layouts.unauthorized');
+        }
         return view('dashboards.apps.deliveries.requests.creates.index');
     }
 }

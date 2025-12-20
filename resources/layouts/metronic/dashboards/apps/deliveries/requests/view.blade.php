@@ -33,40 +33,36 @@
                     <table class="kt-table kt-table-border table-auto">
                         <thead>
                         <tr>
-                            <th class="min-w-[150px]">Requested</th>
                             <th class="min-w-[200px]">Name</th>
+                            <th class="min-w-[150px]">Requested</th>
                             <th class="min-w-[200px]">Email</th>
                             <th class="min-w-[150px]">Dibuat</th>
                         </tr>
                         </thead>
                         <tbody>
-
-                        @forelse($deliveries as $item)
-                            <tr>
-                                <td class="font-bold text-gray-700">
-                                    {{-- Kolom 'name' dari tabel deliveries --}}
-                                    {{ $item->name ?? 'Unnamed Request' }}
-                                </td>
-                                <td>
-                                    {{-- Mengambil atribut dinamis 'information' yang disiapkan di Component --}}
-                                    {{ $item->information->first_name ?? 'N/A' }}
-                                    {{ $item->information->last_name ?? '' }}
-                                </td>
-                                <td>
-                                    {{-- Mengambil atribut dinamis 'contact' yang disiapkan di Component --}}
-                                    {{ $item->contact->email ?? '-' }}
-                                </td>
-                                <td>
-                                    <span class="text-xs">
-                                        {{ $item->created_at->format('H:i:s d-M-Y') }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-10 text-gray-500">Data tidak ditemukan.</td>
-                            </tr>
-                        @endforelse
+                            @forelse($deliveries as $item)
+                                <tr>
+                                    <td class="font-bold text-gray-700">
+                                        {{ $item->name ?? 'Unnamed Request' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->information->first_name ?? 'N/A' }}
+                                        {{ $item->information->last_name ?? '' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->contact->email ?? '-' }}
+                                    </td>
+                                    <td>
+                                        <span class="text-xs">
+                                            {{ $item->created_at->format('H:i:s d-M-Y') }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-10 text-gray-500">Data tidak ditemukan.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

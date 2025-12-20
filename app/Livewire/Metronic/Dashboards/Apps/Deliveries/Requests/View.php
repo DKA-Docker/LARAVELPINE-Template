@@ -4,26 +4,39 @@ namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests;
 
 use AllowDynamicProperties;
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Contracts\View\View as ViewContract;
 
-#[AllowDynamicProperties]
 class View extends Component
 {
     use WithPagination;
 
     // Menggunakan tailwind pagination
     protected $paginationTheme = 'tailwind';
+    protected ResourcesDeliveriesRequestsServices $services;
 
     public $search = '';
     public $perPage = 5;
     public $status = '';
     public $sort = 'latest';
 
-    public function boot(ResourcesDeliveriesRequestsServices $services)
+    // Properti untuk mengecek izin tanpa throw error
+    public bool $isAuthorized = true;
+
+    public function boot(): void
     {
-        $this->services = $services;
+        $this->services = new ResourcesDeliveriesRequestsServices();
+    }
+
+    public function mount(): void
+    {
+        // Langsung lempar exception jika tidak punya izin
+        if (!Auth::user()->can('dashboards.apps.deliveries.requests.view')) {
+            $this->isAuthorized = false;
+        }
     }
 
     public function updatingSearch(): void
@@ -33,6 +46,12 @@ class View extends Component
 
     public function render(): ViewContract
     {
+
+        // Jika tidak ada izin, langsung kembalikan view khusus unauthorized
+        if (!$this->isAuthorized) {
+            return view('dashboards.layouts.unauthorized');
+        }
+
         // Pastikan relasi di-eager load untuk performa
         $query = $this->services->query();
 
