@@ -248,7 +248,7 @@ class CreateForm extends Component
 
         // Cari driver hanya jika input >= 1 karakter
         if (strlen($searchTerm) >= 1) {
-            $response = $this->accountsServices->FindByName($searchTerm);
+            $response = $this->accountsServices->FindByName($searchTerm,"driver");
             if ($response['status'] && !empty($response['data'])) {
                 $selectedIds = array_keys($this->formData['assigned']);
                 // Filter agar driver yang sudah dipilih tidak muncul kembali di saran

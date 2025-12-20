@@ -259,23 +259,29 @@ class ResourcesAccountsServices
      * @param string $name
      * @return array
      */
-    public function FindByName(string $name): array
+    public function FindByName(string $name, string $role = null): array
     {
         try {
             $term = '%' . $name . '%';
+            $query = $this->account->query();
 
-            // Menggunakan method query() dari AccountsRepository
-            $query = $this->account->query()
-                ->whereHas('information', function ($q) use ($term) {
-                    $q->where('first_name', 'ilike', $term)
+            // Jika parameter role diisi, tambahkan filter role
+            if ($role) {
+                $query->role($role);
+            }
+
+            // Gunakan where closure agar logic OR tidak merusak filter ROLE
+            $query->where(function ($q) use ($term) {
+                $q->whereHas('information', function ($sub) use ($term) {
+                    $sub->where('first_name', 'ilike', $term)
                         ->orWhere('last_name', 'ilike', $term);
                 })
-                ->orWhereHas('credential', function ($q) use ($term) {
-                    $q->where('username', 'ilike', $term);
-                });
+                    ->orWhereHas('credential', function ($sub) use ($term) {
+                        $sub->where('username', 'ilike', $term);
+                    });
+            });
 
-            // Eksekusi dengan eager load dan limit
-            $accounts = $query->with(['information', 'credential', 'contact', 'firebase'])
+            $accounts = $query->with(['information', 'credential', 'contact'])
                 ->limit(5)
                 ->get();
 
