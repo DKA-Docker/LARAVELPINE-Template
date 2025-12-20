@@ -2,9 +2,7 @@
 
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests;
 
-use AllowDynamicProperties;
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,16 +12,14 @@ class View extends Component
 {
     use WithPagination;
 
-    // Menggunakan tailwind pagination
     protected $paginationTheme = 'tailwind';
     protected ResourcesDeliveriesRequestsServices $services;
 
     public $search = '';
-    public $perPage = 5;
+    public $perPage = 10;
     public $status = '';
     public $sort = 'latest';
-
-    // Properti untuk mengecek izin tanpa throw error
+    public $customerName = '';
     public bool $isAuthorized = true;
 
     public function boot(): void
@@ -33,58 +29,66 @@ class View extends Component
 
     public function mount(): void
     {
-        // Langsung lempar exception jika tidak punya izin
         if (!Auth::user()->can('dashboards.apps.deliveries.requests.view')) {
             $this->isAuthorized = false;
         }
     }
 
-    public function updatingSearch(): void
+    public function updated($property): void
     {
+        if (in_array($property, ['search', 'status', 'customerName'])) {
+            $this->resetPage();
+        }
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset(['search', 'status', 'customerName']);
+        $this->sort = 'latest';
         $this->resetPage();
     }
 
     public function render(): ViewContract
     {
-
-        // Jika tidak ada izin, langsung kembalikan view khusus unauthorized
         if (!$this->isAuthorized) {
             return view('dashboards.layouts.unauthorized');
         }
 
-        // Pastikan relasi di-eager load untuk performa
-        $query = $this->services->query();
+        // INTEGRASI: Eager loading sesuai instruksi Anda
+        $query = $this->services->query()->with([
+            'account.information',
+            'account.contact',
+            'destinations.packages'
+        ]);
 
-        // Logic Search menembus relasi
         if ($this->search) {
-            $query->where(function ($mainQuery) {
-                $mainQuery->whereHas('account.information', function ($q) {
-                    $q->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                })->orWhereHas('account.contact', function ($q) {
-                    $q->where('email', 'like', '%' . $this->search . '%');
-                });
+            $query->where('name', 'like', '%' . $this->search . '%');
+        }
+
+        if ($this->customerName) {
+            $query->whereHas('account.information', function ($q) {
+                $q->where('first_name', 'like', '%' . $this->customerName . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->customerName . '%');
             });
         }
 
-        // Filter Status
         if ($this->status) {
             $query->where('status', $this->status);
         }
 
-        // Sorting
         $this->sort === 'latest' ? $query->latest() : $query->oldest();
 
-        // Eksekusi Paginasi
         $deliveries = $query->paginate($this->perPage);
 
-        // TRANSFORMATION: Menangani bentrokan nama kolom 'account' vs relasi 'account'
+        // TRANSFORMATION: Tetap menggunakan through sesuai permintaan Anda
         $deliveries->through(function ($item) {
-            // Ambil objek relasi secara paksa melewati properti string
-            $item->account = $item->getRelation('account');
-            $item->account->information = $item->account->getRelationValue('information');
-            $item->account->contact = $item->account->getRelationValue('contact');
-
+            $account = $item->getRelation('account');
+            if ($account) {
+                // Pertahankan bentuk nama object lama
+                $item->account = $account;
+                $item->account->information = $account->getRelationValue('information');
+                $item->account->contact = $account->getRelationValue('contact');
+            }
             return $item;
         });
 
