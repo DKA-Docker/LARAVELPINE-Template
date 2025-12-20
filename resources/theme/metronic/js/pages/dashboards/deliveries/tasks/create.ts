@@ -5,6 +5,7 @@
 
 import $ from "jquery";
 import mapboxgl from "mapbox-gl";
+import URI from "urijs";
 // @ts-ignore
 import { Livewire } from '../../../../../../../../vendor/livewire/livewire/dist/livewire.esm'
 
@@ -169,6 +170,19 @@ const TaskCreateModule: TaskCreateModuleInterface = {
     fetchSuggestions(query, $container) {
         const self = this;
 
+        /** Ambil URL dimana JS Ini Dimuat**/
+        const FullUriCurrentURL = URI(window.location);
+        /**
+         * Ubah URL Menjadi Array Segment
+         * misal /dashboards/apps/deliveries menjadi
+         * ['dashboards','apps','deliveries'];
+         * **/
+        const segs = FullUriCurrentURL.segment();
+        /**
+         * Tambahkan Data Di Dalam Array
+         * ['api','dashboards','apps','deliveries'];
+         * **/
+        segs.push('geocoding-proxy');
         /**
          * PERBAIKAN MAPBOX URL:
          * 1. Menggunakan endpoint 'forward' dengan parameter 'q'.
@@ -181,12 +195,13 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             `&language=id` +
             `&types=address,street,place,locality`; // Ditambah 'place' agar kota seperti Makassar muncul
 
-        const osmUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}` +
-            `&format=json&addressdetails=1&limit=6&countrycodes=id`;
+        const proxyUri = new URI()
+            .segment(segs)
+            .query({ q: query });
 
         Promise.allSettled([
             $.getJSON(mapboxUrl),
-            $.getJSON(osmUrl)
+            $.getJSON(`${proxyUri}`)
         ]).then((results) => {
             $container.empty().removeClass('hidden');
             let combinedResults: any[] = [];
@@ -216,7 +231,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
                 const data = results[1].value;
                 data.forEach((item: any) => {
                     combinedResults.push({
-                        source: 'OSM',
+                        source: 'OPEN STREET MAP',
                         name: item.display_name.split(',')[0],
                         full: item.display_name,
                         lng: parseFloat(item.lon),

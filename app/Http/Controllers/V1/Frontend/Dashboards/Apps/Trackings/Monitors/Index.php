@@ -4,9 +4,11 @@ namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings\Monitors;
 
 use App\Services\Resources\Trackings\Monitors\ResourcesTrackingsMonitorsServices;
 use Exception;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Symfony\Component\HttpFoundation\Response;

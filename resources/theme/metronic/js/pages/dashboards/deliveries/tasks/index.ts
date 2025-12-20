@@ -3,6 +3,7 @@ import $ from "jquery";
 import URI from "urijs";
 import moment from "moment-timezone";
 import "moment/locale/id.js"
+// @ts-ignore
 import { KTDataTable } from "@keenthemes/ktui/lib/esm"
 
 const elementExists = $("div.dashboards-apps-deliveries-tasks");
@@ -52,31 +53,31 @@ $(window).on('load', function () {
             columns: {
                 name: {
                     title: 'Name',
-                    render: (value, row) => {
+                    render: (value: any, row: { name: any; id: any; }) => {
                         return row.name ? `<a href="./tasks/show/${row.id}" class="kt-btn-ghost kt-btn-primary">${row.name}</a>` : '-';
                     }
                 },
                 assigned: {
                     title: 'Assigned',
-                    render: (value, row) => {
+                    render: (value: any, row: { account: { information: { first_name: any; last_name: any; }; }; }) => {
                         return `${row.account.information.first_name} ${row.account.information.last_name}`
                     }
                 },
                 destinations: {
                     title: 'Destinations',
-                    render: (value, row) => {
+                    render: (value: any, row: { destination: { receipt_address: any; }; }) => {
                         return `${row.destination?.receipt_address ?? '-'}`;
                     }
                 },
                 created_at: {
                     title: 'Tanggal Dibuat',
-                    render: (value, row) => {
+                    render: (value: any, row: { created_at: moment.MomentInput; }) => {
                         return moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY")
                     }
                 },
                 actions: {
                     title: 'Aksi',
-                    render: (value, row) => {
+                    render: () => {
                         return `<a class="kt-btn kt-btn-ghost kt-btn-destructive" href="#">
                                     Hapus Task
                                 </a>`;
@@ -92,7 +93,7 @@ $(window).on('load', function () {
                 const page = queryParams.get('page');
                 const size = queryParams.get('size');
 
-                $(".show_from").html(size);
+                $(".show_from").html(`${size}`);
                 return queryParams;
             },
             /**
