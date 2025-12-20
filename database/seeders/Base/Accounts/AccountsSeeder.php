@@ -45,23 +45,65 @@ class AccountsSeeder extends Seeder
             ]
         ]);
         $this->command->info(json_encode($create));
+
         $create = $this->account->Create([
             "information" => [
-                "first_name" => "Ryan",
-                "last_name" => "Pratama"
+                "first_name" => "Administrator",
+                "last_name" => ""
             ],
             "credential" => [
-                "username" => "ryan",
-                "password" => "Makassar123#"
+                "username" => "admin",
+                "password" => "admin"
             ],
             "contact" => [
-                "email" => "ryanpratama@example.com"
+                "email" => "admin@example.com"
+            ],
+            "firebase" => [
+                "token" => null
+            ],
+            "roles" => [
+                "admin"
+            ]
+        ]);
+        $this->command->info(json_encode($create));
+
+        $create = $this->account->Create([
+            "information" => [
+                "first_name" => "Driver",
+                "last_name" => "Satria"
+            ],
+            "credential" => [
+                "username" => "driver",
+                "password" => "driver#"
+            ],
+            "contact" => [
+                "email" => "driver@example.com"
             ],
             "firebase" => [
                 "token" => null
             ],
             "roles" => [
                 "driver"
+            ]
+        ]);
+        $this->command->info(json_encode($create));
+        $create = $this->account->Create([
+            "information" => [
+                "first_name" => "Customer",
+                "last_name" => "Demo"
+            ],
+            "credential" => [
+                "username" => "customer",
+                "password" => "customer"
+            ],
+            "contact" => [
+                "email" => "customer@example.com"
+            ],
+            "firebase" => [
+                "token" => null
+            ],
+            "roles" => [
+                "customer"
             ]
         ]);
         $this->command->info(json_encode($create));
