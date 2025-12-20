@@ -4,8 +4,6 @@ import axios from "axios";
 import URI from "urijs";
 import moment from "moment";
 import { initializeApp } from "firebase/app";
-import PerfectScrollbar from "perfect-scrollbar";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
@@ -19,25 +17,17 @@ declare global {
     }
 }
 
-// ==========================================
-// 4. MAIN ENTRY POINT
-// ==========================================
-
 $(window).on('load', async function () {
     const elementExists = $("div.dashboards-apps-trackings");
     if (elementExists.length === 0 || $('#map').length === 0) return;
 
-    /**
-     * Helper untuk mengambil nilai dari Meta Tag agar kebal Obfuscation
-     */
     const getCfg = (name: string): string => {
         const meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
         return meta ? meta.content : '';
     };
 
+    // --- REVERB & FIREBASE CONFIG ---
     window.Pusher = Pusher;
-
-// Inisialisasi Echo metalanguage Meta Tags dari Config Laravel
     window.Echo = new Echo({
         broadcaster: 'reverb',
         key: getCfg('reverb-key'),
@@ -48,9 +38,6 @@ $(window).on('load', async function () {
         enabledTransports: ['ws', 'wss'],
     });
 
-    // ==========================================
-    // 1. KONFIGURASI & STATE
-    // ==========================================
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyBy_jmKX6mIQOVSUSxra5DnVfFSAel3RIE",
         authDomain: "hndgs-65ce6.firebaseapp.com",
@@ -58,237 +45,168 @@ $(window).on('load', async function () {
         storageBucket: "hndgs-65ce6.firebasestorage.app",
         messagingSenderId: "1078964933148",
         appId: "1:1078964933148:web:6f733f7f2264c0f8f245d9",
-        measurementId: "G-W472DNVMSB"
-    };
-
-    const MAP_STYLES = {
-        standard: 'mapbox://styles/mapbox/standard',
-        streets: 'mapbox://styles/mapbox/streets-v12',
-        satellite: 'mapbox://styles/mapbox/satellite-v9',
-        dark: 'mapbox://styles/mapbox/dark-v11',
     };
 
     let mapInstance: mapboxgl.Map | null = null;
-    const markers: Record<string, {
-        marker: mapboxgl.Marker;
-        popup: mapboxgl.Popup;
-        contentElement?: HTMLElement;
-        containerElement?: HTMLElement;
-    }> = {};
+    let selectedUuid: string | null = null;
+    const markers: Record<string, { marker: mapboxgl.Marker }> = {};
 
-// ==========================================
-// 2. LOGIKA DATA & ANIMASI
-// ==========================================
+    // ==========================================
+    // 1. TELEMETRY & UI LOGIC
+    // ==========================================
 
-    async function fetchTracking(highlightUuid: string | null = null) {
-        try {
-            const fullUri = URI(window.location);
-            const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors']).toString();
-            const res = await axios.get(fetchUrl);
-            const drivers = res.data.data;
-
-            const latestPerUuid: Record<string, any> = {};
-            drivers.forEach((d: any) => {
-                if (!latestPerUuid[d.uuid] || new Date(d.created_at) > new Date(latestPerUuid[d.uuid].created_at)) {
-                    latestPerUuid[d.uuid] = d;
-                }
-            });
-
-            updateMarkersOnMap(latestPerUuid, highlightUuid);
-        } catch (error) {
-            console.error("Gagal update tracking:", error);
-        }
+    function addTelemetryLog(message: string, type: 'info' | 'alert' = 'info') {
+        const $container = $('#log-container');
+        const colorClass = type === 'alert' ? 'text-primary' : 'text-foreground/40';
+        const logHtml = `
+            <div class="log-item flex gap-3 items-start border-l border-white/5 pl-3 py-1 mb-1">
+                <span class="text-[8px] font-mono opacity-20 mt-0.5">${moment().format('HH:mm:ss')}</span>
+                <p class="text-[10px] font-bold tracking-tight ${colorClass}">>> ${message}</p>
+            </div>`;
+        $container.prepend(logHtml);
+        if ($container.children().length > 6) $container.children().last().remove();
     }
 
-    function updateMarkersOnMap(latestPerUuid: Record<string, any>, highlightUuid: string | null = null) {
-        const isDark = document.documentElement.classList.contains('dark');
-        const colors = isDark ?
-            { bg: '#2b2b2b', text: '#ffffff', divider: '#444' } :
-            { bg: '#ffffff', text: '#333333', divider: '#eee' };
+    function resetControlHub() {
+        selectedUuid = null;
+        $('#unit-name').text('System Ready');
+        $('#btn-ping-driver, #energy-widget, #log-widget, #security-alert-box').addClass('hidden');
+        $('#control-sidebar').removeClass('is-updating is-commanding');
+        $('#unit-card').removeClass('animate-panel-scan');
+    }
 
-        Object.values(latestPerUuid).forEach((driver: any) => {
-            const coord: [number, number] = [driver.longitude, driver.latitude];
-            const fullName = `${driver.account.information.first_name} ${driver.account.information.last_name}`;
-            const fcmToken = driver.account?.firebase?.token;
+    function updateControlHub(driver: any, isEchoUpdate: boolean = false) {
+        const info = driver.account?.information;
+        const fullName = info ? `${info.first_name} ${info.last_name}` : 'Unknown';
+        const fcmToken = driver.account?.firebase?.token;
 
-            if (!markers[driver.uuid]) {
-                const popupData = createPopupContainer(driver, fullName, fcmToken, colors);
-                const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, className: 'custom-tracking-popup' })
-                    .setDOMContent(popupData.container);
+        $('#unit-name').text(fullName);
+        $('#unit-id').text(`ID: ${driver.uuid.substring(0, 8).toUpperCase()}`);
+        $('#unit-speed').html(`${parseFloat(driver.speed).toFixed(2)} <span class="text-[10px]">KM/H</span>`);
+        $('#unit-time').text(moment(driver.created_at).format('HH:mm:ss'));
+        if (info?.avatar) $('#unit-avatar').attr('src', `/storage/${info.avatar}`);
 
-                const el = document.createElement('div');
-                el.innerHTML = '🚗';
-                el.style.fontSize = '28px';
-                el.style.cursor = 'pointer';
+        $('#btn-ping-driver, #energy-widget, #log-widget').removeClass('hidden');
 
-                markers[driver.uuid] = {
-                    marker: new mapboxgl.Marker(el).setLngLat(coord).setPopup(popup).addTo(mapInstance!),
-                    popup,
-                    contentElement: popupData.contentElement,
-                    containerElement: popupData.container
-                };
-            } else {
-                const target = markers[driver.uuid];
-                target.marker.setLngLat(coord);
+        const $sidebar = $('#control-sidebar');
+        const $card = $('#unit-card');
 
-                if (target.contentElement) {
-                    target.contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
-                }
+        // --- THE CYBERPUNK SCAN GIF EFFECT ---
+        if (isEchoUpdate) {
+            // Trigger Scanline & Overlay
+            $sidebar.addClass('is-updating');
 
-                // TRIGGER ANIMASI JIKA ADA UPDATE DARI ECHO
-                if (driver.uuid === highlightUuid) {
-                    const el = target.marker.getElement();
-                    el.classList.remove('animate-marker-ping');
-                    void el.offsetWidth;
-                    el.classList.add('animate-marker-ping');
+            // Trigger Glow pada Card dengan Reflow
+            $card.removeClass('animate-panel-scan');
+            void $card[0].offsetWidth;
+            $card.addClass('animate-panel-scan');
 
-                    if (target.containerElement) {
-                        target.containerElement.classList.remove('animate-popup-glow');
-                        void target.containerElement.offsetWidth;
-                        target.containerElement.classList.add('animate-popup-glow');
-                    }
-                }
+            // Alert Box logic
+            $('#security-alert-box').stop(true, true).hide().removeClass('hidden').fadeIn(200);
+            $('#alert-message').text(`${fullName} signal acquired.`);
+            addTelemetryLog(`LIVE SYNC: ${fullName}`, 'alert');
+
+            // Matikan efek setelah 2 detik (durasi scanning)
+            setTimeout(() => {
+                $sidebar.removeClass('is-updating');
+                $('#security-alert-box').fadeOut(1000);
+            }, 2000);
+        }
+
+        // --- REQUEST COMMAND OVERRIDE ---
+        $('#btn-ping-driver').off('click').on('click', async function(e) {
+            e.stopPropagation();
+            const $this = $(this);
+            if ($this.hasClass('is-loading')) return;
+
+            $this.addClass('is-loading');
+            $sidebar.addClass('is-commanding'); // Mode Merah (Override)
+            addTelemetryLog(`OVERRIDE: REQUESTING LOCATION...`, 'alert');
+
+            try {
+                const fullUri = URI(window.location);
+                const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
+                await axios.post(fetchUrl, { token: fcmToken, driver_name: fullName });
+
+                setTimeout(() => {
+                    $this.removeClass('is-loading');
+                    $sidebar.removeClass('is-commanding');
+                    addTelemetryLog(`COMMAND CONFIRMED BY UNIT`, 'info');
+                }, 2500);
+            } catch (err) {
+                $this.removeClass('is-loading');
+                $sidebar.removeClass('is-commanding');
+                addTelemetryLog(`DISPATCH FAILED: UNIT OFFLINE`, 'alert');
             }
         });
     }
 
-// ==========================================
-// 3. UI GENERATORS (ISI DATA TETAP SAMA)
-// ==========================================
-
-    const generatePopupHTML = (driver: any, name: string, colors: any) => `
-    <div style="border-bottom: 1px solid ${colors.divider}; margin-bottom: 8px; padding-bottom: 5px;">
-        <strong style="font-size: 14px;">${name}</strong>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px;">
-        <div style="display: flex; justify-content: space-between;">
-            <span style="font-weight: bold;">Latitude:</span> <span>${driver.latitude}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-            <span style="font-weight: bold;">Longitude:</span> <span>${driver.longitude}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-            <span style="font-weight: bold;">Kecepatan:</span> <span>${parseFloat(driver.speed).toFixed(2)} km/h</span>
-        </div>
-        <div style="display: flex; flex-direction: column; margin-top: 6px; border-top: 1px dashed " + "${colors.divider}" + "; padding-top: 6px;">
-            <span style="font-weight: bold; color: #888; margin-bottom: 2px;">Last Updated:</span>
-            <span>${moment(driver.created_at).format('DD MMM YYYY, HH:mm:ss')}</span>
-        </div>
-    </div>
-`;
-
-    function createPopupContainer(driver: any, fullName: string, fcmToken: string, colors: any) {
-        const container = document.createElement('div');
-        Object.assign(container.style, {
-            padding: '12px', background: colors.bg, color: colors.text,
-            borderRadius: '8px', position: 'relative', minWidth: '260px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)', fontFamily: 'sans-serif',
-            border: '2px solid transparent'
-        });
-
-        const reloadBtn = document.createElement('button');
-        reloadBtn.innerHTML = '↻';
-        Object.assign(reloadBtn.style, {
-            position: 'absolute', top: '-12px', left: '-12px', background: '#007bff',
-            color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'
-        });
-        reloadBtn.onclick = () => sendReloadNotification(fcmToken, fullName, driver.uuid);
-
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '&times;';
-        Object.assign(closeBtn.style, {
-            position: 'absolute', top: '-12px', right: '-12px', background: '#dc3545',
-            color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px'
-        });
-        closeBtn.onclick = () => markers[driver.uuid].popup.remove();
-
-        const contentElement = document.createElement('div');
-        contentElement.style.paddingTop = '5px';
-        contentElement.innerHTML = generatePopupHTML(driver, fullName, colors);
-
-        container.append(reloadBtn, closeBtn, contentElement);
-        return { container, contentElement };
-    }
-
-    async function sendReloadNotification(fcmToken: string, driverName: string, uuid: string) {
-        if (!fcmToken) return alert(`Driver ${driverName} tidak memiliki token FCM.`);
-        try {
-            const fullUri = URI(window.location);
-            const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
-            const response = await axios.post(fetchUrl, { token: fcmToken, driver_name: driverName });
-            if (response.data.status === 'success') console.debug(`Perintah pembaruan lokasi berhasil dikirim ke ${driverName}`);
-        } catch (error: any) {
-            alert("Gagal mengirim perintah reload.");
-        }
-    }
-
-
-    initializeApp(FIREBASE_CONFIG);
-
-    // Ambil Access Token Mapbox dari Meta Tag
-    mapboxgl.accessToken = getCfg('mapbox-token');
-
-    let currentStyleKey = document.documentElement.classList.contains('dark') ? 'dark' : 'standard';
-
-    mapInstance = new mapboxgl.Map({
-        container: "map",
-        style: MAP_STYLES[currentStyleKey as keyof typeof MAP_STYLES],
-        center: [119.4365, -5.1477],
-        zoom: 12,
-        projection: 'globe'
-    });
-
-    $('<style>').text(`
-        .custom-tracking-popup .mapboxgl-popup-content { padding: 0; background: none; box-shadow: none; border: none; }
-        .custom-tracking-popup .mapboxgl-popup-tip { display: none; }
-
-        @keyframes popup-glow {
-            0% { border-color: transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-            50% { border-color: #007bff; box-shadow: 0 0 25px rgba(0,123,255,0.6); }
-            100% { border-color: transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        }
-        .animate-popup-glow { animation: popup-glow 1.2s ease-in-out; }
-    `).appendTo('head');
-
-    window.Echo.channel('dashboards.apps.trackings.monitors')
-        .listen('.dashboards.apps.trackings.monitors', (response: any) => {
-            const incomingUuid = response.data.uuid;
-
-            mapInstance?.flyTo({
-                center: [response.data.longitude, response.data.latitude],
-                zoom: 19,
-                speed: 3,
-                essential: true
-            });
-
-            Object.values(markers).forEach(m => {
-                if (m.popup.isOpen()) {
-                    m.popup.remove();
-                }
-            });
-
-            if (markers[incomingUuid]) {
-                markers[incomingUuid].popup.addTo(mapInstance!);
-            }
-
-            fetchTracking(incomingUuid);
-        }).error((err: any) => {
-            console.error('❌ Echo Error:', err);
-        });
-
-    mapInstance.on('style.load', () => fetchTracking());
-
+    // ==========================================
+    // 2. THEME OBSERVER (MUTATE OBSERVER)
+    // ==========================================
     const themeObserver = new MutationObserver(() => {
         const isDark = document.documentElement.classList.contains('dark');
-        const newKey = isDark ? 'dark' : 'standard';
-        if (newKey !== currentStyleKey) {
-            currentStyleKey = newKey;
-            mapInstance?.setStyle(MAP_STYLES[currentStyleKey as keyof typeof MAP_STYLES]);
-        }
+        const newStyle = isDark ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/standard';
+        if (mapInstance) mapInstance.setStyle(newStyle);
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    window.addEventListener('resize', () => mapInstance?.resize());
+    // ==========================================
+    // 3. MARKER ENGINE
+    // ==========================================
+    function updateMarkersOnMap(latestPerUuid: Record<string, any>, highlightUuid: string | null = null) {
+        Object.values(latestPerUuid).forEach((driver: any) => {
+            const coord: [number, number] = [driver.longitude, driver.latitude];
+            if (!markers[driver.uuid]) {
+                const el = document.createElement('div');
+                el.className = 'marker-car'; el.innerHTML = '🚗';
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation(); selectedUuid = driver.uuid;
+                    updateControlHub(driver, false);
+                    mapInstance?.flyTo({ center: coord, zoom: 16 });
+                });
+                markers[driver.uuid] = { marker: new mapboxgl.Marker(el).setLngLat(coord).addTo(mapInstance!) };
+            } else {
+                markers[driver.uuid].marker.setLngLat(coord);
+                if (driver.uuid === selectedUuid) updateControlHub(driver, driver.uuid === highlightUuid);
+            }
+        });
+    }
+
+    async function fetchTracking(highlightUuid: string | null = null) {
+        try {
+            const res = await axios.get(URI(window.location).segment([...URI(window.location).segment(), 'monitors']).toString());
+            const latest: Record<string, any> = {};
+            res.data.data.forEach((d: any) => {
+                if (!latest[d.uuid] || new Date(d.created_at) > new Date(latest[d.uuid].created_at)) latest[d.uuid] = d;
+            });
+            updateMarkersOnMap(latest, highlightUuid);
+        } catch (e) { console.error(e); }
+    }
+
+    // --- INITIALIZE ---
+    initializeApp(FIREBASE_CONFIG);
+    mapboxgl.accessToken = getCfg('mapbox-token');
+    mapInstance = new mapboxgl.Map({
+        container: "map",
+        style: document.documentElement.classList.contains('dark') ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/standard',
+        center: [119.4365, -5.1477], zoom: 12
+    });
+
+    mapInstance.on('click', (e) => { if (!(e.originalEvent.target as HTMLElement).closest('.marker-car')) resetControlHub(); });
+
+    // --- REALTIME LISTEN ---
+    window.Echo.channel('dashboards.apps.trackings.monitors')
+        .listen('.dashboards.apps.trackings.monitors', (response: any) => {
+            const incoming = response.data;
+            if (markers[incoming.uuid]) markers[incoming.uuid].marker.setLngLat([incoming.longitude, incoming.latitude]);
+            if (!selectedUuid || selectedUuid === incoming.uuid) {
+                selectedUuid = incoming.uuid;
+                updateControlHub(incoming, true); // <--- INI PEMICU ANIMASI CYBER
+                mapInstance?.flyTo({ center: [incoming.longitude, incoming.latitude], zoom: 17 });
+            }
+            fetchTracking(incoming.uuid);
+        });
+
+    mapInstance.on('style.load', () => fetchTracking());
 });

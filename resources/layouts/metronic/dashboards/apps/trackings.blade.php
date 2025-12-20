@@ -2,61 +2,75 @@
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-screen text-base antialiased overflow-hidden">
 
     <style>
-        /* --- ANIMASI JARVIS --- */
-        @keyframes scan-line {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-        }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-        @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .main-tracking-area { position: absolute; top: 60px; left: 0; right: 0; bottom: 0; display: flex; overflow: hidden; z-index: 1; }
+        @media (min-width: 1024px) { .main-tracking-area { top: 70px; } }
+
+        /* MARKER 5X */
+        .marker-car { font-size: 40px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); display: flex; align-items: center; justify-content: center; }
+
+        /* --- ULTRA-CYBER ANIMATION SYSTEM --- */
+
+        /* 1. Overlay Digital (Scanlines & Noise) */
+        .cyber-overlay {
+            position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 50;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 123, 255, 0.08) 50%),
+            linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%;
+            transition: opacity 0.3s ease;
         }
 
-        .animate-scan { animation: scan-line 8s linear infinite; }
-        .animate-rotate { animation: rotate-slow 15s linear infinite; }
-        .animate-slide-right { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-
-        /* --- UI JARVIS ELEMENTS --- */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .glass-panel {
-            background: rgba(24, 24, 27, 0.8);
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .modern-card {
-            background: rgba(0, 123, 255, 0.03);
-            border: 1px solid rgba(0, 123, 255, 0.1);
+        /* 2. Scanning Laser Line */
+        .scan-line {
+            position: absolute; width: 100%; height: 4px; background: #007bff;
+            top: -10%; opacity: 0; z-index: 60; pointer-events: none;
+            box-shadow: 0 0 20px #007bff, 0 0 40px #007bff;
         }
 
-        /* --- LAYOUT FIX --- */
-        .main-tracking-area {
-            position: absolute;
-            top: 60px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            overflow: hidden;
-            z-index: 1;
-        }
-        @media (min-width: 1024px) {
-            .main-tracking-area { top: 70px; }
+        /* 3. Animation Keyframes (Disesuaikan untuk Slow-Motion) */
+        @keyframes cyber-scan-move {
+            0% { top: -10%; opacity: 0; }
+            20% { opacity: 1; } /* Muncul perlahan */
+            80% { opacity: 1; }
+            100% { top: 110%; opacity: 0; } /* Menghilang perlahan di bawah */
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+        @keyframes cyber-pulse {
+            0% { background-color: rgba(0, 123, 255, 0); }
+            50% { background-color: rgba(0, 123, 255, 0.05); } /* Pulse lebih halus */
+            100% { background-color: rgba(0, 123, 255, 0); }
+        }
+
+        /* 4. Trigger Classes - Diubah Durasi ke Slow-Motion */
+        .is-updating .cyber-overlay {
+            opacity: 1;
+            animation: cyber-pulse 2s infinite; /* Slow pulse */
+        }
+
+        .is-updating .scan-line {
+            opacity: 1;
+            /* Diubah dari 1.5s menjadi 4s untuk efek Slowmo */
+            animation: cyber-scan-move 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+
+        /* Mode Override (Saat Klik Request) - Tetap dibuat agak cepat agar terasa responsif */
+        .is-commanding .scan-line {
+            background: #ff0055;
+            box-shadow: 0 0 20px #ff0055, 0 0 40px #ff0055;
+            animation-duration: 1.5s; /* Kecepatan menengah untuk state 'Danger' */
+        }
+
+        /* Glow Panel Scan - Diperhalus durasinya */
+        @keyframes intelligence-glow {
+            0% { border-color: #007bff; box-shadow: 0 0 40px rgba(0,123,255,0.3); transform: scale(1.02); }
+            100% { border-color: rgba(255, 255, 255, 0.1); transform: scale(1); }
+        }
+        .animate-panel-scan { animation: intelligence-glow 2s ease-out forwards; }
+
+        /* SPINNER */
+        .spinner-custom { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .is-loading .spinner-custom { display: block; }
+        .is-loading .btn-text { opacity: 0.5; }
     </style>
 
     <div class="flex grow h-full">
@@ -66,127 +80,87 @@
             @livewire("metronic.dashboards.layouts.constructors.headers")
 
             <div class="main-tracking-area">
-
-                <div class="relative flex-1 h-full min-w-0 bg-black overflow-hidden group">
-
-                    <div id="map" class="w-full h-full z-0 grayscale-[0.3] contrast-[1.1]"></div>
+                <div class="relative flex-1 h-full min-w-0 bg-black overflow-hidden">
+                    <div id="map" class="w-full h-full z-0 grayscale-[0.2]"></div>
                 </div>
 
-                <aside class="glass-sidebar w-80 lg:w-[400px] h-full flex flex-col shadow-2xl animate-slide-right shrink-0 z-20">
+                <aside id="control-sidebar" class="glass-sidebar w-80 lg:w-[400px] h-full flex flex-col shadow-2xl shrink-0 z-20 bg-background/90 backdrop-blur-2xl border-l border-white/10 relative overflow-hidden">
 
-                    <div class="p-6 border-b border-white/10 dark:border-white/5">
-                        <div class="flex justify-between items-end">
+                    <div class="cyber-overlay"></div>
+                    <div class="scan-line"></div>
+
+                    <div class="p-6 border-b border-white/10 relative z-30">
+                        <div class="flex items-center justify-between">
                             <div>
-                                <h2 class="text-xl font-black tracking-tighter uppercase italic">Control Hub</h2>
-                                <p class="text-[10px] opacity-50 font-bold tracking-[0.2em] uppercase">Logistics Intelligence</p>
+                                <h2 class="text-xl font-black tracking-tighter uppercase italic text-primary">Intelligence Hub</h2>
+                                <p class="text-[10px] opacity-50 font-bold tracking-[0.2em] uppercase">Tactical Stream Active</p>
                             </div>
-                            <div class="text-right">
-                                <span class="text-xs font-mono font-bold text-primary">v2.4.0</span>
-                            </div>
+                            <div class="size-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></div>
                         </div>
                     </div>
 
-                    <div class="grow overflow-y-auto p-6 space-y-8 custom-scrollbar">
-
-                        <div class="space-y-4">
-                            <h3 class="text-[10px] font-black opacity-40 uppercase tracking-[0.3em]">Selected Unit</h3>
-                            <div class="glass-card p-5 rounded-[2rem] relative overflow-hidden group hover:border-primary/50 transition-all duration-500">
-                                <div class="flex items-center gap-5 relative z-10">
-                                    <div class="relative">
-                                        <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
-                                        <img src="{{ asset(Storage::url('media/avatars/300-1.png')) }}" class="size-14 rounded-full object-cover border-2 border-white/50 relative">
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="text-base font-bold tracking-tight">Rahmat Hidayat</h4>
-                                        <p class="text-[10px] font-mono opacity-60">ID: DRV-99021 / WINGS-BOX</p>
-                                    </div>
+                    <div class="grow overflow-y-auto p-6 space-y-6 custom-scrollbar relative z-30">
+                        <div id="unit-card" class="glass-card p-6 rounded-[2.5rem] relative overflow-hidden border border-white/10 transition-all duration-500 bg-white/[0.02]">
+                            <div class="flex items-center gap-5 relative z-10">
+                                <div class="relative">
+                                    <div id="unit-pulse" class="absolute inset-0 bg-primary/30 blur-2xl rounded-full opacity-0"></div>
+                                    <img id="unit-avatar" src="{{ asset(Storage::url('media/avatars/blank.png')) }}" class="size-16 rounded-full object-cover border-2 border-white/20 relative shadow-2xl">
                                 </div>
+                                <div class="flex-1">
+                                    <h4 id="unit-name" class="text-lg font-black tracking-tight">System Ready</h4>
+                                    <p id="unit-id" class="text-[10px] font-mono opacity-40 uppercase tracking-widest">Awaiting Link...</p>
+                                </div>
+                            </div>
 
-                                <div class="mt-6 grid grid-cols-2 gap-3 relative z-10">
-                                    <div class="bg-white/10 dark:bg-black/20 p-3 rounded-2xl border border-white/10">
-                                        <span class="block text-[9px] uppercase font-bold opacity-50 mb-1">Fuel Level</span>
-                                        <span class="text-sm font-black italic">82.4%</span>
-                                    </div>
-                                    <div class="bg-white/10 dark:bg-black/20 p-3 rounded-2xl border border-white/10">
-                                        <span class="block text-[9px] uppercase font-bold opacity-50 mb-1">Cargo Temp</span>
-                                        <span class="text-sm font-black italic text-blue-500">4.2°C</span>
-                                    </div>
+                            <div class="mt-6 grid grid-cols-2 gap-3 relative z-10">
+                                <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm">
+                                    <span class="block text-[9px] font-bold opacity-30 mb-1 uppercase tracking-tighter">Velocity</span>
+                                    <span id="unit-speed" class="text-base font-black italic">0.00 <span class="text-[10px] opacity-50">KM/H</span></span>
+                                </div>
+                                <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm">
+                                    <span class="block text-[9px] font-bold opacity-30 mb-1 uppercase tracking-tighter">Sync Delay</span>
+                                    <span id="unit-time" class="text-base font-black italic">--:--</span>
+                                </div>
+                            </div>
+
+                            <button id="btn-ping-driver" class="w-full mt-6 py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase hidden flex items-center justify-center gap-3 transition-all active:scale-95 hover:bg-primary-hover shadow-lg shadow-primary/20">
+                                <div class="spinner-custom"></div>
+                                <span class="btn-text tracking-[0.2em]">Execute Loc Update</span>
+                            </button>
+
+                            <div id="energy-widget" class="mt-6 pt-6 border-t border-white/10 hidden">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-[9px] font-bold uppercase opacity-40">System Energy Cell</span>
+                                    <span id="fuel-val" class="text-[10px] font-black italic text-primary">--%</span>
+                                </div>
+                                <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                    <div id="fuel-bar" class="h-full bg-primary transition-all duration-1000" style="width: 0%"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <h3 class="text-[10px] font-black opacity-40 uppercase tracking-[0.3em]">Fleet Performance</h3>
-                            <div class="space-y-3">
-                                <div class="glass-card flex justify-between items-center p-4 rounded-2xl hover:bg-white/30 transition-colors">
-                                    <div class="flex items-center gap-4">
-                                        <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
-                                            <i class="ki-filled ki-geolocation text-lg"></i>
-                                        </div>
-                                        <span class="text-xs font-bold uppercase tracking-tighter">Total Distance</span>
-                                    </div>
-                                    <span class="text-sm font-black font-mono">1,240.8 <span class="text-[10px]">KM</span></span>
+                        <div id="security-alert-box" class="hidden bg-primary/10 p-5 rounded-[2rem] backdrop-blur-md relative overflow-hidden">
+                            <div class="flex gap-4 items-center relative z-10">
+                                <div class="size-10 rounded-full bg-primary/20 flex items-center justify-center animate-pulse ">
+                                    <i class="ki-filled ki-radar text-primary text-xl"></i>
                                 </div>
-
-                                <div class="glass-card flex justify-between items-center p-4 rounded-2xl hover:bg-white/30 transition-colors">
-                                    <div class="flex items-center gap-4">
-                                        <div class="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500 shadow-inner">
-                                            <i class="ki-filled ki-delivery-door text-lg"></i>
-                                        </div>
-                                        <span class="text-xs font-bold uppercase tracking-tighter">Completed</span>
-                                    </div>
-                                    <span class="text-sm font-black font-mono">32 <span class="text-[10px]">TASKS</span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-orange-500/10 border border-orange-500/20 p-5 rounded-[2rem] backdrop-blur-md">
-                            <div class="flex gap-4">
-                                <i class="ki-filled ki-shield-search text-orange-500 text-xl"></i>
                                 <div>
-                                    <h5 class="text-xs font-black uppercase text-orange-700 dark:text-orange-400">Security Alert</h5>
-                                    <p class="text-[10px] leading-relaxed mt-1 opacity-80 font-medium">Unit B 9921 KAA terdeteksi keluar dari jalur utama (Geo-fencing breach).</p>
+                                    <h5 class="text-[10px] font-black uppercase text-primary tracking-widest">Protocol Sync</h5>
+                                    <p id="alert-message" class="text-[10px] leading-tight opacity-80 font-medium italic"></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="space-y-4 pt-2">
-                            <div class="flex justify-between items-end">
-                                <span class="text-[10px] font-black opacity-40 uppercase tracking-[0.3em]">Shipment Trip</span>
-                                <span class="text-xs font-black text-primary italic">75%</span>
-                            </div>
-                            <div class="h-3 w-full bg-black/5 dark:bg-white/5 rounded-full p-[3px]">
-                                <div class="h-full bg-gradient-to-r from-primary to-blue-400 rounded-full shadow-[0_0_15px_rgba(0,123,255,0.4)] transition-all duration-1000" style="width: 75%"></div>
-                            </div>
-                            <div class="flex justify-between text-[9px] font-bold opacity-60 uppercase italic">
-                                <span>Origin: JKT</span>
-                                <span>Dest: BDG</span>
+                        <div id="log-widget" class="hidden space-y-4">
+                            <h3 class="text-[9px] font-black opacity-30 uppercase tracking-[0.4em] pl-2">Live Telemetry</h3>
+                            <div id="log-container" class="space-y-2 max-h-[250px] overflow-hidden">
                             </div>
                         </div>
-
-                    </div>
-
-                    <div class="p-6 dark:bg-black/10 backdrop-blur-md border-t border-white/10">
-                        <button class="w-full py-4 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-active transition-all shadow-xl shadow-primary/20 active:scale-[0.98]">
-                            View Detailed Intelligence
-                        </button>
                     </div>
                 </aside>
-
-            </div> </div>
+            </div>
+        </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const resizeObserver = new ResizeObserver(() => {
-                window.dispatchEvent(new Event('resize'));
-            });
-            const mapContainer = document.getElementById('map');
-            if(mapContainer) resizeObserver.observe(mapContainer);
-        });
-    </script>
-
     <div class="dashboards-apps-trackings"></div>
-
     </body>
 </x-metronic.dashboards.layouts.container>
