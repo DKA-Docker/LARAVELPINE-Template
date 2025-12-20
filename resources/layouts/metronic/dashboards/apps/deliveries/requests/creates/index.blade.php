@@ -1,119 +1,79 @@
-<form wire:submit.prevent="submit">
-    <!-- Container -->
+<form wire:submit.prevent="submit" class="space-y-8">
     <div class="kt-container-fixed">
-        <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
+        <div class="flex flex-wrap items-center justify-between gap-5 pb-8 lg:items-end">
             <div class="flex flex-col justify-center gap-2">
-                <h1 class="text-mono text-xl leading-none font-medium">Buat Data Request Baru</h1>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900 leading-none">Buat Data Request Baru</h1>
+                <p class="text-sm text-gray-500">Lengkapi informasi pengiriman di bawah ini secara mendetail.</p>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-3">
                 <a
-                    class="kt-btn  kt-btn-lg kt-btn-destructive"
+                    class="kt-btn kt-btn-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
                     href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}"
                 >
                     Batalkan
                 </a>
-                <button class="kt-btn kt-btn-lg kt-btn-secondary" type="submit">
-                    Buat Data
+                <button class="kt-btn kt-btn-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all" type="submit">
+                    Simpan & Buat Data
                 </button>
             </div>
         </div>
     </div>
-    <!-- End of Container -->
+
     @if (session('message'))
-        <div class="alert {{ session('status') ? 'alert-success' : 'alert-danger' }}">
+        <div class="alert {{ session('status') ? 'alert-success' : 'alert-danger' }} rounded-xl border-none shadow-md">
             {{ session('message') }}
         </div>
     @endif
 
-    <!-- Container -->
     <div class="kt-container-fixed">
-        <div class="grid gap-5 lg:gap-7.5">
-            <div class="kt-card border-1 border-cyan-700">
-                <div class="kt-card-header" style="background: linear-gradient(34deg,rgba(6, 90, 92, 1) 49%, rgba(171, 119, 7, 1) 100%);">
-                    <h3 class="kt-card-title text-white">
-                        Informasi Permintaan pengiriman
-                    </h3>
-                </div>
-                <div class="kt-card-content grid gap-5 lg:py-7.5">
-                    <div class="w-full">
-                        @if($data['name'] == null)
-                            <div class="flex flex-col gap-5 lg:gap-7.5">
-                                <div class="kt-card-content px-10 py-7.5 lg:pe-12.5">
-                                    <div class="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-10">
-                                        <!-- Kolom teks -->
-                                        <div class="flex flex-col gap-3 max-w-xl">
-                                            <h2 class="text-xl font-semibold text-mono">
-                                                Buat Nama Subject Pengiriman
-                                            </h2>
-                                            <p class="text-sm text-secondary-foreground leading-5.5">
-                                                Tentukan Namanya Yah, Misal. "Pengiriman Hari Ini". Tenang. Ini Adalah Subject. Hanya Sebuah Judul
-                                            </p>
-                                        </div>
+        <div class="grid gap-8">
+            <div class="kt-card overflow-hidden border-none shadow-xl shadow-gray-100/50 rounded-2xl ring-1 ring-gray-100">
+                <div class="kt-card-header h-2" style="background: linear-gradient(90deg, #065A5C 0%, #AB7707 100%);"></div>
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 bg-cyan-50 rounded-lg">
+                            <svg class="w-5 h-5 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">Informasi Permintaan Pengiriman</h3>
+                    </div>
 
-                                        <!-- Kolom gambar, dipaksa nempel kanan -->
-                                        <div class="ms-auto flex items-center gap-4">
-                                            <img
-                                                alt="image"
-                                                class="block dark:hidden max-h-[160px]"
-                                                src="{{ asset(Storage::url('media/illustrations/32.svg')) }}"
-                                            >
-                                            <img
-                                                alt="image"
-                                                class="hidden dark:block max-h-[160px]"
-                                                src="{{ asset(Storage::url('media/illustrations/32-dark.svg')) }}"
-                                            >
-                                        </div>
-                                    </div>
+                    @if($data['name'] == null)
+                        <div class="bg-gray-50 rounded-2xl p-8 mb-6 border border-dashed border-gray-200">
+                            <div class="flex flex-wrap md:flex-nowrap items-center gap-10">
+                                <div class="flex flex-col gap-3 max-w-xl">
+                                    <h2 class="text-xl font-bold text-gray-900">Buat Nama Subject Pengiriman</h2>
+                                    <p class="text-sm text-gray-600 leading-relaxed">
+                                        Tentukan judul pengiriman Anda, contoh: <span class="italic font-medium text-indigo-600">"Pengiriman Logistik Cluster A"</span>. Judul ini memudahkan pelacakan data.
+                                    </p>
+                                </div>
+                                <div class="ms-auto">
+                                    <img alt="illustration" class="max-h-[140px] drop-shadow-xl" src="{{ asset(Storage::url('media/illustrations/32.svg')) }}">
                                 </div>
                             </div>
-                        @endif
-                        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 lg:gap-7.5 py-3">
-                            <div class="col-span-3">
-                                <div class="flex flex-col gap-3">
-                                    <label class="kt-form-label font-normal text-mono pl-2">Judul Pengiriman</label>
-                                    <input
-                                        class="kt-input kt-input-lg"
-                                        type="text"
-                                        name="name"
-                                        placeholder="Judul Permintaan"
-                                        wire:model.live="data.name"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-span-1">
-                                <div class="flex flex-col gap-3">
-                                    <label class="kt-form-label font-normal text-mono pl-2">Urgensi</label>
-                                    <input
-                                        class="kt-input kt-input-lg"
-                                        type="text"
-                                        name="urgency"
-                                        placeholder="Prioritas"
-                                        wire:model.live="data.urgent"
-                                    />
-                                </div>
-                            </div>
+                        </div>
+                    @endif
+
+                    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                        <div class="col-span-3">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">Judul Pengiriman</label>
+                            <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="Masukkan judul permintaan..." wire:model.live="data.name" />
+                        </div>
+                        <div class="col-span-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">Tingkat Urgensi</label>
+                            <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="Contoh: High/Low" wire:model.live="data.urgent" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- DESTINATIONS --}}
-            <livewire:metronic.dashboards.apps.deliveries.requests.creates.destinations.items-layout
-                wire:model.live="data.destinations"
-            />
+            {{-- DESTINATIONS COMPONENT --}}
+            <livewire:metronic.dashboards.apps.deliveries.requests.creates.destinations.items-layout wire:model.live="data.destinations" />
 
-            <div class="flex gap-4 justify-end">
-                <a
-                    class="kt-btn  kt-btn-lg kt-btn-destructive"
-                    href="{{ route(preg_replace('/\.create\.index$/', '.index', \Illuminate\Support\Facades\Route::currentRouteName())) }}"
-                >
-                    Batalkan
-                </a>
-                <button class="kt-btn kt-btn-lg kt-btn-secondary" type="submit">
-                    Buat Data
+            <div class="flex gap-4 justify-end pt-4">
+                <button class="kt-btn kt-btn-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200" type="submit">
+                    Finalisasi & Simpan Data
                 </button>
             </div>
         </div>
     </div>
-    <!-- End of Container -->
 </form>
