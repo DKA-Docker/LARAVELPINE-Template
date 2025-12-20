@@ -13,7 +13,7 @@ class Permissions extends SpatiePermission
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function getKeyType()
+    public function getKeyType(): string
     {
         return 'string';
     }

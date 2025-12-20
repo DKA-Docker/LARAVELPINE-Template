@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log; // 🟢 Tambahkan ini
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken; // Jika Anda menggunakan Sanctum
 
+/**
+ * @deprecated
+ */
 class VerifyBearerTokenAuthorization
 {
     public function handle(Request $request, Closure $next): Response

@@ -14,7 +14,7 @@ class PermissionsRole extends SpatieRole
     public $incrementing = false;
 
     // Tambahkan ini jika error "id = 0" masih muncul
-    public function getKeyType()
+    public function getKeyType(): string
     {
         return 'string';
     }

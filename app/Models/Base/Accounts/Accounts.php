@@ -20,7 +20,6 @@ class Accounts extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
-    protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -51,8 +50,6 @@ class Accounts extends Authenticatable
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    protected $guard_name = 'web';
 
     // ================= RELATIONSHIP =================
 

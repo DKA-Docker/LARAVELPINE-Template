@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Jose\Component\Core\JWT;
 use Symfony\Component\HttpFoundation\Response;
+/**
+ * @deprecated
+ */
 
 class CheckAuthorizationHeader
 {

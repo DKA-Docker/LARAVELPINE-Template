@@ -2,15 +2,9 @@
 
 namespace Database\Seeders\Base\Permissions;
 
-// File: Database\Seeders\Base\Permissions\PermissionsAccountsSeeder.php
-
-namespace Database\Seeders\Base\Permissions;
-
-// IMPORT MODEL CUSTOM ANDA DISINI
 use App\Models\Base\Permissions\Permissions;
 use App\Models\Base\Permissions\PermissionsRole;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class PermissionsAccountsSeeder extends Seeder
 {
@@ -18,34 +12,70 @@ class PermissionsAccountsSeeder extends Seeder
     {
         $guard = config("auth.defaults.guard");
 
-        $permissionsList = [
-            'dashboards.settings.managements.accounts.view',
-            'dashboards.settings.managements.accounts.create',
-            'dashboards.settings.managements.accounts.update',
-            'dashboards.settings.managements.accounts.delete',
+        // 1. Definisikan Kelompok Permissions
+        $deliveryRequests = [
+            'dashboards.apps.deliveries.requests.view',
+            'dashboards.apps.deliveries.requests.create',
+            'dashboards.apps.deliveries.requests.update',
+            'dashboards.apps.deliveries.requests.delete',
         ];
 
-        foreach ($permissionsList as $name) {
-            // JANGAN masukkan 'id' => Str::uuid() di sini.
-            // Cukup cari berdasarkan name & guard. HasUuids akan mengisi ID jika record dibuat.
+        $deliveryTasks = [
+            'dashboards.apps.deliveries.tasks.view',
+            'dashboards.apps.deliveries.tasks.create',
+            'dashboards.apps.deliveries.tasks.update',
+            'dashboards.apps.deliveries.tasks.delete',
+        ];
+
+        $deliveryReports = [
+            'dashboards.apps.deliveries.reports.view',
+            'dashboards.apps.deliveries.reports.create',
+            'dashboards.apps.deliveries.reports.update',
+            'dashboards.apps.deliveries.reports.delete',
+        ];
+
+        $accountManagement = [
+            'dashboards.managements.accounts.view',
+            'dashboards.managements.accounts.create',
+            'dashboards.managements.accounts.update',
+            'dashboards.managements.accounts.delete',
+        ];
+
+        // Gabungkan semua untuk pembuatan master data permissions
+        $allPermissions = array_merge(
+            $deliveryRequests,
+            $deliveryTasks,
+            $deliveryReports,
+            $accountManagement
+        );
+
+        // 2. Buat Data Master Permissions
+        foreach ($allPermissions as $name) {
             Permissions::firstOrCreate([
                 'name' => $name,
                 'guard_name' => $guard
             ]);
         }
 
-        $roleNames = ['superadmin', 'driver', 'customer', 'admin'];
-        foreach ($roleNames as $name) {
+        // 3. Definisikan Roles dan Sync Berdasarkan Group
+        $rolesConfig = [
+            'superadmin' => $allPermissions, // Mendapat semua akses
+
+            'admin' => $allPermissions,      // Mendapat semua akses
+
+            'driver' => $deliveryTasks,
+
+            'customer' => $deliveryRequests, // Hanya bisa mengelola request
+        ];
+
+        foreach ($rolesConfig as $roleName => $permissions) {
             $role = PermissionsRole::firstOrCreate([
-                'name' => $name,
+                'name' => $roleName,
                 'guard_name' => $guard
             ]);
 
-            if ($name === 'superadmin') {
-                // syncPermissions akan mengambil ID dari model PermissionsRole.
-                // Karena kita sudah set $keyType = 'string', Laravel akan mengirimkan UUID yang valid.
-                $role->syncPermissions($permissionsList);
-            }
+            // Sync permissions untuk masing-masing role
+            $role->syncPermissions($permissions);
         }
     }
 }
