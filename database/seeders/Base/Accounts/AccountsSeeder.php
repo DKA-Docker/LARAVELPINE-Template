@@ -61,7 +61,7 @@ class AccountsSeeder extends Seeder
                 "token" => null
             ],
             "roles" => [
-                "superadmin"
+                "driver"
             ]
         ]);
         $this->command->info(json_encode($create));

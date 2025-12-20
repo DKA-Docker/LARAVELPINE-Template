@@ -1,99 +1,81 @@
+/*
 import axios from "axios";
 import $ from "jquery";
 import URI from "urijs";
 import moment from "moment-timezone";
 import "moment/locale/id.js"
+// @ts-ignore
 import { KTDataTable } from "@keenthemes/ktui/lib/esm"
 
-const elementExists = $("div.dashboards-apps-deliveries-requests");
+const initDeliveryTable = () => {
+    const elementExists = $("div.dashboards-apps-deliveries-requests");
+    const container = document.querySelector('#table-container') as HTMLElement;
 
-/** Menunggu Semua Assets Load **/
-$(window).on('load', function () {
-    /** Check Jika Element Trigger Page ada**/
-    if (elementExists.length > 0) {
-        /** Set Locale Menjadi Indonesia **/
-        moment.locale("id")
-        /** Ambil URL dimana JS Ini Dimuat**/
-        const FullUriCurrentURL = URI(window.location);
-        /**
-         * Ubah URL Menjadi Array Segment
-         * misal /dashboards/apps/deliveries menjadi
-         * ['dashboards','apps','deliveries'];
-         * **/
-        const segs = FullUriCurrentURL.segment();
-        /**
-         * Tambahkan Data Di Dalam Array
-         * ['api','dashboards','apps','deliveries'];
-         * **/
-        segs.unshift('api');
-        /**
-         * ['api','dashboards','apps','deliveries'];
-         * Ambil Kembali Semua Segment dan ubah menjadi URL Kembali
-         * /api/dashboards/apps/deliveries
-         * **/
-        FullUriCurrentURL.segment(segs);
-        /**
-         * Pastikan ID Query Selector yang Diambil Membungkus class kt-data-datatable api
-         */
-        const container = document.querySelector(
-            '#table-container'
-        ) as HTMLElement;
-        /**
-         *
-         */
+    if (elementExists.length > 0 && container) {
+        moment.locale("id");
+
+        // Construct API URL secara dinamis dari URL saat ini
+        const currentUri = URI(window.location);
+        const segments = currentUri.segment();
+        segments.unshift('api');
+        const apiEndpoint = currentUri.segment(segments).toString();
+
         const datatable = new KTDataTable(container, {
-            apiEndpoint: `${FullUriCurrentURL}`,
+            apiEndpoint: apiEndpoint,
             pageSize: 5,
-            /** wajib **/
             requestHeaders: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest', // Memberitahu Laravel ini AJAX (Penting untuk Sanctum Session)
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content,
             },
             columns: {
                 account: {
                     title: 'Name',
-                    render: (value, row) => {
-                        return `${row.account.information.first_name} ${row.account.information.last_name}`
+                    render: (value: any, row: any) => {
+                        const first = row.account?.information?.first_name ?? '';
+                        const last = row.account?.information?.last_name ?? '';
+                        return `${first} ${last}`.trim() || 'No Name';
                     }
                 },
                 email: {
                     title: 'Email',
-                    render: (value, row: any) => row.account?.contact?.email ?? '-'
+                    render: (value: any, row: any) => row.account?.contact?.email ?? '-'
                 },
                 created_at: {
                     title: 'Dibuat',
-                    render: (value, row) => {
-                        return row.created_at ? moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY"):'-'
+                    render: (value: any, row: any) => {
+                        return row.created_at ? moment(row.created_at).format("HH:mm:ss DD MMMM YYYY") : '-'
                     }
                 },
             },
-            /**
-             * @param queryParams
-             * Expand Function Request bawaan dari @themeskeen/kui datatabase request
-             */
             mapRequest: (queryParams: URLSearchParams) => {
-                // KTDataTable sudah isi page & size disini
-                const page = queryParams.get('page');
                 const size = queryParams.get('size');
-
-                $(".show_from").html(size);
+                $(".show_from").html(`${size}`);
                 return queryParams;
             },
-            /**
-             * @param res any
-             * Expand Function Response bawaan dari @themeskeen/kui datatabase Response
-             */
             mapResponse: (res: any) => {
-                // res = response JSON mentah dari API
-                // sesuaikan sama format Laravel kamu
-                // misal: { data: [...], total: 123, ... }
-                $(".show_total").html(res.meta.count.total ?? 0)
+                const total = res.meta?.count?.total ?? 0;
+                $(".show_total").html(total);
                 return {
                     data: res.data ?? [],
-                    totalCount: res.meta.count.total ?? 0,
+                    totalCount: total,
                 };
             },
         });
-        datatable.reload();
+
+        // Trigger Reload Manual
+        $('#reload-btn').on('click', () => datatable.reload());
     }
+};
+
+/!** * Lifecycle Hooks
+ *!/
+// Untuk pertama kali load
+$(window).on('load', initDeliveryTable);
+
+// Untuk navigasi Livewire (jika menggunakan wire:navigate)
+document.addEventListener('livewire:navigated', () => {
+    initDeliveryTable();
 });
+*/

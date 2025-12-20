@@ -8,7 +8,6 @@ use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AccountsRepository implements AccountsRepositoryInterface {
@@ -25,10 +24,6 @@ class AccountsRepository implements AccountsRepositoryInterface {
      */
     public function Create(...$args): Model|Accounts
     {
-
-        if (!Auth::user()->can('dashboards.settings.managements.accounts.view')) {
-            throw new AuthorizationException('Anda tidak memiliki izin untuk melihat data ini.');
-        }
 
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null
@@ -48,12 +43,12 @@ class AccountsRepository implements AccountsRepositoryInterface {
 
     public function ReadAll(): Collection
     {
-        /** **/
         return Accounts::all();
     }
 
     public function query(): Builder
     {
+
         return Accounts::query();
     }
 

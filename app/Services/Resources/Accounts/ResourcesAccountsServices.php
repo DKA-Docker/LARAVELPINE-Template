@@ -10,9 +10,11 @@ use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRep
 use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesRepository;
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -119,6 +121,7 @@ class ResourcesAccountsServices
     /**
      * Update Account (atomik) + afterCommit
      * @return array{status:bool,code:int,msg:string,data?:mixed,error?:mixed}
+     * @throws Throwable
      */
     public function Update(array $payload): array
     {
@@ -300,15 +303,6 @@ class ResourcesAccountsServices
                 'msg'    => 'Unexpected error: ' . $e->getMessage(),
             ];
         }
-    }
-
-    public function GetAccountWithUsername(string $username)
-    {
-        // Pastikan menggunakan first() agar mengembalikan Model tunggal
-        return $this->account->query()
-            ->with(['credential', 'contact', 'information'])
-            ->whereHas('credential', fn($q) => $q->where('username', $username))
-            ->first();
     }
 
     /**

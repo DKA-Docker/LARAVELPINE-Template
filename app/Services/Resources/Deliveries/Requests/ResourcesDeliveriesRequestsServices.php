@@ -8,6 +8,8 @@ use App\Repositories\Apps\Deliveries\Requests\Destinations\RequestsDestinationsR
 use App\Repositories\Apps\Deliveries\Requests\RequestsRepository;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,8 @@ class ResourcesDeliveriesRequestsServices
 
     public function Create(array $args): array
     {
-        /** @var Accounts $account */
+        /**
+         * @var Accounts $account */
         $account = Auth::user();
 
         try {
@@ -100,8 +103,10 @@ class ResourcesDeliveriesRequestsServices
         }
     }
 
-
-
+    public function query(): Builder
+    {
+        return $this->repositoryRequest->query();
+    }
 
     public function ReadAll(): Collection
     {
@@ -110,6 +115,7 @@ class ResourcesDeliveriesRequestsServices
 
     public function AutomaticallyPaginationTable(Request $request): Collection {
         /** kalau nggak ada page & size di query, balikin semua data */
+
         if (!$request->hasAny(['page', 'size'])) {
             return $this->repositoryRequest->query()->get();
         }

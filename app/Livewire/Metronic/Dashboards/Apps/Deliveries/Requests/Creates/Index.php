@@ -4,7 +4,9 @@ namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests\Creates;
 
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -12,10 +14,6 @@ class Index extends Component
 {
 
     protected ResourcesDeliveriesRequestsServices $services;
-    public function __construct()
-    {
-        $this->services = new ResourcesDeliveriesRequestsServices();
-    }
     /**
      * Data global form.
      */
@@ -24,6 +22,18 @@ class Index extends Component
         'urgent'       => null,
         'destinations' => [], // ini akan di-bind ke child Destinations\ItemsLayout
     ];
+
+    public function boot()
+    {
+        $this->services = new ResourcesDeliveriesRequestsServices();
+    }
+    public function mount(): void
+    {
+        // Langsung lempar exception jika tidak punya izin
+        if (!Auth::user()->can('dashboards.apps.deliveries.requests.create')) {
+            throw new AuthorizationException("Unauthorized access to this scope.");
+        }
+    }
 
     public function submit()
     {

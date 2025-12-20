@@ -28,10 +28,6 @@ class TasksRepository implements TasksRepositoryInterface {
         $this->faker = Factory::create();
     }
 
-    public function GetAllRequest(): Collection{
-       return AppsDeliveriesRequestsDestinations::all();
-    }
-
     /**
      * @param ...$args AppsDeliveriesTasks
      * @return AppsDeliveriesTasks|Model
@@ -44,7 +40,7 @@ class TasksRepository implements TasksRepositoryInterface {
         $defaults = [
         ];
         /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, ...$args);
+        $data = array_merge($defaults,...$args);
 
         return AppsDeliveriesTasks::query()->create($data);
     }

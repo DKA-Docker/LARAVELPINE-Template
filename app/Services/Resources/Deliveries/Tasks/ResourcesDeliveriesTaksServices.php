@@ -4,7 +4,9 @@ namespace App\Services\Resources\Deliveries\Tasks;
 
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
+use App\Models\Base\Accounts\Accounts;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +20,6 @@ class ResourcesDeliveriesTaksServices
     public function __construct()
     {
         $this->repository = new TasksRepository();
-    }
-
-    public function GetAllRequest(): Collection
-    {
-        return $this->repository->GetAllRequest();
     }
 
     /**

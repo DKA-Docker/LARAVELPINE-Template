@@ -11,6 +11,8 @@ use App\Services\Resources\Data\Geos\ResourcesDataGeosVillagesServices;
 use App\Services\Resources\Deliveries\Requests\Destinations\ResourcesDeliveriesRequestsDestinationsServices;
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -73,6 +75,7 @@ class CreateForm extends Component
      */
     public function boot(): void
     {
+
         $this->destService = new ResourcesDeliveriesRequestsDestinationsServices();
         $this->accountsServices = new ResourcesAccountsServices();
         $this->GeoProvincesServices = new ResourcesDataGeosProvincesServices();
@@ -89,6 +92,11 @@ class CreateForm extends Component
      */
     public function mount(): void
     {
+        // Langsung lempar exception jika tidak punya izin
+        if (!Auth::user()->can('dashboards.apps.deliveries.tasks.create')) {
+            throw new AuthorizationException("Unauthorized access to this scope.");
+        }
+
         $response = $this->destService->ReadAll();
         $this->destinations = $response['data'] ?? $response;
 

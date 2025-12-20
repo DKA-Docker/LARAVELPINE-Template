@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 interface TasksRepositoryInterface
 {
-    public function GetAllRequest(): Collection;
-
 
     public function Create(...$args): Model|AppsDeliveriesTasks;
 
