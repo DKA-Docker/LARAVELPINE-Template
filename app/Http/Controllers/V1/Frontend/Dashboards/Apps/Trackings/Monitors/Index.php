@@ -58,17 +58,33 @@ class Index extends Controller
 
 
     public function token(Request $request) {
-        // Ambil data dari Vite
+        // Ambil data token dari request
         $token = $request->token;
 
         $messaging = Firebase::messaging();
+
+        // Membangun pesan dengan konfigurasi Android khusus
         $message = CloudMessage::withTarget('token', $token)
-            ->withData(['action' => 'RELOAD_GPS']); // Data khusus untuk aplikasi driver
+            ->withData([
+                'action' => 'RELOAD_GPS',
+                // Kamu bisa tambah data lain jika perlu
+            ])
+            ->withAndroidConfig([
+                'priority' => 'high', // MEMAKSA Android untuk bangun dari Doze Mode
+                'ttl' => '0s',        // Pesan langsung hangus jika tidak terkirim saat itu juga (opsional)
+            ]);
+
         try {
             $messaging->send($message);
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'FCM Sent with High Priority'
+            ]);
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }
