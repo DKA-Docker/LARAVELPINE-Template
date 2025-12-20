@@ -25,16 +25,6 @@
         .animate-slide-right { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
         /* --- UI JARVIS ELEMENTS --- */
-        .hud-overlay {
-            pointer-events: none;
-            background: radial-gradient(circle, transparent 40%, rgba(0, 123, 255, 0.05) 100%);
-        }
-        .jarvis-grid {
-            background-image:
-                linear-gradient(to right, rgba(0, 123, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 123, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
         .glass-panel {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
@@ -78,37 +68,6 @@
             <div class="main-tracking-area">
 
                 <div class="relative flex-1 h-full min-w-0 bg-black overflow-hidden group">
-
-                    <div class="absolute inset-0 jarvis-grid z-[1] opacity-50"></div>
-                    <div class="absolute inset-0 z-[1] hud-overlay"></div>
-                    <div class="absolute inset-x-0 h-1/2 bg-gradient-to-b from-primary/10 to-transparent animate-scan z-[1] opacity-30"></div>
-
-                    <div class="absolute top-5 left-5 z-10 space-y-3 pointer-events-none">
-                        <div class="bg-background/80 backdrop-blur-md px-4 py-2 rounded-xl border border-primary/20 flex items-center gap-3 shadow-2xl pointer-events-auto">
-                            <div class="relative flex h-3 w-3">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-bold uppercase tracking-tighter text-primary">Neural Link Active</span>
-                                <span class="text-[9px] text-muted-foreground leading-none">Scanning Fleet: 100%</span>
-                            </div>
-                        </div>
-
-                        <div class="hidden md:block bg-black/20 backdrop-blur-sm p-3 rounded-lg border border-white/5 text-[8px] font-mono text-primary/70 pointer-events-none">
-                            <p>> LAT: -6.2088</p>
-                            <p>> LNG: 106.8456</p>
-                            <p>> SAT_CONN: STABLE</p>
-                            <p>> B_RATE: 48.2 KB/S</p>
-                        </div>
-                    </div>
-
-                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity duration-700">
-                        <div class="relative size-32 border border-primary/20 rounded-full flex items-center justify-center">
-                            <div class="absolute inset-0 border-2 border-dashed border-primary/10 rounded-full animate-rotate"></div>
-                            <div class="text-[10px] font-bold text-primary font-mono tracking-widest">MAPS_V2.0</div>
-                        </div>
-                    </div>
 
                     <div id="map" class="w-full h-full z-0 grayscale-[0.3] contrast-[1.1]"></div>
                 </div>
