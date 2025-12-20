@@ -1,13 +1,13 @@
-<div class="relative overflow-hidden bg-[#F9FAFB] rounded-[2.5rem] min-h-[580px] flex items-center justify-center p-6 animate-page-entry">
+<div class="relative overflow-hidden rounded-[2.5rem] min-h-[580px] flex items-center justify-center p-6 animate-page-entry">
     {{-- Decorative Background Elements --}}
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-danger/10 rounded-full blur-[100px] animate-pulse"></div>
-        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-pulse" style="animation-duration: 4s"></div>
+        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96  rounded-full blur-[100px] animate-pulse" style="animation-duration: 4s"></div>
     </div>
 
     <div class="relative z-10 w-full max-w-lg">
         {{-- Glassmorphism Card --}}
-        <div class="bg-white/70 backdrop-blur-3xl border border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.05)] rounded-[3.5rem] p-10 md:p-14 text-center">
+        <div class="backdrop-blur-3xl shadow-[0_32px_64px_-15px_rgba(0,0,0,0.05)] rounded-[3.5rem] p-10 md:p-14 text-center">
 
             {{-- Illustration Header --}}
             <div class="relative inline-flex mb-10">
@@ -35,7 +35,7 @@
 
             {{-- Text Content --}}
             <div class="space-y-4 mb-10">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full mb-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-2">
                     <span class="relative flex h-2 w-2">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
@@ -43,7 +43,7 @@
                     <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Security Protocol Active</span>
                 </div>
 
-                <h1 class="text-4xl font-black text-gray-900 tracking-tight leading-tight">
+                <h1 class="text-4xl font-bolder tracking-tight leading-tight">
                     Akses <span class="text-danger">Terbatas</span>
                 </h1>
                 <p class="text-gray-500 text-lg font-medium leading-relaxed">
