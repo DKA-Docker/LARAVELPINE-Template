@@ -2,62 +2,50 @@
 
 namespace Database\Seeders\Base\Permissions;
 
-use App\Services\Resources\ResourcesAccountsServices;
+// File: Database\Seeders\Base\Permissions\PermissionsAccountsSeeder.php
+
+namespace Database\Seeders\Base\Permissions;
+
+// IMPORT MODEL CUSTOM ANDA DISINI
+use App\Models\Base\Permissions\Permissions;
+use App\Models\Base\Permissions\PermissionsRole;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class PermissionsAccountsSeeder extends Seeder
 {
-    protected ResourcesAccountsServices $account;
-
-    public function __construct()
-    {
-        $this->account = new ResourcesAccountsServices();
-    }
-
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // 1. Daftar semua permission
-        $permissions = collect([
+        $guard = config("auth.defaults.guard");
+
+        $permissionsList = [
             'dashboards.settings.managements.accounts.view',
             'dashboards.settings.managements.accounts.create',
             'dashboards.settings.managements.accounts.update',
             'dashboards.settings.managements.accounts.delete',
-            'dashboards.settings.managements.accounts.restore',
-            'dashboards.settings.privileges.permissions.view',
-            'dashboards.settings.privileges.permissions.create',
-            'dashboards.settings.privileges.permissions.update',
-            'dashboards.settings.privileges.permissions.delete',
-            'dashboards.settings.privileges.permissions.restore',
-            'dashboards.settings.privileges.roles.view',
-            'dashboards.settings.privileges.roles.create',
-            'dashboards.settings.privileges.roles.update',
-            'dashboards.settings.privileges.roles.delete',
-            'dashboards.settings.privileges.roles.restore',
-        ]);
-        // 2. Buat semua permission
-        $permissions->each(fn ($perm) =>
-            Permission::query()->firstOrCreate([
-                'name' => $perm,
-                'guard_name' => config("auth.defaults.guard"),
-            ])
-        );
-        // 3. Buat role admin
-        $role = Role::query()->firstOrCreate([
-            'name' => 'superadmin',
-            'guard_name' => config("auth.defaults.guard"),
-        ]);
-        // 4. Assign semua permission ke role admin
-        $role->syncPermissions($permissions);
-        // 5. Ambil akun admin dari service
-        $adminAccount = $this->account->GetAccountWithUsername('superadmin');
-        // 6. Assign role admin ke akun admin
-        $adminAccount->assignRole('superadmin');
-        // 7. Cek hak akses (opsional buat debug)
-        echo 'Has superadmin role? ' . ($adminAccount->hasRole('superadmin') ? 'Yes' : 'No') . PHP_EOL;
+        ];
+
+        foreach ($permissionsList as $name) {
+            // JANGAN masukkan 'id' => Str::uuid() di sini.
+            // Cukup cari berdasarkan name & guard. HasUuids akan mengisi ID jika record dibuat.
+            Permissions::firstOrCreate([
+                'name' => $name,
+                'guard_name' => $guard
+            ]);
+        }
+
+        $roleNames = ['superadmin', 'driver', 'customer', 'admin'];
+        foreach ($roleNames as $name) {
+            $role = PermissionsRole::firstOrCreate([
+                'name' => $name,
+                'guard_name' => $guard
+            ]);
+
+            if ($name === 'superadmin') {
+                // syncPermissions akan mengambil ID dari model PermissionsRole.
+                // Karena kita sudah set $keyType = 'string', Laravel akan mengirimkan UUID yang valid.
+                $role->syncPermissions($permissionsList);
+            }
+        }
     }
 }

@@ -81,7 +81,7 @@ class ResourcesAccountsServices
             );
             /** role assignment: DI DALAM transaksi → atomik */
             if (!empty($payload['roles'])) {
-                $this->account->Find($account->id)?->assignRole($payload['roles']);
+                $account->assignRole($payload['roles']);
             }
             /** Muat Relations Data */
             $account->load(['information', 'credential', 'contact', 'firebase']);
@@ -301,6 +301,16 @@ class ResourcesAccountsServices
             ];
         }
     }
+
+    public function GetAccountWithUsername(string $username)
+    {
+        // Pastikan menggunakan first() agar mengembalikan Model tunggal
+        return $this->account->query()
+            ->with(['credential', 'contact', 'information'])
+            ->whereHas('credential', fn($q) => $q->where('username', $username))
+            ->first();
+    }
+
     /**
      * Delete (atomik) + afterCommit
      * @return array{status:bool,code:int,msg:string,data?:mixed}

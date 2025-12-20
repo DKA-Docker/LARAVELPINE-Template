@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Base\Permissions\Permissions;
+use App\Models\Base\Permissions\PermissionsRole;
+
 return [
 
     'models' => [
@@ -13,18 +16,18 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => Spatie\Permission\Models\Permission::class,
+        'permission' => Permissions::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
          * Eloquent model should be used to retrieve your roles. Of course, it
-         * is often just the "Role" model but you may use whatever you like.
+         * is often just the "PermissionsRole" model but you may use whatever you like.
          *
-         * The model you want to use as a Role model needs to implement the
-         * `Spatie\Permission\Contracts\Role` contract.
+         * The model you want to use as a PermissionsRole model needs to implement the
+         * `Spatie\Permission\Contracts\PermissionsRole` contract.
          */
 
-        'role' => Spatie\Permission\Models\Role::class,
+        'role' => PermissionsRole::class,
 
     ],
 

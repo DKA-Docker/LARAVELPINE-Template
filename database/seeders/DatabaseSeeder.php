@@ -14,6 +14,7 @@ use Database\Seeders\App\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesSeeder
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOriginsSeeder;
 use Database\Seeders\Base\Accounts\AccountsSeeder;
+use Database\Seeders\Base\Permissions\PermissionsAccountsSeeder;
 use Database\Seeders\Base\Sessions\SessionsAccountsSeeder;
 use Database\Seeders\Data\Geo\DataGeoDistrictsSeeder;
 use Database\Seeders\Data\Geo\DataGeoProvincesSeeder;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
+            PermissionsAccountsSeeder::class,
             AccountsSeeder::class,
             SessionsAccountsSeeder::class,
             DeliveriesRequestsSeeder::class,

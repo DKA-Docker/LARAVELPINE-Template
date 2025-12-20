@@ -39,6 +39,9 @@ class AccountsSeeder extends Seeder
             ],
             "firebase" => [
                 "token" => null
+            ],
+            "roles" => [
+                "superadmin"
             ]
         ]);
         $this->command->info(json_encode($create));
@@ -56,6 +59,9 @@ class AccountsSeeder extends Seeder
             ],
             "firebase" => [
                 "token" => null
+            ],
+            "roles" => [
+                "superadmin"
             ]
         ]);
         $this->command->info(json_encode($create));
