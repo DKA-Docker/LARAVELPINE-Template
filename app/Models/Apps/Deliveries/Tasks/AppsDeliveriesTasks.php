@@ -81,6 +81,4 @@ class AppsDeliveriesTasks extends Model
             'id' // Local Key di tabel tasks
         )->withDefault();
     }
-
-
 }

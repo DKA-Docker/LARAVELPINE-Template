@@ -81,12 +81,9 @@ class View extends Component
         // TRANSFORMATION: Menangani bentrokan nama kolom 'account' vs relasi 'account'
         $deliveries->through(function ($item) {
             // Ambil objek relasi secara paksa melewati properti string
-            $account = $item->getRelation('account');
-
-            // Simpan object relasi ke atribut dinamis agar bisa dipanggil langsung di Blade
-            // Ini menghindari error "Attempt to read property on string"
-            $item->information = $account->getRelationValue('information');
-            $item->contact = $account->getRelationValue('contact');
+            $item->account = $item->getRelation('account');
+            $item->account->information = $item->account->getRelationValue('information');
+            $item->account->contact = $item->account->getRelationValue('contact');
 
             return $item;
         });

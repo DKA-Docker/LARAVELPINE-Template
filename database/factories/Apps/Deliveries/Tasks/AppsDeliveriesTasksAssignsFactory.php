@@ -15,7 +15,8 @@ class AppsDeliveriesTasksAssignsFactory extends Factory
     public function definition(): array
     {
 
-        $accounts = Accounts::inRandomOrder()->first();
+        // Tambahkan query() di sini
+        $accounts = Accounts::query()->role('driver')->inRandomOrder()->first();
         $taskRequest = AppsDeliveriesTasks::inRandomOrder()->first();
         return [
             'id' => (String) Str::uuid(),

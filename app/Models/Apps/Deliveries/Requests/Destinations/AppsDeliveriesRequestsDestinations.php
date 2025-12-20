@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\Apps\Deliveries\Requests\Destinations;
 
+use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackages;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,11 @@ class AppsDeliveriesRequestsDestinations extends Model {
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
+
+    public function request(): BelongsTo
+    {
+        return $this->belongsTo(AppsDeliveriesRequests::class, 'request')->withDefault();
     }
 
     public function packages(): HasMany

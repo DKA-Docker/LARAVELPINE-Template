@@ -14,7 +14,8 @@ class AppsDeliveriesTasksFactory extends Factory
 {
     public function definition(): array
     {
-        $accounts = Accounts::inRandomOrder()->first();
+        // Tambahkan query() di sini
+        $accounts = Accounts::query()->role(['superadmin','admin'])->inRandomOrder()->first();
         $reqDestination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
 
         $taskTitles = [

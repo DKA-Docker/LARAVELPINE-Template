@@ -7,6 +7,7 @@ use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
 use App\Models\Base\Accounts\Accounts;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,11 @@ class ResourcesDeliveriesTaksServices
 
     }
 
+
+    public function query(): Builder
+    {
+        return $this->repository->query();
+    }
     public function ReadAll(): Collection
     {
         return $this->repository->ReadAll();

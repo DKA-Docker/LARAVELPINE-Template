@@ -12,7 +12,11 @@ class AppsDeliveriesRequestsFactory extends Factory
 
     public function definition(): array
     {
-        $accountData = Accounts::inRandomOrder()->first();
+        // Tambahkan query() di sini
+        $accountData = Accounts::query()
+            ->role("customer")
+            ->inRandomOrder()
+            ->first();
         return [
             'id' => (string) Str::uuid(),
             'account' => $accountData,

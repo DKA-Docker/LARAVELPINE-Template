@@ -46,11 +46,11 @@
                                         {{ $item->name ?? 'Unnamed Request' }}
                                     </td>
                                     <td>
-                                        {{ $item->information->first_name ?? 'N/A' }}
-                                        {{ $item->information->last_name ?? '' }}
+                                        {{ $item->account->information->first_name ?? 'N/A' }}
+                                        {{ $item->account->information->last_name ?? '' }}
                                     </td>
                                     <td>
-                                        {{ $item->contact->email ?? '-' }}
+                                        {{ $item->account->contact->email ?? '-' }}
                                     </td>
                                     <td>
                                         <span class="text-xs">
