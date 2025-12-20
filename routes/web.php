@@ -10,7 +10,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as D
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as DeliveriesTasksCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Show as DeliveriesTasksShow;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
-use App\Http\Controllers\V1\Frontend\Dashboards\Manajements\Accounts\Index as ManajementsAccountsIndex;
+use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use Illuminate\Support\Facades\Route;
@@ -53,14 +53,11 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             });
         });
 
-
-
-
     });
 
-    Route::prefix('manajements')->name('manajements.')->group(function () {
+    Route::prefix('managements')->name('managements.')->group(function () {
         Route::prefix('accounts')->name('accounts.')->group(function () {
-            Route::resource('/', ManajementsAccountsIndex::class)->parameters(['' => 'id']);
+            Route::resource('/',ManagementsAccountsIndex::class)->parameters(['' => 'id']);
         });
     });
 });

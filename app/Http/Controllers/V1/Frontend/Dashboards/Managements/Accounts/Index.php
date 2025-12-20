@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\V1\Frontend\Dashboards\Manajements\Accounts;
+namespace App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,7 +10,7 @@ class Index extends Controller
 {
     public function index(): Factory|View
     {
-        return view('dashboards.manajements.accounts.index');
+        return view('dashboards.managements.accounts.index');
     }
 
 

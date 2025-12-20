@@ -7,7 +7,7 @@ use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests\Destinations
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
-use App\Http\Controllers\V1\Api\Dashboards\Manajements\Accounts as ManajementAccounts;
+use App\Http\Controllers\V1\Api\Dashboards\Managements\Accounts as ManagementAccounts;
 use App\Http\Controllers\V1\Api\Auth\Index as ApiAuth;
 use Illuminate\Support\Facades\Route;
 
@@ -48,14 +48,16 @@ Route::name('api.')->group(function () {
                 });
             });
 
-            Route::prefix('manajements')->name('manajements.')->group(function () {
-                Route::prefix('accounts')->name('accounts.')->group(function () {
-                    Route::resource('/', ManajementAccounts\Index::class);
-
-                });
-            });
-
         });
+
+//        Api/Dashboards/Managements/Accounts/
+        Route::prefix('managements')->name('managements.')->group(function () {
+            Route::prefix('accounts')->name('accounts.')->group(function () {
+                Route::resource('/', ManagementAccounts\Index::class);
+
+            });
+        });
+
     });
 
     Route::middleware(['Api'])->prefix('base')->name('base.')->group(function () {

@@ -96,8 +96,8 @@
         <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Management</span>
     </div>
     <div class="kt-menu-item">
-        <a href="{{ request()->getSchemeAndHttpHost() . route('dashboards.manajements.accounts.index', [], false) }}">
-            <div class="kt-menu-label border border-transparent gap-[10px] ps-[10px] pe-[10px] py-[6px]" href="{{ request()->getSchemeAndHttpHost() . route('dashboards.manajements.accounts.index', [], false) }}" tabindex="0">
+        <a href="{{ request()->getSchemeAndHttpHost() . route('dashboards.managements.accounts.index', [], false) }}">
+            <div class="kt-menu-label border border-transparent gap-[10px] ps-[10px] pe-[10px] py-[6px]" href="{{ request()->getSchemeAndHttpHost() . route('dashboards.managements.accounts.index', [], false) }}" tabindex="0">
                  <span class="kt-menu-icon items-start text-muted-foreground w-[20px]">
                   <i class="ki-duotone ki-user text-lg"></i>
                  </span>
