@@ -24,7 +24,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                 <i class="ki-outline ki-magnifier text-lg"></i>
                             </div>
-                            <div id="autocomplete-results" class="hidden absolute z-[110] w-full mt-1 bg-white dark:bg-neutral-900 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+                            <div id="autocomplete-results" class="hidden absolute z-[110] w-full mt-1 bg-white dark:bg-neutral-900 rounded-xl shadow-2xl max-h-150 overflow-y-auto">
                             </div>
                         </div>
                     </div>

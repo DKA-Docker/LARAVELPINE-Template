@@ -9,6 +9,7 @@ use App\Services\Resources\Data\Geos\ResourcesDataGeosProvincesServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosRegenciesServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosVillagesServices;
 use App\Services\Resources\Deliveries\Requests\Destinations\ResourcesDeliveriesRequestsDestinationsServices;
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -64,6 +65,8 @@ class CreateForm extends Component
     protected ResourcesDataGeosDistrictsServices $GeoDistrictsServices;
     protected ResourcesDataGeosVillagesServices $GeoVillagesServices;
 
+    protected ResourcesDeliveriesTaksServices $taksServices;
+
     /**
      * Inisialisasi Service melalui Lifecycle Boot
      * Dijalankan pada setiap request (initial load & update)
@@ -76,6 +79,8 @@ class CreateForm extends Component
         $this->GeoRegenciesServices = new ResourcesDataGeosRegenciesServices();
         $this->GeoDistrictsServices = new ResourcesDataGeosDistrictsServices();
         $this->GeoVillagesServices = new ResourcesDataGeosVillagesServices();
+
+        $this->taksServices = new ResourcesDeliveriesTaksServices();
     }
 
     /**
