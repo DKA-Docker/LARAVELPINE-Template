@@ -57,7 +57,7 @@ class Index extends Controller
 
 
 
-    public function token(Request $request) {
+    public function ReqLocationUpdate(Request $request) {
         // Ambil data token dari request
         $token = $request->token;
 
@@ -67,6 +67,36 @@ class Index extends Controller
         $message = CloudMessage::withTarget('token', $token)
             ->withData([
                 'action' => 'RELOAD_GPS',
+                // Kamu bisa tambah data lain jika perlu
+            ])
+            ->withAndroidConfig([
+                'priority' => 'high', // MEMAKSA Android untuk bangun dari Doze Mode
+                'ttl' => '0s',        // Pesan langsung hangus jika tidak terkirim saat itu juga (opsional)
+            ]);
+
+        try {
+            $messaging->send($message);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'FCM Sent with High Priority'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function ReqAlarm(Request $request) {
+        // Ambil data token dari request
+        $token = $request->token;
+        $messaging = Firebase::messaging();
+
+        // Membangun pesan dengan konfigurasi Android khusus
+        $message = CloudMessage::withTarget('token', $token)
+            ->withData([
+                'action' => 'RING_ALARM',
                 // Kamu bisa tambah data lain jika perlu
             ])
             ->withAndroidConfig([

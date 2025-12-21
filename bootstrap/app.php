@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\Api\JSONCheckRequest;
 use App\Http\Middleware\Frontend\Authenticate;
+use App\Http\Middleware\Frontend\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,14 +15,16 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        /**
-         * Ubah Middleware bawaan dari laravel untuk menjadi alias auth
-         */
+    ->withMiddleware(function (Middleware $middleware) { // Hapus : void untuk testing
+        // Masukkan SetLocale ke grup web
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
         $middleware->alias([
             'auth' => Authenticate::class,
         ]);
-        /** Grouping Route dengan middleware api */
+
         $middleware->group('Api', [
             JSONCheckRequest::class,
         ]);

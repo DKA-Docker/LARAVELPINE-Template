@@ -7,7 +7,7 @@
                     <i class="ki-duotone ki-element-11 text-lg"></i>
                 </span>
                 <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">
-                    Overview
+                    {{ __('menu.overview') }}
                 </span>
             </div>
         </a>
@@ -24,7 +24,7 @@
             <span class="kt-menu-icon text-muted-foreground w-[20px] items-start">
                 <i class="ki-duotone ki-parcel text-lg"></i>
             </span>
-                    <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">Delivery</span>
+                    <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">{{ __('menu.delivery') }}</span>
                     <span class="kt-menu-arrow text-muted-foreground ms-1 me-[-10px] w-[20px] shrink-0 justify-end">
                 <span class="kt-menu-item-show:hidden inline-flex">
                     <i class="ki-duotone ki-plus text-[11px]"></i>
@@ -44,7 +44,7 @@
                                 <span class="kt-menu-icon text-muted-foreground items-start">
                         <i class="ki-duotone ki-delivery-3 text-lg"></i>
                     </span>
-                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">Request</span>
+                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">{{ __('menu.request') }}</span>
                             </a>
                         </div>
                     @endcan
@@ -57,7 +57,7 @@
                                 <span class="kt-menu-icon text-muted-foreground items-start">
                         <i class="ki-duotone ki-time text-lg"></i>
                     </span>
-                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">Task</span>
+                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">{{ __('menu.task') }}</span>
                             </a>
                         </div>
                     @endcan
@@ -70,7 +70,7 @@
                                 <span class="kt-menu-icon text-muted-foreground items-start">
                         <i class="ki-duotone ki-element-8 text-lg"></i>
                     </span>
-                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">Report</span>
+                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">{{ __('menu.report') }}</span>
                             </a>
                         </div>
                     @endcan
@@ -85,7 +85,7 @@
                     <i class="ki-duotone ki-map text-lg"></i>
                 </span>
                     <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">
-                    Tracking
+                    {{ __('menu.tracking') }}
                 </span>
                 </div>
             </a>

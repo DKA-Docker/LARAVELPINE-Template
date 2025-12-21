@@ -149,9 +149,15 @@
                                 </div>
                             </div>
 
-                            <button id="btn-ping-driver" class="w-full mt-6 py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase hidden flex items-center justify-center gap-3 transition-all active:scale-95 hover:bg-primary-hover shadow-lg shadow-primary/20">
+                            <button id="btn-ping-driver" class="w-full mt-6 py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-3 transition-all active:scale-95 hover:bg-primary-hover shadow-lg shadow-primary/20">
                                 <div class="spinner-custom"></div>
                                 <span class="btn-text tracking-[0.2em]">Execute Loc Update</span>
+                            </button>
+
+                            <button id="btn-alarm-driver" class="w-full mt-2 py-4 bg-red-600/20 border border-red-500/30 text-red-500 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-3 transition-all active:scale-95 hover:bg-red-600 hover:text-white shadow-lg shadow-red-900/20">
+                                <div class="spinner-custom border-red-500"></div>
+                                <i class="ki-filled ki-vibrate text-sm"></i>
+                                <span class="btn-text tracking-[0.2em]">Initiate Unit Alarm</span>
                             </button>
 
                             <div id="energy-widget" class="mt-6 pt-6 border-t border-white/10 hidden">

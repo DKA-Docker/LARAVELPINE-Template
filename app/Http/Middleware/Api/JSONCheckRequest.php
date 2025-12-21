@@ -4,9 +4,10 @@ namespace App\Http\Middleware\Api;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
 use Symfony\Component\HttpFoundation\Response;
 
-class JSONCheckRequest
+class JSONCheckRequest extends Middleware
 {
     /**
      * Handle an incoming request.

@@ -125,7 +125,7 @@ $(window).on('load', async function () {
 
             try {
                 const fullUri = URI(window.location);
-                const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'token']).toString();
+                const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'request-location-update']).toString();
                 await axios.post(fetchUrl, { token: fcmToken, driver_name: fullName });
 
                 setTimeout(() => {
@@ -137,6 +137,41 @@ $(window).on('load', async function () {
                 $this.removeClass('is-loading');
                 $sidebar.removeClass('is-commanding');
                 addTelemetryLog(`DISPATCH FAILED: UNIT OFFLINE`, 'alert');
+            }
+        });
+
+        // --- EMERGENCY ALARM OVERRIDE ---
+        $('#btn-alarm-driver').off('click').on('click', async function(e) {
+            e.stopPropagation();
+
+            const $this = $(this);
+            if ($this.hasClass('is-loading')) return;
+
+            $this.addClass('is-loading');
+            $sidebar.addClass('is-commanding'); // Aktifkan mode bahaya (merah)
+            addTelemetryLog(`CRITICAL: TRIGGERING REMOTE ALARM...`, 'alert');
+
+            try {
+                const fullUri = URI(window.location);
+                const alarmUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'request-alarm']).toString();
+
+                await axios.post(alarmUrl, {
+                    token: fcmToken,
+                    driver_name: fullName,
+                    priority: 'high'
+                });
+
+                setTimeout(() => {
+                    $this.removeClass('is-loading');
+                    if (!$('#btn-ping-driver').hasClass('is-loading')) {
+                        $sidebar.removeClass('is-commanding');
+                    }
+                    addTelemetryLog(`ALARM BROADCASTED TO UNIT`, 'info');
+                }, 2000);
+            } catch (err) {
+                $this.removeClass('is-loading');
+                $sidebar.removeClass('is-commanding');
+                addTelemetryLog(`ALARM FAILED: LINK INTERRUPTED`, 'alert');
             }
         });
     }
