@@ -2,15 +2,54 @@
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-screen text-base antialiased overflow-hidden">
 
     <style>
-        .main-tracking-area { position: absolute; top: 60px; left: 0; right: 0; bottom: 0; display: flex; overflow: hidden; z-index: 1; }
-        @media (min-width: 1024px) { .main-tracking-area { top: 70px; } }
+        /* Mengubah container menjadi kolom pada mobile, dan baris pada desktop */
+        .main-tracking-area {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column; /* Default mobile: Atas (Map) - Bawah (Sidebar) */
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        @media (min-width: 1024px) {
+            .main-tracking-area {
+                top: 70px;
+                flex-direction: row; /* Desktop: Samping-sampingan */
+            }
+        }
+
+        /* Penyesuaian ukuran Sidebar agar fleksibel di mobile */
+        #control-sidebar {
+            width: 100%; /* Mobile: Lebar penuh */
+            height: 50%; /* Mobile: Setengah layar bawah */
+            border-l: none;
+            border-t: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 1024px) {
+            #control-sidebar {
+                width: 400px; /* Desktop: Lebar tetap */
+                height: 100%; /* Desktop: Tinggi penuh */
+                border-t: none;
+                border-l: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Penyesuaian Map agar mengambil sisa ruang */
+        .map-container-wrapper {
+            flex: 1;
+            min-height: 50%; /* Minimal setengah layar atas di mobile */
+            position: relative;
+        }
 
         /* MARKER 5X */
         .marker-car { font-size: 40px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); display: flex; align-items: center; justify-content: center; }
 
         /* --- ULTRA-CYBER ANIMATION SYSTEM --- */
-
-        /* 1. Overlay Digital (Scanlines & Noise) */
         .cyber-overlay {
             position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 50;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 123, 255, 0.08) 50%),
@@ -19,54 +58,41 @@
             transition: opacity 0.3s ease;
         }
 
-        /* 2. Scanning Laser Line */
         .scan-line {
             position: absolute; width: 100%; height: 4px; background: #007bff;
             top: -10%; opacity: 0; z-index: 60; pointer-events: none;
             box-shadow: 0 0 20px #007bff, 0 0 40px #007bff;
         }
 
-        /* 3. Animation Keyframes (Disesuaikan untuk Slow-Motion) */
         @keyframes cyber-scan-move {
             0% { top: -10%; opacity: 0; }
-            20% { opacity: 1; } /* Muncul perlahan */
+            20% { opacity: 1; }
             80% { opacity: 1; }
-            100% { top: 110%; opacity: 0; } /* Menghilang perlahan di bawah */
+            100% { top: 110%; opacity: 0; }
         }
 
         @keyframes cyber-pulse {
             0% { background-color: rgba(0, 123, 255, 0); }
-            50% { background-color: rgba(0, 123, 255, 0.05); } /* Pulse lebih halus */
+            50% { background-color: rgba(0, 123, 255, 0.05); }
             100% { background-color: rgba(0, 123, 255, 0); }
         }
 
-        /* 4. Trigger Classes - Diubah Durasi ke Slow-Motion */
-        .is-updating .cyber-overlay {
-            opacity: 1;
-            animation: cyber-pulse 2s infinite; /* Slow pulse */
-        }
+        .is-updating .cyber-overlay { opacity: 1; animation: cyber-pulse 2s infinite; }
+        .is-updating .scan-line { opacity: 1; animation: cyber-scan-move 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite; }
 
-        .is-updating .scan-line {
-            opacity: 1;
-            /* Diubah dari 1.5s menjadi 4s untuk efek Slowmo */
-            animation: cyber-scan-move 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-        }
-
-        /* Mode Override (Saat Klik Request) - Tetap dibuat agak cepat agar terasa responsif */
         .is-commanding .scan-line {
             background: #ff0055;
             box-shadow: 0 0 20px #ff0055, 0 0 40px #ff0055;
-            animation-duration: 1.5s; /* Kecepatan menengah untuk state 'Danger' */
+            animation-duration: 1.5s;
         }
+        .is-commanding .glass-card { border-color: #ff0055 !important; box-shadow: 0 0 50px rgba(255, 0, 85, 0.3) !important; }
 
-        /* Glow Panel Scan - Diperhalus durasinya */
         @keyframes intelligence-glow {
             0% { border-color: #007bff; box-shadow: 0 0 40px rgba(0,123,255,0.3); transform: scale(1.02); }
             100% { border-color: rgba(255, 255, 255, 0.1); transform: scale(1); }
         }
         .animate-panel-scan { animation: intelligence-glow 2s ease-out forwards; }
 
-        /* SPINNER */
         .spinner-custom { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .is-loading .spinner-custom { display: block; }
@@ -80,11 +106,11 @@
             @livewire("metronic.dashboards.layouts.constructors.headers")
 
             <div class="main-tracking-area">
-                <div class="relative flex-1 h-full min-w-0 bg-black overflow-hidden">
+                <div class="map-container-wrapper bg-black overflow-hidden">
                     <div id="map" class="w-full h-full z-0 grayscale-[0.2]"></div>
                 </div>
 
-                <aside id="control-sidebar" class="glass-sidebar w-80 lg:w-[400px] h-full flex flex-col shadow-2xl shrink-0 z-20 bg-background/90 backdrop-blur-2xl border-l border-white/10 relative overflow-hidden">
+                <aside id="control-sidebar" class="glass-sidebar flex flex-col shadow-2xl shrink-0 z-20 bg-background/90 backdrop-blur-2xl relative overflow-hidden">
 
                     <div class="cyber-overlay"></div>
                     <div class="scan-line"></div>
