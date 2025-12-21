@@ -20,7 +20,22 @@ class Index extends Controller
     public function index(Request $request): JsonResponse
     {
         return response()->json(
-            $data = $this->services->ReadAll()
+            data: array(
+                'status' => true,
+                'code' => Response::HTTP_OK,
+                'message'=> 'Successfully Load Data Accounts',
+                'data' => $this->services->AutomaticallyPaginationTable($request),
+                'meta' => array(
+                    'count' => array(
+                        'current' => $this->services->AutomaticallyPaginationTable($request),
+                        'total' => $this->services->Count()
+                    )
+                )
+            ),
+                status: Response::HTTP_OK,
+                headers: array(
+                    'Content-Type' => 'application/json'
+            )
         );
     }
 

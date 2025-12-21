@@ -21,7 +21,8 @@ Route::name('api.')->group(function () {
         Route::delete('/', [ApiAuth::class, "logout"]);
     });
     /** name Route api.dashboards */
-    Route::middleware(['auth:sanctum'])->prefix('dashboards')->name('dashboards.')->group(function () {
+//    Route::middleware(['auth:sanctum'])
+        Route::prefix('dashboards')->name('dashboards.')->group(function () {
         /** Name Route api.dashboards.apps */
         Route::prefix('apps')->name('apps.')->group(function () {
             /** Name Route api.dashboards.apps.deliveries */
@@ -60,14 +61,14 @@ Route::name('api.')->group(function () {
 
     });
 
-    Route::middleware(['auth:sanctum'])->prefix('base')->name('base.')->group(function () {
+//    Route::middleware(['auth:sanctum'])->prefix('base')->name('base.')->group(function () {
         Route::prefix('accounts')->name('account.')->group(function () {
             Route::get('/', [Accounts\Index::class, 'index']);
             Route::prefix('firebase')->name('firebase.')->group(function () {
                 Route::patch('/', [Accounts\Firebase\Index::class, 'edit']);
             });
         });
-    });
+//    });
 });
 
 

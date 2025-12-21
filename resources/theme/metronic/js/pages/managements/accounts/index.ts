@@ -53,12 +53,12 @@ $(window).on('load', function () {
                 account: {
                     title: 'Name',
                     render: (value, row) => {
-                        return `${row.data.account.information.first_name} ${row.account.information.last_name}`
+                        return `${row.information.first_name} ${row.information.last_name}`
                     }
                 },
                 email: {
                     title: 'Email',
-                    render: (value, row: any) => row.data.contact?.email ?? '-'
+                    render: (value, row: any) => row.contact?.email ?? '-'
                 },
                 created_at: {
                     title: 'Dibuat',

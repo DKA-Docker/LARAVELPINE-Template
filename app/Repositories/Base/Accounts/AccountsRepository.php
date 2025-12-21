@@ -68,4 +68,9 @@ class AccountsRepository implements AccountsRepositoryInterface {
         $data = $this->Find($id);
         return $data->delete();
     }
+
+    public function Count(): int
+    {
+        return Accounts::query()->count();
+    }
 }

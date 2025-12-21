@@ -11,8 +11,10 @@ use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesReposit
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -252,6 +254,40 @@ class ResourcesAccountsServices
         }
     }
 
+    public function AutomaticallyPaginationTable(Request $request): Collection{
+        if(!$request->hasAny(['page', 'size'])) {
+            return $this->account->query()->get();
+        }
+
+        /** @var $page
+         *
+         * mulai pagination manual kalau ada page/size
+         * default ke 1 kalau orang cuma kirim size
+         */
+        $page = (int)$request->query('page', 1);
+        $size = (int)$request->query('size', 1);
+
+        /**
+         * kalau size nggak dikirim, jangan dipaksa 10 → anggap no limit
+         */
+        if($size !== null){
+            $size = (int)$size;
+            $size = $size < 1 ? null : $size;
+        }
+
+        $query = $this->account->query();
+
+        if($size !== null){
+            $page = max($page, 1);
+            $offset = ($page - 1) * $size;
+
+            $query->skip($offset)->take($size);
+        }
+
+        return $query->get();
+
+    }
+
 
     /**
      * Mencari akun berdasarkan nama (First Name, Last Name, atau Username)
@@ -358,5 +394,15 @@ class ResourcesAccountsServices
                 'msg'    => 'Unexpected error: ' . $e->getMessage(),
             ];
         }
+    }
+
+    public function Count(): int
+    {
+        return $this->account->Count();
+    }
+
+    public function query(): Builder
+    {
+        return $this->account->query();
     }
 }

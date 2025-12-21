@@ -11,6 +11,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as 
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Show as DeliveriesTasksShow;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
+use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as ManagementsAccountsCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use Illuminate\Support\Facades\Route;
@@ -58,7 +59,10 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
 
     Route::prefix('managements')->name('managements.')->group(function () {
         Route::prefix('accounts')->name('accounts.')->group(function () {
-            Route::resource('/',ManagementsAccountsIndex::class)->parameters(['' => 'id']);
+            Route::resource('/',ManagementsAccountsIndex::class);
+            Route::prefix('create')->name('create.')->group(function () {
+                Route::resource('/', ManagementsAccountsCreate::class);
+            });
         });
     });
 });
