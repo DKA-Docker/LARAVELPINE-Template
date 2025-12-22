@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks;
 
-use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View as ViewContract;
@@ -17,7 +17,7 @@ class View extends Component
     use WithPagination;
 
     protected $paginationTheme = 'tailwind';
-    protected ResourcesDeliveriesTaksServices $services;
+    protected ResourcesDeliveriesTasksServices $services;
 
     // Filter Properties
     public $search = '';
@@ -33,7 +33,7 @@ class View extends Component
 
     public function boot(): void
     {
-        $this->services = new ResourcesDeliveriesTaksServices();
+        $this->services = new ResourcesDeliveriesTasksServices();
     }
 
     public function mount(): void
