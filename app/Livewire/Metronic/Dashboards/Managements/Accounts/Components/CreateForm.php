@@ -56,17 +56,10 @@ class CreateForm extends Component
         $this->resetValidation('formData.role');
     }
 
-    /**
-     * Hook untuk menangkap perubahan pada nested array formData
-     */
-    public function updatedFormData($value, $key): void
-    {
-        Debugbar::info("Field {$key} diperbarui:", $value);
-    }
 
     public function updated($propertyName): void
     {
-        Debugbar::info("Properti berubah: " . $propertyName);
+        Debugbar::info($this->formData);
     }
 
     protected function rules(): array
