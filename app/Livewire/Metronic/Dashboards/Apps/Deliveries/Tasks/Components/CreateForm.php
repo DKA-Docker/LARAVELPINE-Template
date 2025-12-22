@@ -9,7 +9,7 @@ use App\Services\Resources\Data\Geos\ResourcesDataGeosProvincesServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosRegenciesServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosVillagesServices;
 use App\Services\Resources\Deliveries\Requests\Destinations\ResourcesDeliveriesRequestsDestinationsServices;
-use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -17,15 +17,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * CreateForm Component
  * * Komponen ini menangani pembuatan tugas pengiriman (Delivery Tasks).
- * Fitur Utama:
- * 1. Manajemen Form Data (Nama, Destinasi, Driver)
- * 2. Sinkronisasi Geografis bertingkat (Provinsi -> Kota -> Kecamatan -> Desa)
- * 3. Pencarian Driver secara Real-time
- * 4. Integrasi dengan Peta (via Dispatch Event)
  */
 #[Lazy]
 class CreateForm extends Component
@@ -33,16 +29,15 @@ class CreateForm extends Component
     // --- State Pagination & Search ---
     public $perPage = 5;
     public $currentPage = 1;
-    public $driverSearch = ''; // Input pencarian untuk driver (assigned)
+    public $driverSearch = '';
 
     /**
      * Objek Utama Data Form
-     * Struktur ini disesuaikan untuk model AppsDeliveriesTasks & AppsDeliveriesTasksGeos
      */
     public $formData = [
         'name' => '',
         'destination' => '',
-        'assigned' => [], // Daftar driver yang dipilih [id => name]
+        'assigned' => [],
         'geos' => [
             'latitude' => -6.2088,
             'longitude' => 106.8456,
@@ -68,33 +63,21 @@ class CreateForm extends Component
     protected ResourcesDataGeosRegenciesServices $GeoRegenciesServices;
     protected ResourcesDataGeosDistrictsServices $GeoDistrictsServices;
     protected ResourcesDataGeosVillagesServices $GeoVillagesServices;
+    protected ResourcesDeliveriesTasksServices $tasksServices;
 
-    protected ResourcesDeliveriesTaksServices $taksServices;
-
-    /**
-     * Inisialisasi Service melalui Lifecycle Boot
-     * Dijalankan pada setiap request (initial load & update)
-     */
     public function boot(): void
     {
-
         $this->destService = new ResourcesDeliveriesRequestsDestinationsServices();
         $this->accountsServices = new ResourcesAccountsServices();
         $this->GeoProvincesServices = new ResourcesDataGeosProvincesServices();
         $this->GeoRegenciesServices = new ResourcesDataGeosRegenciesServices();
         $this->GeoDistrictsServices = new ResourcesDataGeosDistrictsServices();
         $this->GeoVillagesServices = new ResourcesDataGeosVillagesServices();
-
-        $this->taksServices = new ResourcesDeliveriesTaksServices();
+        $this->tasksServices = new ResourcesDeliveriesTasksServices();
     }
 
-    /**
-     * Initial Load
-     * Mengambil data awal untuk dropdown Destinasi dan Provinsi
-     */
     public function mount(): void
     {
-        // Langsung lempar exception jika tidak punya izin
         if (!Auth::user()->can('dashboards.apps.deliveries.tasks.create')) {
             throw new AuthorizationException("Unauthorized access to this scope.");
         }
@@ -106,10 +89,6 @@ class CreateForm extends Component
         $this->provinces = $resProv['data'] ?? $resProv;
     }
 
-    /**
-     * Lifecycle Hook: Triggered saat destinasi dipilih
-     * Otomatis mengisi data koordinat dan hierarki wilayah berdasarkan data destinasi
-     */
     public function updatedFormDataDestination($value): void
     {
         if (!$value) {
@@ -120,11 +99,9 @@ class CreateForm extends Component
         $dest = collect($this->destinations)->firstWhere('id', $value);
 
         if ($dest) {
-            // Update Koordinat
             $this->formData['geos']['latitude'] = $dest['latitude'] ?? $this->formData['geos']['latitude'];
             $this->formData['geos']['longitude'] = $dest['longitude'] ?? $this->formData['geos']['longitude'];
 
-            // Sinkronisasi Wilayah (Cascading Load)
             $this->formData['geos']['province'] = $dest['province_id'] ?? $dest['province'] ?? null;
             if ($this->formData['geos']['province']) {
                 $this->loadRegencies($this->formData['geos']['province']);
@@ -141,15 +118,12 @@ class CreateForm extends Component
                 }
             }
 
-            // Memberitahu Frontend (JS/Maps) untuk mencari lokasi berdasarkan alamat
             if (isset($dest['receipt_address'])) {
                 $this->dispatch('search-location', address: $dest['receipt_address']);
             }
         }
         $this->currentPage = 1;
     }
-
-    // --- Wilayah Updated Hooks (Reset level di bawahnya saat level atas berubah) ---
 
     public function updatedFormDataGeosProvince($value): void
     {
@@ -170,8 +144,6 @@ class CreateForm extends Component
         $this->loadVillages($value);
         $this->formData['geos']['village'] = null;
     }
-
-    // --- Geo Data Fetchers ---
 
     protected function loadRegencies($parentId): void
     {
@@ -197,37 +169,51 @@ class CreateForm extends Component
         $this->regencies = $this->districts = $this->villages = [];
     }
 
-    // --- Driver Assignment Logic ---
-
-    /** Menambahkan driver terpilih ke array assigned */
     public function addDriver($id, $name): void
     {
         if (!isset($this->formData['assigned'][$id])) {
             $this->formData['assigned'][$id] = $name;
         }
-        $this->driverSearch = ''; // Reset input pencarian setelah dipilih
+        $this->driverSearch = '';
     }
 
-    /** Menghapus driver dari array assigned */
     public function removeDriver($id): void
     {
         unset($this->formData['assigned'][$id]);
     }
 
-    /** Final Submit Task */
-    public function submit(): void
+    /** * Final Submit Task
+     * Mengirim data ke service dan menangani error database
+     */
+    public function submit()
     {
-        $data = $this->formData;
-        Debugbar::log($data); // Debugging data sebelum diproses model
+        // Validasi input wajib sebelum dikirim ke service
+        $this->validate([
+            'formData.name' => 'required|string|max:255',
+            'formData.destination' => 'required',
+            'formData.geos.province' => 'required', // Memastikan province tidak null
+        ]);
+
+        try {
+            Debugbar::error($this->formData);
+            // Menyiapkan data untuk dikirim ke service ResourcesDeliveriesTaksServices
+            $response = $this->tasksServices->Create($this->formData);
+
+            if ($response) {
+                session()->flash('success', 'Delivery Task successfully created.');
+                return redirect()->route('dashboards.apps.deliveries.tasks.index');
+            }
+
+        } catch (\Exception $e) {
+            Debugbar::error($e->getMessage());
+            $this->addError('formData.geos.province', 'Database Error: Gagal menyimpan data wilayah.');
+        }
     }
 
-    /** Computed Property: Mendapatkan detail objek destinasi yang sedang dipilih */
     public function getSelectedDestDetailProperty()
     {
         return collect($this->destinations)->firstWhere('id', $this->formData['destination']);
     }
-
-    // --- Pagination Actions ---
 
     public function updatedPerPage(): void
     {
@@ -239,21 +225,15 @@ class CreateForm extends Component
         $this->currentPage = $page;
     }
 
-    /**
-     * Render View
-     * Menangani logika pencarian driver (suggestions) saat user mengetik
-     */
     public function render(): View
     {
         $suggestions = [];
         $searchTerm = trim($this->driverSearch);
 
-        // Cari driver hanya jika input >= 1 karakter
         if (strlen($searchTerm) >= 1) {
             $response = $this->accountsServices->FindByName($searchTerm,"driver");
             if ($response['status'] && !empty($response['data'])) {
                 $selectedIds = array_keys($this->formData['assigned']);
-                // Filter agar driver yang sudah dipilih tidak muncul kembali di saran
                 $suggestions = collect($response['data'])
                     ->filter(fn($d) => !in_array($d['id'], $selectedIds))
                     ->values()

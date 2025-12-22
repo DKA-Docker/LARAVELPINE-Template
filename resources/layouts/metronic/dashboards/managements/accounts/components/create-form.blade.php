@@ -15,10 +15,11 @@
 
         <div class="kt-card-content p-5">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+                {{-- Username --}}
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Username</label>
                     <div class="relative group">
-                        <input wire:model.live="formData.credential.username" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="text" placeholder="Username..."/>
+                        <input wire:model="formData.credential.username" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="text" placeholder="Username..."/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-profile-circle text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -26,10 +27,11 @@
                     @error('formData.credential.username') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Password --}}
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Password</label>
                     <div class="relative group">
-                        <input wire:model.live="formData.credential.password" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
+                        <input wire:model="formData.credential.password" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-key text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -37,10 +39,11 @@
                     @error('formData.credential.password') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Konfirmasi Password --}}
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Konfirmasi Password</label>
                     <div class="relative group">
-                        <input wire:model.live="formData.credential.password_confirmation" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
+                        <input wire:model="formData.credential.password_confirmation" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-password text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -62,18 +65,18 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Nama Depan</label>
-                        <input type="text" wire:model.live="formData.information.first_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="First Name">
+                        <input type="text" wire:model="formData.information.first_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="First Name">
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Nama Belakang</label>
-                        <input type="text" wire:model.live="formData.information.last_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="Last Name">
+                        <input type="text" wire:model="formData.information.last_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="Last Name">
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Email Contact</label>
                     <div class="relative group">
-                        <input type="email" wire:model.live="formData.contact.email" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 pl-10 font-semibold text-sm shadow-sm w-full" placeholder="example@domain.com">
+                        <input type="email" wire:model="formData.contact.email" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 pl-10 font-semibold text-sm shadow-sm w-full" placeholder="example@domain.com">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="ki-filled ki-sms text-base text-gray-300 group-focus-within:text-blue-500"></i>
                         </div>
@@ -89,6 +92,7 @@
                 <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
                     <i class="ki-filled ki-setting-4 text-purple-600"></i> Role Assignment
                 </h3>
+                {{-- Clear Roles Button --}}
                 <button type="button" wire:click="clearRole" class="text-[9px] font-black text-red-500 uppercase hover:text-red-600 transition-colors flex items-center gap-1">
                     <i class="ki-filled ki-cross-circle"></i> Clear Select
                 </button>
@@ -99,12 +103,14 @@
                     <div class="grid grid-cols-1 gap-2">
                         @foreach($roles ?? [] as $role)
                             @php
-                                $isSelected = in_array($role->name, (array) ($formData['role'] ?? []));
+                                // Menggunakan key 'roles' sesuai View Component terbaru
+                                $isSelected = in_array($role->name, (array) ($formData['roles'] ?? []));
                             @endphp
                             <label wire:key="role-{{ $role->id }}"
-                                   class="relative flex items-center p-3 rounded-xl border transition-all group cursor-pointer {{ $isSelected ? 'bg-purple-50 border-purple-200' : 'bg-white border-gray-100 hover:bg-purple-50' }}">
+                                   class="relative flex items-center p-3 rounded-xl border transition-all group cursor-pointer {{ $isSelected ? 'bg-purple-50 border-purple-200 shadow-sm' : 'bg-white border-gray-100 hover:bg-purple-50' }}">
 
-                                <input type="checkbox" wire:model.live="formData.role" value="{{ $role->name }}" class="absolute opacity-0 w-full h-full cursor-pointer z-10">
+                                {{-- Input Checkbox tersembunyi untuk Multi-Role --}}
+                                <input type="checkbox" wire:model.live="formData.roles" value="{{ $role->name }}" class="absolute opacity-0 w-full h-full cursor-pointer z-10">
 
                                 <div class="flex grow items-center gap-3">
                                     <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
@@ -125,22 +131,47 @@
                             </label>
                         @endforeach
                     </div>
-                    @error('formData.role') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
+                    @error('formData.roles') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- ACTIONS --}}
-    <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
-        <button type="button" onclick="history.back()" class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">Discard changes</button>
-        <button wire:click="submit" wire:loading.attr="disabled" class="group relative overflow-hidden bg-gray-900 px-8 py-3.5 rounded-xl shadow-lg transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50">
-            <div class="relative z-10 flex items-center gap-3">
-                <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Create Account</span>
-                <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Processing...</span>
-                <i class="ki-filled ki-check-circle text-emerald-400 group-hover:text-white transition-colors"></i>
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
-        </button>
+    {{-- SECTION 4: ACTIONS --}}
+    <div class="flex flex-col items-end gap-3 pt-6 border-t border-gray-100">
+
+        {{-- Error dari Service/Database --}}
+        @error('submit')
+        <div class="animate-fade-in flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2 rounded-xl">
+            <i class="ki-filled ki-information-2 text-red-500 text-base"></i>
+            <span class="text-[11px] font-bold text-red-600 uppercase tracking-tight">
+                {{ $message }}
+            </span>
+        </div>
+        @enderror
+
+        <div class="flex items-center justify-end gap-4 w-full">
+            <button type="button" onclick="history.back()" class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
+                Discard changes
+            </button>
+
+            <button wire:click="submit" wire:loading.attr="disabled" class="group relative overflow-hidden bg-gray-900 px-8 py-3.5 rounded-xl shadow-lg transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50">
+                <div class="relative z-10 flex items-center gap-3">
+                    <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Create Account</span>
+                    <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Processing...</span>
+                    <i class="ki-filled ki-check-circle text-emerald-400 group-hover:text-white transition-colors"></i>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+            </button>
+        </div>
     </div>
+
+    <style>
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scale-in { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+        .animate-scale-in { animation: scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-shimmer { animation: shimmer 2s infinite; }
+    </style>
 </div>

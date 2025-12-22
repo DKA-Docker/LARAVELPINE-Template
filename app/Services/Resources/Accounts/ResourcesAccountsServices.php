@@ -10,6 +10,7 @@ use App\Repositories\Base\Accounts\Components\Credentials\AccountsCredentialsRep
 use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesRepository;
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -62,7 +63,7 @@ class ResourcesAccountsServices
                 'information' => ['required', 'array'],
                 'credential'  => ['required', 'array'],
                 'contact'     => ['required', 'array'],
-                'firebase'    => ['required', 'array'],
+                'firebase'    => ['nullable', 'array'],
                 'roles'       => ['nullable', 'array'],
                 'roles.*'     => ['string'],
             ])->validate();
@@ -104,11 +105,16 @@ class ResourcesAccountsServices
                 'data'   => $account,
             ];
         } catch (QueryException $e) {
+            Debugbar::warning($e);
+
             /** Cancel Changes Database */
             DB::rollBack();
+            $err = $this->HelpersExceptionsHttpCode->fromSQLError($e);
+            Debugbar::warning($err);
             /** Convert The Database Error To Http Error Payload  */
-            return $this->HelpersExceptionsHttpCode->fromSQLError($e);
+            return $err;
         } catch (Throwable $e) {
+            Debugbar::error($e);
             /** Cancel Changes Database */
             DB::rollBack();
             /** General Http Error Payload  */

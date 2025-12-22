@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
 
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,10 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 class Create extends Controller
 {
 
-    protected ResourcesDeliveriesTaksServices $service;
+    protected ResourcesDeliveriesTasksServices $service;
 
     public function __construct(){
-        $this->service = new ResourcesDeliveriesTaksServices();
+        $this->service = new ResourcesDeliveriesTasksServices();
     }
 
     public function index()

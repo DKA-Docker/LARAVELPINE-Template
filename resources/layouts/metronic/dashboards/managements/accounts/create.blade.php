@@ -46,10 +46,7 @@
                 <!-- Container -->
                 <div class="kt-container-fixed">
                     <div class="Buat Datagrid gap-5 lg:gap-7.5 mx-auto">
-                        <form method="post">
-                            @csrf
-                            @livewire("metronic.dashboards.managements.accounts.components.create-form")
-                        </form>
+                        @livewire("metronic.dashboards.managements.accounts.components.create-form")
                     </div>
                 </div>
                 <!-- End of Container -->

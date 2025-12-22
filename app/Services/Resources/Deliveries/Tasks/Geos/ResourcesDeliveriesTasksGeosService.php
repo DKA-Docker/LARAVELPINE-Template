@@ -1,32 +1,31 @@
 <?php
 
-namespace App\Services\Resources\Deliveries\Tasks;
+namespace App\Services\Resources\Deliveries\Tasks\Geos;
 
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
-use App\Models\Base\Accounts\Accounts;
+use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksGeos;
+use App\Repositories\Apps\Deliveries\Tasks\Geos\TasksGeosRepository;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ResourcesDeliveriesTaksServices
+class ResourcesDeliveriesTasksGeosService
 {
-
-    protected TasksRepository $repository;
+    protected TasksGeosRepository $repository;
 
     public function __construct()
     {
-        $this->repository = new TasksRepository();
+        $this->repository = new TasksGeosRepository();
     }
 
     /**
      * @throws \Throwable
      */
-    public function Create(...$args): AppsDeliveriesTasks
+    public function Create(...$args): AppsDeliveriesTasksGeos
     {
         // 1. Ambil ID User yang sedang login (Pembuat Task)
         $currentUserId = Auth::id();
@@ -115,5 +114,4 @@ class ResourcesDeliveriesTaksServices
     {
         return $this->repository->Find($id);
     }
-
 }

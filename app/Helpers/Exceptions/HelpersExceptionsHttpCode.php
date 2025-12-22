@@ -1,115 +1,112 @@
 <?php
+
 namespace App\Helpers\Exceptions;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\QueryException;
 
 class HelpersExceptionsHttpCode
 {
-    /**
-     * @phpstan-type SqlError array{code:int, msg:string}
-     * @phpstan-type HttpError array{code:int, error:SqlError}
-     */
-
     /** @var array<int, int> */
     private const MAP = [
-        // ===== CONFLICT (409) - bentrok data / constraint =====
-        1022 => 409, // Can't write; duplicate key
-        1062 => 409, // Duplicate entry
-        1586 => 409, // Duplicate index
-        1215 => 409, // Cannot add foreign key constraint
-        1216 => 409, // Cannot add or update child row: FK fails (varian lama)
-        1451 => 409, // Cannot delete/update parent row: FK constraint fails
-        1452 => 409, // Cannot add or update child row: FK constraint fails
-        1213 => 409, // Deadlock found when trying to get lock
+        // ===== CONFLICT (409) =====
+        1022 => 409, 1062 => 409, 1586 => 409,
+        1215 => 409, 1451 => 409, 1452 => 409, 1213 => 409,
         // ===== UNPROCESSABLE ENTITY (422) =====
-        1048 => 422, // Column cannot be null
-        1364 => 422, // Field doesn't have a default value
-        1366 => 422, // Incorrect/truncated value
-        1264 => 422, // Out of range value
-        1265 => 422, // Data truncated
-        1292 => 422, // Incorrect datetime value
-        1406 => 422, // Data too long
-        3819 => 422, // CHECK constraint violated (MySQL 8+)
-        3822 => 422, // Validation error for generated column
-        4025 => 422, // CONSTRAINT CHECK failed
+        1048 => 422, 1364 => 422, 1366 => 422, 1264 => 422,
+        1265 => 422, 1292 => 422, 1406 => 422, 3819 => 422,
+        4025 => 422,
         // ===== SERVICE UNAVAILABLE (503) =====
-        1205 => 503, // Lock wait timeout exceeded
+        1205 => 503, 1045 => 503, 1142 => 503,
         // ===== BAD REQUEST (400) =====
-        1064 => 400, // SQL syntax error
-        1052 => 400, // Column ambiguous
-        1066 => 400, // Not unique table/alias
-        1111 => 400, // Invalid use of group function
-        1140 => 400, // Aggregated query without GROUP BY
-        1141 => 400, // No such grant defined
-        1148 => 400, // Command not allowed
-        1690 => 400, // Division by 0
-        1365 => 400, // Division by 0 (variant)
+        1064 => 400, 1052 => 400, 1690 => 400,
         // ===== NOT FOUND (404) =====
-        1146 => 404, // Table doesn't exist
-        1054 => 404, // Unknown column
-        1051 => 404, // Unknown table
-        1049 => 404, // Unknown database
-        // ===== AUTH/PERM (dipetakan aman ke 503) =====
-        1045 => 503, // Access denied for user
-        1142 => 503, // Command denied
-        1143 => 503, // Select denied
-        // ===== INSUFFICIENT STORAGE (507) =====
-        1114 => 507, // Table is full
-        1021 => 507, // Disk full / write failed
+        1146 => 404, 1054 => 404,
     ];
 
-    /**
-     * Mapping dari SQL Error Code ke HTTP Status (dengan heuristik switch-case).
-     *
-     * @return array{code:int, error:array{code:int, msg:string}}
-     */
     public function fromSQLError(QueryException $e): array
     {
+        // PostgreSQL menggunakan SQLSTATE di errorInfo[0], MySQL menggunakan error code di errorInfo[1]
+        $sqlState = $e->errorInfo[0] ?? null;
         $sqlCode = (int)($e->errorInfo[1] ?? 0);
         $message = $e->getMessage();
-        // 1) Hard map dulu
+        $msgLower = strtolower($message);
+
+        // 1) Hard map berdasarkan SQL Code (MySQL)
         $httpCode = self::MAP[$sqlCode] ?? null;
-        // 2) Heuristik jika belum terpetakan (switch-case style)
+
+        // 2) Mapping berdasarkan SQLSTATE (PostgreSQL & Standar SQL)
         if ($httpCode === null) {
-            $msgLower = strtolower($message);
-            $isConflictLike = in_array($sqlCode, [1215, 1216, 1217, 1218, 1219, 1220, 1213], true);
+            $httpCode = match ($sqlState) {
+                '23505' => 409, // Unique violation
+                '23503' => 409, // Foreign key violation
+                '23502' => 422, // Not null violation
+                '23514' => 422, // Check constraint violation
+                '22001' => 422, // String data right truncation (Too long)
+                default => null,
+            };
+        }
+
+        // 3) Heuristik jika masih null
+        if ($httpCode === null) {
             $httpCode = match (true) {
-                $isConflictLike
-                || str_contains($msgLower, 'duplicate entry')
-                || str_contains($msgLower, 'foreign key') => 409,
-                str_contains($msgLower, 'cannot be null')
-                || str_contains($msgLower, 'data too long')
-                || str_contains($msgLower, 'out of range')
-                || str_contains($msgLower, 'truncated')
-                || str_contains($msgLower, 'incorrect')
-                || str_contains($msgLower, 'check constraint') => 422,
-                str_contains($msgLower, 'unknown column')
-                || str_contains($msgLower, 'unknown table')
-                || str_contains($msgLower, 'unknown database') => 404,
-                str_contains($msgLower, 'syntax')
-                || str_contains($msgLower, 'ambiguous')
-                || str_contains($msgLower, 'not unique table/alias')
-                || str_contains($msgLower, 'division by 0') => 400,
-                $sqlCode === 1205 || str_contains($msgLower, 'lock wait timeout') => 503,
-                $sqlCode === 1213 || str_contains($msgLower, 'deadlock') => 409,
-                str_contains($msgLower, 'access denied')
-                || str_contains($msgLower, 'denied to user')
-                || str_contains($msgLower, 'not allowed') => 503,
-                str_contains($msgLower, 'table is full')
-                || str_contains($msgLower, 'disk full')
-                || str_contains($msgLower, 'no space left') => 507,
+                str_contains($msgLower, 'duplicate') || str_contains($msgLower, 'unique') => 409,
+                str_contains($msgLower, 'null') || str_contains($msgLower, 'constraint') => 422,
+                str_contains($msgLower, 'syntax') => 400,
                 default => 500,
             };
         }
 
+        // 4) Ekstraksi Pesan Spesifik (Sangat penting untuk PostgreSQL)
+        $userFriendlyMsg = $this->extractDetails($message, $httpCode);
+
         return [
             'status' => false,
             'code'  => $httpCode,
-            'msg' => "Database Internal Error",
+            'msg' => $userFriendlyMsg,
             'error' => [
-                'code' => $sqlCode,
+                'code' => $sqlCode ?: $sqlState,
                 'msg'  => $message,
             ],
         ];
+    }
+
+    private function extractDetails(string $rawMsg, int $httpCode): string
+    {
+        $msgLower = strtolower($rawMsg);
+
+        // --- Kasus DUPLIKAT (Conflict 409) ---
+        if ($httpCode === 409) {
+            // PostgreSQL: DETAIL: Key (email)=(test@gmail.com) already exists.
+            if (preg_match('/Key \((.*?)\)=\((.*?)\) already exists/', $rawMsg, $matches)) {
+                return "Data " . $matches[1] . " '" . $matches[2] . "' sudah terdaftar.";
+            }
+            // MySQL: Duplicate entry 'test@gmail.com' for key '...'
+            if (preg_match("/Duplicate entry '(.*?)' for key/", $rawMsg, $matches)) {
+                return "Data '" . $matches[1] . "' sudah terdaftar dalam sistem.";
+            }
+            return "Terjadi duplikasi data pada sistem.";
+        }
+
+        // --- Kasus KOSONG / NOT NULL (Unprocessable 422) ---
+        if ($httpCode === 422) {
+            // PostgreSQL: null value in column "name" violates not-null constraint
+            if (preg_match('/column "(.*?)" violates not-null constraint/', $rawMsg, $matches)) {
+                return "Kolom '" . $matches[1] . "' tidak boleh kosong.";
+            }
+            // MySQL: Column 'name' cannot be null
+            if (preg_match("/Column '(.*?)' cannot be null/", $rawMsg, $matches)) {
+                return "Kolom '" . $matches[1] . "' wajib diisi.";
+            }
+            return "Input data tidak valid atau ada kolom yang kosong.";
+        }
+
+        // --- Kasus Lainnya ---
+        return match ($httpCode) {
+            404 => "Data atau tabel tidak ditemukan.",
+            400 => "Permintaan data tidak valid (Syntax Error).",
+            503 => "Koneksi database sibuk atau akses ditolak.",
+            default => "Terjadi kesalahan internal pada database."
+        };
     }
 }
