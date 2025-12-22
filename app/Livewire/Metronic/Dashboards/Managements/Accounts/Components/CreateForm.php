@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Metronic\Dashboards\Managements\Accounts\Components;
 
+use App\Models\Base\Permissions\PermissionsRole;
 use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Component;
-use Spatie\Permission\Models\Role;
 
 class CreateForm extends Component
 {
@@ -25,7 +25,7 @@ class CreateForm extends Component
         'contact' => [
             'email' => '',
         ],
-        'role' => null,
+        'role' => [], // Inisialisasi sebagai array untuk multi-select
     ];
 
     public $roles = [];
@@ -42,20 +42,31 @@ class CreateForm extends Component
             throw new AuthorizationException("Izin Ditolak.");
         }
 
-        $this->roles = Role::all();
+        $this->roles = PermissionsRole::all();
     }
 
     /**
-     * Manipulasi Clear Select dari Server Side
-     * Mencegah PostgreSQL Casting Error (UUID vs Integer)
+     * Membersihkan pilihan role.
+     * Menggunakan array kosong agar in_array di Blade tidak error.
      */
     public function clearRole(): void
     {
-        // Set ke null secara eksplisit
-        $this->formData['role'] = null;
-
-        // Membersihkan error validasi agar UI kembali bersih
+        Debugbar::log("clear role clicked");
+        $this->formData['role'] = [];
         $this->resetValidation('formData.role');
+    }
+
+    /**
+     * Hook untuk menangkap perubahan pada nested array formData
+     */
+    public function updatedFormData($value, $key): void
+    {
+        Debugbar::info("Field {$key} diperbarui:", $value);
+    }
+
+    public function updated($propertyName): void
+    {
+        Debugbar::info("Properti berubah: " . $propertyName);
     }
 
     protected function rules(): array
@@ -65,13 +76,13 @@ class CreateForm extends Component
             'formData.credential.password' => 'required|min:6|confirmed',
             'formData.information.first_name' => 'required|string|max:50',
             'formData.contact.email' => 'required|email|unique:apps_contacts,email',
-            'formData.role' => 'required',
+            'formData.role' => 'required|array|min:1',
         ];
     }
 
     protected $messages = [
         'formData.credential.password.confirmed' => 'Konfirmasi password tidak cocok.',
-        'formData.role.required' => 'Silakan pilih satu role untuk pengguna ini.',
+        'formData.role.required' => 'Silakan pilih setidaknya satu role.',
     ];
 
     public function submit()
@@ -79,7 +90,7 @@ class CreateForm extends Component
         $this->validate();
 
         try {
-            $response = $this->accountsServices->CreateAccount($this->formData);
+            $response = $this->accountsServices->Create($this->formData);
 
             if ($response['status']) {
                 session()->flash('success', 'Akun berhasil dibuat.');
