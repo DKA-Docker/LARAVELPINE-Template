@@ -38,11 +38,43 @@ class CreateForm extends Component
 
     public function mount(): void
     {
-        if (!Auth::user()->can('dashboards.managements.accounts.create')) {
+        $auth = Auth::user();
+
+        if (!$auth->can('dashboards.managements.accounts.create')) {
             throw new AuthorizationException("Izin Ditolak.");
         }
 
-        $this->roles = PermissionsRole::all();
+        /** * MENGAMBIL ROLE UTAMA SEBAGAI STRING
+         * Jika menggunakan Spatie: $auth->getRoleNames()->first()
+         * Jika menggunakan relasi manual: $auth->roles->first()->name ?? ''
+         */
+        $primaryRole = $auth->getRoleNames()->first();
+
+        Debugbar::info("Primary Role untuk switch: " . $primaryRole);
+
+        $query = PermissionsRole::query();
+
+        switch ($primaryRole) {
+            case 'superadmin':
+                // Superadmin bisa melihat dan membuat semua role
+                $this->roles = $query->get();
+                break;
+
+            case 'admin':
+                // Admin tidak boleh melihat/membuat superadmin
+                $this->roles = $query->where('name', '!=', 'superadmin')->get();
+                break;
+
+            case 'driver':
+                // Driver tidak boleh membuat superadmin dan sesama driver
+                $this->roles = $query->whereNotIn('name', ['superadmin', 'driver'])->get();
+                break;
+
+            default:
+                // Default: hanya tampilkan role yang umum (opsional)
+                $this->roles = $query->whereNotIn('name', ['superadmin', 'admin'])->get();
+                break;
+        }
     }
 
     /**
