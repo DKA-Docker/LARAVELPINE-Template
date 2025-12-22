@@ -28,6 +28,8 @@ class CreateForm extends Component
         'role' => [], // Inisialisasi sebagai array untuk multi-select
     ];
 
+    public bool $isAuthorized = true;
+
     public $roles = [];
     protected ResourcesAccountsServices $accountsServices;
 
@@ -41,7 +43,7 @@ class CreateForm extends Component
         $auth = Auth::user();
 
         if (!$auth->can('dashboards.managements.accounts.create')) {
-            throw new AuthorizationException("Izin Ditolak.");
+            $this->isAuthorized = false;
         }
 
         /** * MENGAMBIL ROLE UTAMA SEBAGAI STRING
@@ -115,6 +117,9 @@ class CreateForm extends Component
 
     public function render(): View
     {
+        if (!$this->isAuthorized) {
+            return view('dashboards.layouts.unauthorized');
+        }
         return view('dashboards.managements.accounts.components.create-form', [
             'roles' => $this->roles
         ]);
