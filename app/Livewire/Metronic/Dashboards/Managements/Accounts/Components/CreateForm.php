@@ -62,7 +62,7 @@ class CreateForm extends Component
 
             case 'admin':
                 // Admin tidak boleh melihat/membuat superadmin
-                $this->roles = $query->where('name', '!=', 'superadmin')->get();
+                $this->roles = $query->whereNotIn('name', ['superadmin', 'admin'])->get();
                 break;
 
             case 'driver':
