@@ -54,27 +54,11 @@ class CreateForm extends Component
 
         $query = PermissionsRole::query();
 
-        switch ($primaryRole) {
-            case 'superadmin':
-                // Superadmin bisa melihat dan membuat semua role
-                $this->roles = $query->get();
-                break;
-
-            case 'admin':
-                // Admin tidak boleh melihat/membuat superadmin
-                $this->roles = $query->whereNotIn('name', ['superadmin', 'admin'])->get();
-                break;
-
-            case 'driver':
-                // Driver tidak boleh membuat superadmin dan sesama driver
-                $this->roles = $query->whereNotIn('name', ['superadmin', 'driver'])->get();
-                break;
-
-            default:
-                // Default: hanya tampilkan role yang umum (opsional)
-                $this->roles = $query->whereNotIn('name', ['superadmin', 'admin'])->get();
-                break;
-        }
+        $this->roles = match ($primaryRole) {
+            'superadmin' => $query->get(),
+            'driver' => $query->whereNotIn('name', ['superadmin', 'driver'])->get(),
+            default => $query->whereNotIn('name', ['superadmin', 'admin'])->get(),
+        };
     }
 
     /**
