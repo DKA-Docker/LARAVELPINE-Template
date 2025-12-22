@@ -4,6 +4,7 @@ namespace App\Livewire\Metronic\Dashboards\Managements\Accounts;
 
 use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Lazy;
@@ -55,6 +56,11 @@ class View extends Component
         $this->reset(['search', 'status', 'customerName', 'recipientName', 'minPackages', 'maxPackages']);
         $this->sort = 'latest';
         $this->resetPage();
+    }
+
+    public function placeholder(): Factory|ViewContract|\Illuminate\View\View
+    {
+        return view('dashboards.layouts.placeholders.view');
     }
 
     public function render(): ViewContract
