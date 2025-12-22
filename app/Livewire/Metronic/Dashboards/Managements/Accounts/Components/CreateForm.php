@@ -89,7 +89,7 @@ class CreateForm extends Component
     }
 
 
-    public function updated($propertyName): void
+    public function updated(): void
     {
         Debugbar::info($this->formData);
     }
