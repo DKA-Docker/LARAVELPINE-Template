@@ -4,11 +4,14 @@ namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks;
 
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Lazy]
 class View extends Component
 {
     use WithPagination;
@@ -63,6 +66,11 @@ class View extends Component
 
         // Penting: Reset halaman ke 1
         $this->resetPage();
+    }
+
+    public function placeholder(): Factory|ViewContract|\Illuminate\View\View
+    {
+        return view('dashboards.layouts.placeholders.view');
     }
 
     public function render(): ViewContract

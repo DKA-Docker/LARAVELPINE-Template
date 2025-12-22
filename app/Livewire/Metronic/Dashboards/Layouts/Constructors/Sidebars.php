@@ -4,8 +4,9 @@ namespace App\Livewire\Metronic\Dashboards\Layouts\Constructors;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-
+#[Lazy]
 class Sidebars extends Component
 {
     public function render(): Factory|View

@@ -15,6 +15,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 /**
@@ -26,6 +27,7 @@ use Livewire\Component;
  * 3. Pencarian Driver secara Real-time
  * 4. Integrasi dengan Peta (via Dispatch Event)
  */
+#[Lazy]
 class CreateForm extends Component
 {
     // --- State Pagination & Search ---

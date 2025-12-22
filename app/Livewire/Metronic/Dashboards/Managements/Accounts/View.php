@@ -6,9 +6,11 @@ use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Lazy]
 class View extends Component
 {
     use WithPagination;

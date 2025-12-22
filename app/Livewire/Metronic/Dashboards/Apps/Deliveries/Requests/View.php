@@ -3,11 +3,14 @@
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests;
 
 use App\Services\Resources\Deliveries\Requests\ResourcesDeliveriesRequestsServices;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Contracts\View\View as ViewContract;
 
+#[Lazy]
 class View extends Component
 {
     use WithPagination;
@@ -46,6 +49,11 @@ class View extends Component
         $this->reset(['search', 'status', 'customerName']);
         $this->sort = 'latest';
         $this->resetPage();
+    }
+
+    public function placeholder(): Factory|ViewContract|\Illuminate\View\View
+    {
+        return view('dashboards.layouts.placeholders.view');
     }
 
     public function render(): ViewContract

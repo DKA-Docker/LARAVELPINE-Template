@@ -3,8 +3,10 @@
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components;
 
 use Illuminate\Http\Request;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class PackagesItemsLayout extends Component
 {
     public array $items = [];

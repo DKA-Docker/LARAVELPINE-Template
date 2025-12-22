@@ -8,7 +8,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
+
 
 class Index extends Component
 {

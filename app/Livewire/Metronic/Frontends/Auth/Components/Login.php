@@ -6,8 +6,10 @@ use App\Services\Auth\AuthAccountsServices;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class Login extends Component
 {
 

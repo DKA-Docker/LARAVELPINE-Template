@@ -3,9 +3,9 @@
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests\Creates\Destinations;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
-
 class ItemsLayout extends Component
 {
     #[Modelable]

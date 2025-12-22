@@ -8,8 +8,10 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class CreateForm extends Component
 {
     public $formData = [
