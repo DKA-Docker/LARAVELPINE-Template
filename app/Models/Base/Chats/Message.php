@@ -11,6 +11,8 @@ class Message extends Model
 {
     use HasFactory;
 
+    protected $table = 'accounts_chats_messages';
+
     protected $fillable = ['user_id', 'receiver_id', 'body'];
 
     public function sender(): BelongsTo
