@@ -8,10 +8,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
-#[Lazy]
 class Logout extends Component
 {
 

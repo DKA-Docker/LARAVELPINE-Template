@@ -371,6 +371,25 @@ $(window).on('load', async function () {
             const existingInList = $(`.unit-item[data-id="${id}"]`);
             if (existingInList.length > 0) {
                 existingInList.find('.text-blue-400').html(`${parseFloat(d.speed || 0).toFixed(0)} <span class="text-[7px] opacity-50 not-italic text-white">KM</span>`);
+            } else {
+                // Determine if we need to append to list (New Unit)
+                const info = d.account?.information;
+                const html = `
+                    <div class="unit-item group p-3 rounded-xl border border-blue-200 dark:border-white/5 bg-white/50 dark:bg-white/[0.02] flex items-center gap-3 cursor-pointer hover:bg-blue-50 dark:hover:bg-white/10 hover:border-blue-400/50 transition-all shadow-sm dark:shadow-none animate-in slide-in-from-left-2 duration-300" data-id="${id}">
+                        <div class="relative shrink-0">
+                            <img src="${info?.avatar ? '/storage/' + info.avatar : '/storage/media/avatars/blank.png'}" class="size-9 rounded-lg border border-blue-100 dark:border-white/10 object-cover shadow-sm bg-white">
+                            <div class="absolute -bottom-0.5 -right-0.5 size-2 bg-emerald-500 rounded-full shadow-[0_0_5px_#10b981] ring-2 ring-white dark:ring-black"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="unit-item-name text-[10px] font-black uppercase tracking-tight text-gray-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors truncate">${info?.first_name || 'Unit'} ${info?.last_name || ''}</div>
+                            <div class="text-[8px] font-mono font-bold opacity-100 dark:opacity-30 uppercase truncate text-gray-600 dark:text-gray-400">NODE-${id.toString().substring(0, 6)}</div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="text-[9px] font-black text-blue-700 dark:text-blue-400 italic">${parseFloat(d.speed || 0).toFixed(0)} <span class="text-[7px] opacity-100 dark:opacity-50 not-italic text-gray-500 dark:text-white">KM</span></div>
+                        </div>
+                    </div>`;
+                $('#unit-list-container').append(html);
+                $('#hud-active-count').text($('#unit-list-container').children().length.toString().padStart(2, '0'));
             }
         });
 
