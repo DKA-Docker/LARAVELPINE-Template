@@ -117,7 +117,7 @@
                         <div class="grow overflow-hidden relative z-[60] flex flex-col">
 
                             <div id="tab-list" class="tab-content grow hidden flex flex-col p-8">
-                                <div class="search-wrapper mb-6">
+                                <div class="search-wrapper">
                                     <i class="ki-filled ki-magnifier"></i>
                                     <input type="text" id="unit-search" placeholder="SEARCH ACTIVE NODES..." autocomplete="off">
                                 </div>
@@ -140,15 +140,15 @@
                                     </div>
 
                                     <div class="mt-8 grid grid-cols-2 gap-4">
-                                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                                        <div class="bg-white/5 px-5 rounded-2xl border border-white/5">
                                             <span class="block text-[9px] font-black opacity-30 mb-2 uppercase text-primary">Velocity</span>
                                             <span id="unit-speed" class="text-xl font-black italic text-foreground">0.00 <small class="text-[10px] opacity-30 not-italic font-black">KM/H</small></span>
                                         </div>
-                                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                                        <div class="bg-white/5 px-5 rounded-2xl border border-white/5">
                                             <span class="block text-[9px] font-black opacity-30 mb-2 uppercase text-primary">Sync Delay</span>
                                             <span id="unit-time" class="text-xl font-black italic text-foreground">--:--</span>
                                         </div>
-                                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5 col-span-2">
+                                        <div class="bg-white/5 px-5 rounded-2xl border border-white/5 col-span-2">
                                             <div class="flex justify-between items-end">
                                                 <div><span class="block text-[9px] font-black opacity-30 mb-2 uppercase">Position</span><span id="unit-coords" class="text-[11px] font-mono font-black text-foreground/80 tracking-tight">0.00000, 0.00000</span></div>
                                                 <div class="text-right"><span class="block text-[9px] font-black opacity-30 mb-2 uppercase">Accuracy</span><span id="unit-accuracy" class="text-xs font-mono font-black text-primary">N/A</span></div>

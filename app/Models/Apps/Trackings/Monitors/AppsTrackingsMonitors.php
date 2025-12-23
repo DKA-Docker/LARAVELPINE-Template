@@ -25,6 +25,7 @@ class AppsTrackingsMonitors extends Model
         'latitude',
         'longitude',
         'speed',
+        'accuracy',
         'created_at',
         'updated_at',
     ];
