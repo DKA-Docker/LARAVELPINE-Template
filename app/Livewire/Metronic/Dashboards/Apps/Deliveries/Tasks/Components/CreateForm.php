@@ -23,7 +23,7 @@ use Illuminate\Http\RedirectResponse;
  * CreateForm Component
  * * Komponen ini menangani pembuatan tugas pengiriman (Delivery Tasks).
  */
-#[Lazy]
+
 class CreateForm extends Component
 {
     // --- State Pagination & Search ---
@@ -65,6 +65,8 @@ class CreateForm extends Component
     protected ResourcesDataGeosVillagesServices $GeoVillagesServices;
     protected ResourcesDeliveriesTasksServices $tasksServices;
 
+    public bool $isAuthorized = true;
+
     public function boot(): void
     {
         $this->destService = new ResourcesDeliveriesRequestsDestinationsServices();
@@ -79,7 +81,7 @@ class CreateForm extends Component
     public function mount(): void
     {
         if (!Auth::user()->can('dashboards.apps.deliveries.tasks.create')) {
-            throw new AuthorizationException("Unauthorized access to this scope.");
+            $this->isAuthorized = false;
         }
 
         $response = $this->destService->ReadAll();
@@ -227,8 +229,13 @@ class CreateForm extends Component
 
     public function render(): View
     {
+        if (!$this->isAuthorized) {
+            return view('dashboards.layouts.unauthorized');
+        }
+
         $suggestions = [];
         $searchTerm = trim($this->driverSearch);
+
 
         if (strlen($searchTerm) >= 1) {
             $response = $this->accountsServices->FindByName($searchTerm,"driver");

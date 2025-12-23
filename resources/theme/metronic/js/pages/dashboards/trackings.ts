@@ -48,7 +48,7 @@ $(window).on('load', async function () {
     };
 
     let mapInstance: mapboxgl.Map | null = null;
-    let selectedUuid: string | null = null;
+    let selectedAccountId: string | number | null = null; // BERUBAH DARI UUID
     const markers: Record<string, { marker: mapboxgl.Marker }> = {};
 
     // ==========================================
@@ -68,7 +68,7 @@ $(window).on('load', async function () {
     }
 
     function resetControlHub() {
-        selectedUuid = null;
+        selectedAccountId = null; // BERUBAH DARI UUID
         $('#unit-name').text('System Ready');
         $('#btn-ping-driver, #energy-widget, #log-widget, #security-alert-box').addClass('hidden');
         $('#control-sidebar').removeClass('is-updating is-commanding');
@@ -79,9 +79,10 @@ $(window).on('load', async function () {
         const info = driver.account?.information;
         const fullName = info ? `${info.first_name} ${info.last_name}` : 'Unknown';
         const fcmToken = driver.account?.firebase?.token;
+        const accId = driver.account_id; // BERUBAH DARI UUID
 
         $('#unit-name').text(fullName);
-        $('#unit-id').text(`ID: ${driver.uuid.substring(0, 8).toUpperCase()}`);
+        $('#unit-id').text(`ACC-ID: ${accId}`);
         $('#unit-speed').html(`${parseFloat(driver.speed).toFixed(2)} <span class="text-[10px]">KM/H</span>`);
         $('#unit-time').text(moment(driver.created_at).format('HH:mm:ss'));
         if (info?.avatar) $('#unit-avatar').attr('src', `/storage/${info.avatar}`);
@@ -91,36 +92,29 @@ $(window).on('load', async function () {
         const $sidebar = $('#control-sidebar');
         const $card = $('#unit-card');
 
-        // --- THE CYBERPUNK SCAN GIF EFFECT ---
         if (isEchoUpdate) {
-            // Trigger Scanline & Overlay
             $sidebar.addClass('is-updating');
-
-            // Trigger Glow pada Card dengan Reflow
             $card.removeClass('animate-panel-scan');
             void $card[0].offsetWidth;
             $card.addClass('animate-panel-scan');
 
-            // Alert Box logic
             $('#security-alert-box').stop(true, true).hide().removeClass('hidden').fadeIn(200);
             $('#alert-message').text(`${fullName} signal acquired.`);
             addTelemetryLog(`LIVE SYNC: ${fullName}`, 'alert');
 
-            // Matikan efek setelah 2 detik (durasi scanning)
             setTimeout(() => {
                 $sidebar.removeClass('is-updating');
                 $('#security-alert-box').fadeOut(1000);
             }, 2000);
         }
 
-        // --- REQUEST COMMAND OVERRIDE ---
         $('#btn-ping-driver').off('click').on('click', async function(e) {
             e.stopPropagation();
             const $this = $(this);
             if ($this.hasClass('is-loading')) return;
 
             $this.addClass('is-loading');
-            $sidebar.addClass('is-commanding'); // Mode Merah (Override)
+            $sidebar.addClass('is-commanding');
             addTelemetryLog(`OVERRIDE: REQUESTING LOCATION...`, 'alert');
 
             try {
@@ -140,15 +134,13 @@ $(window).on('load', async function () {
             }
         });
 
-        // --- EMERGENCY ALARM OVERRIDE ---
         $('#btn-alarm-driver').off('click').on('click', async function(e) {
             e.stopPropagation();
-
             const $this = $(this);
             if ($this.hasClass('is-loading')) return;
 
             $this.addClass('is-loading');
-            $sidebar.addClass('is-commanding'); // Aktifkan mode bahaya (merah)
+            $sidebar.addClass('is-commanding');
             addTelemetryLog(`CRITICAL: TRIGGERING REMOTE ALARM...`, 'alert');
 
             try {
@@ -177,7 +169,7 @@ $(window).on('load', async function () {
     }
 
     // ==========================================
-    // 2. THEME OBSERVER (MUTATE OBSERVER)
+    // 2. THEME OBSERVER
     // ==========================================
     const themeObserver = new MutationObserver(() => {
         const isDark = document.documentElement.classList.contains('dark');
@@ -189,33 +181,39 @@ $(window).on('load', async function () {
     // ==========================================
     // 3. MARKER ENGINE
     // ==========================================
-    function updateMarkersOnMap(latestPerUuid: Record<string, any>, highlightUuid: string | null = null) {
-        Object.values(latestPerUuid).forEach((driver: any) => {
+    function updateMarkersOnMap(latestPerAccount: Record<string, any>, highlightAccountId: string | number | null = null) {
+        Object.values(latestPerAccount).forEach((driver: any) => {
+            const accId = driver.account_id; // BERUBAH DARI UUID
             const coord: [number, number] = [driver.longitude, driver.latitude];
-            if (!markers[driver.uuid]) {
+
+            if (!markers[accId]) {
                 const el = document.createElement('div');
                 el.className = 'marker-car'; el.innerHTML = '🚗';
                 el.addEventListener('click', (e) => {
-                    e.stopPropagation(); selectedUuid = driver.uuid;
+                    e.stopPropagation();
+                    selectedAccountId = accId;
                     updateControlHub(driver, false);
                     mapInstance?.flyTo({ center: coord, zoom: 16 });
                 });
-                markers[driver.uuid] = { marker: new mapboxgl.Marker(el).setLngLat(coord).addTo(mapInstance!) };
+                markers[accId] = { marker: new mapboxgl.Marker(el).setLngLat(coord).addTo(mapInstance!) };
             } else {
-                markers[driver.uuid].marker.setLngLat(coord);
-                if (driver.uuid === selectedUuid) updateControlHub(driver, driver.uuid === highlightUuid);
+                markers[accId].marker.setLngLat(coord);
+                if (accId === selectedAccountId) updateControlHub(driver, accId === highlightAccountId);
             }
         });
     }
 
-    async function fetchTracking(highlightUuid: string | null = null) {
+    async function fetchTracking(highlightAccountId: string | number | null = null) {
         try {
             const res = await axios.get(URI(window.location).segment([...URI(window.location).segment(), 'monitors']).toString());
             const latest: Record<string, any> = {};
             res.data.data.forEach((d: any) => {
-                if (!latest[d.uuid] || new Date(d.created_at) > new Date(latest[d.uuid].created_at)) latest[d.uuid] = d;
+                // MENGGUNAKAN account_id SEBAGAI KEY
+                if (!latest[d.account_id] || new Date(d.created_at) > new Date(latest[d.account_id].created_at)) {
+                    latest[d.account_id] = d;
+                }
             });
-            updateMarkersOnMap(latest, highlightUuid);
+            updateMarkersOnMap(latest, highlightAccountId);
         } catch (e) { console.error(e); }
     }
 
@@ -233,14 +231,20 @@ $(window).on('load', async function () {
     // --- REALTIME LISTEN ---
     window.Echo.channel('dashboards.apps.trackings.monitors')
         .listen('.dashboards.apps.trackings.monitors', (response: any) => {
+            console.log("response", response)
             const incoming = response.data;
-            if (markers[incoming.uuid]) markers[incoming.uuid].marker.setLngLat([incoming.longitude, incoming.latitude]);
-            if (!selectedUuid || selectedUuid === incoming.uuid) {
-                selectedUuid = incoming.uuid;
-                updateControlHub(incoming, true); // <--- INI PEMICU ANIMASI CYBER
+            const accId = incoming.account_id; // BERUBAH DARI UUID
+
+            if (markers[accId]) {
+                markers[accId].marker.setLngLat([incoming.longitude, incoming.latitude]);
+            }
+
+            if (!selectedAccountId || selectedAccountId === accId) {
+                selectedAccountId = accId;
+                updateControlHub(incoming, true);
                 mapInstance?.flyTo({ center: [incoming.longitude, incoming.latitude], zoom: 17 });
             }
-            fetchTracking(incoming.uuid);
+            fetchTracking(accId);
         });
 
     mapInstance.on('style.load', () => fetchTracking());

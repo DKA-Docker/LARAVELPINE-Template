@@ -15,9 +15,8 @@ class ResourcesTrackingsMonitorsServices
         $this->repository = new MonitorsRepository();
     }
 
-    public function Create(Request $request) {
-        $allRequest = $request->all();
-        return $this->repository->create($allRequest);
+    public function Create(array $request) {
+        return $this->repository->create($request);
     }
 
 
