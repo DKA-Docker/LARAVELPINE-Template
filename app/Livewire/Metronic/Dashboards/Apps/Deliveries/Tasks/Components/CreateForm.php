@@ -232,8 +232,4 @@ class CreateForm extends Component
         ]);
     }
 
-    public function placeholder()
-    {
-        return view('dashboards.apps.deliveries.tasks.components.create-form-placeholder');
-    }
 }
