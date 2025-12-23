@@ -3,10 +3,12 @@
 namespace App\Events\Dashboards\Apps\Trackings\Alarms;
 
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
-class Index implements ShouldBroadcastNow
+class Index implements ShouldBroadcast, ShouldQueue
 {
     use SerializesModels;
 
