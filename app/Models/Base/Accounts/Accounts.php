@@ -33,6 +33,7 @@ class Accounts extends Authenticatable
         'credential',
         'contact',
         'firebase',
+        'last_seen_at',
         'created_at',
         'updated_at',
     ];
@@ -45,10 +46,12 @@ class Accounts extends Authenticatable
         'password', // Hide accessor password biar gak bocor hash
     ];
 
+
     /** Cast tipe data */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'last_seen_at' => 'datetime',
     ];
 
     // ================= RELATIONSHIP =================
