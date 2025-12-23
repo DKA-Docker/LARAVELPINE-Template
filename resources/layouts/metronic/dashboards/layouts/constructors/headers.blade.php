@@ -5,6 +5,14 @@
     data-kt-sticky-class="border-b border-border"
     data-kt-sticky-name="header"
     id="header"
+    x-init="
+        if (typeof KTMenu !== 'undefined') KTMenu.createInstances();
+        if (typeof KTDrawer !== 'undefined') KTDrawer.createInstances();
+        if (typeof KTScroll !== 'undefined') KTScroll.createInstances();
+        if (typeof KTSticky !== 'undefined') KTSticky.createInstances();
+        if (typeof KTToggle !== 'undefined') KTToggle.createInstances();
+        if (typeof KTDropdown !== 'undefined') KTDropdown.createInstances();
+    "
 >
     <!-- Container -->
     <div class="kt-container-fixed flex items-stretch justify-between lg:gap-4" id="headerContainer">

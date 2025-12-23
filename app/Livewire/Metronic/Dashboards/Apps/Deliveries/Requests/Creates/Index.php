@@ -15,6 +15,11 @@ use Livewire\Component;
 class Index extends Component
 {
 
+    public function placeholder(): Factory|View
+    {
+        return view('dashboards.apps.deliveries.requests.creates.index-skeleton');
+    }
+
     protected ResourcesDeliveriesRequestsServices $services;
     /**
      * Data global form.

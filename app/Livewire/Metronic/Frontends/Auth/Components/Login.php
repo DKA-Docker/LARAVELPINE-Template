@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class Login extends Component
 {
 

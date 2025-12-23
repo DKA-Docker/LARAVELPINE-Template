@@ -3,7 +3,9 @@
 namespace App\Livewire\Metronic\Dashboards\Layouts\Constructors;
 
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 
+#[Lazy]
 class HeadersSkeleton extends Component
 {
     public function render()

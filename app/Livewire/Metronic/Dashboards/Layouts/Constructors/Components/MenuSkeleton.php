@@ -3,7 +3,9 @@
 namespace App\Livewire\Metronic\Dashboards\Layouts\Constructors\Components;
 
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 
+#[Lazy]
 class MenuSkeleton extends Component
 {
     public function render()

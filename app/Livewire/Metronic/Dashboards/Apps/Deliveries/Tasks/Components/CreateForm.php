@@ -18,6 +18,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class CreateForm extends Component
 {
     // --- State Pagination & Search ---

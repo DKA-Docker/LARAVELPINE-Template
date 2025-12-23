@@ -7,6 +7,7 @@ use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
 
+// #[Lazy]
 class ItemsLayout extends Component
 {
     #[Modelable]

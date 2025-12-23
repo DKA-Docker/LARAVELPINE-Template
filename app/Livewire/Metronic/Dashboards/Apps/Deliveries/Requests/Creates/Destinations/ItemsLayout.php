@@ -5,7 +5,9 @@ namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Requests\Creates\Dest
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 
+// #[Lazy]
 class ItemsLayout extends Component
 {
     #[Modelable]

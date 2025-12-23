@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+
 class Sidebars extends Component
 {
     public function render(): Factory|View

@@ -38,6 +38,8 @@ $(window).on('load', function () {
         const container = document.querySelector(
             '#table-container'
         ) as HTMLElement;
+
+        if (!container) return; // Defensive check
         /**
          *
          */
@@ -63,7 +65,7 @@ $(window).on('load', function () {
                 created_at: {
                     title: 'Dibuat',
                     render: (value: any, row: { created_at: moment.MomentInput; }) => {
-                        return row.created_at ? moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY"):'-'
+                        return row.created_at ? moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY") : '-'
                     }
                 },
             },

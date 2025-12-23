@@ -7,8 +7,14 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class Footers extends Component
 {
+    public function placeholder(): Factory|View
+    {
+        return view('dashboards.layouts.constructors.footers-skeleton');
+    }
+
     public function render(): Factory|View
     {
         return view('dashboards.layouts.constructors.footers');
