@@ -1360,6 +1360,7 @@
             <!-- End of Chat -->
             <!-- Apps -->
             <div
+                wire:ignore
                 data-kt-dropdown="true"
                 data-kt-dropdown-offset="10px, 10px"
                 data-kt-dropdown-offset-rtl="-10px, 10px"

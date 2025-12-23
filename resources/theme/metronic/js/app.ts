@@ -8,4 +8,3 @@ import "./pages/dashboards/deliveries/tasks/create";
 import "./pages/dashboards/deliveries/tasks/show";
 import "./pages/managements/accounts/index";
 //import "./layouts/demo1.js";
-

@@ -6,8 +6,6 @@
 import $ from "jquery";
 import mapboxgl from "mapbox-gl";
 import URI from "urijs";
-// @ts-ignore
-import { Livewire } from '../../../../../../../../vendor/livewire/livewire/dist/livewire.esm'
 
 interface TaskCreateModuleInterface {
     map: mapboxgl.Map | null;

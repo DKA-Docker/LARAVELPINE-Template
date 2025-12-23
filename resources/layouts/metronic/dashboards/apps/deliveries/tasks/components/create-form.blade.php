@@ -335,7 +335,13 @@
 
         {{-- SECTION 5: BUTTON ACTION --}}
         <div class="flex items-center justify-end gap-5">
-            <button type="button" class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">Discard Changes</button>
+            <a
+                href="."
+                wire:navigate
+                class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors"
+            >
+                Discard Change
+            </a>
             <button wire:click="submit" wire:loading.attr="disabled" class="group relative overflow-hidden bg-gray-900 px-12 py-5 rounded-2xl shadow-2xl transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50">
                 <div class="relative z-10 flex items-center gap-3">
                     <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Confirm & Save Task</span>

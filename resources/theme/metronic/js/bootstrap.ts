@@ -13,13 +13,13 @@ declare global {
         jQuery: typeof jQuery;
         axios: typeof axios;
         ApexCharts: typeof ApexCharts;
+        Livewire : typeof Livewire;
     }
 }
 
 // Assign ke window (global)
 window.$ = window.jQuery = jQuery;
 window.axios = axios;
-
 //window.axios.defaults.headers.common['X-CSRF-TOKEN'] = $("meta[name='csrf-token']").attr("content");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

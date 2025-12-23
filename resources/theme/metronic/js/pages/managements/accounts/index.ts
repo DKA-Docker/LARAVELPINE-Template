@@ -1,6 +1,7 @@
 import URI from "urijs";
 import moment from "moment-timezone";
 import "moment/locale/id.js"
+// @ts-ignore
 import { KTDataTable } from "@keenthemes/ktui/lib/esm"
 import $ from "jquery";
 
@@ -14,7 +15,6 @@ $(window).on('load', function () {
         moment.locale("id")
         /** Ambil URL dimana JS Ini Dimuat**/
         const FullUriCurrentURL = URI(window.location);
-        console.log(FullUriCurrentURL);
         /**
          * Ubah URL Menjadi Array Segment
          * misal /dashboards/apps/deliveries menjadi
@@ -52,17 +52,17 @@ $(window).on('load', function () {
             columns: {
                 account: {
                     title: 'Name',
-                    render: (value, row) => {
+                    render: (value: any, row: { information: { first_name: any; last_name: any; }; }) => {
                         return `${row.information.first_name} ${row.information.last_name}`
                     }
                 },
                 email: {
                     title: 'Email',
-                    render: (value, row: any) => row.contact?.email ?? '-'
+                    render: (value: any, row: any) => row.contact?.email ?? '-'
                 },
                 created_at: {
                     title: 'Dibuat',
-                    render: (value, row) => {
+                    render: (value: any, row: { created_at: moment.MomentInput; }) => {
                         return row.created_at ? moment(row.created_at).format("HH:mm:ss DD-MMMM-YYYY"):'-'
                     }
                 },
@@ -76,7 +76,7 @@ $(window).on('load', function () {
                 const page = queryParams.get('page');
                 const size = queryParams.get('size');
 
-                $(".show_from").html(size);
+                $(".show_from").html(`${size}`);
                 return queryParams;
             },
             /**

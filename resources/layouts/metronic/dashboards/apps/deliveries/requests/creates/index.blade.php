@@ -7,8 +7,9 @@
             </div>
             <div class="flex items-center gap-3">
                 <a
+                    href="."
+                    wire:navigate
                     class="kt-btn kt-btn-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
-                    href="{{ route(preg_replace('/\.create\.index$/', '.index', Route::currentRouteName())) }}"
                 >
                     Batalkan
                 </a>
