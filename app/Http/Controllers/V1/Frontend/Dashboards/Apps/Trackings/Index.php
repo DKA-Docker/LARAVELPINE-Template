@@ -11,6 +11,6 @@ class Index extends Controller
 {
     public function index(): Factory|View
     {
-        return view('dashboards.apps.trackings');
+        return view('dashboards.apps.trackings.index');
     }
 }
