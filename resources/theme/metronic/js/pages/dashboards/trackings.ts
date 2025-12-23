@@ -41,15 +41,21 @@ $(window).on('load', async function () {
     let selectedAccountId: string | number | null = null;
     const markers: Record<string, { marker: mapboxgl.Marker, element: HTMLElement, lastCoord: [number, number], lastData: any }> = {};
 
-    // --- SIDEBAR & TAB LOGIC ---
-    $('#sidebar-toggle').on('click', function() {
-        $('#control-sidebar').toggleClass('is-minimized');
-        $(this).toggleClass('rotate-180');
-        setTimeout(() => { if (mapInstance) mapInstance.resize(); }, 500);
-    });
+    // --- SIDEBAR & TAB LOGIC (FIXED PANAH & RESIZE) ---
+    $('#sidebar-toggle').off('click').on('click', function() {
+        const $sidebar = $('#control-sidebar');
+        const $btn = $(this);
 
-    $('.tab-btn[data-tab="list"]').addClass('is-active');
-    $('#tab-list').removeClass('hidden');
+        $sidebar.toggleClass('is-minimized');
+        $btn.toggleClass('rotate-180');
+
+        // PENTING: Mapbox butuh trigger resize manual saat container berubah ukuran
+        setTimeout(() => {
+            if (mapInstance) {
+                mapInstance.resize();
+            }
+        }, 510); // sedikit lebih lama dari transisi CSS (0.5s)
+    });
 
     $('.tab-btn').on('click', function() {
         const target = $(this).data('tab');
@@ -132,9 +138,11 @@ $(window).on('load', async function () {
         const id = acc?.id || "N/A";
         const fullName = info ? `${info.first_name} ${info.last_name}` : 'Unknown Unit';
 
+        // Auto-expand sidebar jika ada data masuk saat sedang tutup
         if($('#control-sidebar').hasClass('is-minimized')) {
             $('#control-sidebar').removeClass('is-minimized');
             $('#sidebar-toggle').removeClass('rotate-180');
+            setTimeout(() => { if (mapInstance) mapInstance.resize(); }, 510);
         }
 
         $('.tab-btn[data-tab="detail"]').click();
@@ -246,12 +254,19 @@ $(window).on('load', async function () {
         center: [119.4365, -5.1477], zoom: 12
     });
 
+    // --- MARKER CREATION (STYLE LAMA DIPERTAHANKAN) ---
     function createMarker(d: any) {
         const id = d.account.id;
         const pos: [number, number] = [parseFloat(d.longitude), parseFloat(d.latitude)];
         const el = document.createElement('div');
         el.className = 'marker-car';
-        el.innerHTML = `<div class="pulse-ring"></div><div class="pulse-danger"></div><div class="marker-icon-wrapper"><span class="car-icon">🚗</span></div>`;
+        el.innerHTML = `
+            <div class="pulse-ring"></div>
+            <div class="pulse-danger"></div>
+            <div class="marker-icon-wrapper">
+                <span class="car-icon">🚗</span>
+            </div>
+        `;
 
         el.onclick = (e) => {
             e.stopPropagation();
@@ -286,6 +301,7 @@ $(window).on('load', async function () {
         } catch (e) {}
     }
 
+    // --- ECHO LISTENERS ---
     window.Echo.channel('dashboards.apps.trackings.monitors')
         .listen('.dashboards.apps.trackings.monitors', (res: any) => {
             const d = res.data;
@@ -300,7 +316,6 @@ $(window).on('load', async function () {
                 createMarker(d);
             }
 
-            // AUTO-SELECT ON ECHO
             selectedAccountId = id;
             updateUI(d, true);
             mapInstance?.flyTo({ center: newPos, zoom: 17, essential: true });

@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View as ViewContract;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
-#[Lazy]
+
 class Menu extends Component
 {
 

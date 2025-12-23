@@ -27,13 +27,11 @@
     <div class="flex grow">
         @livewire("metronic.dashboards.layouts.constructors.sidebars")
         <!-- Wrapper -->
-        <div class="kt-wrapper flex grow flex-col">
+        <div class="kt-wrapper flex flex-col h-screen">
             @livewire("metronic.dashboards.layouts.constructors.headers")
             <!-- Content -->
-            <main class="grow pt-5" id="content" role="content">
-                <!-- Container -->
-                <div class="kt-container-fixed" id="contentContainer"></div>
-                <!-- End of Container -->
+            <main class="grow overflow-y-auto pt-5" id="content" role="content">
+                <div class="kt-container-fixed"></div>
                 <!-- Container -->
                 @livewire("metronic.dashboards.apps.deliveries.requests.particles.headings.headings")
                 <!-- End of Container -->
