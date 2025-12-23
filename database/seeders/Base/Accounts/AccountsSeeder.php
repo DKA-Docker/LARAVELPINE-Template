@@ -74,10 +74,70 @@ class AccountsSeeder extends Seeder
             ],
             "credential" => [
                 "username" => "driver",
-                "password" => "driver#"
+                "password" => "driver"
             ],
             "contact" => [
                 "email" => "driver@example.com"
+            ],
+            "firebase" => [
+                "token" => null
+            ],
+            "roles" => [
+                "driver"
+            ]
+        ]);
+        $this->command->info(json_encode($create));
+        $create = $this->account->Create([
+            "information" => [
+                "first_name" => "Driver",
+                "last_name" => "Bagas"
+            ],
+            "credential" => [
+                "username" => "driver1",
+                "password" => "driver1"
+            ],
+            "contact" => [
+                "email" => "driver1@example.com"
+            ],
+            "firebase" => [
+                "token" => null
+            ],
+            "roles" => [
+                "driver"
+            ]
+        ]);
+        $this->command->info(json_encode($create));
+        $create = $this->account->Create([
+            "information" => [
+                "first_name" => "Driver",
+                "last_name" => "Agus"
+            ],
+            "credential" => [
+                "username" => "driver2",
+                "password" => "driver2"
+            ],
+            "contact" => [
+                "email" => "driver2@example.com"
+            ],
+            "firebase" => [
+                "token" => null
+            ],
+            "roles" => [
+                "driver"
+            ]
+        ]);
+        $this->command->info(json_encode($create));
+        $create = $this->account->Create([
+            "information" => [
+                "first_name" => "Driver",
+                "last_name" => "Joni"
+            ],
+            "credential" => [
+                "username" => "driver3",
+                "password" => "driver3"
+            ],
+            "contact" => [
+                "email" => "driver3@example.com"
             ],
             "firebase" => [
                 "token" => null
