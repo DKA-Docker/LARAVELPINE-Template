@@ -2,7 +2,7 @@
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
     <!-- Theme Mode -->
     <script>
-        const defaultThemeMode = 'light' // light|dark|system
+        let defaultThemeMode = 'light' // light|dark|system
         let themeMode
 
         if (document.documentElement) {
@@ -44,7 +44,7 @@
                 <!-- End of Container -->
                 <!-- Container -->
                 <div class="kt-container-fixed">
-                    <div class="Buat Datagrid gap-5 lg:gap-7.5 mx-auto">
+                <div class="dashboards-apps-deliveries-tasks-create gap-5 lg:gap-7.5 mx-auto">
                         @livewire("metronic.dashboards.apps.deliveries.tasks.components.create-form")
                     </div>
                 </div>

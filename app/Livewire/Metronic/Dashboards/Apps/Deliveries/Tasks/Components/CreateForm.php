@@ -18,6 +18,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+
 #[Lazy]
 class CreateForm extends Component
 {
@@ -229,5 +230,10 @@ class CreateForm extends Component
             'suggestions' => $suggestions,
             'currentDest' => $this->selectedDestDetail
         ]);
+    }
+
+    public function placeholder()
+    {
+        return view('dashboards.apps.deliveries.tasks.components.create-form-placeholder');
     }
 }

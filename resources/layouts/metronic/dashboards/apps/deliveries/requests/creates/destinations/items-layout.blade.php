@@ -2,10 +2,10 @@
     <div class="p-6 flex items-center justify-between border-b border-gray-50 bg-gradient-to-r from-red-600 to-orange-500 rounded-t-2xl">
         <div class="flex items-center gap-3">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-            <h3 class="text-lg font-bold text-white">Daftar Destinasi Pengiriman</h3>
+            <h3 class="text-lg font-bold text-white">{{ __('dashboard.request.create.sections.destination_list') }}</h3>
         </div>
         <button class="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-xl text-sm font-semibold transition-all" type="button" wire:click="add">
-            + Tambah Destinasi
+            {{ __('dashboard.request.create.buttons.add_destination') }}
         </button>
     </div>
 
@@ -13,8 +13,8 @@
         @if(count($destinations) == 0)
             <div class="py-12 flex flex-col items-center text-center">
                 <img alt="empty" class="max-h-[160px] mb-6 opacity-80" src="{{ asset(Storage::url('media/illustrations/31.svg')) }}">
-                <h2 class="text-xl font-bold text-gray-800">Belum Ada Destinasi</h2>
-                <p class="text-gray-500 max-w-sm mt-2">Anda bisa menambahkan lebih dari satu titik pengiriman untuk permintaan ini.</p>
+                <h2 class="text-xl font-bold text-gray-800">{{ __('dashboard.request.create.form.empty_destination') }}</h2>
+                <p class="text-gray-500 max-w-sm mt-2">{{ __('dashboard.request.create.form.empty_destination_desc') }}</p>
             </div>
         @endif
 
@@ -26,10 +26,10 @@
                         <span class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-600 text-xs font-bold">#{{ $index + 1 }}</span>
                         <div class="flex flex-col">
                             <span class="text-sm font-bold text-gray-800">
-                                {{ $destination['receipt_name'] ? strtoupper($destination['receipt_name']) : 'Penerima Belum Diisi' }}
+                                {{ $destination['receipt_name'] ? strtoupper($destination['receipt_name']) : __('dashboard.request.create.form.destination_recipient_empty') }}
                             </span>
                             <span class="text-xs text-gray-500 italic">
-                                {{ $destination['receipt_address'] ? $destination['receipt_address'] : 'Alamat pengiriman belum ditentukan' }}
+                                {{ $destination['receipt_address'] ? $destination['receipt_address'] : __('dashboard.request.create.form.destination_address_empty') }}
                             </span>
                         </div>
                     </div>
@@ -44,17 +44,17 @@
                 <div class="{{ ($open[$index] ?? false) ? 'block' : 'hidden' }} p-6 bg-white border-t border-gray-100 animate-fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Nama Penerima</label>
-                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="Contoh: Bpk. Jaka" wire:model.defer="destinations.{{ $index }}.receipt_name" />
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_recipient_label') }}</label>
+                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.destination_recipient_placeholder') }}" wire:model.defer="destinations.{{ $index }}.receipt_name" />
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Alamat Lengkap</label>
-                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="Masukkan alamat tujuan..." wire:model.defer="destinations.{{ $index }}.receipt_address" />
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_address_label') }}</label>
+                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.destination_address_placeholder') }}" wire:model.defer="destinations.{{ $index }}.receipt_address" />
                         </div>
                     </div>
                     <div class="mb-6 space-y-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Catatan Tambahan</label>
-                        <textarea class="kt-input min-h-24 focus:ring-red-100 border-gray-200 rounded-xl p-4" placeholder="Keterangan pengiriman..." wire:model.defer="destinations.{{ $index }}.description"></textarea>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_note_label') }}</label>
+                        <textarea class="kt-input min-h-24 focus:ring-red-100 border-gray-200 rounded-xl p-4" placeholder="{{ __('dashboard.request.create.form.destination_note_placeholder') }}" wire:model.defer="destinations.{{ $index }}.description"></textarea>
                     </div>
 
                     <div class="pt-4 border-t border-gray-50">

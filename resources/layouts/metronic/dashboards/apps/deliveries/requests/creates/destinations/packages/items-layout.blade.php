@@ -2,17 +2,17 @@
     <div class="p-5 flex items-center justify-between">
         <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></div>
-            <h3 class="font-bold text-blue-900">Daftar Barang (Item)</h3>
+            <h3 class="font-bold text-blue-900">{{ __('dashboard.request.create.form.box_header') }}</h3>
         </div>
         <button class="text-xs font-bold text-blue-700 hover:text-blue-900 underline decoration-2 underline-offset-4 transition-all" type="button" wire:click="add">
-            + Tambah Item Barang
+            {{ __('dashboard.request.create.buttons.add_package') }}
         </button>
     </div>
 
     <div class="px-4 pb-4 space-y-3">
         @if(count($packages) == 0)
             <div class="bg-white rounded-xl p-6 text-center border border-blue-100">
-                <p class="text-sm text-gray-500 italic">Klik tombol di atas untuk memasukkan detail barang.</p>
+                <p class="text-sm text-gray-500 italic">{{ __('dashboard.request.create.form.empty_package_desc') }}</p>
             </div>
         @endif
 
@@ -33,30 +33,30 @@
                 <div class="{{ ($open[$index] ?? false) ? 'block' : 'hidden' }} p-5 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-3 space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Nama Barang</label>
-                            <input class="kt-input text-sm border-gray-100 focus:ring-blue-50 rounded-lg" type="text" placeholder="Contoh: Monitor LCD 24 Inch" wire:model.defer="packages.{{ $index }}.name" />
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">{{ __('dashboard.request.create.form.package_name_label') }}</label>
+                            <input class="kt-input text-sm border-gray-100 focus:ring-blue-50 rounded-lg" type="text" placeholder="{{ __('dashboard.request.create.form.package_name_placeholder') }}" wire:model.defer="packages.{{ $index }}.name" />
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Jumlah (Qty)</label>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">{{ __('dashboard.request.create.form.package_qty_label') }}</label>
                             <input class="kt-input text-sm border-gray-100 focus:ring-blue-50 rounded-lg" type="number" wire:model.defer="packages.{{ $index }}.qty" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
                         <div class="space-y-1">
-                            <label class="text-[10px] font-medium text-gray-500">Lebar (W)</label>
+                            <label class="text-[10px] font-medium text-gray-500">{{ __('dashboard.request.create.form.package_width_label') }}</label>
                             <input class="kt-input bg-white text-xs border-gray-100 rounded-md" type="text" wire:model.defer="packages.{{ $index }}.dimension_width" />
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-medium text-gray-500">Panjang (L)</label>
+                            <label class="text-[10px] font-medium text-gray-500">{{ __('dashboard.request.create.form.package_length_label') }}</label>
                             <input class="kt-input bg-white text-xs border-gray-100 rounded-md" type="number" wire:model.defer="packages.{{ $index }}.dimension_weight" />
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-medium text-gray-500">Tinggi (H)</label>
+                            <label class="text-[10px] font-medium text-gray-500">{{ __('dashboard.request.create.form.package_height_label') }}</label>
                             <input class="kt-input bg-white text-xs border-gray-100 rounded-md" type="number" wire:model.defer="packages.{{ $index }}.dimension_height" />
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-medium text-gray-500">Berat (Kg)</label>
+                            <label class="text-[10px] font-medium text-gray-500">{{ __('dashboard.request.create.form.package_weight_label') }}</label>
                             <input class="kt-input bg-white text-xs border-gray-100 rounded-md" type="number" wire:model.defer="packages.{{ $index }}.heavy" />
                         </div>
                     </div>

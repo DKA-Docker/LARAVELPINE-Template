@@ -27,19 +27,21 @@
     </style>
 
     <script>
-        const defaultThemeMode = 'light'
-        let themeMode
-        if (document.documentElement) {
-            if (localStorage.getItem('kt-theme')) {
-                themeMode = localStorage.getItem('kt-theme')
-            } else {
-                themeMode = defaultThemeMode
+        (() => {
+            const defaultThemeMode = 'light'
+            let themeMode
+            if (document.documentElement) {
+                if (localStorage.getItem('kt-theme')) {
+                    themeMode = localStorage.getItem('kt-theme')
+                } else {
+                    themeMode = defaultThemeMode
+                }
+                if (themeMode === 'system') {
+                    themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                }
+                document.documentElement.classList.add(themeMode)
             }
-            if (themeMode === 'system') {
-                themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-            }
-            document.documentElement.classList.add(themeMode)
-        }
+        })()
     </script>
 
     <div class="flex grow">

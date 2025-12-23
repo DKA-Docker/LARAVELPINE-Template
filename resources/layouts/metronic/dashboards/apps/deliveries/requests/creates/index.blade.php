@@ -3,8 +3,8 @@
         <div class="kt-container-fixed">
             <div class="flex flex-wrap items-center justify-between gap-5 pb-8 lg:items-end">
                 <div class="flex flex-col justify-center gap-2">
-                    <h1 class="text-2xl font-bold tracking-tight text-gray-900 leading-none">Buat Data Request Baru</h1>
-                    <p class="text-sm text-gray-500">Lengkapi informasi pengiriman di bawah ini secara mendetail.</p>
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900 leading-none">{{ __('dashboard.request.create.title') }}</h1>
+                    <p class="text-sm text-gray-500">{{ __('dashboard.request.create.subtitle') }}</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <a
@@ -12,10 +12,10 @@
                         wire:navigate
                         class="kt-btn kt-btn-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
                     >
-                        Batalkan
+                        {{ __('dashboard.request.create.buttons.cancel') }}
                     </a>
                     <button class="kt-btn kt-btn-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all" type="submit">
-                        Simpan & Buat Data
+                        {{ __('dashboard.request.create.buttons.save') }}
                     </button>
                 </div>
             </div>
@@ -36,16 +36,16 @@
                             <div class="p-2 bg-cyan-50 rounded-lg">
                                 <svg class="w-5 h-5 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-800">Informasi Permintaan Pengiriman</h3>
+                            <h3 class="text-lg font-bold text-gray-800">{{ __('dashboard.request.create.sections.info') }}</h3>
                         </div>
 
                         @if($data['name'] == null)
                             <div class="bg-gray-50 rounded-2xl p-8 mb-6 border border-dashed border-gray-200">
                                 <div class="flex flex-wrap md:flex-nowrap items-center gap-10">
                                     <div class="flex flex-col gap-3 max-w-xl">
-                                        <h2 class="text-xl font-bold text-gray-900">Buat Nama Subject Pengiriman</h2>
+                                        <h2 class="text-xl font-bold text-gray-900">{{ __('dashboard.request.create.form.subject_title') }}</h2>
                                         <p class="text-sm text-gray-600 leading-relaxed">
-                                            Tentukan judul pengiriman Anda, contoh: <span class="italic font-medium text-indigo-600">"Pengiriman Logistik Cluster A"</span>. Judul ini memudahkan pelacakan data.
+                                            {!! __('dashboard.request.create.form.subject_desc') !!}
                                         </p>
                                     </div>
                                     <div class="ms-auto">
@@ -57,12 +57,12 @@
 
                         <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
                             <div class="col-span-3">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">Judul Pengiriman</label>
-                                <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="Masukkan judul permintaan..." wire:model.live="data.name" />
+                                <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">{{ __('dashboard.request.create.form.input_title') }}</label>
+                                <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.input_title_placeholder') }}" wire:model.live="data.name" />
                             </div>
                             <div class="col-span-1">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">Tingkat Urgensi</label>
-                                <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="Contoh: High/Low" wire:model.live="data.urgent" />
+                                <label class="block text-sm font-semibold text-gray-700 mb-2 ml-1">{{ __('dashboard.request.create.form.input_urgency') }}</label>
+                                <input class="kt-input focus:ring-4 focus:ring-cyan-100 transition-all border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.input_urgency_placeholder') }}" wire:model.live="data.urgent" />
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
 
                 <div class="flex gap-4 justify-end pt-4">
                     <button class="kt-btn kt-btn-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200" type="submit">
-                        Finalisasi & Simpan Data
+                        {{ __('dashboard.request.create.buttons.finalize') }}
                     </button>
                 </div>
             </div>

@@ -135,7 +135,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         const $input = $('#map-search-input');
         const $resultsContainer = $('#autocomplete-results');
 
-        $input.on('input', function() {
+        $input.on('input', function () {
             if (self.isAutoFilling) return;
             const query = $(this).val() as string;
 
@@ -163,7 +163,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
      * Deskripsi: Optimized Hybrid Search (Mapbox V6 + OSM)
      */
 
-// ... (Interface & State tetap sama)
+    // ... (Interface & State tetap sama)
 
     fetchSuggestions(query, $container) {
         const self = this;
@@ -354,8 +354,15 @@ const TaskCreateModule: TaskCreateModuleInterface = {
 
 $(() => {
     const elementExists = $("div.dashboards-apps-deliveries-tasks-create");
-    if (elementExists.length === 0 || $('#map').length === 0) return;
-    const run = () => { if ($("#map").length > 0) TaskCreateModule.init(); };
+    if (elementExists.length === 0) return;
+
+    const run = () => {
+        if ($("#map").length > 0) {
+            TaskCreateModule.init();
+        }
+    };
+
     run();
     $(document).on('livewire:navigated', run);
+    document.addEventListener('init-map', run);
 });

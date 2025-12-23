@@ -2,7 +2,7 @@
     <body class="text-foreground bg-background demo1 kt-sidebar-fixed kt-header-fixed flex h-full text-base antialiased">
     <!-- Theme Mode -->
     <script>
-        const defaultThemeMode = 'light' // light|dark|system
+        let defaultThemeMode = 'light' // light|dark|system
         let themeMode
 
         if (document.documentElement) {

@@ -1,4 +1,4 @@
-<div>
+<div x-init="$dispatch('init-map')">
     <div class="space-y-8 animate-fade-in">
 
         {{-- SECTION 1: INFORMASI TUGAS & MAPBOX --}}
