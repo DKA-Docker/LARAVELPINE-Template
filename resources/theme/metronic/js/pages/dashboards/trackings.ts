@@ -26,7 +26,7 @@ $(window).on('load', async function () {
         return meta ? meta.content : '';
     };
 
-    // --- REVERB & FIREBASE CONFIG ---
+    // --- BROADCAST ENGINE ---
     window.Pusher = Pusher;
     window.Echo = new Echo({
         broadcaster: 'reverb',
@@ -38,214 +38,207 @@ $(window).on('load', async function () {
         enabledTransports: ['ws', 'wss'],
     });
 
-    const FIREBASE_CONFIG = {
-        apiKey: "AIzaSyBy_jmKX6mIQOVSUSxra5DnVfFSAel3RIE",
-        authDomain: "hndgs-65ce6.firebaseapp.com",
-        projectId: "hndgs-65ce6",
-        storageBucket: "hndgs-65ce6.firebasestorage.app",
-        messagingSenderId: "1078964933148",
-        appId: "1:1078964933148:web:6f733f7f2264c0f8f245d9",
-    };
-
     let mapInstance: mapboxgl.Map | null = null;
-    let selectedAccountId: string | number | null = null; // BERUBAH DARI UUID
-    const markers: Record<string, { marker: mapboxgl.Marker }> = {};
+    let selectedAccountId: string | number | null = null;
+    const markers: Record<string, { marker: mapboxgl.Marker, element: HTMLElement, lastCoord: [number, number], lastData: any }> = {};
 
-    // ==========================================
-    // 1. TELEMETRY & UI LOGIC
-    // ==========================================
+    function addLog(msg: string, type: 'info' | 'alert' | 'danger' = 'info') {
+        let colorClass = 'text-foreground/40';
+        if (type === 'alert') colorClass = 'text-primary';
+        if (type === 'danger') colorClass = 'text-red-500';
 
-    function addTelemetryLog(message: string, type: 'info' | 'alert' = 'info') {
-        const $container = $('#log-container');
-        const colorClass = type === 'alert' ? 'text-primary' : 'text-foreground/40';
-        const logHtml = `
-            <div class="log-item flex gap-3 items-start border-l border-white/5 pl-3 py-1 mb-1">
-                <span class="text-[8px] font-mono opacity-20 mt-0.5">${moment().format('HH:mm:ss')}</span>
-                <p class="text-[10px] font-bold tracking-tight ${colorClass}">>> ${message}</p>
+        const html = `
+            <div class="flex gap-4 border-l-2 border-white/5 pl-4 py-1 animate-in slide-in-from-left duration-300">
+                <span class="text-[9px] font-mono font-bold opacity-20">${moment().format('HH:mm:ss')}</span>
+                <p class="text-[11px] font-black tracking-tight ${colorClass}">>> ${msg}</p>
             </div>`;
-        $container.prepend(logHtml);
-        if ($container.children().length > 6) $container.children().last().remove();
+        $('#log-container').prepend(html);
+        if ($('#log-container').children().length > 8) $('#log-container').children().last().remove();
     }
 
-    function resetControlHub() {
-        selectedAccountId = null; // BERUBAH DARI UUID
-        $('#unit-name').text('System Ready');
-        $('#btn-ping-driver, #energy-widget, #log-widget, #security-alert-box').addClass('hidden');
-        $('#control-sidebar').removeClass('is-updating is-commanding');
-        $('#unit-card').removeClass('animate-panel-scan');
-    }
-
-    function updateControlHub(driver: any, isEchoUpdate: boolean = false) {
-        const info = driver.account?.information;
-        const fullName = info ? `${info.first_name} ${info.last_name}` : 'Unknown';
-        const fcmToken = driver.account?.firebase?.token;
-        const accId = driver.account_id; // BERUBAH DARI UUID
-
-        $('#unit-name').text(fullName);
-        $('#unit-id').text(`ACC-ID: ${accId}`);
-        $('#unit-speed').html(`${parseFloat(driver.speed).toFixed(2)} <span class="text-[10px]">KM/H</span>`);
-        $('#unit-time').text(moment(driver.created_at).format('HH:mm:ss'));
-        if (info?.avatar) $('#unit-avatar').attr('src', `/storage/${info.avatar}`);
-
-        $('#btn-ping-driver, #energy-widget, #log-widget').removeClass('hidden');
-
-        const $sidebar = $('#control-sidebar');
-        const $card = $('#unit-card');
-
-        if (isEchoUpdate) {
-            $sidebar.addClass('is-updating');
-            $card.removeClass('animate-panel-scan');
-            void $card[0].offsetWidth;
-            $card.addClass('animate-panel-scan');
-
-            $('#security-alert-box').stop(true, true).hide().removeClass('hidden').fadeIn(200);
-            $('#alert-message').text(`${fullName} signal acquired.`);
-            addTelemetryLog(`LIVE SYNC: ${fullName}`, 'alert');
-
-            setTimeout(() => {
-                $sidebar.removeClass('is-updating');
-                $('#security-alert-box').fadeOut(1000);
-            }, 2000);
-        }
-
-        $('#btn-ping-driver').off('click').on('click', async function(e) {
-            e.stopPropagation();
-            const $this = $(this);
-            if ($this.hasClass('is-loading')) return;
-
-            $this.addClass('is-loading');
-            $sidebar.addClass('is-commanding');
-            addTelemetryLog(`OVERRIDE: REQUESTING LOCATION...`, 'alert');
-
-            try {
-                const fullUri = URI(window.location);
-                const fetchUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'request-location-update']).toString();
-                await axios.post(fetchUrl, { token: fcmToken, driver_name: fullName });
-
-                setTimeout(() => {
-                    $this.removeClass('is-loading');
-                    $sidebar.removeClass('is-commanding');
-                    addTelemetryLog(`COMMAND CONFIRMED BY UNIT`, 'info');
-                }, 2500);
-            } catch (err) {
-                $this.removeClass('is-loading');
-                $sidebar.removeClass('is-commanding');
-                addTelemetryLog(`DISPATCH FAILED: UNIT OFFLINE`, 'alert');
-            }
-        });
-
-        $('#btn-alarm-driver').off('click').on('click', async function(e) {
-            e.stopPropagation();
-            const $this = $(this);
-            if ($this.hasClass('is-loading')) return;
-
-            $this.addClass('is-loading');
-            $sidebar.addClass('is-commanding');
-            addTelemetryLog(`CRITICAL: TRIGGERING REMOTE ALARM...`, 'alert');
-
-            try {
-                const fullUri = URI(window.location);
-                const alarmUrl = fullUri.segment([...fullUri.segment(), 'monitors', 'request-alarm']).toString();
-
-                await axios.post(alarmUrl, {
-                    token: fcmToken,
-                    driver_name: fullName,
-                    priority: 'high'
-                });
-
-                setTimeout(() => {
-                    $this.removeClass('is-loading');
-                    if (!$('#btn-ping-driver').hasClass('is-loading')) {
-                        $sidebar.removeClass('is-commanding');
-                    }
-                    addTelemetryLog(`ALARM BROADCASTED TO UNIT`, 'info');
-                }, 2000);
-            } catch (err) {
-                $this.removeClass('is-loading');
-                $sidebar.removeClass('is-commanding');
-                addTelemetryLog(`ALARM FAILED: LINK INTERRUPTED`, 'alert');
-            }
-        });
-    }
-
-    // ==========================================
-    // 2. THEME OBSERVER
-    // ==========================================
-    const themeObserver = new MutationObserver(() => {
+    // --- THEME OBSERVER ---
+    const updateMapStyle = () => {
         const isDark = document.documentElement.classList.contains('dark');
-        const newStyle = isDark ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/standard';
-        if (mapInstance) mapInstance.setStyle(newStyle);
-    });
+        const style = isDark ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/light-v11';
+        if (mapInstance) mapInstance.setStyle(style);
+    };
+    const themeObserver = new MutationObserver(updateMapStyle);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // ==========================================
-    // 3. MARKER ENGINE
-    // ==========================================
-    function updateMarkersOnMap(latestPerAccount: Record<string, any>, highlightAccountId: string | number | null = null) {
-        Object.values(latestPerAccount).forEach((driver: any) => {
-            const accId = driver.account_id; // BERUBAH DARI UUID
-            const coord: [number, number] = [driver.longitude, driver.latitude];
+    // --- PULSE TRIGGERS ---
+    function triggerPulse(accId: any) {
+        if (markers[accId]) {
+            $(markers[accId].element).addClass('marker-pulse-active');
+            setTimeout(() => $(markers[accId].element).removeClass('marker-pulse-active'), 5000);
+        }
+    }
 
-            if (!markers[accId]) {
-                const el = document.createElement('div');
-                el.className = 'marker-car'; el.innerHTML = '🚗';
-                el.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedAccountId = accId;
-                    updateControlHub(driver, false);
-                    mapInstance?.flyTo({ center: coord, zoom: 16 });
-                });
-                markers[accId] = { marker: new mapboxgl.Marker(el).setLngLat(coord).addTo(mapInstance!) };
-            } else {
-                markers[accId].marker.setLngLat(coord);
-                if (accId === selectedAccountId) updateControlHub(driver, accId === highlightAccountId);
+    function triggerAlarmPulse(accId: any) {
+        if (markers[accId]) {
+            $(markers[accId].element).addClass('marker-alarm-active');
+            setTimeout(() => $(markers[accId].element).removeClass('marker-alarm-active'), 10000);
+        }
+    }
+
+    // --- UPDATE UI & HIGHLIGHT MARKER ---
+    function updateUI(driver: any, isLive: boolean = false) {
+        const acc = driver.account;
+        const info = acc?.information;
+        const fcm = acc?.firebase?.token;
+        const id = acc?.id || "N/A";
+
+        // Ganti Warna Marker Terpilih
+        $('.marker-car').removeClass('is-active'); // Hapus semua highlight
+        if (markers[id]) {
+            $(markers[id].element).addClass('is-active'); // Tambah highlight ke yang diklik
+        }
+
+        $('#unit-name').text(info ? `${info.first_name} ${info.last_name}` : 'Unknown Unit');
+        $('#unit-id').text(`${isLive ? 'LIVE' : 'CACHE'}: NODE-${id.toString().substring(0,8).toUpperCase()}`).toggleClass('text-primary', isLive);
+        $('#unit-speed').html(`${parseFloat(driver.speed || 0).toFixed(2)} <small class="text-xs opacity-30 font-bold not-italic">KM/H</small>`);
+        $('#unit-time').text(moment(driver.created_at).format('HH:mm:ss'));
+
+        // REVISI POSISI: Pastikan urutan Lat, Lng benar untuk tampilan teks
+        const displayLat = parseFloat(driver.latitude).toFixed(5);
+        const displayLng = parseFloat(driver.longitude).toFixed(5);
+        $('#unit-coords').text(`${displayLat}, ${displayLng}`);
+
+        $('#unit-accuracy').text(driver.accuracy ? `${driver.accuracy} m` : 'N/A');
+
+        if (info?.avatar) $('#unit-avatar').attr('src', `/storage/${info.avatar}`);
+        $('#btn-ping-driver, #btn-alarm-driver, #log-widget').removeClass('hidden');
+
+        if (isLive) {
+            $('#control-sidebar').addClass('is-updating');
+            triggerPulse(acc.id);
+            addLog(`LIVE SYNC: ${info?.first_name || 'Unit'}`, 'alert');
+            setTimeout(() => $('#control-sidebar').removeClass('is-updating'), 3000);
+        }
+
+        // --- BUTTON HANDLERS ---
+        $('#btn-ping-driver').off('click').on('click', async function() {
+            const $b = $(this).addClass('is-loading');
+            $('#control-sidebar').addClass('is-updating');
+            triggerPulse(acc.id);
+            try {
+                const url = URI(window.location).segment([...URI(window.location).segment(), 'monitors', 'request-location-update']).toString();
+                await axios.post(url, { token: fcm, driver_name: info?.first_name });
+                addLog(`PING REQUEST SENT`, 'info');
+            } finally {
+                setTimeout(() => { $b.removeClass('is-loading'); $('#control-sidebar').removeClass('is-updating'); }, 2000);
+            }
+        });
+
+        $('#btn-alarm-driver').off('click').on('click', async function() {
+            const $b = $(this).addClass('is-loading');
+            $('#control-sidebar').addClass('is-updating is-commanding');
+            triggerAlarmPulse(acc.id);
+            try {
+                const url = URI(window.location).segment([...URI(window.location).segment(), 'monitors', 'request-alarm']).toString();
+                await axios.post(url, { token: fcm, driver_name: info?.first_name });
+                addLog(`CRITICAL ALARM BROADCASTED`, 'danger');
+            } finally {
+                setTimeout(() => {
+                    $b.removeClass('is-loading');
+                    $('#control-sidebar').removeClass('is-updating is-commanding');
+                }, 4000);
             }
         });
     }
 
-    async function fetchTracking(highlightAccountId: string | number | null = null) {
-        try {
-            const res = await axios.get(URI(window.location).segment([...URI(window.location).segment(), 'monitors']).toString());
-            const latest: Record<string, any> = {};
-            res.data.data.forEach((d: any) => {
-                // MENGGUNAKAN account_id SEBAGAI KEY
-                if (!latest[d.account_id] || new Date(d.created_at) > new Date(latest[d.account_id].created_at)) {
-                    latest[d.account_id] = d;
-                }
-            });
-            updateMarkersOnMap(latest, highlightAccountId);
-        } catch (e) { console.error(e); }
-    }
-
-    // --- INITIALIZE ---
-    initializeApp(FIREBASE_CONFIG);
+    // --- MAP ENGINE ---
     mapboxgl.accessToken = getCfg('mapbox-token');
     mapInstance = new mapboxgl.Map({
         container: "map",
-        style: document.documentElement.classList.contains('dark') ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/standard',
+        style: document.documentElement.classList.contains('dark') ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/light-v11',
         center: [119.4365, -5.1477], zoom: 12
     });
 
-    mapInstance.on('click', (e) => { if (!(e.originalEvent.target as HTMLElement).closest('.marker-car')) resetControlHub(); });
+    function createMarker(d: any) {
+        const id = d.account.id;
+        const pos: [number, number] = [parseFloat(d.longitude), parseFloat(d.latitude)];
+        const el = document.createElement('div');
+        el.className = 'marker-car';
+        el.innerHTML = `
+            <div class="pulse-ring"></div>
+            <div class="pulse-danger"></div>
+            <div class="marker-icon-wrapper">
+                <span class="car-icon">🚗</span>
+            </div>
+        `;
 
-    // --- REALTIME LISTEN ---
+        el.onclick = (e) => {
+            e.stopPropagation(); // Mencegah map click event
+            selectedAccountId = id;
+            const currentData = markers[id].lastData;
+            const currentPos = markers[id].lastCoord;
+
+            updateUI(currentData, false);
+            mapInstance?.flyTo({ center: currentPos, zoom: 16, essential: true });
+        };
+
+        markers[id] = {
+            marker: new mapboxgl.Marker(el).setLngLat(pos).addTo(mapInstance!),
+            element: el,
+            lastCoord: pos,
+            lastData: d
+        };
+    }
+
+    async function fetchAll() {
+        try {
+            const res = await axios.get(URI(window.location).segment([...URI(window.location).segment(), 'monitors']).toString());
+            res.data.data.forEach((d: any) => {
+                const id = d.account.id;
+                const pos: [number, number] = [parseFloat(d.longitude), parseFloat(d.latitude)];
+                if (!markers[id]) {
+                    createMarker(d);
+                } else {
+                    markers[id].marker.setLngLat(pos);
+                    markers[id].lastCoord = pos;
+                    markers[id].lastData = d;
+                    if (id === selectedAccountId) updateUI(d, false);
+                }
+            });
+        } catch (e) {}
+    }
+
+    // Tracking Channel
     window.Echo.channel('dashboards.apps.trackings.monitors')
-        .listen('.dashboards.apps.trackings.monitors', (response: any) => {
-            console.log("response", response)
-            const incoming = response.data;
-            const accId = incoming.account_id; // BERUBAH DARI UUID
+        .listen('.dashboards.apps.trackings.monitors', (res: any) => {
+            const d = res.data;
+            const id = d.account.id;
+            const newPos: [number, number] = [parseFloat(d.longitude), parseFloat(d.latitude)];
 
-            if (markers[accId]) {
-                markers[accId].marker.setLngLat([incoming.longitude, incoming.latitude]);
+            if (markers[id]) {
+                markers[id].marker.setLngLat(newPos);
+                markers[id].lastCoord = newPos;
+                markers[id].lastData = d;
+            } else {
+                createMarker(d);
             }
 
-            if (!selectedAccountId || selectedAccountId === accId) {
-                selectedAccountId = accId;
-                updateControlHub(incoming, true);
-                mapInstance?.flyTo({ center: [incoming.longitude, incoming.latitude], zoom: 17 });
+            if (selectedAccountId === id) {
+                updateUI(d, true);
+                mapInstance?.flyTo({ center: newPos, zoom: 17, essential: true });
             }
-            fetchTracking(accId);
         });
 
-    mapInstance.on('style.load', () => fetchTracking());
+    // Alarm Channel
+    window.Echo.channel('dashboards.apps.trackings.alarms')
+        .listen('.dashboards.apps.trackings.alarms', (res: any) => {
+            const accId = res.data.account.id;
+            addLog(`CRITICAL: Unit NODE-${accId.toString().substring(0,8)} Alarm Triggered!`, 'danger');
+            triggerAlarmPulse(accId);
+        });
+
+    mapInstance.on('load', fetchAll);
+    mapInstance.on('click', (e) => {
+        if (!$(e.originalEvent.target as any).closest('.marker-car').length) {
+            selectedAccountId = null;
+            $('.marker-car').removeClass('is-active');
+            $('#unit-name').text('System Ready');
+            $('#btn-ping-driver, #btn-alarm-driver, #log-widget').addClass('hidden');
+        }
+    });
 });

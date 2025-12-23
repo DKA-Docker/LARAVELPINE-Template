@@ -36,7 +36,6 @@ class MonitorsRepository implements MonitorsRepositoryInterface {
     public function Create(...$args): Model|AppsTrackingsMonitors
     {
         $account = $this->auth->verify();
-        Log::info(json_encode($account));
         /** @var $defaults
          * jika data inputan kosong maka semua variable di set null
          */

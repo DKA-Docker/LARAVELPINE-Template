@@ -96,7 +96,7 @@ class Index extends Controller
         // Membangun pesan dengan konfigurasi Android khusus
         $message = CloudMessage::withTarget('token', $token)
             ->withData([
-                'action' => 'RING_ALARM',
+                'action' => 'RINGING',
                 // Kamu bisa tambah data lain jika perlu
             ])
             ->withAndroidConfig([
