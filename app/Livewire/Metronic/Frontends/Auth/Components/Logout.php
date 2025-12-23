@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
-#[Lazy]
 class Logout extends Component
 {
 

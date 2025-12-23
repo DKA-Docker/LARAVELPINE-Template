@@ -11,7 +11,6 @@ use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-//#[Lazy]
 class View extends Component
 {
     use WithPagination;
@@ -79,8 +78,7 @@ class View extends Component
             return view('dashboards.layouts.unauthorized');
         }
 
-        $query = $this->services->query()
-            ->with([
+        $query = $this->services->query()->with([
             'destination.request.account.information',
             'destination.packages',
             'history.account.information'
@@ -127,7 +125,6 @@ class View extends Component
         // KUNCI: Pertahankan transformasi manual agar properti account & destination terbaca sebagai objek
         $tasks->through(function ($item) {
             $item->account = $item->getRelation('account');
-            $item->history = $item->getRelation('history');
 
             $item->destination = $item->getRelation('destination');
             if ($item->destination) {
@@ -140,11 +137,8 @@ class View extends Component
                 }
                 $item->destination->packages = $item->destination->getRelationValue('packages');
             }
-
             return $item;
         });
-
-        Debugbar::error($tasks);
 
         return view('dashboards.apps.deliveries.tasks.view', [
             'tasks' => $tasks

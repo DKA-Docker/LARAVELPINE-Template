@@ -11,7 +11,6 @@ use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Lazy]
 class View extends Component
 {
     use WithPagination;
