@@ -10,7 +10,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Contracts\View\View as ViewContract;
 
-#[Lazy]
+
 class View extends Component
 {
     use WithPagination;

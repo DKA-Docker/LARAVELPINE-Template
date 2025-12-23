@@ -27,10 +27,10 @@
     <div class="flex grow">
         @livewire("metronic.dashboards.layouts.constructors.sidebars")
         <!-- Wrapper -->
-        <div class="kt-wrapper flex flex-col h-screen">
+        <div class="kt-wrapper grow flex flex-col h-screen">
             @livewire("metronic.dashboards.layouts.constructors.headers")
             <!-- Content -->
-            <main class="grow overflow-y-auto pt-5" id="content" role="content">
+            <main class="grow overflow-y-auto pb-8" id="content" role="content">
                 <div class="kt-container-fixed"></div>
                 <!-- Container -->
                 @livewire("metronic.dashboards.apps.deliveries.requests.particles.headings.headings")

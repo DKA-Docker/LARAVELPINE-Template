@@ -29,7 +29,7 @@
         <div class="kt-wrapper flex grow flex-col h-screen">
             @livewire("metronic.dashboards.layouts.constructors.headers")
             <!-- Content -->
-            <main class="grow overflow-y-auto pt-5" id="content" role="content">
+            <main class="grow overflow-y-auto pb-8" id="content" role="content">
                 <div class="kt-container-fixed"></div>
                 <!-- End of Container -->
 

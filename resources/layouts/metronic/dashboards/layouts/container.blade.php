@@ -12,7 +12,7 @@
         <meta name="google-maps-key" content="{{ config('services.google.map.token') }}">
         <meta content="follow, index" name="robots" />
         <link href="#" rel="canonical" />
-        <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+        <meta content="width=device-width, initial-scale=0.9, shrink-to-fit=no" name="viewport" />
         <meta content="" name="description" />
         <meta content="@keenthemes" name="twitter:site" />
         <meta content="@keenthemes" name="twitter:creator" />

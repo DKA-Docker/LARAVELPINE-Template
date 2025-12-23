@@ -17,9 +17,6 @@
                 <button class="kt-btn kt-btn-icon kt-btn-ghost" data-kt-drawer-toggle="#sidebar">
                     <i class="ki-filled ki-menu"></i>
                 </button>
-                <button class="kt-btn kt-btn-icon kt-btn-ghost" data-kt-drawer-toggle="#mega_menu_wrapper">
-                    <i class="ki-filled ki-burger-menu-2"></i>
-                </button>
             </div>
         </div>
         <!-- End of Mobile Logo -->
@@ -1037,9 +1034,6 @@
             </div>
             <!--End of Notifications Drawer-->
             <!-- End of Notifications -->
-            <button class="kt-btn kt-btn-ghost kt-btn-icon hover:bg-primary/10 hover:[&_i]:text-primary size-9 rounded-full" data-kt-drawer-toggle="#notifications_drawer">
-                <i class="ki-filled ki-notification-status text-lg"></i>
-            </button>
 
             <div class="kt-menu" data-kt-menu="true">
                 <div class="kt-menu-item" data-kt-menu-item-offset="0,10px" data-kt-menu-item-placement="bottom-end" data-kt-menu-item-toggle="dropdown" data-kt-menu-item-trigger="click|lg:hover">

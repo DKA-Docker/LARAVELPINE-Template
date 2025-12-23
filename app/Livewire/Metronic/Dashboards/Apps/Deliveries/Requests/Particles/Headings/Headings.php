@@ -9,7 +9,7 @@ use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 
-#[Lazy]
+
 class Headings extends Component
 {
 

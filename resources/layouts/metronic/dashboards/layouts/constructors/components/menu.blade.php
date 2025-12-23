@@ -21,9 +21,9 @@
         @if(auth()->user()->canany(['dashboards.apps.deliveries.requests.view', 'dashboards.apps.deliveries.tasks.view', 'dashboards.apps.deliveries.reports.view']))
             <div class="kt-menu-item" data-kt-menu-item-toggle="accordion" data-kt-menu-item-trigger="click">
                 <div class="kt-menu-link flex grow cursor-pointer items-center gap-[10px] border border-transparent py-[6px] ps-[10px] pe-[10px]" tabindex="0">
-            <span class="kt-menu-icon text-muted-foreground w-[20px] items-start">
-                <i class="ki-duotone ki-parcel text-lg"></i>
-            </span>
+                <span class="kt-menu-icon text-muted-foreground w-[20px] items-start">
+                    <i class="ki-duotone ki-parcel text-lg"></i>
+                </span>
                     <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">{{ __('menu.delivery') }}</span>
                     <span class="kt-menu-arrow text-muted-foreground ms-1 me-[-10px] w-[20px] shrink-0 justify-end">
                 <span class="kt-menu-item-show:hidden inline-flex">
@@ -68,8 +68,8 @@
                                href="{{ request()->getSchemeAndHttpHost() . route('dashboards.apps.deliveries.reports.index', [], false) }}" tabindex="0">
                                 <span class="kt-menu-bullet kt-menu-item-active:before:bg-primary kt-menu-item-hover:before:bg-primary relative -start-[3px] flex w-[6px] before:absolute before:top-0 before:size-[6px] before:-translate-y-1/2 before:rounded-full rtl:start-0 rtl:before:translate-x-1/2"></span>
                                 <span class="kt-menu-icon text-muted-foreground items-start">
-                        <i class="ki-duotone ki-element-8 text-lg"></i>
-                    </span>
+                                    <i class="ki-duotone ki-element-8 text-lg"></i>
+                                </span>
                                 <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">{{ __('menu.report') }}</span>
                             </a>
                         </div>
