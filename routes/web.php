@@ -27,6 +27,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->group(function () {
     /** Name Route dashboards.apps */
     Route::resource('/', DashboardsIndex::class)->parameters(['' => 'id']);
+    
+    /** Session Check Endpoint */
+    Route::get('/check-session', function () {
+        return response()->json(['status' => 'valid']);
+    })->name('check-session');
+
     /** Name Group Route dashboards.apps */
     Route::prefix('apps')->name('apps.')->group(function () {
         /** Name Route dashboards.apps.deliveries */

@@ -4,6 +4,7 @@ import "./core.bundle.js";
 //import "./widgets/general.js";
 import "./pages/dashboards/trackings.ts";
 import "./pages/dashboards/dashboard.ts";
+import "./components/session-monitor.ts";
 import "./pages/dashboards/deliveries/tasks/index";
 import "./pages/dashboards/deliveries/tasks/create";
 import "./pages/dashboards/deliveries/tasks/show";
