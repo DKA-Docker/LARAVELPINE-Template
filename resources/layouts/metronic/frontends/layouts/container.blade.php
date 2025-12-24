@@ -22,12 +22,13 @@
         <meta content="" property="og:description" />
         <meta content="assets/media/app/og-image.png" property="og:image" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <!-- Styles / Scripts -->
+        <!-- Styles -->
         @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
-            @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css", "resources/theme/" . config("theme.name", "laravel") . "/js/app.ts"])
+            @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css", "resources/theme/" . config("theme.name", "laravel") . "/js/frontend.ts"])
         @endif
 
         @livewireStyles
     </head>
     {{ $slot }}
 </html>
+
