@@ -4,6 +4,7 @@ namespace App\Services\Resources\Deliveries\Tasks;
 
 use App\Helpers\Exceptions\HelpersExceptionsHttpCode;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
+use App\Repositories\Apps\Deliveries\Histories\HistoriesRepository;
 use App\Repositories\Apps\Deliveries\Tasks\Assigns\TasksAssignsRepository;
 use App\Repositories\Apps\Deliveries\Tasks\TasksRepository;
 use App\Services\Resources\Deliveries\Tasks\Geos\ResourcesDeliveriesTasksGeosService;
@@ -23,6 +24,7 @@ class ResourcesDeliveriesTasksServices
     protected ResourcesDeliveriesTasksGeosService $geos;
     protected TasksAssignsRepository $assigns;
     protected HelpersExceptionsHttpCode $HelpersExceptionsHttpCode;
+    protected HistoriesRepository $histories;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class ResourcesDeliveriesTasksServices
         $this->geos = new ResourcesDeliveriesTasksGeosService();
         $this->assigns = new TasksAssignsRepository();
         $this->HelpersExceptionsHttpCode = new HelpersExceptionsHttpCode();
+        $this->histories = new HistoriesRepository();
     }
 
     /**
@@ -39,7 +42,7 @@ class ResourcesDeliveriesTasksServices
      */
     public function Create(array $payload): array
     {
-//        DB::beginTransaction();
+        DB::beginTransaction(); // Mengaktifkan kembali transaksi database
         try {
             // 1. Ambil ID User login sebagai pembuat task
             $currentUserId = Auth::id();
@@ -53,20 +56,21 @@ class ResourcesDeliveriesTasksServices
 
             // 4. Simpan Main Task
             $taskCreated = $this->repository->Create($taskData);
-            Debugbar::error($taskCreated);
 
             // 5. Simpan Data Assign menggunakan Repository $this->assigns
             if ($taskCreated && !empty($driverIds)) {
                 foreach ($driverIds as $driverId) {
-                    $this->assigns->Create([
+                   $result = $this->assigns->Create([
                         'task'    => $taskCreated->id,
                         'account' => $driverId,
                     ]);
                 }
             }
 
+            // Debugbar::error($payload['geos']);
             // 6. Simpan Geos dengan memastikan seluruh field wilayah terkirim
             if ($taskCreated && isset($payload['geos'])) {
+
                 $geosPayload = $payload['geos'];
                 $geosPayload['task'] = $taskCreated->id;
 
@@ -77,17 +81,31 @@ class ResourcesDeliveriesTasksServices
                 $this->geos->Create($geosPayload);
             }
 
+            // 7. Simpan History Awal (Contoh: Status 'pending' atau 'created')
+            // Menyesuaikan dengan $this->histories yang diinisialisasi di constructor
+            if ($taskCreated) {
+               $response = $this->histories->Create([
+                    'task'        => $taskCreated->id,
+                    'account'     => $currentUserId,
+                    'to_status'   => 'to do', // Status awal default
+                    'title' => null,
+                    'description' => $taskData['name'],
+                    'name'        => $taskData['first_name']
+                ]);
+
+            }
+//
 //            DB::afterCommit(function () use ($taskCreated) {
 //                // Side effects: Notifikasi, Log, dll
 //            });
 
-//            DB::commit();
+            DB::commit();
 
             return [
                 'status' => true,
                 'code'   => 201,
                 'msg'    => 'Delivery Task Successfully Created',
-                'data'   => $taskCreated->load(['assigned', 'geos']),
+                'data'   => $taskCreated->load(['assigned', 'geos', 'history']),
             ];
 
         } catch (QueryException $e) {

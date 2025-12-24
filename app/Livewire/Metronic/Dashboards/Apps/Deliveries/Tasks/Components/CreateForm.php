@@ -17,12 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
-use Illuminate\Http\RedirectResponse;
-
-/**
- * CreateForm Component
- * * Komponen ini menangani pembuatan tugas pengiriman (Delivery Tasks).
- */
 
 class CreateForm extends Component
 {
@@ -31,9 +25,6 @@ class CreateForm extends Component
     public $currentPage = 1;
     public $driverSearch = '';
 
-    /**
-     * Objek Utama Data Form
-     */
     public $formData = [
         'name' => '',
         'destination' => '',
@@ -47,16 +38,15 @@ class CreateForm extends Component
             'village' => null,
             'postal_code' => '',
         ],
+        'first_name' => ''
     ];
 
-    // --- Data Dropdown (Lists) ---
     public $destinations = [];
     public $provinces = [];
     public $regencies = [];
     public $districts = [];
     public $villages = [];
 
-    // --- Services ---
     protected ResourcesDeliveriesRequestsDestinationsServices $destService;
     protected ResourcesAccountsServices $accountsServices;
     protected ResourcesDataGeosProvincesServices $GeoProvincesServices;
@@ -64,8 +54,6 @@ class CreateForm extends Component
     protected ResourcesDataGeosDistrictsServices $GeoDistrictsServices;
     protected ResourcesDataGeosVillagesServices $GeoVillagesServices;
     protected ResourcesDeliveriesTasksServices $tasksServices;
-
-    public bool $isAuthorized = true;
 
     public function boot(): void
     {
@@ -81,7 +69,7 @@ class CreateForm extends Component
     public function mount(): void
     {
         if (!Auth::user()->can('dashboards.apps.deliveries.tasks.create')) {
-            $this->isAuthorized = false;
+            throw new AuthorizationException("Unauthorized access to this scope.");
         }
 
         $response = $this->destService->ReadAll();
@@ -103,8 +91,8 @@ class CreateForm extends Component
         if ($dest) {
             $this->formData['geos']['latitude'] = $dest['latitude'] ?? $this->formData['geos']['latitude'];
             $this->formData['geos']['longitude'] = $dest['longitude'] ?? $this->formData['geos']['longitude'];
-
             $this->formData['geos']['province'] = $dest['province_id'] ?? $dest['province'] ?? null;
+
             if ($this->formData['geos']['province']) {
                 $this->loadRegencies($this->formData['geos']['province']);
                 $this->formData['geos']['regency'] = $dest['regency_id'] ?? $dest['regency'] ?? null;
@@ -123,6 +111,9 @@ class CreateForm extends Component
             if (isset($dest['receipt_address'])) {
                 $this->dispatch('search-location', address: $dest['receipt_address']);
             }
+
+            $this->formData['first_name'] = $dest['receipt_name'] ?? null;
+
         }
         $this->currentPage = 1;
     }
@@ -184,31 +175,21 @@ class CreateForm extends Component
         unset($this->formData['assigned'][$id]);
     }
 
-    /** * Final Submit Task
-     * Mengirim data ke service dan menangani error database
-     */
     public function submit()
     {
-        // Validasi input wajib sebelum dikirim ke service
-        $this->validate([
-            'formData.name' => 'required|string|max:255',
-            'formData.destination' => 'required',
-            'formData.geos.province' => 'required', // Memastikan province tidak null
-        ]);
+        if (empty($this->formData['geos']['province'])) {
+            $this->addError('province', 'Province must be selected.');
+            return;
+        }
 
-        try {
-            Debugbar::error($this->formData);
-            // Menyiapkan data untuk dikirim ke service ResourcesDeliveriesTaksServices
-            $response = $this->tasksServices->Create($this->formData);
+        $response = $this->tasksServices->Create($this->formData);
 
-            if ($response) {
-                session()->flash('success', 'Delivery Task successfully created.');
-                return redirect()->route('dashboards.apps.deliveries.tasks.index');
-            }
-
-        } catch (\Exception $e) {
-            Debugbar::error($e->getMessage());
-            $this->addError('formData.geos.province', 'Database Error: Gagal menyimpan data wilayah.');
+        if ($response['status']) {
+            // Flash ke session Laravel
+            session()->flash('success', 'Delivery Task: ' . $this->formData['name'] . ' successfully created.');
+            return redirect()->route('dashboards.apps.deliveries.tasks.index');
+        } else {
+            $this->addError('submit', $response['msg'] ?? 'An error occurred while creating the task.');
         }
     }
 
@@ -229,13 +210,8 @@ class CreateForm extends Component
 
     public function render(): View
     {
-        if (!$this->isAuthorized) {
-            return view('dashboards.layouts.unauthorized');
-        }
-
         $suggestions = [];
         $searchTerm = trim($this->driverSearch);
-
 
         if (strlen($searchTerm) >= 1) {
             $response = $this->accountsServices->FindByName($searchTerm,"driver");

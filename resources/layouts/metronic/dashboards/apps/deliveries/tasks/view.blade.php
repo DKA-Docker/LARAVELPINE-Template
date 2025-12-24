@@ -1,5 +1,17 @@
 <div class="kt-container-fixed">
     <div class="grid gap-5 lg:gap-7.5">
+        {{-- ALERT SUKSES DENGAN ANIMASI --}}
+        @if (session()->has('success'))
+            <div class="kt-card border-none bg-emerald-50 rounded-2xl p-5 flex items-center gap-4 animate-scale-in border border-emerald-100 shadow-sm mb-6">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-200">
+                    <i class="ki-filled ki-check text-white text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs font-black text-emerald-900 uppercase tracking-widest leading-none mb-1">Transaction Success</span>
+                    <p class="text-[11px] text-emerald-600 font-bold uppercase tracking-tight">{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
 
         {{-- SECTION FILTER: Compact & Smooth --}}
         <div class="bg-white rounded-2xl shadow-sm px-6 py-4 flex flex-wrap items-center gap-4">

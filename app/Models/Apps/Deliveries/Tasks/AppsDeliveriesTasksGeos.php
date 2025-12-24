@@ -14,6 +14,11 @@ class AppsDeliveriesTasksGeos extends Model
         'task',
         'latitude',
         'longitude',
+        'province',
+        'regency',
+        'district',
+        'village',
+        'postal_code',
     ];
 
     protected $casts = [
