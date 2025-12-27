@@ -8,9 +8,9 @@ services:
     pull_policy: always
     environment:
       APP_NAME: 'Logistech'
-      APP_ENV: local
+      APP_ENV: production
       APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
-      APP_DEBUG: true
+      APP_DEBUG: false
       APP_TIMEZONE: Asia/Makassar
       # ----------------------------------------------------------
       APP_URL: https://dev.logistech.hnd.web.id
@@ -102,10 +102,6 @@ services:
           cpus: "0.80"
           memory: 800M
     ports:
-      - target: 443
-        published: 443
-        protocol: tcp
-        host_ip: 0.0.0.0
       - target: 8080
         published: 8080
         protocol: tcp
@@ -118,6 +114,10 @@ services:
         published: 8080
         protocol: tcp
         host_ip: 0.0.0.0
+    volumes:
+      - type: volume
+        source: storage-data
+        target: /var/www/storage/app
     networks:
       - default
 
@@ -156,14 +156,14 @@ services:
       - default
 
 volumes:
-  mariadb-data:
-    name: hndgroup-logistech-mariadb-data
-    driver: local
+  storage-data:
+    name: hndgroup-logistech-storage-data
+    external: true
   postgres-data:
     name: hndgroup-logistech-postgres-data
-    driver: local
+    external: true
 
 networks:
   default:
     name: hndgroup-logistech
-    driver: bridge
+    external: true
