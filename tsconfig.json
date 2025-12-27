@@ -5,18 +5,27 @@
         /* Tambahkan atau pastikan baris di bawah ini ada */
         "moduleResolution": "bundler", // Sangat disarankan untuk Vite/ESNext
         "useDefineForClassFields": true,
-        "lib": ["ESNext", "DOM", "DOM.Iterable"],
-        "esModuleInterop": true,         // Adds compatibility between CJS and ESM
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "esModuleInterop": true, // Adds compatibility between CJS and ESM
         "allowSyntheticDefaultImports": true, // Allows default imports from modules with no default export
         "skipLibCheck": true,
         /* Agar TS tidak bingung dengan import.meta */
-        "types": ["vite/client", "node"],
-
+        "types": [
+            "vite/client",
+            "node"
+        ],
         /* Pengaturan lainnya */
         "strict": true,
         "isolatedModules": true,
         "noEmit": true,
         "resolveJsonModule": true
     },
-    "include": ["resources/ts/**/*"]
+    "include": [
+        "resources/**/*.ts",
+        "resources/**/*.tsx"
+    ]
 }
