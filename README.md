@@ -1,59 +1,366 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HND Logistech Web Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## About Laravel
+Sistem manajemen logistik dan pengiriman yang komprehensif dengan kemampuan pelacakan real-time.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **🔐 Authentication & Authorization**
+  - Login/Logout dengan Laravel Sanctum
+  - Role-based access control (Spatie Permission)
+  - Firebase Cloud Messaging integration
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **📦 Delivery Management**
+  - Create delivery requests dengan multiple destinations
+  - Package management per destination
+  - Task assignment ke drivers
+  - Route optimization
+  - Delivery history tracking
 
-## Learning Laravel
+- **📍 Real-time Tracking**
+  - GPS tracking dari mobile devices
+  - Real-time location updates via WebSocket (Laravel Reverb)
+  - Tracking alarms & notifications
+  - Mapbox integration untuk visualisasi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **📊 Reporting**
+  - Delivery reports dengan filter tanggal
+  - Distance & duration tracking
+  - Task completion status
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **🗺️ Geographic Data**
+  - Indonesia geographic hierarchy (Province → Regency → District → Village)
+  - Address geocoding
 
-## Laravel Sponsors
+## 🛠️ Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Backend
+- **Laravel 12** - PHP Framework
+- **Laravel Sanctum** - API Authentication
+- **Laravel Livewire 3.6** - Dynamic UI
+- **Laravel Reverb** - WebSocket Server
+- **Spatie Laravel Permission** - Role & Permission Management
+- **Firebase Cloud Messaging** - Push Notifications
 
-### Premium Partners
+### Frontend
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Build Tool
+- **TailwindCSS 4.0** - Utility-first CSS
+- **Alpine.js** - Lightweight JavaScript
+- **Mapbox GL** - Real-time Map Visualization
+- **ApexCharts** - Data Visualization
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Database
+- **SQLite** (Development)
+- **PostgreSQL/MySQL** (Production Ready)
 
-## Contributing
+## 📋 Requirements
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP >= 8.2
+- Composer
+- Node.js >= 18.x
+- NPM/Yarn
+- SQLite/PostgreSQL/MySQL
 
-## Code of Conduct
+## 🚀 Installation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 1. Clone Repository
 
-## Security Vulnerabilities
+```bash
+git clone <repository-url>
+cd WEB_LOGISTECH
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Install Dependencies
 
-## License
+```bash
+# Install PHP dependencies
+composer install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Install Node dependencies
+npm install
+# atau
+yarn install
+```
+
+### 3. Environment Setup
+
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Database Setup
+
+```bash
+# Run migrations
+php artisan migrate
+
+# (Optional) Seed database
+php artisan db:seed
+```
+
+### 5. Build Assets
+
+```bash
+# Development
+npm run dev
+
+# Production
+npm run build
+```
+
+### 6. Run Application
+
+```bash
+# Development server
+php artisan serve
+
+# Atau gunakan composer script
+composer run dev
+```
+
+Aplikasi akan berjalan di `http://localhost:8000`
+
+## 📚 API Documentation
+
+Dokumentasi API lengkap tersedia dalam format OpenAPI 3.0 dan Postman Collection.
+
+### Quick Start
+
+#### Menggunakan Postman
+
+1. Import collection dari `docs/postman/HND-Logistech-API.postman_collection.json`
+2. Import environment dari `docs/postman/HND-Logistech-Local.postman_environment.json`
+3. Jalankan request **Login** untuk mendapatkan token
+4. Token akan otomatis tersimpan dan siap digunakan
+
+#### Menggunakan OpenAPI/Swagger
+
+```bash
+# Install Swagger UI
+npm install -g swagger-ui-watcher
+
+# Run Swagger UI
+cd docs/api
+swagger-ui-watcher openapi.json
+```
+
+Buka browser di `http://localhost:8000`
+
+### Dokumentasi Lengkap
+
+- **[API Documentation](./docs/api/)** - OpenAPI 3.0 Specification
+- **[Postman Collection](./docs/postman/)** - Ready-to-use Postman Collection
+- **[Complete Documentation](./docs/)** - Overview semua dokumentasi
+
+### API Endpoints
+
+#### Authentication
+```
+POST   /api/auth          # Login
+GET    /api/auth          # Verify Token
+DELETE /api/auth          # Logout
+```
+
+#### Delivery Management
+```
+GET    /api/dashboards/apps/deliveries/requests          # List Requests
+POST   /api/dashboards/apps/deliveries/requests          # Create Request
+PATCH  /api/dashboards/apps/deliveries/requests/{id}     # Update Request
+DELETE /api/dashboards/apps/deliveries/requests/{id}     # Delete Request
+
+GET    /api/dashboards/apps/deliveries/tasks             # List Tasks
+GET    /api/dashboards/apps/deliveries/reports           # List Reports
+```
+
+#### Real-time Tracking
+```
+GET    /api/dashboards/apps/trackings/monitors           # List Monitors
+POST   /api/dashboards/apps/trackings/monitors           # Create Monitor
+GET    /api/dashboards/apps/trackings/alarms             # List Alarms
+```
+
+#### Account Management
+```
+GET    /api/dashboards/managements/accounts              # List Accounts (Admin)
+GET    /api/base/accounts                                # Get Current Account
+PATCH  /api/base/accounts/firebase                       # Update Firebase Token
+```
+
+## 🔐 Authentication
+
+API menggunakan Laravel Sanctum bearer token authentication.
+
+### Login
+
+```bash
+curl -X POST "http://localhost:8000/api/auth" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "password123"
+  }'
+```
+
+### Menggunakan Token
+
+```bash
+curl -X GET "http://localhost:8000/api/dashboards/apps/deliveries/requests" \
+  -H "Authorization: Bearer {your-token}" \
+  -H "Content-Type: application/json"
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+php artisan test
+
+# Run with coverage
+php artisan test --coverage
+```
+
+## 📦 Deployment
+
+### Production Build
+
+```bash
+# Build assets
+npm run build
+
+# Optimize Laravel
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+### Docker (Optional)
+
+```bash
+# Development
+docker-compose up -d
+
+# Staging
+docker-compose -f compose.staging.yml up -d
+```
+
+## 🔧 Development
+
+### Code Style
+
+```bash
+# PHP (Laravel Pint)
+./vendor/bin/pint
+
+# JavaScript/TypeScript (Prettier)
+npm run format
+```
+
+### Database
+
+```bash
+# Create migration
+php artisan make:migration create_table_name
+
+# Run migrations
+php artisan migrate
+
+# Rollback
+php artisan migrate:rollback
+
+# Fresh migration with seed
+php artisan migrate:fresh --seed
+```
+
+### Queue & Jobs
+
+```bash
+# Run queue worker
+php artisan queue:work
+
+# Run scheduler
+php artisan schedule:work
+```
+
+### WebSocket (Reverb)
+
+```bash
+# Start Reverb server
+php artisan reverb:start
+
+# Development with watch
+php artisan reverb:start --debug
+```
+
+## 📁 Project Structure
+
+```
+WEB_LOGISTECH/
+├── app/
+│   ├── Console/         # Artisan commands
+│   ├── Events/          # Event classes
+│   ├── Http/
+│   │   ├── Controllers/ # API & Web controllers
+│   │   └── Middleware/  # Custom middleware
+│   ├── Livewire/        # Livewire components
+│   ├── Models/          # Eloquent models
+│   ├── Repositories/    # Repository pattern
+│   └── Services/        # Business logic
+│
+├── database/
+│   ├── migrations/      # Database migrations
+│   ├── seeders/         # Database seeders
+│   └── factories/       # Model factories
+│
+├── docs/
+│   ├── api/             # OpenAPI documentation
+│   └── postman/         # Postman collection
+│
+├── resources/
+│   ├── views/           # Blade templates
+│   └── theme/           # Frontend assets
+│
+└── routes/
+    ├── api.php          # API routes
+    ├── web.php          # Web routes
+    └── channels.php     # Broadcast channels
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Team
+
+**HND Technology**
+- Email: support@hndtech.com
+- Website: [hndtech.com](https://hndtech.com)
+
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) - The PHP Framework
+- [Livewire](https://livewire.laravel.com) - Dynamic UI
+- [TailwindCSS](https://tailwindcss.com) - Utility-first CSS
+- [Mapbox](https://mapbox.com) - Real-time Maps
+- [Firebase](https://firebase.google.com) - Push Notifications
+
+---
+
+**Built with ❤️ by HND Technology Team**

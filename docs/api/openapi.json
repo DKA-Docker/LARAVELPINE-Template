@@ -1,0 +1,2123 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "HND Logistech Web Application API",
+        "description": "API documentation for HND Logistech - A comprehensive logistics and delivery management system with real-time tracking capabilities. This API provides endpoints for authentication, delivery request management, task assignment, route optimization, and real-time vehicle tracking.",
+        "version": "1.0.0",
+        "contact": {
+            "name": "HND Technology",
+            "email": "support@hndtech.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://api.hndlogistech.com/api",
+            "description": "Production Server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "User authentication and session management endpoints"
+        },
+        {
+            "name": "Delivery Requests",
+            "description": "Manage delivery requests and destinations"
+        },
+        {
+            "name": "Delivery Tasks",
+            "description": "Manage delivery tasks and assignments"
+        },
+        {
+            "name": "Delivery Routes",
+            "description": "Manage delivery routes and waypoints"
+        },
+        {
+            "name": "Delivery Reports",
+            "description": "Generate and retrieve delivery reports"
+        },
+        {
+            "name": "Tracking Monitors",
+            "description": "Real-time vehicle tracking and monitoring"
+        },
+        {
+            "name": "Tracking Alarms",
+            "description": "Manage tracking alarms and notifications"
+        },
+        {
+            "name": "Account Management",
+            "description": "User account management and administration"
+        },
+        {
+            "name": "Base Account",
+            "description": "Current user account information"
+        }
+    ],
+    "paths": {
+        "/auth": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify authentication token",
+                "description": "Verify the current authentication token and return user information",
+                "operationId": "verifyAuth",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token is valid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthVerifyResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Token is valid",
+                                    "user": {
+                                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "credential": {
+                                            "id": "650e8400-e29b-41d4-a716-446655440001",
+                                            "username": "admin"
+                                        },
+                                        "information": {
+                                            "id": "750e8400-e29b-41d4-a716-446655440002",
+                                            "fullname": "Administrator",
+                                            "avatar": "https://ui-avatars.com/api/?name=Administrator"
+                                        },
+                                        "contact": {
+                                            "id": "850e8400-e29b-41d4-a716-446655440003",
+                                            "email": "admin@hndlogistech.com",
+                                            "phone": "+628123456789"
+                                        },
+                                        "firebase": {
+                                            "id": "950e8400-e29b-41d4-a716-446655440004",
+                                            "token": "fGcI1234567890abcdef..."
+                                        },
+                                        "role": {
+                                            "id": 1,
+                                            "name": "admin",
+                                            "guard_name": "web"
+                                        },
+                                        "last_seen_at": "2025-12-28T00:30:00+08:00",
+                                        "created_at": "2025-01-01T00:00:00+08:00",
+                                        "updated_at": "2025-12-28T00:30:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "description": "Authenticate user and return access token",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            },
+                            "example": {
+                                "username": "admin",
+                                "password": "password123"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Login successful",
+                                    "token": "1|abcdef123456789ghijklmnopqrstuvwxyz",
+                                    "token_type": "Bearer",
+                                    "user": {
+                                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "credential": {
+                                            "id": "650e8400-e29b-41d4-a716-446655440001",
+                                            "username": "admin"
+                                        },
+                                        "information": {
+                                            "id": "750e8400-e29b-41d4-a716-446655440002",
+                                            "fullname": "Administrator",
+                                            "avatar": "https://ui-avatars.com/api/?name=Administrator"
+                                        },
+                                        "contact": {
+                                            "id": "850e8400-e29b-41d4-a716-446655440003",
+                                            "email": "admin@hndlogistech.com",
+                                            "phone": "+628123456789"
+                                        },
+                                        "firebase": {
+                                            "id": "950e8400-e29b-41d4-a716-446655440004",
+                                            "token": null
+                                        },
+                                        "role": {
+                                            "id": 1,
+                                            "name": "admin",
+                                            "guard_name": "web"
+                                        },
+                                        "last_seen_at": "2025-12-28T00:30:00+08:00",
+                                        "created_at": "2025-01-01T00:00:00+08:00",
+                                        "updated_at": "2025-12-28T00:30:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication failed",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": false,
+                                    "code": 401,
+                                    "msg": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User logout",
+                "description": "Revoke current authentication token",
+                "operationId": "logout",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LogoutResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Logout successful"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/requests": {
+            "get": {
+                "tags": [
+                    "Delivery Requests"
+                ],
+                "summary": "List delivery requests",
+                "description": "Retrieve a paginated list of delivery requests",
+                "operationId": "listDeliveryRequests",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortByParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortOrderParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeliveryRequestsListResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "req-550e8400-e29b-41d4-a716-446655440000",
+                                            "account": {
+                                                "id": "550e8400-e29b-41d4-a716-446655440000",
+                                                "information": {
+                                                    "fullname": "John Doe"
+                                                }
+                                            },
+                                            "name": "Delivery Request #001",
+                                            "destinations": [
+                                                {
+                                                    "id": "dest-123",
+                                                    "address": "Jl. Sudirman No. 123, Jakarta Selatan",
+                                                    "latitude": -6.2088,
+                                                    "longitude": 106.8456,
+                                                    "packages": [
+                                                        {
+                                                            "id": "pkg-001",
+                                                            "name": "Package A",
+                                                            "weight": 5.5,
+                                                            "quantity": 2
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "created_at": "2025-12-27T10:00:00+08:00",
+                                            "updated_at": "2025-12-27T10:00:00+08:00"
+                                        }
+                                    ],
+                                    "meta": {
+                                        "count": {
+                                            "current": 15,
+                                            "total": 150
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Delivery Requests"
+                ],
+                "summary": "Create delivery request",
+                "description": "Create a new delivery request",
+                "operationId": "createDeliveryRequest",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDeliveryRequestInput"
+                            },
+                            "example": {
+                                "name": "Delivery Request #002",
+                                "destinations": [
+                                    {
+                                        "address": "Jl. Gatot Subroto No. 456, Jakarta Selatan",
+                                        "latitude": -6.2297,
+                                        "longitude": 106.8261,
+                                        "packages": [
+                                            {
+                                                "name": "Electronics",
+                                                "weight": 10.5,
+                                                "quantity": 1
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Delivery request created successfully",
+                                    "data": {
+                                        "id": "req-550e8400-e29b-41d4-a716-446655440001",
+                                        "name": "Delivery Request #002",
+                                        "created_at": "2025-12-28T00:35:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/requests/{id}": {
+            "patch": {
+                "tags": [
+                    "Delivery Requests"
+                ],
+                "summary": "Update delivery request",
+                "description": "Update an existing delivery request",
+                "operationId": "updateDeliveryRequest",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDeliveryRequestInput"
+                            },
+                            "example": {
+                                "name": "Updated Delivery Request #002"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Delivery request updated successfully"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Delivery Requests"
+                ],
+                "summary": "Delete delivery request",
+                "description": "Delete a delivery request",
+                "operationId": "deleteDeliveryRequest",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Delivery request deleted successfully"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/requests/destinations": {
+            "get": {
+                "tags": [
+                    "Delivery Requests"
+                ],
+                "summary": "List delivery destinations",
+                "description": "Retrieve a list of delivery destinations for requests",
+                "operationId": "listDeliveryDestinations",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "dest-123",
+                                            "request": "req-550e8400-e29b-41d4-a716-446655440000",
+                                            "address": "Jl. Sudirman No. 123, Jakarta Selatan",
+                                            "latitude": -6.2088,
+                                            "longitude": 106.8456
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/tasks": {
+            "get": {
+                "tags": [
+                    "Delivery Tasks"
+                ],
+                "summary": "List delivery tasks",
+                "description": "Retrieve a paginated list of delivery tasks",
+                "operationId": "listDeliveryTasks",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortByParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortOrderParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeliveryTasksListResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "task-550e8400-e29b-41d4-a716-446655440000",
+                                            "account": {
+                                                "id": "550e8400-e29b-41d4-a716-446655440000",
+                                                "information": {
+                                                    "fullname": "John Doe"
+                                                }
+                                            },
+                                            "name": "Delivery Task #001",
+                                            "destination": {
+                                                "id": "dest-123",
+                                                "address": "Jl. Sudirman No. 123, Jakarta Selatan",
+                                                "latitude": -6.2088,
+                                                "longitude": 106.8456
+                                            },
+                                            "assigned": [
+                                                {
+                                                    "id": "driver-001",
+                                                    "information": {
+                                                        "fullname": "Driver A"
+                                                    }
+                                                }
+                                            ],
+                                            "history": [
+                                                {
+                                                    "id": "hist-001",
+                                                    "status": "in_progress",
+                                                    "notes": "On the way",
+                                                    "created_at": "2025-12-28T00:30:00+08:00"
+                                                }
+                                            ],
+                                            "geos": {
+                                                "province": "DKI Jakarta",
+                                                "regency": "Jakarta Selatan",
+                                                "district": "Kebayoran Baru",
+                                                "village": "Senayan"
+                                            },
+                                            "created_at": "2025-12-27T10:00:00+08:00",
+                                            "updated_at": "2025-12-28T00:30:00+08:00"
+                                        }
+                                    ],
+                                    "meta": {
+                                        "count": {
+                                            "current": 15,
+                                            "total": 100
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/tasks/routes": {
+            "get": {
+                "tags": [
+                    "Delivery Routes"
+                ],
+                "summary": "List delivery routes",
+                "description": "Retrieve a list of delivery routes",
+                "operationId": "listDeliveryRoutes",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "route-001",
+                                            "task": "task-550e8400-e29b-41d4-a716-446655440000",
+                                            "origin": {
+                                                "latitude": -6.2088,
+                                                "longitude": 106.8456,
+                                                "address": "Warehouse Jakarta"
+                                            },
+                                            "destination": {
+                                                "latitude": -6.2297,
+                                                "longitude": 106.8261,
+                                                "address": "Jl. Gatot Subroto No. 456"
+                                            },
+                                            "distance": 5.2,
+                                            "duration": 15
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/reports": {
+            "get": {
+                "tags": [
+                    "Delivery Reports"
+                ],
+                "summary": "List delivery reports",
+                "description": "Retrieve a list of delivery reports",
+                "operationId": "listDeliveryReports",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Filter reports from this date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2025-12-01"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Filter reports until this date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2025-12-31"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "report-001",
+                                            "task": "task-550e8400-e29b-41d4-a716-446655440000",
+                                            "status": "completed",
+                                            "total_distance": 25.5,
+                                            "total_duration": 120,
+                                            "completed_at": "2025-12-27T15:30:00+08:00"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/trackings/monitors": {
+            "get": {
+                "tags": [
+                    "Tracking Monitors"
+                ],
+                "summary": "List tracking monitors",
+                "description": "Retrieve a list of tracking monitor records",
+                "operationId": "listTrackingMonitors",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "monitor-001",
+                                            "account_id": "550e8400-e29b-41d4-a716-446655440000",
+                                            "latitude": -6.2088,
+                                            "longitude": 106.8456,
+                                            "speed": 45.5,
+                                            "heading": 180.0,
+                                            "accuracy": 10.5,
+                                            "created_at": "2025-12-28T00:30:00+08:00"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tracking Monitors"
+                ],
+                "summary": "Create tracking monitor record",
+                "description": "Create a new tracking monitor record (typically sent from mobile devices)",
+                "operationId": "createTrackingMonitor",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTrackingMonitorInput"
+                            },
+                            "example": {
+                                "status": true,
+                                "data": {
+                                    "account_id": "550e8400-e29b-41d4-a716-446655440000",
+                                    "latitude": -6.2088,
+                                    "longitude": 106.8456,
+                                    "speed": 45.5,
+                                    "heading": 180.0,
+                                    "accuracy": 10.5,
+                                    "timestamp": "2025-12-28T00:30:00+08:00"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Monitor record created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrackingMonitorResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Creates Data",
+                                    "data": {
+                                        "id": "monitor-002",
+                                        "account_id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "latitude": -6.2088,
+                                        "longitude": 106.8456,
+                                        "speed": 45.5,
+                                        "heading": 180.0,
+                                        "accuracy": 10.5,
+                                        "created_at": "2025-12-28T00:30:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": false,
+                                    "code": 400,
+                                    "msg": "Failed Sending Data"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/trackings/alarms": {
+            "get": {
+                "tags": [
+                    "Tracking Alarms"
+                ],
+                "summary": "List tracking alarms",
+                "description": "Retrieve a list of tracking alarms",
+                "operationId": "listTrackingAlarms",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Read Data",
+                                    "data": [
+                                        {
+                                            "id": "alarm-001",
+                                            "account_id": "550e8400-e29b-41d4-a716-446655440000",
+                                            "type": "speed_limit",
+                                            "message": "Speed limit exceeded",
+                                            "severity": "warning",
+                                            "created_at": "2025-12-28T00:25:00+08:00"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/managements/accounts": {
+            "get": {
+                "tags": [
+                    "Account Management"
+                ],
+                "summary": "List user accounts",
+                "description": "Retrieve a paginated list of user accounts (admin only)",
+                "operationId": "listAccounts",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountsListResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "message": "Successfully Load Data Accounts",
+                                    "data": [
+                                        {
+                                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                                            "credential": {
+                                                "id": "650e8400-e29b-41d4-a716-446655440001",
+                                                "username": "admin"
+                                            },
+                                            "information": {
+                                                "id": "750e8400-e29b-41d4-a716-446655440002",
+                                                "fullname": "Administrator",
+                                                "avatar": "https://ui-avatars.com/api/?name=Administrator"
+                                            },
+                                            "contact": {
+                                                "id": "850e8400-e29b-41d4-a716-446655440003",
+                                                "email": "admin@hndlogistech.com",
+                                                "phone": "+628123456789"
+                                            },
+                                            "role": {
+                                                "id": 1,
+                                                "name": "admin",
+                                                "guard_name": "web"
+                                            },
+                                            "last_seen_at": "2025-12-28T00:30:00+08:00",
+                                            "created_at": "2025-01-01T00:00:00+08:00",
+                                            "updated_at": "2025-12-28T00:30:00+08:00"
+                                        }
+                                    ],
+                                    "meta": {
+                                        "count": {
+                                            "current": 15,
+                                            "total": 50
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ForbiddenError"
+                    }
+                }
+            }
+        },
+        "/base/accounts": {
+            "get": {
+                "tags": [
+                    "Base Account"
+                ],
+                "summary": "Get current user account",
+                "description": "Retrieve the current authenticated user's account information",
+                "operationId": "getCurrentAccount",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "data": {
+                                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "credential": {
+                                            "id": "650e8400-e29b-41d4-a716-446655440001",
+                                            "username": "admin"
+                                        },
+                                        "information": {
+                                            "id": "750e8400-e29b-41d4-a716-446655440002",
+                                            "fullname": "Administrator",
+                                            "avatar": "https://ui-avatars.com/api/?name=Administrator"
+                                        },
+                                        "contact": {
+                                            "id": "850e8400-e29b-41d4-a716-446655440003",
+                                            "email": "admin@hndlogistech.com",
+                                            "phone": "+628123456789"
+                                        },
+                                        "firebase": {
+                                            "id": "950e8400-e29b-41d4-a716-446655440004",
+                                            "token": "fGcI1234567890abcdef..."
+                                        },
+                                        "role": {
+                                            "id": 1,
+                                            "name": "admin",
+                                            "guard_name": "web"
+                                        },
+                                        "last_seen_at": "2025-12-28T00:30:00+08:00",
+                                        "created_at": "2025-01-01T00:00:00+08:00",
+                                        "updated_at": "2025-12-28T00:30:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/base/accounts/firebase": {
+            "patch": {
+                "tags": [
+                    "Base Account"
+                ],
+                "summary": "Update Firebase token",
+                "description": "Update the Firebase Cloud Messaging token for the current user",
+                "operationId": "updateFirebaseToken",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateFirebaseTokenInput"
+                            },
+                            "example": {
+                                "token": "fGcI1234567890abcdef..."
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Firebase token updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Firebase token updated successfully"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Laravel Sanctum token authentication. Include the token in the Authorization header as: Bearer {token}"
+            }
+        },
+        "parameters": {
+            "IdParam": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "Resource ID",
+                "schema": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "PageParam": {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                },
+                "example": 1
+            },
+            "PerPageParam": {
+                "name": "per_page",
+                "in": "query",
+                "description": "Number of items per page",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 15
+                },
+                "example": 15
+            },
+            "SearchParam": {
+                "name": "search",
+                "in": "query",
+                "description": "Search query string",
+                "schema": {
+                    "type": "string"
+                },
+                "example": "delivery"
+            },
+            "SortByParam": {
+                "name": "sort_by",
+                "in": "query",
+                "description": "Field to sort by",
+                "schema": {
+                    "type": "string",
+                    "default": "created_at"
+                },
+                "example": "created_at"
+            },
+            "SortOrderParam": {
+                "name": "sort_order",
+                "in": "query",
+                "description": "Sort order",
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ],
+                    "default": "desc"
+                },
+                "example": "desc"
+            }
+        },
+        "schemas": {
+            "LoginRequest": {
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "User's username",
+                        "example": "admin"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "User's password",
+                        "example": "password123"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Login successful"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Bearer token for authentication",
+                        "example": "1|abcdef123456..."
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                }
+            },
+            "AuthVerifyResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Token is valid"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                }
+            },
+            "LogoutResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Logout successful"
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "credential": {
+                        "$ref": "#/components/schemas/AccountCredential"
+                    },
+                    "information": {
+                        "$ref": "#/components/schemas/AccountInformation"
+                    },
+                    "contact": {
+                        "$ref": "#/components/schemas/AccountContact"
+                    },
+                    "firebase": {
+                        "$ref": "#/components/schemas/AccountFirebase"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/Role"
+                    },
+                    "last_seen_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "example": "2025-12-28T00:30:00+08:00"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01T00:00:00+08:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-28T00:30:00+08:00"
+                    }
+                }
+            },
+            "AccountCredential": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "admin"
+                    }
+                }
+            },
+            "AccountInformation": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "fullname": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "https://ui-avatars.com/api/?name=John+Doe"
+                    }
+                }
+            },
+            "AccountContact": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+628123456789"
+                    }
+                }
+            },
+            "AccountFirebase": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "token": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Firebase Cloud Messaging token"
+                    }
+                }
+            },
+            "Role": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "admin"
+                    },
+                    "guard_name": {
+                        "type": "string",
+                        "example": "web"
+                    }
+                }
+            },
+            "DeliveryRequest": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "account": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Request name or description",
+                        "example": "Delivery Request #001"
+                    },
+                    "destinations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DeliveryDestination"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "DeliveryDestination": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "request": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Parent request ID"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "Jl. Sudirman No. 123, Jakarta"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "double",
+                        "example": -6.2088
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 106.8456
+                    },
+                    "packages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Package"
+                        }
+                    }
+                }
+            },
+            "Package": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Package A"
+                    },
+                    "weight": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 5.5,
+                        "description": "Weight in kg"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    }
+                }
+            },
+            "DeliveryTask": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "account": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Task name or description",
+                        "example": "Delivery Task #001"
+                    },
+                    "destination": {
+                        "$ref": "#/components/schemas/DeliveryDestination"
+                    },
+                    "assigned": {
+                        "type": "array",
+                        "description": "Assigned drivers/users",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "history": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DeliveryHistory"
+                        }
+                    },
+                    "geos": {
+                        "$ref": "#/components/schemas/TaskGeo"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "DeliveryHistory": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "task": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "in_progress",
+                            "completed",
+                            "cancelled"
+                        ],
+                        "example": "in_progress"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "TaskGeo": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "task": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "province": {
+                        "type": "string",
+                        "example": "DKI Jakarta"
+                    },
+                    "regency": {
+                        "type": "string",
+                        "example": "Jakarta Selatan"
+                    },
+                    "district": {
+                        "type": "string",
+                        "example": "Kebayoran Baru"
+                    },
+                    "village": {
+                        "type": "string",
+                        "example": "Senayan"
+                    }
+                }
+            },
+            "CreateDeliveryRequestInput": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Delivery Request #001"
+                    },
+                    "destinations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string"
+                                },
+                                "latitude": {
+                                    "type": "number",
+                                    "format": "double"
+                                },
+                                "longitude": {
+                                    "type": "number",
+                                    "format": "double"
+                                },
+                                "packages": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "weight": {
+                                                "type": "number",
+                                                "format": "double"
+                                            },
+                                            "quantity": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateDeliveryRequestInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CreateTrackingMonitorInput": {
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "description": "Whether the tracking data is valid",
+                        "example": true
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Tracking data payload (required if status is true)",
+                        "properties": {
+                            "account_id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "Account ID of the tracked user"
+                            },
+                            "latitude": {
+                                "type": "number",
+                                "format": "double",
+                                "example": -6.2088
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "double",
+                                "example": 106.8456
+                            },
+                            "speed": {
+                                "type": "number",
+                                "format": "double",
+                                "example": 45.5,
+                                "description": "Speed in km/h"
+                            },
+                            "heading": {
+                                "type": "number",
+                                "format": "double",
+                                "example": 180.0,
+                                "description": "Heading in degrees"
+                            },
+                            "accuracy": {
+                                "type": "number",
+                                "format": "double",
+                                "example": 10.5,
+                                "description": "GPS accuracy in meters"
+                            },
+                            "timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-12-28T00:30:00+08:00"
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateFirebaseTokenInput": {
+                "type": "object",
+                "required": [
+                    "token"
+                ],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "Firebase Cloud Messaging token",
+                        "example": "fGcI1234567890abcdef..."
+                    }
+                }
+            },
+            "DeliveryRequestsListResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Successfully Read Data"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DeliveryRequest"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                }
+            },
+            "DeliveryTasksListResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Successfully Read Data"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DeliveryTask"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                }
+            },
+            "AccountsListResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Successfully Load Data Accounts"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                }
+            },
+            "AccountResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                }
+            },
+            "TrackingMonitorResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Successfully Creates Data"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "account_id": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "latitude": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "speed": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "heading": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "accuracy": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "PaginationMeta": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "object",
+                        "properties": {
+                            "current": {
+                                "type": "integer",
+                                "description": "Number of items in current page",
+                                "example": 15
+                            },
+                            "total": {
+                                "type": "integer",
+                                "description": "Total number of items",
+                                "example": 150
+                            }
+                        }
+                    }
+                }
+            },
+            "SuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Operation successful"
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Response data (varies by endpoint)"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 400
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Error message"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "description": "Detailed error information",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Authentication required or token invalid",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Unauthorized"
+                                }
+                            }
+                        },
+                        "example": {
+                            "status": false,
+                            "code": 401,
+                            "msg": "Unauthorized - Token is invalid or expired"
+                        }
+                    }
+                }
+            },
+            "ForbiddenError": {
+                "description": "Insufficient permissions",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 403
+                                },
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Forbidden"
+                                }
+                            }
+                        },
+                        "example": {
+                            "status": false,
+                            "code": 403,
+                            "msg": "Forbidden - Insufficient permissions to access this resource"
+                        }
+                    }
+                }
+            },
+            "NotFoundError": {
+                "description": "Resource not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Resource not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "status": false,
+                            "code": 404,
+                            "msg": "Resource not found"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "description": "Validation error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 422
+                                },
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Validation Error"
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "example": {
+                            "status": false,
+                            "code": 422,
+                            "msg": "Validation Error",
+                            "errors": {
+                                "username": [
+                                    "The username field is required."
+                                ],
+                                "password": [
+                                    "The password field is required."
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

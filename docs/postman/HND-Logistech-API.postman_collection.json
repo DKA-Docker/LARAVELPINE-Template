@@ -1,0 +1,748 @@
+{
+    "info": {
+        "_postman_id": "hnd-logistech-api-collection",
+        "name": "HND Logistech API",
+        "description": "Complete API collection for HND Logistech - Logistics and Delivery Management System with Real-time Tracking",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "hnd-logistech"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.environment.set(\"access_token\", jsonData.token);",
+                                    "    pm.environment.set(\"user_id\", jsonData.user.id);",
+                                    "    console.log(\"Token saved:\", jsonData.token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth"
+                            ]
+                        },
+                        "description": "Authenticate user and receive access token"
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"status\": true,\n  \"code\": 200,\n  \"msg\": \"Login successful\",\n  \"token\": \"1|abcdef123456789ghijklmnopqrstuvwxyz\",\n  \"token_type\": \"Bearer\",\n  \"user\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"credential\": {\n      \"username\": \"admin\"\n    },\n    \"information\": {\n      \"fullname\": \"Administrator\"\n    }\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify Token",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/auth",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth"
+                            ]
+                        },
+                        "description": "Verify current authentication token"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    pm.environment.unset(\"access_token\");",
+                                    "    pm.environment.unset(\"user_id\");",
+                                    "    console.log(\"Token cleared\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/auth",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth"
+                            ]
+                        },
+                        "description": "Revoke current authentication token"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Authentication endpoints for login, token verification, and logout"
+        },
+        {
+            "name": "Dashboards",
+            "item": [
+                {
+                    "name": "Apps",
+                    "item": [
+                        {
+                            "name": "Deliveries",
+                            "item": [
+                                {
+                                    "name": "Requests",
+                                    "item": [
+                                        {
+                                            "name": "List Requests",
+                                            "request": {
+                                                "method": "GET",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/requests?page=1&per_page=15&sort_order=desc",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "requests"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "page",
+                                                            "value": "1"
+                                                        },
+                                                        {
+                                                            "key": "per_page",
+                                                            "value": "15"
+                                                        },
+                                                        {
+                                                            "key": "search",
+                                                            "value": "",
+                                                            "disabled": true
+                                                        },
+                                                        {
+                                                            "key": "sort_by",
+                                                            "value": "created_at",
+                                                            "disabled": true
+                                                        },
+                                                        {
+                                                            "key": "sort_order",
+                                                            "value": "desc"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Get paginated list of delivery requests"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Create Request",
+                                            "request": {
+                                                "method": "POST",
+                                                "header": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "body": {
+                                                    "mode": "raw",
+                                                    "raw": "{\n  \"name\": \"Delivery Request #002\",\n  \"destinations\": [\n    {\n      \"address\": \"Jl. Gatot Subroto No. 456, Jakarta Selatan\",\n      \"latitude\": -6.2297,\n      \"longitude\": 106.8261,\n      \"packages\": [\n        {\n          \"name\": \"Electronics\",\n          \"weight\": 10.5,\n          \"quantity\": 1\n        }\n      ]\n    }\n  ]\n}"
+                                                },
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/requests",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "requests"
+                                                    ]
+                                                },
+                                                "description": "Create a new delivery request"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Update Request",
+                                            "request": {
+                                                "method": "PATCH",
+                                                "header": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "body": {
+                                                    "mode": "raw",
+                                                    "raw": "{\n  \"name\": \"Updated Delivery Request #002\"\n}"
+                                                },
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/requests/:id",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "requests",
+                                                        ":id"
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "key": "id",
+                                                            "value": "{{request_id}}",
+                                                            "description": "Request ID"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Update an existing delivery request"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Delete Request",
+                                            "request": {
+                                                "method": "DELETE",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/requests/:id",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "requests",
+                                                        ":id"
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "key": "id",
+                                                            "value": "{{request_id}}",
+                                                            "description": "Request ID"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Delete a delivery request"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Destinations",
+                                            "item": [
+                                                {
+                                                    "name": "List Destinations",
+                                                    "request": {
+                                                        "method": "GET",
+                                                        "header": [],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/requests/destinations?page=1&per_page=15",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "requests",
+                                                                "destinations"
+                                                            ],
+                                                            "query": [
+                                                                {
+                                                                    "key": "page",
+                                                                    "value": "1"
+                                                                },
+                                                                {
+                                                                    "key": "per_page",
+                                                                    "value": "15"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Get list of delivery destinations"
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "description": "Delivery request management endpoints"
+                                },
+                                {
+                                    "name": "Tasks",
+                                    "item": [
+                                        {
+                                            "name": "List Tasks",
+                                            "request": {
+                                                "method": "GET",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/tasks?page=1&per_page=15&sort_order=desc",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "tasks"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "page",
+                                                            "value": "1"
+                                                        },
+                                                        {
+                                                            "key": "per_page",
+                                                            "value": "15"
+                                                        },
+                                                        {
+                                                            "key": "search",
+                                                            "value": "",
+                                                            "disabled": true
+                                                        },
+                                                        {
+                                                            "key": "sort_by",
+                                                            "value": "created_at",
+                                                            "disabled": true
+                                                        },
+                                                        {
+                                                            "key": "sort_order",
+                                                            "value": "desc"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Get paginated list of delivery tasks"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Routes",
+                                            "item": [
+                                                {
+                                                    "name": "List Routes",
+                                                    "request": {
+                                                        "method": "GET",
+                                                        "header": [],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/routes?page=1&per_page=15",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "routes"
+                                                            ],
+                                                            "query": [
+                                                                {
+                                                                    "key": "page",
+                                                                    "value": "1"
+                                                                },
+                                                                {
+                                                                    "key": "per_page",
+                                                                    "value": "15"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Get list of delivery routes"
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "description": "Delivery task management endpoints"
+                                },
+                                {
+                                    "name": "Reports",
+                                    "item": [
+                                        {
+                                            "name": "List Reports",
+                                            "request": {
+                                                "method": "GET",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/deliveries/reports?page=1&per_page=15&start_date=2025-12-01&end_date=2025-12-31",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "deliveries",
+                                                        "reports"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "page",
+                                                            "value": "1"
+                                                        },
+                                                        {
+                                                            "key": "per_page",
+                                                            "value": "15"
+                                                        },
+                                                        {
+                                                            "key": "start_date",
+                                                            "value": "2025-12-01",
+                                                            "description": "Filter from date (YYYY-MM-DD)"
+                                                        },
+                                                        {
+                                                            "key": "end_date",
+                                                            "value": "2025-12-31",
+                                                            "description": "Filter to date (YYYY-MM-DD)"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Get delivery reports with date filtering"
+                                            },
+                                            "response": []
+                                        }
+                                    ],
+                                    "description": "Delivery reporting endpoints"
+                                }
+                            ],
+                            "description": "Delivery management module"
+                        },
+                        {
+                            "name": "Trackings",
+                            "item": [
+                                {
+                                    "name": "Monitors",
+                                    "item": [
+                                        {
+                                            "name": "List Monitors",
+                                            "request": {
+                                                "method": "GET",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/trackings/monitors?page=1&per_page=15",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "trackings",
+                                                        "monitors"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "page",
+                                                            "value": "1"
+                                                        },
+                                                        {
+                                                            "key": "per_page",
+                                                            "value": "15"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Get list of tracking monitor records"
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "Create Monitor Record",
+                                            "request": {
+                                                "method": "POST",
+                                                "header": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "body": {
+                                                    "mode": "raw",
+                                                    "raw": "{\n  \"status\": true,\n  \"data\": {\n    \"account_id\": \"{{user_id}}\",\n    \"latitude\": -6.2088,\n    \"longitude\": 106.8456,\n    \"speed\": 45.5,\n    \"heading\": 180.0,\n    \"accuracy\": 10.5,\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  }\n}"
+                                                },
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/trackings/monitors",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "trackings",
+                                                        "monitors"
+                                                    ]
+                                                },
+                                                "description": "Create a new tracking monitor record (GPS data)"
+                                            },
+                                            "response": []
+                                        }
+                                    ],
+                                    "description": "Real-time GPS tracking endpoints"
+                                },
+                                {
+                                    "name": "Alarms",
+                                    "item": [
+                                        {
+                                            "name": "List Alarms",
+                                            "request": {
+                                                "method": "GET",
+                                                "header": [],
+                                                "url": {
+                                                    "raw": "{{base_url}}/dashboards/apps/trackings/alarms?page=1&per_page=15",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "dashboards",
+                                                        "apps",
+                                                        "trackings",
+                                                        "alarms"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "page",
+                                                            "value": "1"
+                                                        },
+                                                        {
+                                                            "key": "per_page",
+                                                            "value": "15"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "Get list of tracking alarms"
+                                            },
+                                            "response": []
+                                        }
+                                    ],
+                                    "description": "Tracking alarm endpoints"
+                                }
+                            ],
+                            "description": "Real-time tracking module"
+                        }
+                    ],
+                    "description": "Application modules"
+                },
+                {
+                    "name": "Managements",
+                    "item": [
+                        {
+                            "name": "Accounts",
+                            "item": [
+                                {
+                                    "name": "List Accounts",
+                                    "request": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "url": {
+                                            "raw": "{{base_url}}/dashboards/managements/accounts?page=1&per_page=15",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "dashboards",
+                                                "managements",
+                                                "accounts"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "page",
+                                                    "value": "1"
+                                                },
+                                                {
+                                                    "key": "per_page",
+                                                    "value": "15"
+                                                },
+                                                {
+                                                    "key": "search",
+                                                    "value": "",
+                                                    "disabled": true
+                                                }
+                                            ]
+                                        },
+                                        "description": "Get list of user accounts (Admin only)"
+                                    },
+                                    "response": []
+                                }
+                            ],
+                            "description": "User account management (Admin)"
+                        }
+                    ],
+                    "description": "Management modules"
+                }
+            ],
+            "description": "Dashboard endpoints"
+        },
+        {
+            "name": "Base",
+            "item": [
+                {
+                    "name": "Accounts",
+                    "item": [
+                        {
+                            "name": "Get Current Account",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/base/accounts",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "base",
+                                        "accounts"
+                                    ]
+                                },
+                                "description": "Get current authenticated user's account information"
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Firebase",
+                            "item": [
+                                {
+                                    "name": "Update Firebase Token",
+                                    "request": {
+                                        "method": "PATCH",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"token\": \"{{firebase_token}}\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/base/accounts/firebase",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "base",
+                                                "accounts",
+                                                "firebase"
+                                            ]
+                                        },
+                                        "description": "Update Firebase Cloud Messaging token for current user"
+                                    },
+                                    "response": []
+                                }
+                            ]
+                        }
+                    ],
+                    "description": "Current user account endpoints"
+                }
+            ],
+            "description": "Base/Core endpoints"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "{{base_url}}",
+            "type": "string"
+        }
+    ]
+}
