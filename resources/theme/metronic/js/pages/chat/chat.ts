@@ -121,7 +121,7 @@ const selectContactAndShowMessage = (contactId: string, message: any, currentUse
 
     // Find contact button and click it programmatically
     const contactButtons = document.querySelectorAll('[wire\\:click*="selectContact"]');
-    let contactButton: HTMLElement | null = null;
+    let contactButton: any | null = null;
 
     contactButtons.forEach((button) => {
         const wireClick = button.getAttribute('wire:click');
