@@ -75,6 +75,16 @@ class AppsDeliveriesTasks extends Model
         return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
     }
 
+    public function destinationData(): BelongsTo
+    {
+        return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
+    }
+
+    public function assigns(): HasMany
+    {
+        return $this->hasMany(AppsDeliveriesTasksAssigns::class, 'task', 'id');
+    }
+
     public function geos(): HasOne
     {
         return $this->hasOne(AppsDeliveriesTasksGeos::class, 'task', // Foreign Key di tabel geos (sesuai migration sebelumnya)

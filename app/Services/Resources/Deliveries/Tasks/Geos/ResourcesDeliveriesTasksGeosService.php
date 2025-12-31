@@ -114,4 +114,9 @@ class ResourcesDeliveriesTasksGeosService
     {
         return $this->repository->Find($id);
     }
+
+    public function Update(AppsDeliveriesTasksGeos $geos, array $payload): AppsDeliveriesTasksGeos
+    {
+        return $this->repository->Update($geos, $payload);
+    }
 }

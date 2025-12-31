@@ -411,4 +411,9 @@ class ResourcesAccountsServices
     {
         return $this->account->query();
     }
+
+    public function findByInfo($id)
+    {
+        return $this->information->ReadByID($id);
+    }
 }

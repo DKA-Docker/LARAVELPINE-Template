@@ -3,16 +3,16 @@
 namespace Routes;
 
 use App\Http\Controllers\V1\Frontend\Auth\Index as FrontendAuth;
-use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Reports;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Reports\Index as DeliveriesReports;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Create as DeliveriesRequestCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index as DeliveriesRequest;
-use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as DeliveriesTasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as DeliveriesTasksCreate;
-use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Show as DeliveriesTasksShow;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Edit as DeliveriesTasksEdit;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as DeliveriesTasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
-use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
-use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as ManagementsAccountsCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
+use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as ManagementsAccountsCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use App\Http\Controllers\V1\Frontend\Resources\Index as FrontendResources;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +32,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->group(function () {
     /** Name Route dashboards.apps */
     Route::resource('/', DashboardsIndex::class)->parameters(['' => 'id']);
-    
+
     /** Session Check Endpoint */
     Route::get('/check-session', function () {
         return response()->json(['status' => 'valid']);
@@ -55,8 +55,14 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                     Route::resource('/', DeliveriesTasksCreate::class);
                     Route::get('/geocoding-proxy', [DeliveriesTasksCreate::class, 'geocodingProxy'])->name('geocodingProxy');
                 });
+                Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                     Route::get('/', [DeliveriesTasksEdit::class, 'index'])->name('index');
+                });
             });
-            Route::resource('reports', Reports::class);
+            Route::prefix('reports')->name('reports.')->group(function () {
+                Route::resource('/', DeliveriesReports::class);
+            });
+
         });
         Route::prefix('trackings')->name('trackings.')->group(function () {
             Route::get('/', [Trackings\Index::class,'index'])->name('index');

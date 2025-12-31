@@ -71,6 +71,7 @@
                             <th class="px-6 py-5 text-left">Penerima & Lokasi</th>
                             <th class="px-6 py-5 text-left">Log Aktivitas</th>
                             <th class="px-6 py-5 text-left">Volume</th>
+                            <th class="px-6 py-5 text-right w-24">Actions</th>
                             <th class="px-6 py-5 text-right">Waktu</th>
                         </tr>
                         </thead>
@@ -153,6 +154,13 @@
                                     @else
                                         <span class="text-[10px] font-bold text-gray-300 italic">N/A</span>
                                     @endif
+                                </td>
+
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm" href="./tasks/{{ $item->id }}/edit" wire:navigate><i class="ki-filled ki-pencil fs-5" title="Edit Task"></i>
+                                        </a>
+                                    </div>
                                 </td>
 
                                 <td class="px-6 py-5 text-right">

@@ -101,6 +101,17 @@ class TasksRepository implements TasksRepositoryInterface {
         return AppsDeliveriesTasks::query()->count();
     }
 
+    /**
+     * @param Model|AppsDeliveriesTasks $model
+     * @param array $data
+     * @return Model|AppsDeliveriesTasks
+     */
+    public function Update(Model $model, array $data): Model|AppsDeliveriesTasks
+    {
+        $model->update($data);
+        return $model;
+    }
+
     public  function Store(){
 
     }

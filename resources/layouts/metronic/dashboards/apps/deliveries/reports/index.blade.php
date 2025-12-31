@@ -32,7 +32,9 @@
         <!-- Content -->
         <main class="grow pt-5" id="content" role="content">
             <!-- Container -->
-            <div class="kt-container-fixed" id="contentContainer"></div>
+            <div class="kt-container-fixed" id="contentContainer">
+                @livewire('metronic.dashboards.apps.deliveries.reports.report-table')
+            </div>
             <!-- End of Container -->
         </main>
         <!-- End of Content -->

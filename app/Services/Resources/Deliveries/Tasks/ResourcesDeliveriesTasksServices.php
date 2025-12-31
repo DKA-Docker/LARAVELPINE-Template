@@ -67,7 +67,7 @@ class ResourcesDeliveriesTasksServices
                 }
             }
 
-            // Debugbar::error($payload['geos']);
+
             // 6. Simpan Geos dengan memastikan seluruh field wilayah terkirim
             if ($taskCreated && isset($payload['geos'])) {
 
@@ -233,6 +233,41 @@ class ResourcesDeliveriesTasksServices
     public function ReadAll(): Collection { return $this->repository->ReadAll(); }
     public function Count(): int { return $this->repository->Count(); }
     public function Find($id) { return $this->repository->Find($id); }
+    public function FindByAssign($id) : array
+    {
+        DB::beginTransaction();
+        try {
+            $task = $this->assigns->query()->where('task', $id)->get();
+
+            if (!$task) {
+                DB::rollBack();
+                return [
+                    'status' => false,
+                    'code'   => 404,
+                    'msg'    => 'Delivery Assign not found',
+                ];
+            }
+
+            DB::commit();
+
+            return [
+                'status' => true,
+                'code'   => 200,
+                'msg'    => 'Delivery Assign Successfully Read Data',
+                'data'   => $task,
+            ];
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return $this->HelpersExceptionsHttpCode->fromSQLError($e);
+        }catch (Throwable $e) {
+            DB::rollBack();
+            return [
+                'status' => false,
+                'code'   => 500,
+                'msg'    => 'Unexpected error: ' . $e->getMessage(),
+            ];
+        }
+    }
 
     public function AutomaticallyPaginationTable(Request $request): Collection
     {

@@ -101,6 +101,17 @@ class TasksGeosRepository implements TasksGeosRepositoryInterface
         return AppsDeliveriesTasksGeos::query()->count();
     }
 
+    /**
+     * @param Model|AppsDeliveriesTasksGeos $model
+     * @param array $data
+     * @return Model|AppsDeliveriesTasksGeos
+     */
+    public function Update(Model $model, array $data): Model|AppsDeliveriesTasksGeos
+    {
+        $model->update($data);
+        return $model;
+    }
+
     public  function Store(){
 
     }
