@@ -1,69 +1,9 @@
 <div x-init="$dispatch('init-map')">
     <div class="space-y-8 animate-fade-in">
 
-        {{-- SECTION 1: INFORMASI TUGAS & MAPBOX --}}
-        <div class="kt-card border-none shadow-2xl shadow-gray-200/50 rounded-3xl overflow-hidden ring-1 ring-gray-100">
-            <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-6 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
-                        <i class="ki-filled ki-map text-xl text-emerald-400"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-black text-lg tracking-tight">Informasi Utama & Geofencing</h3>
-                        <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Tentukan titik koordinat pengiriman</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="kt-card-content p-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                    <div class="space-y-6">
-                        <div class="flex flex-col gap-2">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Nama Task / Pekerjaan</label>
-                            <input wire:model="formData.name" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-2xl h-14 font-bold text-gray-700 shadow-sm" type="text" placeholder="Contoh: Pengiriman Elektronik Batch A"/>
-                            @error('formData.name') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="flex flex-col gap-2 relative" id="map-search-container">
-                            <label class="text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] ml-1 flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
-                                Search Location
-                            </label>
-                            <div class="relative group">
-                                <input type="text" id="map-search-input" class="kt-input focus:ring-4 focus:ring-blue-50 border-gray-100 rounded-2xl h-14 pl-12 font-medium shadow-sm transition-all" placeholder="Cari nama gedung atau alamat..." autocomplete="off">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="ki-outline ki-magnifier text-xl text-gray-400 group-focus-within:text-blue-600 transition-colors"></i>
-                                </div>
-                                <div id="autocomplete-results" class="hidden absolute z-[110] w-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-60 overflow-y-auto"></div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-dashed border-gray-200">
-                            <div class="flex flex-col gap-1">
-                                <label class="text-[9px] font-black text-gray-400 uppercase">Latitude</label>
-                                <input type="text" id="lat-display" wire:model="formData.geos.latitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <label class="text-[9px] font-black text-gray-400 uppercase">Longitude</label>
-                                <input type="text" id="lng-display" wire:model="formData.geos.longitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="lg:col-span-2 relative group">
-                        <div wire:ignore id="map" class="w-full h-[480px] shadow-2xl rounded-3xl overflow-hidden ring-4 ring-gray-50 transition-all group-hover:ring-emerald-50"
-                             data-lng="{{ $formData['geos']['longitude'] }}" data-lat="{{ $formData['geos']['latitude'] }}"></div>
-                        <div class="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white shadow-lg pointer-events-none">
-                            <span class="text-[10px] font-black text-gray-800 uppercase italic">Live Map Interface</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="flex md:flex-row flex-col gap-8">
 
-            {{-- SECTION 2: DESTINASI & WILAYAH --}}
+            {{-- SECTION 1: DESTINASI & WILAYAH --}}
             <div class="kt-card md:w-1/2 border-none shadow-xl shadow-gray-100 rounded-3xl overflow-hidden ring-1 ring-gray-100">
                 <div class="p-6 border-b border-gray-50 bg-gray-50/50">
                     <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
@@ -140,7 +80,7 @@
                 </div>
             </div>
 
-            {{-- SECTION 3: DRIVER ASSIGNMENT --}}
+            {{-- SECTION 2: DRIVER ASSIGNMENT --}}
             <div class="kt-card md:w-1/2 border-none shadow-xl shadow-gray-100 rounded-3xl overflow-hidden ring-1 ring-gray-100">
                 <div class="p-6 border-b border-gray-50 bg-gray-50/50">
                     <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
@@ -197,6 +137,66 @@
                             <p class="text-[10px] text-blue-700 font-bold leading-relaxed uppercase tracking-tighter">
                                 Driver yang ditugaskan akan menerima notifikasi otomatis pada aplikasi mereka setelah tugas ini disimpan.
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- SECTION 4: INFORMASI TUGAS & MAPBOX --}}
+        <div class="kt-card border-none shadow-2xl shadow-gray-200/50 rounded-3xl overflow-hidden ring-1 ring-gray-100">
+            <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-6 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                        <i class="ki-filled ki-map text-xl text-emerald-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-black text-lg tracking-tight">Informasi Utama & Geofencing</h3>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Tentukan titik koordinat pengiriman</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kt-card-content p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div class="space-y-6">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Nama Task / Pekerjaan</label>
+                            <input wire:model="formData.name" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-2xl h-14 font-bold text-gray-700 shadow-sm" type="text" placeholder="Contoh: Pengiriman Elektronik Batch A"/>
+                            @error('formData.name') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="flex flex-col gap-2 relative" id="map-search-container">
+                            <label class="text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] ml-1 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
+                                Search Location
+                            </label>
+                            <div class="relative group">
+                                <input type="text" id="map-search-input" class="kt-input bg-gray-100 cursor-not-allowed border-gray-100 rounded-2xl h-14 pl-12 font-medium shadow-sm transition-all" placeholder="Search Location (Read Only)" autocomplete="off" readonly disabled>
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="ki-outline ki-magnifier text-xl text-gray-400 group-focus-within:text-blue-600 transition-colors"></i>
+                                </div>
+                                <div id="autocomplete-results" class="hidden absolute z-[110] w-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-60 overflow-y-auto"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-dashed border-gray-200">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-[9px] font-black text-gray-400 uppercase">Latitude</label>
+                                <input type="text" id="lat-display" wire:model="formData.geos.latitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-[9px] font-black text-gray-400 uppercase">Longitude</label>
+                                <input type="text" id="lng-display" wire:model="formData.geos.longitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 relative group">
+                        <div wire:ignore id="map" class="w-full h-[480px] shadow-2xl rounded-3xl overflow-hidden ring-4 ring-gray-50 transition-all group-hover:ring-emerald-50"
+                             data-lng="{{ $formData['geos']['longitude'] }}" data-lat="{{ $formData['geos']['latitude'] }}"></div>
+                        <div class="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white shadow-lg pointer-events-none">
+                            <span class="text-[10px] font-black text-gray-800 uppercase italic">Live Map Interface</span>
                         </div>
                     </div>
                 </div>

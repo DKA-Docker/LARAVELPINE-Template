@@ -20,6 +20,8 @@ use Database\Seeders\Data\Geo\DataGeoDistrictsSeeder;
 use Database\Seeders\Data\Geo\DataGeoProvincesSeeder;
 use Database\Seeders\Data\Geo\DataGeoRegenciesSeeder;
 use Database\Seeders\Data\Geo\DataGeoVillagesSeeder;
+use Database\Seeders\Data\Vehicles\DataVehicleCategoriesSeeder;
+use Database\Seeders\Data\Vehicles\DataVehiclesSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -48,7 +50,9 @@ class DatabaseSeeder extends Seeder
             DataGeoRegenciesSeeder::class,
             DataGeoDistrictsSeeder::class,
             DataGeoVillagesSeeder::class,
-            DeliveriesTasksGeosSeeder::class
+            DeliveriesTasksGeosSeeder::class,
+            DataVehicleCategoriesSeeder::class,
+            DataVehiclesSeeder::class,
         ]);
     }
 }

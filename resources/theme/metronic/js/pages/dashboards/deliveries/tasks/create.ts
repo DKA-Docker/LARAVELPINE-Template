@@ -68,6 +68,8 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             });
 
             self.map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+            // Geolocate control removed for read-only mode
+            /*
             const geolocate = new mapboxgl.GeolocateControl({
                 positionOptions: { enableHighAccuracy: true },
                 trackUserLocation: true,
@@ -78,8 +80,9 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             geolocate.on('geolocate', (e: any) => {
                 self.moveToLocation(e.coords.longitude, e.coords.latitude, true);
             });
+            */
 
-            self.marker = new mapboxgl.Marker({ draggable: true, color: "#2563eb" })
+            self.marker = new mapboxgl.Marker({ draggable: false, color: "#2563eb" })
                 .setLngLat([lng, lat])
                 .addTo(self.map);
 
