@@ -34,11 +34,11 @@ class SendRequestCreatedNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $request = AppsDeliveriesRequests::with(['destinations.packages'])->find($this->requestId);
-        $user = Accounts::find($this->userId);
+        $request = Requests::with(['destinations.packages'])->find($this->requestId);
+        $user = Accounts::with('contact')->find($this->userId);
 
-        if ($request && $user) {
-            Mail::to($user->email)->send(new RequestCreatedMail($request, $user));
+        if ($request && $user && $user->contact && $user->contact->email) {
+            Mail::to($user->contact->email)->send(new RequestCreatedMail($request, $user));
         }
     }
 }
