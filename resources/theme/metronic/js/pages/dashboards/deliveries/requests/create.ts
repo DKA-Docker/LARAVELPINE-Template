@@ -362,13 +362,16 @@ const DestinationMapManager = {
     instances: {} as Record<number, DestinationMap>,
 
     init() {
+        // Prevent running if Mapbox token is missing
         const accessToken = getCfg('mapbox-token');
         if (!accessToken) return;
 
         const scan = () => {
+            // LOCK: Only run if the specific wrapper exists
+            if ($('.request-create-destinations-wrapper').length === 0) return;
+
             $('.destination-map').each((_, el) => {
                 const index = $(el).data('index');
-                // Check if already initialized and if element is still connected
                 if (typeof index !== 'undefined' && !this.instances[index]) {
                     const mapInstance = new DestinationMap(index, accessToken);
                     mapInstance.init();
@@ -377,6 +380,7 @@ const DestinationMapManager = {
             });
         };
 
+        // Initial scan
         scan();
 
         // Watch for DOM changes (Livewire updates)
