@@ -23,6 +23,9 @@ class AppsDeliveriesRequestsDestinations extends Model {
         'request',
         'receipt_name',
         'receipt_address',
+        'coordinate_latitude',
+        'coordinate_longitude',
+        'description',
         'created_at',
         'updated_at',
     ];
