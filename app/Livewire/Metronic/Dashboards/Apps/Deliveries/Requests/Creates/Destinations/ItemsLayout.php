@@ -21,6 +21,8 @@ class ItemsLayout extends Component
         return [
             'receipt_name'    => null,
             'receipt_address' => null,
+            'coordinate_latitude' => null,
+            'coordinate_longitude' => null,
             'description'     => null,
             'packages'        => [],   // <— nested packages di sini
         ];
