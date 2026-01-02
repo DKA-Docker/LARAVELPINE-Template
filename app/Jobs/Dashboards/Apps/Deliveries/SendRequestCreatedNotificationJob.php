@@ -37,8 +37,11 @@ class SendRequestCreatedNotificationJob implements ShouldQueue
         $request = Requests::with(['destinations.packages'])->find($this->requestId);
         $user = Accounts::with('contact')->find($this->userId);
 
-        if ($request && $user && $user->contact && $user->contact->email) {
-            Mail::to($user->contact->email)->send(new RequestCreatedMail($request, $user));
+        // Gunakan getRelationValue karena nama kolom 'contact' bentrok dengan nama relasi
+        $contact = $user?->getRelationValue('contact');
+
+        if ($request && $contact && $contact->email) {
+            Mail::to($contact->email)->send(new RequestCreatedMail($request, $user));
         }
     }
 }

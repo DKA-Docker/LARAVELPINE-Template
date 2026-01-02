@@ -18,7 +18,7 @@
             <h2>Delivery Request Created</h2>
         </div>
         <div class="content">
-            <p>Dear {{ $user->information->first_name ?? $user->contact->email }},</p>
+            <p>Dear {{ $user->information->first_name ?? $user->getRelationValue('contact')?->email }},</p>
             <p>Your delivery request has been successfully created. Here are the details:</p>
             
             <h3>Request Information</h3>
