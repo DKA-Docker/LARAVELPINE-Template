@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string("receipt_name")->comment('nama penerima barang');
             /** Alamat Tujuan Pengiriman */
             $table->string('receipt_address')->comment('tujuan barang dikirim kemana');
+            /** Menambahkan Kordinat Tujuan */
+            $table->float('coordinate_latitude')->comment('Adalah Coordinate Tujuan Atau (Latitude)');
+            $table->float('coordinate_longitude')->comment('Adalah Coordinate Tujuan Atau (Longitude)');
             /** Catatan tambahan yang dibuat oleh si pre requests */
             $table->string('description')->comment('Catatan Untuk Pengiriman Ini')->nullable();
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
