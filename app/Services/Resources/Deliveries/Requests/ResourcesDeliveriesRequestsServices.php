@@ -2,6 +2,7 @@
 
 namespace App\Services\Resources\Deliveries\Requests;
 
+use App\Jobs\Dashboards\Apps\Deliveries\SendRequestCreatedNotificationJob;
 use App\Models\Base\Accounts\Accounts;
 use App\Repositories\Apps\Deliveries\Requests\Destinations\Packages\RequestsDestinationsPackagesRepository;
 use App\Repositories\Apps\Deliveries\Requests\Destinations\RequestsDestinationsRepository;
@@ -79,12 +80,13 @@ class ResourcesDeliveriesRequestsServices
                 });
             });
 
-            DB::commit();
-
-            DB::afterCommit(function () use ($RequestResponse) {
-                // taruh dispatch event / job kalau nanti butuh
+            DB::afterCommit(function () use ($RequestResponse, $account) {
+                // Dispatch notification job
+                SendRequestCreatedNotificationJob::dispatch($RequestResponse->id, $account->id);
             });
 
+            DB::commit();
+            
             return [
                 'status'  => true,
                 'message' => 'Berhasil membuat request pengiriman.',
