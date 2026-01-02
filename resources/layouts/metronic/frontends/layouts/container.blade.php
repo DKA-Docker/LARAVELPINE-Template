@@ -24,7 +24,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Styles -->
         @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
-            @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css", "resources/theme/" . config("theme.name", "laravel") . "/js/frontend.ts"])
+            @vite(["resources/theme/" . config("theme.name", "laravel") . "/css/app.css"])
         @endif
 
         @livewireStyles
