@@ -20,6 +20,8 @@ class AppsDeliveriesRequestsDestinationsFactory extends Factory
             'request' => $request->id,
             'receipt_name' => trim($this->faker->name()),
             'receipt_address' => trim($this->faker->address()),
+            'coordinate_latitude' => $this->faker->latitude(),
+            'coordinate_longitude' => $this->faker->longitude(),
         ];
     }
 }
