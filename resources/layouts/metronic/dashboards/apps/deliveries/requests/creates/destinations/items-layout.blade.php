@@ -19,18 +19,25 @@
         @endif
 
         @foreach ($destinations as $index => $destination)
-            <div class="border border-gray-100 rounded-2xl overflow-hidden transition-all hover:shadow-md" wire:key="destination-{{ $index }}">
+            <div class="border border-gray-100 rounded-2xl overflow-hidden transition-all hover:shadow-md"
+                 wire:key="destination-{{ $index }}"
+                 x-data="{
+                    name: @entangle('destinations.'.$index.'.receipt_name'),
+                    address: @entangle('destinations.'.$index.'.receipt_address')
+                 }"
+            >
                 {{-- TOGGLE HEADER --}}
                 <div class="p-4 flex items-center justify-between cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition-colors" wire:click="toggle({{ $index }})">
                     <div class="flex items-center gap-4">
                         <span class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-600 text-xs font-bold">#{{ $index + 1 }}</span>
                         <div class="flex flex-col">
-                            <span class="text-sm font-bold text-gray-800">
-                                {{ $destination['receipt_name'] ? strtoupper($destination['receipt_name']) : __('dashboard.request.create.form.destination_recipient_empty') }}
-                            </span>
-                            <span class="text-xs text-gray-500 italic">
-                                {{ $destination['receipt_address'] ? $destination['receipt_address'] : __('dashboard.request.create.form.destination_address_empty') }}
-                            </span>
+                            <span class="text-sm font-bold text-gray-800" x-text="name || '{{ __('dashboard.request.create.form.destination_recipient_empty') }}'"></span>
+                            <span class="text-xs text-gray-500 italic line-clamp-1" x-text="address || '{{ __('dashboard.request.create.form.destination_address_empty') }}'"></span>
+                             <div class="flex items-center gap-2 mt-1">
+                                <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold">
+                                    {{ count($destination['packages'] ?? []) }} Item
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -42,19 +49,62 @@
 
                 {{-- CONTENT --}}
                 <div class="{{ ($open[$index] ?? false) ? 'block' : 'hidden' }} p-6 bg-white border-t border-gray-100 animate-fade-in">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_recipient_label') }}</label>
-                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.destination_recipient_placeholder') }}" wire:model.defer="destinations.{{ $index }}.receipt_name" />
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6" wire:ignore>
+                        {{-- LEFT COLUMN: FORM INPUTS --}}
+                        <div class="space-y-5">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_recipient_label') }}</label>
+                                <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl w-full" type="text" placeholder="{{ __('dashboard.request.create.form.destination_recipient_placeholder') }}" x-model="name" />
+                            </div>
+
+                            <div class="space-y-2 relative">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_address_label') }}</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="ki-filled ki-magnifier text-gray-400"></i>
+                                    </div>
+                                    <input class="kt-input pl-10 focus:ring-red-100 border-gray-200 rounded-xl w-full"
+                                           type="text"
+                                           id="map-search-{{ $index }}"
+                                           data-index="{{ $index }}"
+                                           placeholder="{{ __('dashboard.request.create.form.destination_address_placeholder') }}"
+                                           x-model="address"
+                                           autocomplete="off" />
+                                    {{-- Search Results Container --}}
+                                    <div id="map-results-{{ $index }}" class="destination-search-results hidden absolute z-50 w-full bg-white mt-1 rounded-lg shadow-xl border border-gray-100 max-h-60 overflow-y-auto"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_note_label') }}</label>
+                                <textarea class="kt-input min-h-[140px] focus:ring-red-100 border-gray-200 rounded-xl p-4 w-full resize-none" placeholder="{{ __('dashboard.request.create.form.destination_note_placeholder') }}" wire:model.defer="destinations.{{ $index }}.description"></textarea>
+                            </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_address_label') }}</label>
-                            <input class="kt-input focus:ring-red-100 border-gray-200 rounded-xl" type="text" placeholder="{{ __('dashboard.request.create.form.destination_address_placeholder') }}" wire:model.defer="destinations.{{ $index }}.receipt_address" />
+
+                        {{-- RIGHT COLUMN: MAP --}}
+                        <div class="destination-map-wrapper bg-gray-50/50 p-2 rounded-xl border border-dashed border-gray-200 h-full flex flex-col">
+                            <div id="map-{{ $index }}"
+                                 class="destination-map w-full flex-grow min-h-[300px] rounded-lg shadow-inner"
+                                 data-index="{{ $index }}"
+                                 data-lat="{{ $destination['coordinate_latitude'] ?? -6.2088 }}"
+                                 data-lng="{{ $destination['coordinate_longitude'] ?? 106.8456 }}">
+                            </div>
+
+                            <div class="flex items-center justify-between mt-3 px-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">LAT:</span>
+                                    <span class="text-[10px] font-mono text-gray-600 bg-white px-2 py-0.5 rounded border border-gray-200" id="lat-display-{{ $index }}">
+                                        {{ $destination['coordinate_latitude'] ?? '-' }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">LNG:</span>
+                                    <span class="text-[10px] font-mono text-gray-600 bg-white px-2 py-0.5 rounded border border-gray-200" id="lng-display-{{ $index }}">
+                                        {{ $destination['coordinate_longitude'] ?? '-' }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-6 space-y-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{{ __('dashboard.request.create.form.destination_note_label') }}</label>
-                        <textarea class="kt-input min-h-24 focus:ring-red-100 border-gray-200 rounded-xl p-4" placeholder="{{ __('dashboard.request.create.form.destination_note_placeholder') }}" wire:model.defer="destinations.{{ $index }}.description"></textarea>
                     </div>
 
                     <div class="pt-4 border-t border-gray-50">

@@ -47,6 +47,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 Route::resource('/', DeliveriesRequest::class);
                 Route::prefix('create')->name('create.')->group(function () {
                     Route::resource('/', DeliveriesRequestCreate::class);
+                    Route::get('/geocoding-proxy', [DeliveriesRequestCreate::class, 'geocodingProxy'])->name('geocodingProxy');
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {

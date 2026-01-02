@@ -89,11 +89,13 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             self.setupAutocomplete();
             self.setupThemeObserver();
 
+            // @ts-ignore
             Livewire.on('search-location', (event: any) => {
                 const data = Array.isArray(event) ? event[0] : event;
                 if (data.address) self.geocodeAddress(data.address, true);
             });
 
+            // @ts-ignore
             Livewire.on('destination-updated', (event: any) => {
                 const data = Array.isArray(event) ? event[0] : event;
                 if (data.address) self.geocodeAddress(data.address, true);
@@ -347,6 +349,7 @@ const TaskCreateModule: TaskCreateModuleInterface = {
         $('#lat-display').val(lat.toFixed(6));
         $('#lng-display').val(lng.toFixed(6));
         const componentId = $('#map').closest('[wire\\:id]').attr('wire:id');
+        // @ts-ignore
         const lw = Livewire.find(componentId);
         if (lw) {
             lw.set('formData.geos.longitude', lng.toFixed(6), false);
