@@ -7,6 +7,7 @@ use Database\Seeders\App\Deliveries\Requests\DeliveriesRequestsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\DeliveriesRequestsDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\Units\DeliveriesRequestsDestinationsPackagesUnitsSeeder;
+use Database\Seeders\App\Deliveries\Tasks\Attachments\DeliveriesTasksAttachmentsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksAssignsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksGeosSeeder;
 use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksSeeder;
@@ -41,6 +42,8 @@ class DatabaseSeeder extends Seeder
             DeliveriesRequestsDestinationsSeeder::class,
             DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
             DeliveriesRequestsDestinationsPackagesSeeder::class,
+            DataVehicleCategoriesSeeder::class,
+            DataVehiclesSeeder::class,
             AppsDeliveriesTasksRoutesSeeder::class,
             AppsDeliveriesTaskRoutesOriginsSeeder::class,
             DeliveriesTasksSeeder::class,
@@ -51,8 +54,7 @@ class DatabaseSeeder extends Seeder
             DataGeoDistrictsSeeder::class,
             DataGeoVillagesSeeder::class,
             DeliveriesTasksGeosSeeder::class,
-            DataVehicleCategoriesSeeder::class,
-            DataVehiclesSeeder::class,
+            DeliveriesTasksAttachmentsSeeder::class
         ]);
     }
 }

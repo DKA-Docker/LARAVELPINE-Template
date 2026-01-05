@@ -3,6 +3,8 @@
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components;
 
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
+use App\Models\Data\Vehicles\DataVehicleCategories;
+use App\Models\Data\Vehicles\DataVehicles;
 use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosDistrictsServices;
 use App\Services\Resources\Data\Geos\ResourcesDataGeosProvincesServices;
@@ -40,8 +42,13 @@ class CreateForm extends Component
             'village' => null,
             'postal_code' => '',
         ],
-        'first_name' => ''
+        'first_name' => '',
+        'vehicle_category' => '',
+        'vehicle_id' => ''
     ];
+
+    public $vehicleCategories = [];
+    public $availableVehicles = [];
 
     public $destinations = [];
     public $provinces = [];
@@ -79,6 +86,21 @@ class CreateForm extends Component
 
         $resProv = $this->GeoProvincesServices->ReadAll();
         $this->provinces = $resProv['data'] ?? $resProv;
+
+        $allCats = DataVehicleCategories::all();
+        $this->vehicleCategories = $allCats->unique('name');
+    }
+
+    public function updatedFormDataVehicleCategory($value): void
+    {
+        $this->availableVehicles = [];
+        $this->formData['vehicle_id'] = '';
+
+        if ($value) {
+            $this->availableVehicles = DataVehicles::whereHas('category', function ($q) use ($value) {
+                $q->where('name', $value);
+            })->get();
+        }
     }
 
     public function updatedFormDataDestination($value): void
@@ -179,10 +201,21 @@ class CreateForm extends Component
 
     public function submit()
     {
-        if (empty($this->formData['geos']['province'])) {
-            $this->addError('province', 'Province must be selected.');
-            return;
-        }
+        $this->validate([
+            'formData.name' => 'required|string',
+            'formData.destination' => 'required',
+            'formData.geos.province' => 'required',
+            'formData.geos.regency' => 'required',
+            'formData.geos.district' => 'required',
+            'formData.geos.village' => 'required',
+            'formData.assigned' => 'required|array|min:1',
+            'formData.vehicle_category' => 'required',
+            'formData.vehicle_id' => 'required',
+            'formData.geos.postal_code' => 'nullable',
+        ], [
+            'formData.assigned.required' => 'Minimal satu driver harus dipilih.',
+            'formData.assigned.min' => 'Minimal satu driver harus dipilih.',
+        ]);
 
         $response = $this->tasksServices->Create($this->formData);
 

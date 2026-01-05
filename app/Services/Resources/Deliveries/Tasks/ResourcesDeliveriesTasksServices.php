@@ -54,6 +54,9 @@ class ResourcesDeliveriesTasksServices
             $taskData = $payload;
             $taskData['account'] = $currentUserId;
 
+            // 4. ambil data vehicle dari inputan 'vehicle_id'
+            $taskData['vehicle'] =  $payload['vehicle_id'];
+
             // 4. Simpan Main Task
             $taskCreated = $this->repository->Create($taskData);
 

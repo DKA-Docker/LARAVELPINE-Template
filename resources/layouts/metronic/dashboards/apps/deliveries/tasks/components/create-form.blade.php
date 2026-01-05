@@ -1,6 +1,18 @@
 <div x-init="$dispatch('init-map')">
     <div class="space-y-8 animate-fade-in">
 
+        @if ($errors->any())
+            <div class="kt-card border-none bg-red-50 rounded-2xl p-5 flex items-center gap-4 animate-scale-in border border-red-100 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center shadow-lg shadow-red-200">
+                    <i class="ki-filled ki-cross-circle text-white text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs font-black text-red-900 uppercase tracking-widest leading-none mb-1">Validation Error</span>
+                    <p class="text-[11px] text-red-600 font-bold uppercase tracking-tight">Gagal disimpan karena ada inputan tertentu belum di isi.</p>
+                </div>
+            </div>
+        @endif
+
         <div class="flex md:flex-row flex-col gap-8">
 
             {{-- SECTION 1: DESTINASI & WILAYAH --}}
@@ -19,6 +31,7 @@
                                 <option value="{{ $dest['id'] }}">{{ $dest['receipt_name'] }} ({{ $dest['receipt_address'] }})</option>
                             @endforeach
                         </select>
+                        @error('formData.destination') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-6 p-6 bg-gray-50/50 rounded-3xl border border-gray-100">
@@ -31,6 +44,7 @@
                                     <option value="{{ $prov['id'] }}">{{ $prov['name'] }}</option>
                                 @endforeach
                             </select>
+                            @error('formData.geos.province') <span class="text-red-500 text-[9px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                         </div>
 
                         {{-- KOTA / KABUPATEN --}}
@@ -44,6 +58,7 @@
                                     <option value="{{ $reg['id'] }}">{{ $reg['name'] }}</option>
                                 @endforeach
                             </select>
+                            @error('formData.geos.regency') <span class="text-red-500 text-[9px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                         </div>
 
                         {{-- KECAMATAN --}}
@@ -57,6 +72,7 @@
                                     <option value="{{ $dist['id'] }}">{{ $dist['name'] }}</option>
                                 @endforeach
                             </select>
+                            @error('formData.geos.district') <span class="text-red-500 text-[9px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                         </div>
 
                         {{-- DESA / KELURAHAN --}}
@@ -70,6 +86,7 @@
                                     <option value="{{ $vil['id'] }}">{{ $vil['name'] }}</option>
                                 @endforeach
                             </select>
+                            @error('formData.geos.village') <span class="text-red-500 text-[9px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -87,7 +104,8 @@
                         <i class="ki-filled ki-delivery-3 text-blue-600"></i> Crew Assignment
                     </h3>
                 </div>
-                <div class="kt-card-content p-8">
+
+                <div class="kt-card-content p-8 ">
                     <div class="flex flex-col gap-4 relative">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Daftar Personel</label>
 
@@ -103,6 +121,7 @@
                                 <span class="text-[10px] text-gray-400 font-bold italic">Belum ada driver dipilih...</span>
                             @endforelse
                         </div>
+                        @error('formData.assigned') <div class="mt-2"><span class="text-red-500 text-[10px] font-bold italic">{{ $message }}</span></div> @enderror
 
                         <div class="relative mt-2">
                             <input wire:model.live.debounce.300ms="driverSearch" type="text" class="kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold pl-12" placeholder="Ketik nama driver...">
@@ -130,20 +149,56 @@
                             </div>
                         @endif
                     </div>
+                </div>
+                <div class="kt-card-content p-1 w-full">
+                    <div class="grid gap-6 p-6 bg-gray-50/50 rounded-3xl border border-gray-100 w-full">
+                        <div class="flex flex-col gap-4 relative">
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Pilih Kategori Kendaraan</label>
+                            {{-- ubah ukuran kolom grid-cols-1--}}
+                            <div class="grid grid-cols-1 gap-3 mt-2 w-full">
+                                @foreach($vehicleCategories as $cat)
+                                    @php
+                                        $isSelected = ($formData['vehicle_category'] === $cat->name);
+                                    @endphp
+                                    <label wire:key="cat-{{ $cat->id }}"
+                                           class="relative flex items-center p-3 rounded-xl border transition-all group cursor-pointer {{ $isSelected ? 'bg-blue-50 border-blue-200 shadow-sm' : 'bg-white border-gray-100 hover:bg-blue-50' }}">
 
-                    <div class="mt-10 p-5 bg-blue-50 rounded-2xl border border-blue-100">
-                        <div class="flex items-start gap-4">
-                            <i class="ki-filled ki-information text-blue-600 text-2xl"></i>
-                            <p class="text-[10px] text-blue-700 font-bold leading-relaxed uppercase tracking-tighter">
-                                Driver yang ditugaskan akan menerima notifikasi otomatis pada aplikasi mereka setelah tugas ini disimpan.
-                            </p>
+                                        {{-- Radio Input Hidden --}}
+                                        <input type="radio" wire:model.live="formData.vehicle_category" value="{{ $cat->name }}" class="absolute opacity-0 w-full h-full cursor-pointer z-10">
+
+                                        <div class="flex grow items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                <i class="ki-filled {{ $cat->name == 'Mobil' ? 'ki-car' : 'ki-bus' }} text-xl {{ $isSelected ? 'text-blue-600' : 'text-gray-400' }}"></i>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-black {{ $isSelected ? 'text-blue-900' : 'text-gray-800' }} uppercase tracking-tight">{{ $cat->name }}</span>
+                                                <span class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter line-clamp-1" title="{{ $cat->description }}">{{ $cat->description ?? 'No description' }}</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('formData.vehicle_category') <div class="mt-2"><span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span></div> @enderror
+
+                            @if(!empty($formData['vehicle_category']))
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1 mt-4 block">Pilih Unit Kendaraan</label>
+                                <select wire:model="formData.vehicle_id" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold w-full">
+                                    <option value="">-- Pilih Unit --</option>
+                                    @foreach($availableVehicles as $veh)
+                                        <option value="{{ $veh->id }}">{{ $veh->name }} - {{ $veh->plate }}</option>
+                                    @endforeach
+                                </select>
+                                @error('formData.vehicle_id') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
+                            @endif
+
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-        {{-- SECTION 4: INFORMASI TUGAS & MAPBOX --}}
+        {{-- SECTION 3: INFORMASI TUGAS & MAPBOX --}}
         <div class="kt-card border-none shadow-2xl shadow-gray-200/50 rounded-3xl overflow-hidden ring-1 ring-gray-100">
             <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-6 flex items-center justify-between">
                 <div class="flex items-center gap-4">

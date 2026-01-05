@@ -32,6 +32,7 @@ class AppsDeliveriesTasks extends Model
         'account',
         'name', // keterangan
         'destination',
+        'vehicle' // kendaraan
     ];
 
     protected $with = ['account','assigned', 'destination', 'history','geos'];
@@ -90,5 +91,22 @@ class AppsDeliveriesTasks extends Model
         return $this->hasOne(AppsDeliveriesTasksGeos::class, 'task', // Foreign Key di tabel geos (sesuai migration sebelumnya)
             'id' // Local Key di tabel tasks
         )->withDefault();
+    }
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(
+            \App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions::class,
+            'task',
+            'id'
+        );
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(
+            \App\Models\Apps\Deliveries\Tasks\Attachments\AppsDeliveriesTasksAttachments::class,
+            'task_id',
+            'id'
+        );
     }
 }

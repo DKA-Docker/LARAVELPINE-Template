@@ -7,6 +7,7 @@ use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
 use App\Models\Base\Accounts\Accounts;
+use App\Models\Data\Vehicles\DataVehicles;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -17,6 +18,7 @@ class AppsDeliveriesTasksFactory extends Factory
         // Tambahkan query() di sini
         $accounts = Accounts::query()->role(['superadmin','admin'])->inRandomOrder()->first();
         $reqDestination = AppsDeliveriesRequestsDestinations::inRandomOrder()->first();
+        $vehicle = DataVehicles::query()->inRandomOrder()->first();
 
         $taskTitles = [
             'Pengantaran hari ini',
@@ -32,6 +34,7 @@ class AppsDeliveriesTasksFactory extends Factory
             'id' => (string) Str::uuid(),
             'account' => $accounts->id,
             'name' => $this->faker->randomElement($taskTitles),
+            'vehicle' => $vehicle->id,
             'destination' => $reqDestination->id,
         ];
     }

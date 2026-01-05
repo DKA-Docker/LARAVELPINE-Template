@@ -17,4 +17,9 @@ class DataVehicles extends Model
         'plate',
         'description'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(DataVehicleCategories::class, 'category');
+    }
 }

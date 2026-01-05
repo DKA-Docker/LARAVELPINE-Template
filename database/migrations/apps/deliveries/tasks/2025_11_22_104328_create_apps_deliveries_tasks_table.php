@@ -32,6 +32,12 @@ return new class extends Migration
                 ->constrained('apps_deliveries_requests_destinations', 'id')
                 ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
 
+            $table->foreignUuid('vehicle')
+                  ->index()
+                  ->comment('vehicle ambil referensi dari id di tabel data_vehicle')
+                  ->constrained('data_vehicles', 'id')
+                  ->onDelete('cascade');
+
             /** adalah function yang digunakan untuk melakukan soft deleted di dalam, database agar data tidak di hapus secara otomatis */
             $table->softDeletes()->comment('parameter soft deleted');
             /** data waktu yang digunakan untuk melakukan pembuatan data timestamp di dalam database  */
