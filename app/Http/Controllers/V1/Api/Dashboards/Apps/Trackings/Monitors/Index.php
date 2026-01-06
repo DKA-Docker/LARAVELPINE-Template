@@ -59,11 +59,23 @@ class Index extends Controller
             // Memicu broadcast ke frontend
             // 2. Memicu broadcast dengan proteksi Exception
             try {
-                // Karena menggunakan ShouldQueue, ini akan mengirim job ke background worker
-                broadcast(new MonitorEvent($incommingRequest));
+                // Inject Account Info so specific frontend marker can be updated
+                $account = $request->user();
+                
+                if ($account) {
+                     // Information is auto-loaded via $with in model
+                     $incommingRequest['account'] = $account->toArray();
+                     $incommingRequest['driver_name'] = $account->information->first_name ?? 'Unknown';
+                     
+                     // Use Alarm Event for GPS OFF
+                     broadcast(new \App\Events\Dashboards\Apps\Trackings\Alarms\Index([
+                        'data' => $incommingRequest
+                     ]));
+                     Log::info("Broadcast dispatched for GPS OFF event via ALARM Channel.", ['account_id' => $account->id]);
+                } else {
+                    Log::warning("GPS OFF Request: Account (User) not found!");
+                }
             } catch (Exception $e) {
-                // Jika broadcast/queue gagal, kita hanya mencatat log.
-                // Proses utama (simpan data) TIDAK akan terhenti (rollback).
                 Log::error("Broadcast MonitorEvent failed: " . $e->getMessage(), [
                     'data' => $incommingRequest,
                     'trace' => $e->getTraceAsString()
