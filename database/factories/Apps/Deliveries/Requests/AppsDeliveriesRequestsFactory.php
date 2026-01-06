@@ -20,7 +20,18 @@ class AppsDeliveriesRequestsFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'account' => $accountData,
-            'name' => $this->faker->realText(50)
+            'name' => $this->faker->randomElement([
+                'Pengiriman Logistik Regional Sulawesi',
+                'Distribusi Barang Elektronik Makassar',
+                'Pengiriman Bahan Pokok Bulanan',
+                'Kargo Suku Cadang Kendaraan',
+                'Paket E-Commerce Reguler',
+                'Pengiriman Dokumen Penting Korporat',
+                'Distribusi Material Konstruksi',
+                'Layanan Kargo Ekspres Harian',
+                'Pengiriman Farmasi dan Obat-obatan',
+                'Distribusi Retail Modern',
+            ])
         ];
     }
 }

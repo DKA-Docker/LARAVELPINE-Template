@@ -12,14 +12,15 @@ class AppsDeliveriesRequestsDestinationsFactory extends Factory
 
     public function definition(): array
     {
+        $faker = \Faker\Factory::create('id_ID');
         $account = Accounts::inRandomOrder()->first();
         $request = AppsDeliveriesRequests::inRandomOrder()->first();
         return [
             'id' => (string) Str::uuid(),
             'account' => $account->id,
             'request' => $request->id,
-            'receipt_name' => trim($this->faker->name()),
-            'receipt_address' => trim($this->faker->address()),
+            'receipt_name' => trim($faker->name()),
+            'receipt_address' => trim($faker->address()),
             'coordinate_latitude' => $this->faker->latitude(),
             'coordinate_longitude' => $this->faker->longitude(),
         ];
