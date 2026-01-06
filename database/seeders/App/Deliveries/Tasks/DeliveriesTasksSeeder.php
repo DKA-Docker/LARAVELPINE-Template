@@ -19,7 +19,7 @@ class DeliveriesTasksSeeder extends Seeder
 
     public function run(): void
     {
-        $this->factory->count(5)->create();
+        $this->factory->count(200)->create();
         $this->command->info('Deliveries tasks successfully created');
     }
 

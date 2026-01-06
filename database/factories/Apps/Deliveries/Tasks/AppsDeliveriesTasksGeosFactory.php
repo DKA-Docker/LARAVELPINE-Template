@@ -23,19 +23,22 @@ class AppsDeliveriesTasksGeosFactory extends Factory
     {
 
         $task = AppsDeliveriesTasks::inRandomOrder()->first();
-        $village = DataGeosVillages::inRandomOrder()->first();
-        $district = DataGeosDistricts::where("id", $village->district_id)->inRandomOrder()->first();
-        $regency = DataGeosRegencies::where("id", $district->regency_id)->inRandomOrder()->first();
-        $province = DataGeosProvinces::where("id", $regency->province_id)->inRandomOrder()->first();
+        
+        // Strict: Sulawesi Selatan (73) -> Kota Makassar (7371)
+        $province = DataGeosProvinces::find(73);
+        $regency = DataGeosRegencies::find(7371);
+        
+        $district = DataGeosDistricts::where("regency_id", $regency->id)->inRandomOrder()->first();
+        $village = DataGeosVillages::where("district_id", $district->id)->inRandomOrder()->first();
 
         return [
             'task'=> $task->id,
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
-            'province' => $province, //provinsi
-            'regency' => $regency,
-            'district' => $district, //kecamatan
-            'village' => $village,
+            'province' => $province->id, 
+            'regency' => $regency->id,
+            'district' => $district->id, 
+            'village' => $village->id,
             'postal_code' => $this->faker->postcode(),
         ];
     }

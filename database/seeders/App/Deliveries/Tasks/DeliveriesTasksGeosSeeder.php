@@ -19,7 +19,7 @@ class DeliveriesTasksGeosSeeder extends Seeder
 
     public function run(): void
     {
-        $this->factory->count(10)->create();
+        $this->factory->count(200)->create();
         $this->command->info('Deliveries tasks created');
     }
 

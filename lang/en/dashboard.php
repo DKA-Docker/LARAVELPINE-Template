@@ -328,8 +328,13 @@ return [
             ],
             'chart' => [
                 'demography' => 'Delivery Demography',
+                'select_province' => 'Select Province',
+                'select_regency' => 'Select City/District',
+                'select_district' => 'Select District',
+                'select_village' => 'Select Village',
                 'by_city' => 'By City',
                 'by_district' => 'By District',
+                'by_village' => 'By Village',
                 'logistics' => 'Logistics Overview',
                 'performance' => 'Delivery Performance',
                 'last_7_days' => 'Last 7 Days',

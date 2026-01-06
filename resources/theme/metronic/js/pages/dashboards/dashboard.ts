@@ -127,57 +127,122 @@ const initCharts = () => {
         };
         new ApexCharts(lineEl, lineOptions).render();
     }
+};
 
-    // --- DEMOGRAPHY CHART (BAR) ---
-    const demoEl = document.getElementById('chart-demography');
-    if (demoEl) {
-        const demoOptions = {
-            ...commonOptions,
-            series: [{
-                name: 'Deliveries',
-                data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-            }],
-            chart: {
-                type: 'bar',
-                height: 350,
-                toolbar: { show: false }
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: true,
-                    distributed: true,
-                    barHeight: '70%'
-                }
-            },
-            colors: ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f', '#f9a3a4', '#90ee7e', '#f48024', '#69d2e7'],
-            dataLabels: { enabled: false },
-            xaxis: {
-                categories: ['South Jakarta', 'Bandung', 'Semarang', 'Surabaya', 'Medan', 'Makassar', 'Denpasar', 'West Jakarta', 'East Jakarta', 'Central Jakarta'],
-                labels: {
-                    style: { colors: '#9ca3af', fontSize: '12px' }
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: { colors: '#9ca3af', fontSize: '12px' }
-                }
-            },
-            grid: {
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                xaxis: { lines: { show: true } },
-                yaxis: { lines: { show: false } }
-            },
-            legend: { show: false },
-            tooltip: {
-                theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-                y: {
-                    formatter: function (val: number) {
-                        return val + " orders"
+// Register Alpine component for interactive Demography Chart
+document.addEventListener('alpine:init', () => {
+    // @ts-ignore
+    Alpine.data('overviewChart', (initialData: any) => ({
+        demographics: initialData,
+        chart: null as any,
+
+        init() {
+            this.renderChart();
+
+            // Listen for Livewire event
+            // @ts-ignore
+            this.$wire.on('overview-update-chart', (event: any) => {
+                this.demographics = event.data;
+                this.updateChart();
+            });
+        },
+
+        renderChart() {
+            const element = document.getElementById('chart-demography');
+            if (!element) return;
+
+            // @ts-ignore
+            const data = this.demographics;
+
+            const options = {
+                series: [{
+                    name: 'Tasks',
+                    data: data.series
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: { show: false },
+                    events: {
+                        dataPointSelection: (event: any, chartContext: any, config: any) => {
+                            // @ts-ignore
+                            const data = this.demographics;
+                            if (data && data.ids && data.target_property) {
+                                const index = config.dataPointIndex;
+                                const id = data.ids[index];
+                                const property = data.target_property;
+
+                                // @ts-ignore
+                                if (this.$wire && property) {
+                                    // @ts-ignore
+                                    this.$wire.set(property, id);
+                                }
+                            }
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                        distributed: true, // Enable distributed colors
+                    }
+                },
+                legend: {
+                    show: false // Often better to hide legend when distributed
+                },
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: data.labels,
+                },
+                // Use a diverse palette
+                colors: [
+                    '#3E97FF', // Primary
+                    '#F1416C', // Danger
+                    '#50CD89', // Success
+                    '#FFC700', // Warning
+                    '#7239EA', // Info
+                    '#009EF7', // Azure
+                    '#181C32', // Dark
+                    '#D83556', // Rose
+                    '#F6C000', // Yellow-ish
+                    '#3F4254'  // Gray-ish
+                ],
+                grid: {
+                    borderColor: '#f1f1f1',
+                },
+                tooltip: {
+                    theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+                    y: {
+                        formatter: function (val: any) {
+                            return val
+                        }
                     }
                 }
-            }
-        };
-        new ApexCharts(demoEl, demoOptions).render();
-    }
-};
+            };
+
+            // @ts-ignore
+            this.chart = new ApexCharts(element, options);
+            this.chart.render();
+        },
+
+        updateChart() {
+            // @ts-ignore
+            if (!this.chart) return;
+            // @ts-ignore
+            const data = this.demographics;
+
+            // @ts-ignore
+            this.chart.updateOptions({
+                xaxis: {
+                    categories: data.labels
+                }
+            });
+
+            // @ts-ignore
+            this.chart.updateSeries([{
+                data: data.series
+            }]);
+        }
+    }));
+});

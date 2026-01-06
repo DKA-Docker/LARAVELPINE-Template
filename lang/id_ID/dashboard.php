@@ -328,8 +328,13 @@ return [
             ],
             'chart' => [
                 'demography' => 'Demografi Pengiriman',
+                'select_province' => 'Pilih Provinsi',
+                'select_regency' => 'Pilih Kota/Kab',
+                'select_district' => 'Pilih Kecamatan',
+                'select_village' => 'Pilih Kelurahan',
                 'by_city' => 'Berdasarkan Kota',
                 'by_district' => 'Berdasarkan Kecamatan',
+                'by_village' => 'Berdasarkan Kelurahan',
                 'logistics' => 'Tinjauan Logistik',
                 'performance' => 'Kinerja Pengiriman',
                 'last_7_days' => '7 Hari Terakhir',

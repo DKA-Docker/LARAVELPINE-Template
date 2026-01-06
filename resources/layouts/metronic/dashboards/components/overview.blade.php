@@ -1,4 +1,4 @@
-<div x-data x-init="$dispatch('overview-ready')" class="grid gap-5 lg:gap-7.5 w-full">
+<div x-data='overviewChart(@json($demographics))' x-init="$dispatch('overview-ready')" class="grid gap-5 lg:gap-7.5 w-full">
     <div class="grid items-stretch gap-y-5 lg:grid-cols-3 lg:gap-7.5">
         <div class="lg:col-span-1">
             <div class="grid h-full grid-cols-2 items-stretch gap-5 lg:gap-6">
@@ -29,8 +29,39 @@
                 <div class="kt-card-header flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-white/5">
                     <h3 class="kt-card-title font-bold text-lg">{{ __('dashboard.components.overview.chart.demography') }}</h3>
                     <div class="flex gap-2">
-                        <button class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all">{{ __('dashboard.components.overview.chart.by_city') }}</button>
-                        <button class="text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all">{{ __('dashboard.components.overview.chart.by_district') }}</button>
+                        <select wire:model.live="selectedProvince" class="form-select kt-input h-10 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-bold text-gray-600 w-full max-w-[150px]">
+                            <option value="">{{ __('dashboard.components.overview.chart.select_province') }}</option>
+                            @foreach($provinces as $id => $name)
+                                <option value="{{ $id }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+
+                        @if($selectedProvince)
+                            <select wire:model.live="selectedRegency" class="form-select kt-input h-10 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-bold text-gray-600 w-full max-w-[150px] animate-fade-in">
+                                <option value="">{{ __('dashboard.components.overview.chart.select_regency') }}</option>
+                                @foreach($regencies as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+
+                        @if($selectedRegency)
+                            <select wire:model.live="selectedDistrict" class="form-select kt-input h-10 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-bold text-gray-600 w-full max-w-[150px] animate-fade-in">
+                                <option value="">{{ __('dashboard.components.overview.chart.select_district') }}</option>
+                                @foreach($districts as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+
+                        @if($selectedDistrict)
+                            <select wire:model.live="selectedVillage" class="form-select kt-input h-10 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-bold text-gray-600 w-full max-w-[150px] animate-fade-in">
+                                <option value="">{{ __('dashboard.components.overview.chart.select_village') }}</option>
+                                @foreach($villages as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
                 </div>
                 <div class="kt-card-body p-6">
@@ -38,6 +69,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- NEW CHARTS ROW -->
