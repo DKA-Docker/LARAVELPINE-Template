@@ -109,11 +109,16 @@ class ResourcesDeliveriesTasksServices
                      $creator = Auth::user()->account->information->first_name ?? 'Admin';
                      
                      $notifTitle = "Kamu diberikan tugas dari {$creator}";
-                     $vehicleName = $taskLoaded->vehicle->name ?? 'Kendaraan';
-                     $vehiclePlate = $taskLoaded->vehicle->plate ?? '-';
                      
-                     $receiptName = $taskLoaded->destination->receipt_name ?? 'Penerima';
-                     $receiptAddress = $taskLoaded->destination->receipt_address ?? 'Alamat';
+                     // Gunakan getRelationValue karena nama relasi 'vehicle' sama dengan nama kolom foreign key
+                     $vehicleRel = $taskLoaded->getRelationValue('vehicle');
+                     $vehicleName = $vehicleRel->name ?? 'Kendaraan';
+                     $vehiclePlate = $vehicleRel->plate ?? '-';
+                     
+                     // Gunakan getRelationValue karena nama relasi 'destination' sama dengan nama kolom foreign key
+                     $destinationRel = $taskLoaded->getRelationValue('destination');
+                     $receiptName = $destinationRel->receipt_name ?? 'Penerima';
+                     $receiptAddress = $destinationRel->receipt_address ?? 'Alamat';
                      
                      $notifBody = "{$taskCreated->name}, {$vehicleName} - {$vehiclePlate}. Penerima: {$receiptName}, Alamat: {$receiptAddress}";
 
