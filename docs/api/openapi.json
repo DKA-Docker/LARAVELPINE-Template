@@ -1195,7 +1195,7 @@
                 "example": 1
             },
             "PerPageParam": {
-                "name": "per_page",
+                "name": "size",
                 "in": "query",
                 "description": "Number of items per page",
                 "schema": {
