@@ -25,8 +25,10 @@ class ResourcesTrackingsMonitorsServices
         $driver = config('database.default'); // ambil driver saat ini
 
         // PostgreSQL: DISTINCT ON bisa dipakai langsung
+        // Add eager loading for account.firebase to get FCM tokens
         return $this->repository
             ->query()
+            ->with(['account.firebase', 'account.information'])
             ->selectRaw('DISTINCT ON (account) *')
             ->orderBy('account')
             ->orderByDesc('created_at')

@@ -58,61 +58,162 @@ class Index extends Controller
 
 
     public function ReqLocationUpdate(Request $request) {
-        // Ambil data token dari request
+        // Validate token exists
         $token = $request->token;
-
-        $messaging = Firebase::messaging();
-
-        // Membangun pesan dengan konfigurasi Android khusus
-        $message = CloudMessage::withTarget('token', $token)
-            ->withData([
-                'action' => 'RELOAD_GPS',
-                // Kamu bisa tambah data lain jika perlu
-            ])
-            ->withAndroidConfig([
-                'priority' => 'high', // MEMAKSA Android untuk bangun dari Doze Mode
-                'ttl' => '0s',        // Pesan langsung hangus jika tidak terkirim saat itu juga (opsional)
+        
+        if (!$token) {
+            \Log::error('ReqLocationUpdate: Missing FCM token in request', [
+                'request_data' => $request->all()
             ]);
-
-        try {
-            $messaging->send($message);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'FCM Sent with High Priority'
-            ]);
-        } catch (Exception $e) {
+            
             return response()->json([
                 'status' => 'error',
+                'message' => 'FCM token is required'
+            ], 400);
+        }
+
+        try {
+            $messaging = Firebase::messaging();
+            
+            // Build message with Android configuration
+            $message = CloudMessage::withTarget('token', $token)
+                ->withData([
+                    'action' => 'RELOAD_GPS',
+                    'timestamp' => now()->toIso8601String(),
+                    'driver_name' => $request->driver_name ?? 'Unknown'
+                ])
+                ->withAndroidConfig([
+                    'priority' => 'high',
+                    'ttl' => '0s',
+                ]);
+
+            $result = $messaging->send($message);
+            
+            \Log::info('ReqLocationUpdate: FCM location request sent successfully', [
+                'token' => substr($token, 0, 20) . '...',
+                'result' => $result
+            ]);
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'FCM location request sent with high priority'
+            ]);
+            
+        } catch (\Kreait\Firebase\Exception\Messaging\InvalidArgument $e) {
+            \Log::error('ReqLocationUpdate: Invalid FCM token', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid FCM token',
+                'error' => $e->getMessage()
+            ], 400);
+            
+        } catch (\Kreait\Firebase\Exception\MessagingException $e) {
+            \Log::error('ReqLocationUpdate: Firebase messaging error', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send FCM notification',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (Exception $e) {
+            \Log::error('ReqLocationUpdate: Unexpected error', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unexpected error occurred',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
     public function ReqAlarm(Request $request) {
-        // Ambil data token dari request
+        // Validate token exists
         $token = $request->token;
-        $messaging = Firebase::messaging();
-
-        // Membangun pesan dengan konfigurasi Android khusus
-        $message = CloudMessage::withTarget('token', $token)
-            ->withData([
-                'action' => 'RINGING',
-                // Kamu bisa tambah data lain jika perlu
-            ])
-            ->withAndroidConfig([
-                'priority' => 'high', // MEMAKSA Android untuk bangun dari Doze Mode
-                'ttl' => '0s',        // Pesan langsung hangus jika tidak terkirim saat itu juga (opsional)
+        
+        if (!$token) {
+            \Log::error('ReqAlarm: Missing FCM token in request', [
+                'request_data' => $request->all()
             ]);
-
-        try {
-            $messaging->send($message);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'FCM Sent with High Priority'
-            ]);
-        } catch (Exception $e) {
+            
             return response()->json([
                 'status' => 'error',
+                'message' => 'FCM token is required'
+            ], 400);
+        }
+
+        try {
+            $messaging = Firebase::messaging();
+            
+            // Build message with Android configuration
+            $message = CloudMessage::withTarget('token', $token)
+                ->withData([
+                    'action' => 'RINGING',
+                    'timestamp' => now()->toIso8601String(),
+                    'driver_name' => $request->driver_name ?? 'Unknown'
+                ])
+                ->withAndroidConfig([
+                    'priority' => 'high',
+                    'ttl' => '0s',
+                ]);
+
+            $result = $messaging->send($message);
+            
+            \Log::info('ReqAlarm: FCM alarm sent successfully', [
+                'token' => substr($token, 0, 20) . '...',
+                'result' => $result
+            ]);
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'FCM Alarm sent with high priority'
+            ]);
+            
+        } catch (\Kreait\Firebase\Exception\Messaging\InvalidArgument $e) {
+            \Log::error('ReqAlarm: Invalid FCM token', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid FCM token',
+                'error' => $e->getMessage()
+            ], 400);
+            
+        } catch (\Kreait\Firebase\Exception\MessagingException $e) {
+            \Log::error('ReqAlarm: Firebase messaging error', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send FCM notification',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (Exception $e) {
+            \Log::error('ReqAlarm: Unexpected error', [
+                'token' => substr($token, 0, 20) . '...',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unexpected error occurred',
                 'error' => $e->getMessage()
             ], 500);
         }

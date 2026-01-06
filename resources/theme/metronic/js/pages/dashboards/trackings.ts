@@ -262,10 +262,16 @@ $(window).on('load', async function () {
             addLog(`CMD: LOC REQUEST [${fullName.toUpperCase()}]`, 'info');
             try {
                 const url = URI(window.location).segment([...URI(window.location).segment(), 'monitors', 'request-location-update']).toString();
-                await axios.post(url, { token: fcm, driver_name: info?.first_name });
-                addLog(`ACK: COMMAND RECEIVED`, 'success');
-            } catch (e) {
-                addLog(`ERR: PACKET LOSS`, 'danger');
+                const response = await axios.post(url, { token: fcm, driver_name: info?.first_name });
+
+                if (response.data.status === 'success') {
+                    addLog(`ACK: COMMAND RECEIVED`, 'success');
+                } else {
+                    addLog(`ERR: ${response.data.message || 'REQUEST FAILED'}`, 'danger');
+                }
+            } catch (e: any) {
+                const errorMsg = e.response?.data?.message || e.response?.data?.error || e.message || 'PACKET LOSS';
+                addLog(`ERR: ${errorMsg}`, 'danger');
             } finally {
                 setTimeout(() => $b.removeClass('is-loading'), 2000);
             }
@@ -276,10 +282,21 @@ $(window).on('load', async function () {
             addLog(`CMD: ALARM PROTOCOL [${fullName.toUpperCase()}]`, 'danger');
             try {
                 const url = URI(window.location).segment([...URI(window.location).segment(), 'monitors', 'request-alarm']).toString();
-                await axios.post(url, { token: fcm, driver_name: info?.first_name });
-                addLog(`ACK: ALARM TRIGGERED`, 'success');
-            } catch (e) {
-                addLog(`ERR: SIGNAL BLOCKED`, 'danger');
+                const response = await axios.post(url, { token: fcm, driver_name: info?.first_name });
+
+                if (response.data.status === 'success') {
+                    addLog(`ACK: ALARM TRIGGERED`, 'success');
+                } else {
+                    addLog(`ERR: ${response.data.message || 'ALARM FAILED'}`, 'danger');
+                }
+            } catch (e: any) {
+                const errorMsg = e.response?.data?.message || e.response?.data?.error || e.message || 'SIGNAL BLOCKED';
+                addLog(`ERR: ${errorMsg}`, 'danger');
+
+                // Log additional details if available
+                if (e.response?.data?.error && e.response?.data?.error !== errorMsg) {
+                    addLog(`DETAIL: ${e.response.data.error}`, 'danger');
+                }
             } finally {
                 setTimeout(() => $b.removeClass('is-loading'), 4000);
             }
