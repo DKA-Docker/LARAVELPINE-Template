@@ -15,7 +15,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use Kreait\Firebase\Messaging\CloudMessage;
 use Throwable;
 
 class ResourcesDeliveriesTasksServices
@@ -98,9 +101,49 @@ class ResourcesDeliveriesTasksServices
 
             }
 //
-//            DB::afterCommit(function () use ($taskCreated) {
-//                // Side effects: Notifikasi, Log, dll
-//            });
+            DB::afterCommit(function () use ($taskCreated, $currentUserId) {
+                 try {
+                     $messaging = Firebase::messaging();
+                     /** @var AppsDeliveriesTasks $taskLoaded */
+                     $taskLoaded = $taskCreated->load(['assigned.firebase', 'assigned.information']);
+                     $creator = Auth::user()->account->information->first_name ?? 'Admin';
+
+                     foreach ($taskLoaded->assigned as $assign) {
+                         // Gunakan getRelationValue() untuk menghindari konflik dengan kolom 'firebase' yang berisi string UUID
+                         // $assign adalah model Account karena relasi 'assigned' adalah BelongsToMany
+                         $firebaseRel = $assign->getRelationValue('firebase');
+                         $token = $firebaseRel->token ?? null;
+                         
+                         if ($token) {
+                             Log::info("Sending FCM for Task {$taskCreated->id}", [
+                                 'token' => substr($token, 0, 10) . '...',
+                                 'assign_id' => $assign->id
+                             ]);
+
+                             $messaging = Firebase::messaging();
+            
+                            $message = CloudMessage::withTarget('token', $token)
+                                ->withData([
+                                    'action' => 'TASK_ASSIGNED',
+                                    'task_id' => $taskCreated->id,
+                                    'creator' => $creator
+                                ])
+                                ->withAndroidConfig([
+                                    'priority' => 'high',
+                                    'ttl' => '0s',
+                                ]);
+
+                            $result = $messaging->send($message);
+                            Log::info("FCM Sent Successfully", ['result' => json_encode($result)]);
+                         } else {
+                             Log::warning("No FCM Token for assigned account", ['assign_id' => $assign->id]);
+                         }
+                     }
+                 } catch (Throwable $e) {
+                     Log::error("Failed to send FCM: " . $e->getMessage());
+                     Debugbar::error("Failed to send FCM: " . $e->getMessage());
+                 }
+            });
 
             DB::commit();
 
