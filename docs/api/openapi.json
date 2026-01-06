@@ -2,7 +2,7 @@
     "openapi": "3.0.3",
     "info": {
         "title": "HND Logistech Web Application API",
-        "description": "API documentation for HND Logistech - A comprehensive logistics and delivery management system with real-time tracking capabilities. This API provides endpoints for authentication, delivery request management, task assignment, route optimization, and real-time vehicle tracking.",
+        "description": "API documentation for HND Logistech.\n\n> **Architectural Note**: This API adheres to the 'World-Class' standards defined in `.aicontext.md`. All ID fields are UUIDs, and responses follow the strict `{status, code, msg, data}` format.",
         "version": "1.0.0",
         "contact": {
             "name": "HND Technology",

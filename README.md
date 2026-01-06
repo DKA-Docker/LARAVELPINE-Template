@@ -45,7 +45,19 @@ Sistem manajemen logistik dan pengiriman yang komprehensif dengan kemampuan pela
 - **Spatie Laravel Permission** - Role & Permission Management
 - **Firebase Cloud Messaging** - Push Notifications
 
+### 🧠 Intelligent Architecture
+> [!IMPORTANT]
+> Project ini menggunakan standar arsitektur **"World-Class"** yang didokumentasikan di `.aicontext.md`.
+
+*   **Service Layer**: Manual Repo Instantiation, Strict Transactions.
+*   **Deep Migrations**: Folder-matching Table Names (`apps/deliveries/requests` -> `apps_deliveries_requests`).
+*   **Frontend**: Strict JS Execution Guards & Livewire Coupling.
+*   **Generative Rules**: Standardized "Scaffolding" for new modules.
+
+Referensi Lengkap: **[.aicontext.md](./.aicontext.md)**
+
 ### Frontend
+- **TypeScript** - Type-safe JavaScript
 - **TypeScript** - Type-safe JavaScript
 - **Vite** - Build Tool
 - **TailwindCSS 4.0** - Utility-first CSS
