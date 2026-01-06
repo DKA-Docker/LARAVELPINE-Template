@@ -52,20 +52,20 @@
                 id="notifications_drawer"
             >
                 <div class="text-mono border-b-border flex items-center justify-between gap-2.5 border-b px-5 py-2.5 text-sm font-semibold" id="notifications_header">
-                    Notifications
+                    {{ __('layout.header.notifications.title') }}
                     <button class="kt-btn kt-btn-sm kt-btn-icon kt-btn-dim shrink-0" data-kt-drawer-dismiss="true">
                         <i class="ki-filled ki-cross"></i>
                     </button>
                 </div>
                 <div class="kt-tabs kt-tabs-line mb-2 justify-between px-5" data-kt-tabs="true" id="notifications_tabs">
                     <div class="flex items-center gap-5">
-                        <button class="kt-tab-toggle active py-3" data-kt-tab-toggle="#notifications_tab_all">All</button>
+                        <button class="kt-tab-toggle active py-3" data-kt-tab-toggle="#notifications_tab_all">{{ __('layout.header.notifications.tabs.all') }}</button>
                         <button class="kt-tab-toggle relative py-3" data-kt-tab-toggle="#notifications_tab_inbox">
-                            Inbox
+                            {{ __('layout.header.notifications.tabs.inbox') }}
                             <span class="absolute end-0 top-2 size-[5px] translate-x-full translate-y-1/2 transform rounded-full bg-green-500 rtl:start-0"></span>
                         </button>
-                        <button class="kt-tab-toggle py-3" data-kt-tab-toggle="#notifications_tab_team">Team</button>
-                        <button class="kt-tab-toggle py-3" data-kt-tab-toggle="#notifications_tab_following">Following</button>
+                        <button class="kt-tab-toggle py-3" data-kt-tab-toggle="#notifications_tab_team">{{ __('layout.header.notifications.tabs.team') }}</button>
+                        <button class="kt-tab-toggle py-3" data-kt-tab-toggle="#notifications_tab_following">{{ __('layout.header.notifications.tabs.following') }}</button>
                     </div>
                     <div class="kt-menu" data-kt-menu="true">
                         <div
@@ -85,7 +85,7 @@
                                         <span class="kt-menu-icon">
                                             <i class="ki-filled ki-document"></i>
                                         </span>
-                                        <span class="kt-menu-title">View</span>
+                                        <span class="kt-menu-title">{{ __('layout.header.notifications.actions.view') }}</span>
                                     </a>
                                 </div>
                                 <div
@@ -99,7 +99,7 @@
                                         <span class="kt-menu-icon">
                                             <i class="ki-filled ki-notification-status"></i>
                                         </span>
-                                        <span class="kt-menu-title">Export</span>
+                                        <span class="kt-menu-title">{{ __('layout.header.notifications.actions.export') }}</span>
                                         <span class="kt-menu-arrow">
                                             <i class="ki-filled ki-right text-xs rtl:rotate-180 rtl:transform"></i>
                                         </span>
@@ -110,7 +110,7 @@
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-sms"></i>
                                                 </span>
-                                                <span class="kt-menu-title">Email</span>
+                                                <span class="kt-menu-title">{{ __('layout.header.notifications.actions.email') }}</span>
                                             </a>
                                         </div>
                                         <div class="kt-menu-item">
@@ -118,7 +118,7 @@
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-message-notify"></i>
                                                 </span>
-                                                <span class="kt-menu-title">SMS</span>
+                                                <span class="kt-menu-title">{{ __('layout.header.notifications.actions.sms') }}</span>
                                             </a>
                                         </div>
                                         <div class="kt-menu-item">
@@ -126,7 +126,7 @@
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-notification-status"></i>
                                                 </span>
-                                                <span class="kt-menu-title">Push</span>
+                                                <span class="kt-menu-title">{{ __('layout.header.notifications.actions.push') }}</span>
                                             </a>
                                         </div>
                                     </div>
@@ -136,7 +136,7 @@
                                         <span class="kt-menu-icon">
                                             <i class="ki-filled ki-pencil"></i>
                                         </span>
-                                        <span class="kt-menu-title">Edit</span>
+                                        <span class="kt-menu-title">{{ __('layout.header.notifications.actions.edit') }}</span>
                                     </a>
                                 </div>
                                 <div class="kt-menu-item">
@@ -144,7 +144,7 @@
                                         <span class="kt-menu-icon">
                                             <i class="ki-filled ki-trash"></i>
                                         </span>
-                                        <span class="kt-menu-title">Delete</span>
+                                        <span class="kt-menu-title">{{ __('layout.header.notifications.actions.delete') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -340,8 +340,8 @@
                     </div>
                     <div class="border-b-border border-b"></div>
                     <div class="grid grid-cols-2 gap-2.5 p-5" id="notifications_all_footer">
-                        <button class="kt-btn kt-btn-outline justify-center">Archive all</button>
-                        <button class="kt-btn kt-btn-outline justify-center">Mark all as read</button>
+                        <button class="kt-btn kt-btn-outline justify-center">{{ __('layout.header.notifications.actions.archive_all') }}</button>
+                        <button class="kt-btn kt-btn-outline justify-center">{{ __('layout.header.notifications.actions.mark_read') }}</button>
                     </div>
                 </div>
                 <div class="flex hidden grow flex-col" id="notifications_tab_inbox">

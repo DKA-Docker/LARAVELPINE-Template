@@ -35,7 +35,7 @@
                             <span class="text-xs text-gray-500 italic line-clamp-1" x-text="address || '{{ __('dashboard.request.create.form.destination_address_empty') }}'"></span>
                              <div class="flex items-center gap-2 mt-1">
                                 <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold">
-                                    {{ count($destination['packages'] ?? []) }} Item
+                                    {{ count($destination['packages'] ?? []) }} {{ __('dashboard.request.create.form.item_count_suffix') }}
                                 </span>
                             </div>
                         </div>
@@ -92,13 +92,13 @@
 
                             <div class="flex items-center justify-between mt-3 px-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase">LAT:</span>
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">{{ __('dashboard.request.create.form.lat_label') }}:</span>
                                     <span class="text-[10px] font-mono text-gray-600 bg-white px-2 py-0.5 rounded border border-gray-200" id="lat-display-{{ $index }}">
                                         {{ $destination['coordinate_latitude'] ?? '-' }}
                                     </span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase">LNG:</span>
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">{{ __('dashboard.request.create.form.lng_label') }}:</span>
                                     <span class="text-[10px] font-mono text-gray-600 bg-white px-2 py-0.5 rounded border border-gray-200" id="lng-display-{{ $index }}">
                                         {{ $destination['coordinate_longitude'] ?? '-' }}
                                     </span>

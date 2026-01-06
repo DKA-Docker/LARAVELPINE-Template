@@ -54,41 +54,41 @@
         <div class="container">
             <div class="header-strip"></div>
             <div class="content">
-                <h1>Delivery Request Created</h1>
-                <p>Dear {{ $user->information->first_name ?? $user->getRelationValue('contact')?->email }},</p>
-                <p>Your delivery request has been successfully created. Below are the details of your submission.</p>
+                <h1>{{ __('emails.deliveries.request_created.title') }}</h1>
+                <p>{{ __('emails.deliveries.request_created.greeting', ['name' => $user->information->first_name ?? $user->getRelationValue('contact')?->email]) }}</p>
+                <p>{{ __('emails.deliveries.request_created.intro') }}</p>
 
                 <!-- Summary Grid -->
-                <h2>Request Summary</h2>
+                <h2>{{ __('emails.deliveries.request_created.summary.title') }}</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="info-label">Request Name</span>
+                        <span class="info-label">{{ __('emails.deliveries.request_created.summary.request_name') }}</span>
                         <span class="info-value">{{ $requestOrder->name ?? '-' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Created At</span>
+                        <span class="info-label">{{ __('emails.deliveries.request_created.summary.created_at') }}</span>
                         <span class="info-value">{{ $requestOrder->created_at->format('d M Y, H:i') }}</span>
                     </div>
                     <div class="info-item" style="padding-bottom: 0;">
-                        <span class="info-label">Urgency</span>
+                        <span class="info-label">{{ __('emails.deliveries.request_created.summary.urgency') }}</span>
                         <span class="badge {{ ($requestOrder->urgent === 'High') ? 'badge-urgent-high' : 'badge-urgent-normal' }}">
-                            {{ $requestOrder->urgent ?? 'Normal' }}
+                            {{ $requestOrder->urgent === 'High' ? __('emails.deliveries.request_created.summary.urgent_high') : __('emails.deliveries.request_created.summary.urgent_normal') }}
                         </span>
                     </div>
                     <div class="info-item" style="padding-bottom: 0;">
-                        <span class="info-label">Status</span>
-                        <span class="badge badge-status">{{ $requestOrder->status ?? 'Draft' }}</span>
+                        <span class="info-label">{{ __('emails.deliveries.request_created.summary.status') }}</span>
+                        <span class="badge badge-status">{{ $requestOrder->status ?? __('emails.deliveries.request_created.summary.status_draft') }}</span>
                     </div>
                 </div>
 
                 <!-- Destinations -->
                 @if($requestOrder->destinations && $requestOrder->destinations->count() > 0)
-                    <h2>Destinations ({{ $requestOrder->destinations->count() }})</h2>
+                    <h2>{{ __('emails.deliveries.request_created.destinations.title', ['count' => $requestOrder->destinations->count()]) }}</h2>
                     @foreach($requestOrder->destinations as $index => $destination)
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">#{{ $index + 1 }} {{ $destination->receipt_name ?? 'N/A' }}</span>
-                                <span class="card-subtitle">{{ $destination->receipt_address ?? 'No Address Provided' }}</span>
+                                <span class="card-subtitle">{{ $destination->receipt_address ?? __('emails.deliveries.request_created.destinations.no_address') }}</span>
                             </div>
                             <div class="card-body">
                                 @if($destination->packages && $destination->packages->count() > 0)
@@ -96,15 +96,15 @@
                                         @foreach($destination->packages as $pkg)
                                             <li class="pkg-item">
                                                 <span>
-                                                    <span class="pkg-qty">{{ $pkg->qty }} {{ $pkg->unit?->name ?? 'pcs' }}</span>
+                                                    <span class="pkg-qty">{{ $pkg->qty }} {{ $pkg->unit?->name ?? __('emails.deliveries.request_created.destinations.units') }}</span>
                                                     {{ $pkg->name }}
                                                 </span>
-                                                <span>{{ $pkg->weight }} kg</span>
+                                                <span>{{ $pkg->weight }} {{ __('emails.deliveries.request_created.destinations.weight_suffix') }}</span>
                                             </li>
                                         @endforeach
                                     </ul>
                                 @else
-                                    <p style="margin:0; font-style:italic; font-size:12px; color:#b5b5c3;">No packages listed.</p>
+                                    <p style="margin:0; font-style:italic; font-size:12px; color:#b5b5c3;">{{ __('emails.deliveries.request_created.destinations.no_packages') }}</p>
                                 @endif
                             </div>
                         </div>
@@ -112,12 +112,12 @@
                 @endif
                 
                 <div style="margin-top: 30px; border-top: 1px solid #f1f1f4; padding-top: 20px;">
-                    <p style="margin-bottom: 0;">Thank you for using <strong>{{ config('app.name') }}</strong>.</p>
+                    <p style="margin-bottom: 0;">{!! __('emails.deliveries.request_created.footer.thank_you', ['app' => '<strong>'.config('app.name').'</strong>']) !!}</p>
                 </div>
             </div>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('emails.deliveries.request_created.footer.rights') }}
         </div>
     </div>
 </body>

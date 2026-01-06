@@ -2,6 +2,99 @@
 
 
 return [
+    'search_modal' => [
+        'placeholder' => 'Tap to start search',
+        'tabs' => [
+            'mixed' => 'Mixed',
+            'settings' => 'Settings',
+            'integrations' => 'Integrations',
+            'users' => 'Users',
+            'docs' => 'Docs',
+            'empty' => 'Empty',
+            'no_results' => 'No Results',
+        ],
+        'items' => [
+            'settings' => 'Settings',
+            'public_profile' => 'Public Profile',
+            'my_account' => 'My Account',
+            'devs_forum' => 'Devs Forum',
+            'integrations' => 'Integrations',
+            'users' => 'Users',
+            'shortcuts' => 'Shortcuts',
+            'go_to_dashboard' => 'Go to Dashboard',
+            'my_profile' => 'My Profile',
+            'actions' => 'Actions',
+            'create_user' => 'Create User',
+            'create_team' => 'Create Team',
+            'change_plan' => 'Change Plan',
+            'setup_branding' => 'Setup Branding',
+            'go_to_apps' => 'Go to Apps',
+            'go_to_users' => 'Go to Users',
+            'view' => 'View',
+            'export' => 'Export',
+            'email' => 'Email',
+            'sms' => 'SMS',
+            'push' => 'Push',
+            'edit' => 'Edit',
+            'delete' => 'Delete',
+        ],
+        'status' => [
+            'in_office' => 'In Office',
+            'on_leave' => 'On Leave',
+            'remote' => 'Remote',
+        ],
+        'content' => [
+            'jira' => 'Jira',
+            'project_management' => 'Project management',
+            'inferno' => 'Inferno',
+            'real_time_photo' => 'Real-time photo sharing app',
+            'evernote' => 'Evernote',
+            'notes_app' => 'Notes management app',
+            'gitlab' => 'Gitlab',
+            'google_webdev' => 'Google webdev',
+            'building_web' => 'Building web expierences',
+            'empty_title' => 'Looking for something..',
+            'empty_desc' => 'Initiate your digital experience with our intuitive dashboard',
+            'no_results_title' => 'No Results Found',
+            'no_results_desc' => 'Refine your query to discover relevant items',
+            'view_projects' => 'View Projects',
+        ]
+    ],
+    'modals' => [
+        'share' => [
+            'title' => 'Share Profile',
+            'read_only' => 'Share read-only link',
+            'email' => 'Share via email',
+            'btn_share' => 'Share',
+            'owner' => 'Owner',
+            'editor' => 'Editor',
+            'viewer' => 'Viewer',
+            'settings' => 'Settings',
+            'anyone_view' => 'Anyone at :company can view',
+            'change_access' => 'Change Access',
+            'anyone_edit' => 'Anyone with link can edit',
+            'set_password' => 'Set Password',
+            'done' => 'Done',
+        ],
+        'award' => [
+            'title' => 'Give Award',
+        ],
+        'report' => [
+            'title' => 'Report User',
+            'reason_title' => 'Let us know why you’re reporting this person',
+            'impersonation' => 'Impersonation',
+            'impersonation_desc' => 'It looks like this profile might be impersonating someone else',
+            'spammy' => 'Spammy',
+            'spammy_desc' => 'This person profile, comments or posts contain misleading text',
+            'abusive' => 'Off bumble behavior',
+            'abusive_desc' => 'This person has engaged in behavior that is abusive, bullying',
+            'other' => 'Something else',
+            'other_desc' => 'None of the reasons listed above are suitable',
+            'anonymous_note' => "Don't worry, your report is completely anonymous; the person you're reporting will not be informed that you've submitted it",
+            'submit' => 'Report this person',
+            'cancel' => 'Cancel',
+        ]
+    ],
     'request' => [
         "heading" => "Request Delivery",
         "data" => [
@@ -56,10 +149,192 @@ return [
                 'package_heavy_label' => 'Heavy Item?',
                 'package_heavy_yes' => 'Yes, Weight > 20kg',
                 'package_heavy_no' => 'No',
+                'new_item' => 'New Item',
+                'qty_suffix' => 'Qty',
+                'item_count_suffix' => 'Item',
+                'lat_label' => 'LAT',
+                'lng_label' => 'LNG',
             ]
         ]
     ],
     'task' => [
         "heading" => "Delivery Task",
+        'create' => [
+            'title' => 'Create New Task',
+            'validation_error' => [
+                'title' => 'Validation Error',
+                'message' => 'Failed to save because some inputs are missing.',
+            ],
+            'region' => [
+                'title' => 'Region Profiling',
+                'destination_label' => 'Recipient Destination',
+                'select_destination' => '-- Select Destination Address --',
+                'province' => 'Province',
+                'select_province' => '-- Select Province --',
+                'city' => 'City/Regency',
+                'select_city' => '-- Select City --',
+                'district' => 'District',
+                'select_district' => '-- Select District --',
+                'village' => 'Village',
+                'select_village' => '-- Select Village --',
+                'postal_code' => 'Postal Code',
+                'postal_code_placeholder' => 'Ex: 17211',
+            ],
+            'crew' => [
+                'title' => 'Crew Assignment',
+                'list_label' => 'Personnel List',
+                'empty_list' => 'No driver selected yet...',
+                'search_placeholder' => 'Type driver name...',
+                'not_found' => 'Not Found',
+                'add_button' => 'Add Driver',
+            ],
+            'vehicle' => [
+                'category_label' => 'Select Vehicle Category',
+                'unit_label' => 'Select Vehicle Unit',
+                'select_unit' => '-- Select Unit --',
+            ],
+            'info' => [
+                'title' => 'Main Info & Geofencing',
+                'subtitle' => 'Determine delivery coordinates',
+                'task_name' => 'Task / Job Name',
+                'task_name_placeholder' => 'Example: Electronic Delivery Batch A',
+                'search_location' => 'Search Location',
+                'search_location_placeholder' => 'Search Location (Read Only)',
+                'latitude' => 'Latitude',
+                'longitude' => 'Longitude',
+                'live_map' => 'Live Map Interface',
+            ],
+            'manifest' => [
+                'title' => 'Inventory Manifest',
+                'destination' => 'Destination:',
+                'total_qty' => 'Grand Total Qty',
+                'show_items' => 'Show Items',
+                'items' => 'Items',
+            ],
+            'table' => [
+                'index' => 'Index',
+                'product' => 'Product Description',
+                'unit' => 'Unit Type',
+                'qty' => 'Quantity',
+                'item_ref' => 'Item Ref:',
+            ],
+            'pagination' => [
+                'page' => 'Page',
+            ],
+            'waiting' => [
+                'title' => 'Waiting for Destination',
+                'subtitle' => 'Please select a destination to view manifest',
+            ],
+            'actions' => [
+                'discard' => 'Discard Change',
+                'confirm' => 'Confirm & Save Task',
+                'synchronizing' => 'Synchronizing...',
+            ],
+        ],
+    ],
+    'tracking' => [
+        'hud' => [
+            'system_status' => 'System Status',
+            'online' => 'ONLINE',
+            'active_units' => 'Active Units',
+            'time_sync' => 'Universal Time Sync',
+        ]
+    ],
+    'management' => [
+        'accounts' => [
+            'search_placeholder' => 'Search accounts...',
+            'filter' => [
+                'cust' => 'Cust...',
+                'recp' => 'Recp...',
+                'status_label' => 'Status',
+                'status_options' => [
+                    'todo' => 'To-Do',
+                    'on_delivery' => 'Progress',
+                    'delivered' => 'Delivered',
+                    'failed' => 'Failed',
+                    'done' => 'Done',
+                ],
+                'sort_label' => 'Sort',
+                'sort_options' => [
+                    'latest' => 'Latest',
+                    'oldest' => 'Oldest',
+                ],
+                'clear' => 'Clear'
+            ],
+            'table' => [
+                'title' => 'Account Management',
+                'showing' => 'Showing',
+                'from' => 'from',
+                'data' => 'data',
+                'headers' => [
+                    'profile' => 'User Profile',
+                    'credential' => 'Credential',
+                    'role' => 'Role',
+                    'device' => 'Device',
+                    'registered' => 'Registered',
+                ],
+                'empty' => 'Empty Data',
+                'no_role' => 'No Role',
+                'status' => [
+                    'active' => 'Active',
+                    'off' => 'OFF',
+                ]
+            ],
+            'footer' => [
+                'limit' => 'Limit',
+            ],
+            'create' => [
+                'title' => 'Create New Account',
+                'security' => [
+                    'title' => 'Security Credentials',
+                    'subtitle' => 'Manage user login access',
+                    'username' => 'Username',
+                    'username_placeholder' => 'Username...',
+                    'password' => 'Password',
+                    'password_placeholder' => '••••••••',
+                    'confirm_password' => 'Confirm Password',
+                ],
+                'personal' => [
+                    'title' => 'Personal Information',
+                    'first_name' => 'First Name',
+                    'first_name_placeholder' => 'First Name',
+                    'last_name' => 'Last Name',
+                    'last_name_placeholder' => 'Last Name',
+                    'email' => 'Email Contact',
+                    'email_placeholder' => 'example@domain.com',
+                ],
+                'roles' => [
+                    'title' => 'Role Assignment',
+                    'clear_selection' => 'Clear Select',
+                    'system_access' => 'System Access Rights',
+                    'guard' => 'Guard: :name',
+                ],
+                'actions' => [
+                    'discard' => 'Discard changes',
+                    'create' => 'Create Account',
+                    'processing' => 'Processing...',
+                    'error_title' => 'Validation Error',
+                ],
+            ],
+        ]
+    ],
+    'components' => [
+        'overview' => [
+            'stats' => [
+                'request' => 'Delivery Request',
+                'sending' => 'Sending',
+                'pending' => 'Pending Delivery',
+                'finished' => 'Finished Delivery',
+            ],
+            'chart' => [
+                'demography' => 'Delivery Demography',
+                'by_city' => 'By City',
+                'by_district' => 'By District',
+                'logistics' => 'Logistics Overview',
+                'performance' => 'Delivery Performance',
+                'last_7_days' => 'Last 7 Days',
+                'last_30_days' => 'Last 30 Days',
+            ]
+        ]
     ]
 ];

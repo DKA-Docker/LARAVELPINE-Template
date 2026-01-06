@@ -4,16 +4,16 @@
             <div class="order-2 flex items-center gap-1.5 text-sm font-normal md:order-1">
                 <span class="text-gray-500">2026©</span>
                 <a class="text-gray-700 dark:text-gray-400 hover:text-primary transition-colors font-medium uppercase tracking-wider text-[11px]" href="https://hndgroup.id" target="_blank">
-                    HNDGroup Dev Team.
+                    {{ __('layout.footer.copyright') }}
                 </a>
             </div>
 
             <nav class="order-1 flex items-center gap-4 text-sm font-normal md:order-2">
-                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">Docs</a>
-                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">API</a>
-                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">FAQ</a>
-                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">Support</a>
-                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">About</a>
+                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">{{ __('layout.footer.menu.docs') }}</a>
+                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">{{ __('layout.footer.menu.api') }}</a>
+                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">{{ __('layout.footer.menu.faq') }}</a>
+                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">{{ __('layout.footer.menu.support') }}</a>
+                <a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-2sm" href="#">{{ __('layout.footer.menu.about') }}</a>
             </nav>
         </div>
     </div>

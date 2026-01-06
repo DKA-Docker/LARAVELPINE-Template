@@ -16,5 +16,10 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    'access_denied_title' => 'Access Restricted',
+    'access_denied_desc' => 'Sorry, your account does not have sufficient permissions to view this data.',
+    'back_button' => 'Go Back Now',
+    'security_protocol' => 'Security Protocol Active',
+    'contact_support' => 'Contact IT Support',
+    'need_help' => 'Need help?',
 ];

@@ -6,5 +6,9 @@ return [
     "request" => "Request",
     "task" => "Task",
     "report" => "Report",
-    "tracking" => "Tracking"
+    "tracking" => "Tracking",
+    "apps" => "Apps",
+    "management" => "Management",
+    "account" => "Account",
+    "rates" => "Rates"
 ];

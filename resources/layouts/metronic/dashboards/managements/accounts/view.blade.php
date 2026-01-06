@@ -7,15 +7,15 @@
                 <i class="ki-filled ki-magnifier text-gray-400 text-sm group-focus-within:text-primary transition-colors"></i>
                 <input wire:model.live.debounce.300ms="search"
                        class="bg-transparent border-none focus:ring-0 text-sm font-bold placeholder-gray-400 text-gray-700 w-full"
-                       placeholder="Cari akun..." type="text" />
+                       placeholder="{{ __('dashboard.management.accounts.search_placeholder') }}" type="text" />
             </label>
 
             <div class="flex flex-wrap gap-2 items-center">
                 <div class="flex gap-1.5">
-                    <input wire:model.live.debounce.500ms="customerName" type="text" placeholder="Cust..."
+                    <input wire:model.live.debounce.500ms="customerName" type="text" placeholder="{{ __('dashboard.management.accounts.filter.cust') }}"
                            class="bg-gray-50/50 border border-gray-200 rounded-lg text-xs font-bold py-2 px-3 focus:ring-4 focus:ring-primary/5 focus:border-primary/40 focus:bg-white transition-all w-28 shadow-sm" />
 
-                    <input wire:model.live.debounce.500ms="recipientName" type="text" placeholder="Recp..."
+                    <input wire:model.live.debounce.500ms="recipientName" type="text" placeholder="{{ __('dashboard.management.accounts.filter.recp') }}"
                            class="bg-gray-50/50 border border-gray-200 rounded-lg text-xs font-bold py-2 px-3 focus:ring-4 focus:ring-primary/5 focus:border-primary/40 focus:bg-white transition-all w-28 shadow-sm" />
                 </div>
 
@@ -23,12 +23,12 @@
 
                 <select wire:model.live="status"
                         class="bg-gray-50/50 border border-gray-200 rounded-lg text-xs font-bold py-2 px-3 focus:ring-4 focus:ring-primary/5 focus:border-primary/40 focus:bg-white transition-all w-36 cursor-pointer shadow-sm">
-                    <option value="">Status</option>
-                    <option value="todo">To-Do</option>
-                    <option value="on_delivery">Progress</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="failed">Failed</option>
-                    <option value="done">Done</option>
+                    <option value="">{{ __('dashboard.management.accounts.filter.status_label') }}</option>
+                    <option value="todo">{{ __('dashboard.management.accounts.filter.status_options.todo') }}</option>
+                    <option value="on_delivery">{{ __('dashboard.management.accounts.filter.status_options.on_delivery') }}</option>
+                    <option value="delivered">{{ __('dashboard.management.accounts.filter.status_options.delivered') }}</option>
+                    <option value="failed">{{ __('dashboard.management.accounts.filter.status_options.failed') }}</option>
+                    <option value="done">{{ __('dashboard.management.accounts.filter.status_options.done') }}</option>
                 </select>
 
                 <div class="flex items-center bg-gray-50/50 border border-gray-200 rounded-lg px-2 gap-1 focus-within:bg-white transition-all shadow-sm">
@@ -38,15 +38,15 @@
                 </div>
 
                 <select wire:model.live="sort" class="bg-gray-50/50 border border-gray-200 rounded-lg text-xs font-bold py-2 px-3 focus:ring-0 w-28 shadow-sm cursor-pointer transition-all">
-                    <option value="latest">Terbaru</option>
-                    <option value="oldest">Terlama</option>
+                    <option value="latest">{{ __('dashboard.management.accounts.filter.sort_options.latest') }}</option>
+                    <option value="oldest">{{ __('dashboard.management.accounts.filter.sort_options.oldest') }}</option>
                 </select>
 
                 @if($search || $customerName || $recipientName || $status || $minPackages || $maxPackages)
                     <button wire:click="resetFilters"
                             class="group flex items-center gap-2 px-3 py-2 text-xs font-black text-red-500 hover:bg-red-50 rounded-lg transition-all duration-300 uppercase tracking-tight border border-transparent">
                         <i class="ki-filled ki-cross-circle text-base group-hover:rotate-90 transition-transform"></i>
-                        Clear
+                        {{ __('dashboard.management.accounts.filter.clear') }}
                     </button>
                 @endif
             </div>
@@ -56,9 +56,9 @@
         <div class="bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden transition-all duration-500">
             <div class="px-8 py-5 bg-gray-50/20 border-b border-gray-50 flex items-center justify-between">
                 <div>
-                    <h3 class="text-gray-800 text-base font-black tracking-tight">Manajemen Akun</h3>
+                    <h3 class="text-gray-800 text-base font-black tracking-tight">{{ __('dashboard.management.accounts.table.title') }}</h3>
                     <p class="text-gray-400 text-xs font-bold mt-0.5">
-                        Menampilkan <span class="text-primary">{{ $acc->firstItem() ?? 0 }}-{{ $acc->lastItem() ?? 0 }}</span> dari {{ $acc->total() }} data
+                        {{ __('dashboard.management.accounts.table.showing') }} <span class="text-primary">{{ $acc->firstItem() ?? 0 }}-{{ $acc->lastItem() ?? 0 }}</span> {{ __('dashboard.management.accounts.table.from') }} {{ $acc->total() }} {{ __('dashboard.management.accounts.table.data') }}
                     </p>
                 </div>
             </div>
@@ -68,11 +68,11 @@
                     <table class="table-auto w-full border-separate border-spacing-y-2">
                         <thead>
                         <tr class="text-gray-400 font-black text-xs uppercase tracking-[0.1em]">
-                            <th class="px-6 py-4 text-left">Profil Pengguna</th>
-                            <th class="px-6 py-4 text-left">Kredensial</th>
-                            <th class="px-6 py-4 text-left">Peran</th>
-                            <th class="px-6 py-4 text-left">Device</th>
-                            <th class="px-6 py-4 text-right">Terdaftar</th>
+                            <th class="px-6 py-4 text-left">{{ __('dashboard.management.accounts.table.headers.profile') }}</th>
+                            <th class="px-6 py-4 text-left">{{ __('dashboard.management.accounts.table.headers.credential') }}</th>
+                            <th class="px-6 py-4 text-left">{{ __('dashboard.management.accounts.table.headers.role') }}</th>
+                            <th class="px-6 py-4 text-left">{{ __('dashboard.management.accounts.table.headers.device') }}</th>
+                            <th class="px-6 py-4 text-right">{{ __('dashboard.management.accounts.table.headers.registered') }}</th>
                         </tr>
                         </thead>
                         <tbody class="divide-y-0">
@@ -118,7 +118,7 @@
                                             <span class="text-xs font-black uppercase tracking-widest">{{ $item->role->name }}</span>
                                         </div>
                                     @else
-                                        <span class="text-xs font-black text-gray-300 italic uppercase">No Role</span>
+                                        <span class="text-xs font-black text-gray-300 italic uppercase">{{ __('dashboard.management.accounts.table.no_role') }}</span>
                                     @endif
                                 </td>
 
@@ -126,12 +126,12 @@
                                     @if($item->firebase)
                                         <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-orange-50 border border-orange-100 w-fit">
                                             <i class="ki-filled ki-notification-on text-sm text-orange-500 animate-pulse"></i>
-                                            <span class="text-xs font-black text-orange-600 uppercase tracking-tighter">Active</span>
+                                            <span class="text-xs font-black text-orange-600 uppercase tracking-tighter">{{ __('dashboard.management.accounts.table.status.active') }}</span>
                                         </div>
                                     @else
                                         <div class="flex items-center gap-2 opacity-30 pl-2">
                                             <i class="ki-outline ki-cloud-cross text-lg text-gray-400"></i>
-                                            <span class="text-xs font-bold text-gray-400 italic">OFF</span>
+                                            <span class="text-xs font-bold text-gray-400 italic">{{ __('dashboard.management.accounts.table.status.off') }}</span>
                                         </div>
                                     @endif
                                 </td>
@@ -144,7 +144,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="py-24 text-center text-gray-300 font-black text-sm uppercase tracking-[0.2em]">Data Kosong</td></tr>
+                            <tr><td colspan="5" class="py-24 text-center text-gray-300 font-black text-sm uppercase tracking-[0.2em]">{{ __('dashboard.management.accounts.table.empty') }}</td></tr>
                         @endforelse
                         </tbody>
                     </table>
@@ -154,7 +154,7 @@
             {{-- FOOTER --}}
             <div class="px-10 py-6 bg-gray-50/10 flex items-center justify-between gap-4 border-t border-gray-50">
                 <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-gray-100 shadow-sm">
-                    <span class="text-xs font-black text-gray-400 uppercase">Limit</span>
+                    <span class="text-xs font-black text-gray-400 uppercase">{{ __('dashboard.management.accounts.footer.limit') }}</span>
                     <select wire:model.live="perPage" class="bg-transparent border-none text-sm font-black text-primary focus:ring-0 p-0 cursor-pointer">
                         <option value="5">05</option><option value="10">10</option><option value="25">25</option>
                     </select>

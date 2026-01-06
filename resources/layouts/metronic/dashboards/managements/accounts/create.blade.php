@@ -37,7 +37,7 @@
                 <div class="kt-container-fixed">
                     <div class="flex flex-wrap items-center justify-between gap-5 pb-7.5 lg:items-end">
                         <div class="flex flex-col justify-center gap-2">
-                            <h1 class="text-mono text-xl leading-none font-medium">Buat Data Task Baru</h1>
+                            <h1 class="text-mono text-xl leading-none font-medium">{{ __('dashboard.management.accounts.create.title') }}</h1>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
         <div class="kt-modal-content top-[15%] max-w-[600px]">
             <div class="kt-modal-header px-5 py-4">
                 <i class="ki-filled ki-magnifier text-muted-foreground text-xl"></i>
-                <input class="kt-input kt-input-ghost" name="query" placeholder="Tap to start search" type="text" value="" />
+                <input class="kt-input kt-input-ghost" name="query" placeholder="{{ __('dashboard.search_modal.placeholder') }}" type="text" value="" />
                 <button class="kt-btn kt-btn-sm kt-btn-icon kt-btn-dim shrink-0" data-kt-modal-dismiss="true">
                     <i class="ki-filled ki-cross"></i>
                 </button>
@@ -68,13 +68,13 @@
             <div class="kt-modal-body p-0 pb-5">
                 <div class="kt-tabs kt-tabs-line mb-2.5 justify-between px-5" data-kt-tabs="true">
                     <div class="flex items-center gap-5">
-                        <button class="kt-tab-toggle active py-5" data-kt-tab-toggle="#search_modal_mixed">Mixed</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_settings">Settings</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_integrations">Integrations</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_users">Users</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_docs">Docs</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_empty">Empty</button>
-                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_no-results">No Results</button>
+                        <button class="kt-tab-toggle active py-5" data-kt-tab-toggle="#search_modal_mixed">{{ __('dashboard.search_modal.tabs.mixed') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_settings">{{ __('dashboard.search_modal.tabs.settings') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_integrations">{{ __('dashboard.search_modal.tabs.integrations') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_users">{{ __('dashboard.search_modal.tabs.users') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_docs">{{ __('dashboard.search_modal.tabs.docs') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_empty">{{ __('dashboard.search_modal.tabs.empty') }}</button>
+                        <button class="kt-tab-toggle py-5" data-kt-tab-toggle="#search_modal_no-results">{{ __('dashboard.search_modal.tabs.no_results') }}</button>
                     </div>
                     <div class="kt-menu -mt-px" data-kt-menu="true">
                         <div
@@ -94,7 +94,7 @@
                                             <span class="kt-menu-icon">
                                                 <i class="ki-filled ki-document"></i>
                                             </span>
-                                        <span class="kt-menu-title">View</span>
+                                        <span class="kt-menu-title">{{ __('dashboard.search_modal.items.view') }}</span>
                                     </a>
                                 </div>
                                 <div
@@ -108,7 +108,7 @@
                                             <span class="kt-menu-icon">
                                                 <i class="ki-filled ki-notification-status"></i>
                                             </span>
-                                        <span class="kt-menu-title">Export</span>
+                                        <span class="kt-menu-title">{{ __('dashboard.search_modal.items.export') }}</span>
                                         <span class="kt-menu-arrow">
                                                 <i class="ki-filled ki-right text-xs rtl:rotate-180 rtl:transform"></i>
                                             </span>
@@ -119,7 +119,7 @@
                                                     <span class="kt-menu-icon">
                                                         <i class="ki-filled ki-sms"></i>
                                                     </span>
-                                                <span class="kt-menu-title">Email</span>
+                                                <span class="kt-menu-title">{{ __('dashboard.search_modal.items.email') }}</span>
                                             </a>
                                         </div>
                                         <div class="kt-menu-item">
@@ -127,7 +127,7 @@
                                                     <span class="kt-menu-icon">
                                                         <i class="ki-filled ki-message-notify"></i>
                                                     </span>
-                                                <span class="kt-menu-title">SMS</span>
+                                                <span class="kt-menu-title">{{ __('dashboard.search_modal.items.sms') }}</span>
                                             </a>
                                         </div>
                                         <div class="kt-menu-item">
@@ -135,7 +135,7 @@
                                                     <span class="kt-menu-icon">
                                                         <i class="ki-filled ki-notification-status"></i>
                                                     </span>
-                                                <span class="kt-menu-title">Push</span>
+                                                <span class="kt-menu-title">{{ __('dashboard.search_modal.items.push') }}</span>
                                             </a>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                             <span class="kt-menu-icon">
                                                 <i class="ki-filled ki-pencil"></i>
                                             </span>
-                                        <span class="kt-menu-title">Edit</span>
+                                        <span class="kt-menu-title">{{ __('dashboard.search_modal.items.edit') }}</span>
                                     </a>
                                 </div>
                                 <div class="kt-menu-item">
@@ -153,7 +153,7 @@
                                             <span class="kt-menu-icon">
                                                 <i class="ki-filled ki-trash"></i>
                                             </span>
-                                        <span class="kt-menu-title">Delete</span>
+                                        <span class="kt-menu-title">{{ __('dashboard.search_modal.items.delete') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -164,14 +164,14 @@
                     <div class="" id="search_modal_mixed">
                         <div class="flex flex-col gap-2.5">
                             <div>
-                                <div class="text-secondary-foreground ps-5 pt-2.5 pb-1.5 text-xs font-medium">Settings</div>
+                                <div class="text-secondary-foreground ps-5 pt-2.5 pb-1.5 text-xs font-medium">{{ __('dashboard.search_modal.items.settings') }}</div>
                                 <div class="kt-menu kt-menu-default flex-col px-0.5">
                                     <div class="kt-menu-item">
                                         <a class="kt-menu-link" href="#">
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-badge"></i>
                                                 </span>
-                                            <span class="kt-menu-title">Public Profile</span>
+                                            <span class="kt-menu-title">{{ __('dashboard.search_modal.items.public_profile') }}</span>
                                         </a>
                                     </div>
                                     <div class="kt-menu-item">
@@ -179,7 +179,7 @@
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-setting-2"></i>
                                                 </span>
-                                            <span class="kt-menu-title">My Account</span>
+                                            <span class="kt-menu-title">{{ __('dashboard.search_modal.items.my_account') }}</span>
                                         </a>
                                     </div>
                                     <div class="kt-menu-item">
@@ -187,7 +187,7 @@
                                                 <span class="kt-menu-icon">
                                                     <i class="ki-filled ki-message-programming"></i>
                                                 </span>
-                                            <span class="kt-menu-title">Devs Forum</span>
+                                            <span class="kt-menu-title">{{ __('dashboard.search_modal.items.devs_forum') }}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -248,8 +248,8 @@
                                                     <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/inferno.svg")) }}" />
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
-                                                    <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Inferno</a>
-                                                    <span class="text-secondary-foreground text-xs font-medium">Real-time photo sharing app</span>
+                                                    <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.inferno') }}</a>
+                                                    <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.real_time_photo') }}</span>
                                                 </div>
                                             </div>
                                             <div class="flex shrink-0 justify-end">
@@ -283,7 +283,7 @@
                             </div>
                             <div class="border-b-border border-b"></div>
                             <div>
-                                <div class="text-secondary-foreground ps-5 pt-2.5 pb-1.5 text-xs font-medium">Users</div>
+                                <div class="text-secondary-foreground ps-5 pt-2.5 pb-1.5 text-xs font-medium">{{ __('dashboard.search_modal.items.users') }}</div>
                                 <div class="kt-menu kt-menu-default flex-col px-0.5">
                                     <div class="grid gap-1">
                                         <div class="kt-menu-item">
@@ -318,7 +318,7 @@
                                                 <div class="flex items-center gap-2.5">
                                                     <div class="kt-badge kt-badge-outline kt-badge-destructive gap-1.5 rounded-full">
                                                         <span class="kt-badge-dot"></span>
-                                                        On Leave
+                                                        {{ __('dashboard.search_modal.status.on_leave') }}
                                                     </div>
                                                     <button class="kt-btn kt-btn-icon kt-btn-ghost kt-btn-sm">
                                                         <i class="ki-filled ki-dots-vertical text-lg"></i>
@@ -418,8 +418,8 @@
                                             <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/jira.svg")) }}" />
                                         </div>
                                         <div class="flex flex-col gap-0.5">
-                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Jira</a>
-                                            <span class="text-secondary-foreground text-xs font-medium">Project management</span>
+                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.jira') }}</a>
+                                            <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.project_management') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex shrink-0 justify-end">
@@ -463,8 +463,8 @@
                                             <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/inferno.svg")) }}" />
                                         </div>
                                         <div class="flex flex-col gap-0.5">
-                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Inferno</a>
-                                            <span class="text-secondary-foreground text-xs font-medium">Real-time photo sharing app</span>
+                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.inferno') }}</a>
+                                            <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.real_time_photo') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex shrink-0 justify-end">
@@ -501,8 +501,8 @@
                                             <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/evernote.svg")) }}" />
                                         </div>
                                         <div class="flex flex-col gap-0.5">
-                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Evernote</a>
-                                            <span class="text-secondary-foreground text-xs font-medium">Notes management app</span>
+                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.evernote') }}</a>
+                                            <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.notes_app') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex shrink-0 justify-end">
@@ -546,8 +546,8 @@
                                             <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/gitlab.svg")) }}" />
                                         </div>
                                         <div class="flex flex-col gap-0.5">
-                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Gitlab</a>
-                                            <span class="text-secondary-foreground text-xs font-medium">Notes management app</span>
+                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.gitlab') }}</a>
+                                            <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.notes_app') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex shrink-0 justify-end">
@@ -577,8 +577,8 @@
                                             <img alt="" class="size-6 shrink-0" src="{{ asset(Storage::url("media/brand-logos/google-webdev.svg")) }}" />
                                         </div>
                                         <div class="flex flex-col gap-0.5">
-                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">Google webdev</a>
-                                            <span class="text-secondary-foreground text-xs font-medium">Building web expierences</span>
+                                            <a class="text-mono hover:text-primary text-sm font-semibold" href="#">{{ __('dashboard.search_modal.content.google_webdev') }}</a>
+                                            <span class="text-secondary-foreground text-xs font-medium">{{ __('dashboard.search_modal.content.building_web') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex shrink-0 justify-end">

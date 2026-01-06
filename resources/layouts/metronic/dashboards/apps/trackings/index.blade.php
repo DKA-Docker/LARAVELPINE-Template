@@ -97,12 +97,12 @@
                         {{-- SYSTEM STATUS --}}
                         <div class="absolute top-6 left-8 flex items-center gap-4">
                             <div class="flex flex-col">
-                                <span class="text-[10px] font-black tracking-[0.2em] text-blue-400/80 uppercase">System Status</span>
-                                <span class="text-xl font-black text-blue-500 tracking-widest leading-none drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">ONLINE</span>
+                                <span class="text-[10px] font-black tracking-[0.2em] text-blue-400/80 uppercase">{{ __('dashboard.tracking.hud.system_status') }}</span>
+                                <span class="text-xl font-black text-blue-500 tracking-widest leading-none drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">{{ __('dashboard.tracking.hud.online') }}</span>
                             </div>
                             <div class="h-8 w-[1px] bg-blue-500/30"></div>
                             <div class="flex flex-col">
-                                <span class="text-[10px] font-black tracking-[0.2em] text-blue-400/80 uppercase">Active Units</span>
+                                <span class="text-[10px] font-black tracking-[0.2em] text-blue-400/80 uppercase">{{ __('dashboard.tracking.hud.active_units') }}</span>
                                 <span id="hud-active-count" class="text-xl font-black text-emerald-400 tracking-widest leading-none">00</span>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                         {{-- TIME --}}
                         <div class="absolute top-6 right-8 text-right">
                              <span id="hud-time" class="text-2xl font-mono font-bold text-blue-500/80 tracking-widest">00:00:00</span>
-                             <div class="text-[9px] font-black text-blue-400/50 uppercase tracking-[0.3em] mt-1">Universal Time Sync</div>
+                             <div class="text-[9px] font-black text-blue-400/50 uppercase tracking-[0.3em] mt-1">{{ __('dashboard.tracking.hud.time_sync') }}</div>
                         </div>
 
                         {{-- SCAN LINES ANIMATION --}}

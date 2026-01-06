@@ -40,14 +40,14 @@
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
                     </span>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Security Protocol Active</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">{{ __('auth.security_protocol') }}</span>
                 </div>
 
                 <h1 class="text-4xl font-bolder tracking-tight leading-tight">
-                    Akses <span class="text-danger">Terbatas</span>
+                    {{ __('auth.access_denied_title') }}
                 </h1>
                 <p class="text-gray-500 text-lg font-medium leading-relaxed">
-                    Maaf, akun Anda tidak memiliki izin yang cukup untuk melihat data ini.
+                    {{ __('auth.access_denied_desc') }}
                 </p>
             </div>
 
@@ -58,11 +58,11 @@
                     class="group relative flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-4 bg-gray-900 text-white font-bold rounded-2xl transition-all duration-300 hover:bg-black hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] active:scale-95"
                 >
                     <i class="ki-filled ki-arrow-left text-xl transition-transform group-hover:-translate-x-1"></i>
-                    Kembali Sekarang
+                    {{ __('auth.back_button') }}
                 </button>
 
                 <p class="text-sm font-semibold text-gray-400">
-                    Butuh bantuan? <a href="#" class="text-primary hover:underline transition-all">Hubungi IT Support</a>
+                    {{ __('auth.need_help') }} <a href="#" class="text-primary hover:underline transition-all">{{ __('auth.contact_support') }}</a>
                 </p>
             </div>
         </div>

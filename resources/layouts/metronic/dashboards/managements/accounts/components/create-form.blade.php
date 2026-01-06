@@ -7,8 +7,8 @@
                     <i class="ki-filled ki-shield-search text-lg text-emerald-400"></i>
                 </div>
                 <div>
-                    <h3 class="text-white font-black text-lg tracking-tight">Kredensial Keamanan</h3>
-                    <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest text-left">Atur akses login pengguna</p>
+                    <h3 class="text-white font-black text-lg tracking-tight">{{ __('dashboard.management.accounts.create.security.title') }}</h3>
+                    <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest text-left">{{ __('dashboard.management.accounts.create.security.subtitle') }}</p>
                 </div>
             </div>
         </div>
@@ -17,9 +17,9 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
                 {{-- Username --}}
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Username</label>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">{{ __('dashboard.management.accounts.create.security.username') }}</label>
                     <div class="relative group">
-                        <input wire:model="formData.credential.username" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="text" placeholder="Username..."/>
+                        <input wire:model="formData.credential.username" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="text" placeholder="{{ __('dashboard.management.accounts.create.security.username_placeholder') }}"/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-profile-circle text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -29,9 +29,9 @@
 
                 {{-- Password --}}
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Password</label>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">{{ __('dashboard.management.accounts.create.security.password') }}</label>
                     <div class="relative group">
-                        <input wire:model="formData.credential.password" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
+                        <input wire:model="formData.credential.password" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="{{ __('dashboard.management.accounts.create.security.password_placeholder') }}"/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-key text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -41,9 +41,9 @@
 
                 {{-- Konfirmasi Password --}}
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Konfirmasi Password</label>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">{{ __('dashboard.management.accounts.create.security.confirm_password') }}</label>
                     <div class="relative group">
-                        <input wire:model="formData.credential.password_confirmation" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="••••••••"/>
+                        <input wire:model="formData.credential.password_confirmation" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-xl h-11 pl-10 font-bold text-gray-700 shadow-sm transition-all" type="password" placeholder="{{ __('dashboard.management.accounts.create.security.password_placeholder') }}"/>
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <i class="ki-filled ki-password text-lg text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
                         </div>
@@ -58,25 +58,25 @@
         <div class="kt-card md:w-1/2 border-none shadow-lg shadow-gray-100 rounded-2xl overflow-hidden ring-1 ring-gray-100">
             <div class="p-4 border-b border-gray-50 bg-gray-50/50">
                 <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
-                    <i class="ki-filled ki-badge text-blue-600"></i> Personal Information
+                    <i class="ki-filled ki-badge text-blue-600"></i> {{ __('dashboard.management.accounts.create.personal.title') }}
                 </h3>
             </div>
             <div class="kt-card-content p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Nama Depan</label>
-                        <input type="text" wire:model="formData.information.first_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="First Name">
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.management.accounts.create.personal.first_name') }}</label>
+                        <input type="text" wire:model="formData.information.first_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="{{ __('dashboard.management.accounts.create.personal.first_name_placeholder') }}">
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Nama Belakang</label>
-                        <input type="text" wire:model="formData.information.last_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="Last Name">
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.management.accounts.create.personal.last_name') }}</label>
+                        <input type="text" wire:model="formData.information.last_name" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold text-sm shadow-sm" placeholder="{{ __('dashboard.management.accounts.create.personal.last_name_placeholder') }}">
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Email Contact</label>
+                    <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.management.accounts.create.personal.email') }}</label>
                     <div class="relative group">
-                        <input type="email" wire:model="formData.contact.email" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 pl-10 font-semibold text-sm shadow-sm w-full" placeholder="example@domain.com">
+                        <input type="email" wire:model="formData.contact.email" class="kt-input h-10 rounded-lg border-gray-100 focus:ring-4 focus:ring-blue-50 pl-10 font-semibold text-sm shadow-sm w-full" placeholder="{{ __('dashboard.management.accounts.create.personal.email_placeholder') }}">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="ki-filled ki-sms text-base text-gray-300 group-focus-within:text-blue-500"></i>
                         </div>
@@ -90,16 +90,16 @@
         <div class="kt-card md:w-1/2 border-none shadow-lg shadow-gray-100 rounded-2xl overflow-hidden ring-1 ring-gray-100">
             <div class="p-4 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
                 <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
-                    <i class="ki-filled ki-setting-4 text-purple-600"></i> Role Assignment
+                    <i class="ki-filled ki-setting-4 text-purple-600"></i> {{ __('dashboard.management.accounts.create.roles.title') }}
                 </h3>
                 {{-- Clear Roles Button --}}
                 <button type="button" wire:click="clearRole" class="text-[9px] font-black text-red-500 uppercase hover:text-red-600 transition-colors flex items-center gap-1">
-                    <i class="ki-filled ki-cross-circle"></i> Clear Select
+                    <i class="ki-filled ki-cross-circle"></i> {{ __('dashboard.management.accounts.create.roles.clear_selection') }}
                 </button>
             </div>
             <div class="kt-card-content p-5">
                 <div class="flex flex-col gap-3">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Hak Akses Sistem</label>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">{{ __('dashboard.management.accounts.create.roles.system_access') }}</label>
                     <div class="grid grid-cols-1 gap-2">
                         @foreach($roles ?? [] as $role)
                             @php
@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-black {{ $isSelected ? 'text-purple-900' : 'text-gray-800' }} uppercase tracking-tight">{{ $role->name }}</span>
-                                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Guard: {{ $role->guard_name }}</span>
+                                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">{{ __('dashboard.management.accounts.create.roles.guard', ['name' => $role->guard_name]) }}</span>
                                     </div>
                                 </div>
                                 <div class="flex items-center">
@@ -152,13 +152,13 @@
 
         <div class="flex items-center justify-end gap-4 w-full">
             <button type="button" onclick="history.back()" class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
-                Discard changes
+                {{ __('dashboard.management.accounts.create.actions.discard') }}
             </button>
 
             <button wire:click="submit" wire:loading.attr="disabled" class="group relative overflow-hidden bg-gray-900 px-8 py-3.5 rounded-xl shadow-lg transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50">
                 <div class="relative z-10 flex items-center gap-3">
-                    <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Create Account</span>
-                    <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Processing...</span>
+                    <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">{{ __('dashboard.management.accounts.create.actions.create') }}</span>
+                    <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">{{ __('dashboard.management.accounts.create.actions.processing') }}</span>
                     <i class="ki-filled ki-check-circle text-emerald-400 group-hover:text-white transition-colors"></i>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></div>

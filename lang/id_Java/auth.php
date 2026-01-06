@@ -15,6 +15,12 @@ return [
 
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'throttle' => 'Kakehan nyoba mlebu. Mangga nyoba maneh ing :seconds detik.',
+    'access_denied_title' => 'Akses Wates',
+    'access_denied_desc' => 'Nyuwun pangapunten, akun sampeyan mboten gadhah izin kangge ningali data niki.',
+    'back_button' => 'Wangsul Sakmeniko',
+    'security_protocol' => 'Protokol Keamanan Aktif',
+    'contact_support' => 'Hubungi IT Support',
+    'need_help' => 'Betah bantuan?',
 
 ];

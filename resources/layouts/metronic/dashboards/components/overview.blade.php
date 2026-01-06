@@ -4,10 +4,10 @@
             <div class="grid h-full grid-cols-2 items-stretch gap-5 lg:gap-6">
                 @php
                     $stats = [
-                        ['label' => 'Permintaan Pengiriman', 'value' => '0', 'delay' => '100ms'],
-                        ['label' => 'Sedang Dikirim', 'value' => '0', 'delay' => '200ms'],
-                        ['label' => 'Pengiriman Tertunda', 'value' => '0', 'delay' => '300ms'],
-                        ['label' => 'Pengiriman Selesai', 'value' => '0', 'delay' => '400ms'],
+                        ['label' => __('dashboard.components.overview.stats.request'), 'value' => '0', 'delay' => '100ms'],
+                        ['label' => __('dashboard.components.overview.stats.sending'), 'value' => '0', 'delay' => '200ms'],
+                        ['label' => __('dashboard.components.overview.stats.pending'), 'value' => '0', 'delay' => '300ms'],
+                        ['label' => __('dashboard.components.overview.stats.finished'), 'value' => '0', 'delay' => '400ms'],
                     ];
                 @endphp
                 @foreach($stats as $stat)
@@ -27,10 +27,10 @@
         <div class="lg:col-span-2 animate-fade-up" style="animation-delay: 500ms">
             <div class="kt-card h-full shadow-xl border-none ring-1 ring-black/5 dark:ring-white/5">
                 <div class="kt-card-header flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-white/5">
-                    <h3 class="kt-card-title font-bold text-lg">Demografi Pengiriman</h3>
+                    <h3 class="kt-card-title font-bold text-lg">{{ __('dashboard.components.overview.chart.demography') }}</h3>
                     <div class="flex gap-2">
-                        <button class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all">By City</button>
-                        <button class="text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all">By District</button>
+                        <button class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all">{{ __('dashboard.components.overview.chart.by_city') }}</button>
+                        <button class="text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all">{{ __('dashboard.components.overview.chart.by_district') }}</button>
                     </div>
                 </div>
                 <div class="kt-card-body p-6">
@@ -45,7 +45,7 @@
         <!-- Donut Chart -->
         <div class="kt-card shadow-sm border border-gray-200 dark:border-white/5 h-full">
             <div class="kt-card-header px-6 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
-                <h3 class="kt-card-title font-bold text-lg">Logistics Overview</h3>
+                <h3 class="kt-card-title font-bold text-lg">{{ __('dashboard.components.overview.chart.logistics') }}</h3>
                 <div class="kt-menu-trigger p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg cursor-pointer transition-colors">
                     <i class="ki-filled ki-dots-vertical text-gray-500"></i>
                 </div>
@@ -58,10 +58,10 @@
         <!-- Line Chart -->
         <div class="kt-card shadow-sm border border-gray-200 dark:border-white/5 h-full">
             <div class="kt-card-header px-6 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
-                <h3 class="kt-card-title font-bold text-lg">Delivery Performance</h3>
+                <h3 class="kt-card-title font-bold text-lg">{{ __('dashboard.components.overview.chart.performance') }}</h3>
                 <select class="text-sm border-gray-200 dark:border-white/10 rounded-md bg-transparent focus:ring-0">
-                    <option>Last 7 Days</option>
-                    <option>Last 30 Days</option>
+                    <option>{{ __('dashboard.components.overview.chart.last_7_days') }}</option>
+                    <option>{{ __('dashboard.components.overview.chart.last_30_days') }}</option>
                 </select>
             </div>
             <div class="kt-card-body p-6">

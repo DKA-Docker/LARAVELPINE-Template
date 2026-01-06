@@ -7,8 +7,8 @@
                     <i class="ki-filled ki-cross-circle text-white text-xl"></i>
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-xs font-black text-red-900 uppercase tracking-widest leading-none mb-1">Validation Error</span>
-                    <p class="text-[11px] text-red-600 font-bold uppercase tracking-tight">Gagal disimpan karena ada inputan tertentu belum di isi.</p>
+                    <span class="text-xs font-black text-red-900 uppercase tracking-widest leading-none mb-1">{{ __('dashboard.task.create.validation_error.title') }}</span>
+                    <p class="text-[11px] text-red-600 font-bold uppercase tracking-tight">{{ __('dashboard.task.create.validation_error.message') }}</p>
                 </div>
             </div>
         @endif
@@ -19,14 +19,14 @@
             <div class="kt-card md:w-1/2 border-none shadow-xl shadow-gray-100 rounded-3xl overflow-hidden ring-1 ring-gray-100">
                 <div class="p-6 border-b border-gray-50 bg-gray-50/50">
                     <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
-                        <i class="ki-filled ki-geolocation text-red-500"></i> Region Profiling
+                        <i class="ki-filled ki-geolocation text-red-500"></i> {{ __('dashboard.task.create.region.title') }}
                     </h3>
                 </div>
                 <div class="kt-card-content p-8">
                     <div class="flex flex-col gap-2 mb-8">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Destinasi Penerima</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">{{ __('dashboard.task.create.region.destination_label') }}</label>
                         <select wire:model.live="formData.destination" class="form-select kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-red-50 font-bold text-gray-700 shadow-sm transition-all">
-                            <option value="">-- Pilih Alamat Tujuan --</option>
+                            <option value="">{{ __('dashboard.task.create.region.select_destination') }}</option>
                             @foreach($destinations as $dest)
                                 <option value="{{ $dest['id'] }}">{{ $dest['receipt_name'] }} ({{ $dest['receipt_address'] }})</option>
                             @endforeach
@@ -37,9 +37,9 @@
                     <div class="grid grid-cols-2 gap-6 p-6 bg-gray-50/50 rounded-3xl border border-gray-100">
                         {{-- PROVINSI --}}
                         <div class="flex flex-col gap-2">
-                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Provinsi</label>
+                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.task.create.region.province') }}</label>
                             <select wire:model.live="formData.geos.province" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold">
-                                <option value="">-- Pilih Provinsi --</option>
+                                <option value="">{{ __('dashboard.task.create.region.select_province') }}</option>
                                 @foreach($provinces ?? [] as $prov)
                                     <option value="{{ $prov['id'] }}">{{ $prov['name'] }}</option>
                                 @endforeach
@@ -49,11 +49,11 @@
 
                         {{-- KOTA / KABUPATEN --}}
                         <div class="flex flex-col gap-2">
-                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Kota/Kab</label>
+                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.task.create.region.city') }}</label>
                             <select wire:model.live="formData.geos.regency" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold"
                                     wire:loading.attr="disabled" wire:target="formData.geos.province"
                                     @if(empty($regencies)) disabled @endif>
-                                <option value="">-- Pilih Kota --</option>
+                                <option value="">{{ __('dashboard.task.create.region.select_city') }}</option>
                                 @foreach($regencies ?? [] as $reg)
                                     <option value="{{ $reg['id'] }}">{{ $reg['name'] }}</option>
                                 @endforeach
@@ -63,11 +63,11 @@
 
                         {{-- KECAMATAN --}}
                         <div class="flex flex-col gap-2">
-                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Kecamatan</label>
+                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.task.create.region.district') }}</label>
                             <select wire:model.live="formData.geos.district" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold"
                                     wire:loading.attr="disabled" wire:target="formData.geos.regency"
                                     @if(empty($districts)) disabled @endif>
-                                <option value="">-- Pilih Kecamatan --</option>
+                                <option value="">{{ __('dashboard.task.create.region.select_district') }}</option>
                                 @foreach($districts ?? [] as $dist)
                                     <option value="{{ $dist['id'] }}">{{ $dist['name'] }}</option>
                                 @endforeach
@@ -77,11 +77,11 @@
 
                         {{-- DESA / KELURAHAN --}}
                         <div class="flex flex-col gap-2">
-                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Desa/Kelurahan</label>
+                            <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.task.create.region.village') }}</label>
                             <select wire:model.live="formData.geos.village" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold"
                                     wire:loading.attr="disabled" wire:target="formData.geos.district"
                                     @if(empty($villages)) disabled @endif>
-                                <option value="">-- Pilih Desa --</option>
+                                <option value="">{{ __('dashboard.task.create.region.select_village') }}</option>
                                 @foreach($villages ?? [] as $vil)
                                     <option value="{{ $vil['id'] }}">{{ $vil['name'] }}</option>
                                 @endforeach
@@ -91,8 +91,8 @@
                     </div>
 
                     <div class="flex flex-col gap-2 mt-6">
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">Postal Code</label>
-                        <input type="text" wire:model="formData.geos.postal_code" class="kt-input h-12 rounded-xl border-gray-100 focus:ring-4 focus:ring-gray-50 font-mono text-center text-sm shadow-sm" placeholder="Ex: 17211">
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-1">{{ __('dashboard.task.create.region.postal_code') }}</label>
+                        <input type="text" wire:model="formData.geos.postal_code" class="kt-input h-12 rounded-xl border-gray-100 focus:ring-4 focus:ring-gray-50 font-mono text-center text-sm shadow-sm" placeholder="{{ __('dashboard.task.create.region.postal_code_placeholder') }}">
                     </div>
                 </div>
             </div>
@@ -101,13 +101,13 @@
             <div class="kt-card md:w-1/2 border-none shadow-xl shadow-gray-100 rounded-3xl overflow-hidden ring-1 ring-gray-100">
                 <div class="p-6 border-b border-gray-50 bg-gray-50/50">
                     <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center gap-2">
-                        <i class="ki-filled ki-delivery-3 text-blue-600"></i> Crew Assignment
+                        <i class="ki-filled ki-delivery-3 text-blue-600"></i> {{ __('dashboard.task.create.crew.title') }}
                     </h3>
                 </div>
 
                 <div class="kt-card-content p-8 ">
                     <div class="flex flex-col gap-4 relative">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Daftar Personel</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">{{ __('dashboard.task.create.crew.list_label') }}</label>
 
                         <div class="flex flex-wrap gap-2 min-h-[40px] items-center">
                             @forelse($formData['assigned'] as $id => $name)
@@ -118,13 +118,13 @@
                                 </button>
                             </span>
                             @empty
-                                <span class="text-[10px] text-gray-400 font-bold italic">Belum ada driver dipilih...</span>
+                                <span class="text-[10px] text-gray-400 font-bold italic">{{ __('dashboard.task.create.crew.empty_list') }}</span>
                             @endforelse
                         </div>
                         @error('formData.assigned') <div class="mt-2"><span class="text-red-500 text-[10px] font-bold italic">{{ $message }}</span></div> @enderror
 
                         <div class="relative mt-2">
-                            <input wire:model.live.debounce.300ms="driverSearch" type="text" class="kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold pl-12" placeholder="Ketik nama driver...">
+                            <input wire:model.live.debounce.300ms="driverSearch" type="text" class="kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-blue-50 font-bold pl-12" placeholder="{{ __('dashboard.task.create.crew.search_placeholder') }}">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center">
                                 <i class="ki-filled ki-user text-xl text-gray-300"></i>
                             </div>
@@ -143,7 +143,7 @@
                                 @empty
                                     <div class="px-4 py-10 text-center">
                                         <i class="ki-outline ki-search-list text-3xl text-gray-200 mb-2"></i>
-                                        <p class="text-[10px] text-gray-400 font-black uppercase">Tidak Ditemukan</p>
+                                        <p class="text-[10px] text-gray-400 font-black uppercase">{{ __('dashboard.task.create.crew.not_found') }}</p>
                                     </div>
                                 @endforelse
                             </div>
@@ -153,7 +153,7 @@
                 <div class="kt-card-content p-1 w-full">
                     <div class="grid gap-6 p-6 bg-gray-50/50 rounded-3xl border border-gray-100 w-full">
                         <div class="flex flex-col gap-4 relative">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">Pilih Kategori Kendaraan</label>
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">{{ __('dashboard.task.create.vehicle.category_label') }}</label>
                             {{-- ubah ukuran kolom grid-cols-1--}}
                             <div class="grid grid-cols-1 gap-3 mt-2 w-full">
                                 @foreach($vehicleCategories as $cat)
@@ -181,9 +181,9 @@
                             @error('formData.vehicle_category') <div class="mt-2"><span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span></div> @enderror
 
                             @if(!empty($formData['vehicle_category']))
-                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1 mt-4 block">Pilih Unit Kendaraan</label>
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1 mt-4 block">{{ __('dashboard.task.create.vehicle.unit_label') }}</label>
                                 <select wire:model="formData.vehicle_id" class="form-select kt-input h-11 text-xs rounded-xl border-gray-200 focus:ring-blue-50 font-semibold w-full">
-                                    <option value="">-- Pilih Unit --</option>
+                                    <option value="">{{ __('dashboard.task.create.vehicle.select_unit') }}</option>
                                     @foreach($availableVehicles as $veh)
                                         <option value="{{ $veh->id }}">{{ $veh->name }} - {{ $veh->plate }}</option>
                                     @endforeach
@@ -206,8 +206,8 @@
                         <i class="ki-filled ki-map text-xl text-emerald-400"></i>
                     </div>
                     <div>
-                        <h3 class="text-white font-black text-lg tracking-tight">Informasi Utama & Geofencing</h3>
-                        <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Tentukan titik koordinat pengiriman</p>
+                        <h3 class="text-white font-black text-lg tracking-tight">{{ __('dashboard.task.create.info.title') }}</h3>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">{{ __('dashboard.task.create.info.subtitle') }}</p>
                     </div>
                 </div>
             </div>
@@ -216,18 +216,18 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     <div class="space-y-6">
                         <div class="flex flex-col gap-2">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Nama Task / Pekerjaan</label>
-                            <input wire:model="formData.name" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-2xl h-14 font-bold text-gray-700 shadow-sm" type="text" placeholder="Contoh: Pengiriman Elektronik Batch A"/>
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">{{ __('dashboard.task.create.info.task_name') }}</label>
+                            <input wire:model="formData.name" class="kt-input focus:ring-4 focus:ring-emerald-50 border-gray-100 rounded-2xl h-14 font-bold text-gray-700 shadow-sm" type="text" placeholder="{{ __('dashboard.task.create.info.task_name_placeholder') }}"/>
                             @error('formData.name') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="flex flex-col gap-2 relative" id="map-search-container">
                             <label class="text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] ml-1 flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
-                                Search Location
+                                {{ __('dashboard.task.create.info.search_location') }}
                             </label>
                             <div class="relative group">
-                                <input type="text" id="map-search-input" class="kt-input bg-gray-100 cursor-not-allowed border-gray-100 rounded-2xl h-14 pl-12 font-medium shadow-sm transition-all" placeholder="Search Location (Read Only)" autocomplete="off" readonly disabled>
+                                <input type="text" id="map-search-input" class="kt-input bg-gray-100 cursor-not-allowed border-gray-100 rounded-2xl h-14 pl-12 font-medium shadow-sm transition-all" placeholder="{{ __('dashboard.task.create.info.search_location_placeholder') }}" autocomplete="off" readonly disabled>
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <i class="ki-outline ki-magnifier text-xl text-gray-400 group-focus-within:text-blue-600 transition-colors"></i>
                                 </div>
@@ -237,11 +237,11 @@
 
                         <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-dashed border-gray-200">
                             <div class="flex flex-col gap-1">
-                                <label class="text-[9px] font-black text-gray-400 uppercase">Latitude</label>
+                                <label class="text-[9px] font-black text-gray-400 uppercase">{{ __('dashboard.task.create.info.latitude') }}</label>
                                 <input type="text" id="lat-display" wire:model="formData.geos.latitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
                             </div>
                             <div class="flex flex-col gap-1">
-                                <label class="text-[9px] font-black text-gray-400 uppercase">Longitude</label>
+                                <label class="text-[9px] font-black text-gray-400 uppercase">{{ __('dashboard.task.create.info.longitude') }}</label>
                                 <input type="text" id="lng-display" wire:model="formData.geos.longitude" class="bg-transparent border-none p-0 font-mono text-xs text-blue-700 font-bold focus:ring-0" readonly>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                         <div wire:ignore id="map" class="w-full h-[480px] shadow-2xl rounded-3xl overflow-hidden ring-4 ring-gray-50 transition-all group-hover:ring-emerald-50"
                              data-lng="{{ $formData['geos']['longitude'] }}" data-lat="{{ $formData['geos']['latitude'] }}"></div>
                         <div class="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white shadow-lg pointer-events-none">
-                            <span class="text-[10px] font-black text-gray-800 uppercase italic">Live Map Interface</span>
+                            <span class="text-[10px] font-black text-gray-800 uppercase italic">{{ __('dashboard.task.create.info.live_map') }}</span>
                         </div>
                     </div>
                 </div>
@@ -267,11 +267,11 @@
                     @if($currentDest)
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                             <div>
-                                <h3 class="text-2xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-2">Inventory Manifest</h3>
+                                <h3 class="text-2xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-2">{{ __('dashboard.task.create.manifest.title') }}</h3>
                                 <div class="flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                                     <p class="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">
-                                        Destination: <span class="text-blue-600">{{ $currentDest['receipt_name'] }}</span>
+                                        {{ __('dashboard.task.create.manifest.destination') }} <span class="text-blue-600">{{ $currentDest['receipt_name'] }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -282,7 +282,7 @@
                                         <i class="ki-filled ki-box text-white text-xl"></i>
                                     </div>
                                     <div>
-                                        <span class="text-[8px] font-black text-gray-400 uppercase block mb-1">Grand Total Qty</span>
+                                        <span class="text-[8px] font-black text-gray-400 uppercase block mb-1">{{ __('dashboard.task.create.manifest.total_qty') }}</span>
                                         <span class="text-xl font-black text-white leading-none">
                                         {{ number_format(collect($currentDest['packages'])->sum('qty'), 0, ',', '.') }}
                                     </span>
@@ -290,11 +290,11 @@
                                 </div>
 
                                 <div class="bg-white border border-gray-100 rounded-2xl p-2 px-4 shadow-sm">
-                                    <label class="text-[8px] font-black text-gray-400 uppercase block">Show Items</label>
+                                    <label class="text-[8px] font-black text-gray-400 uppercase block">{{ __('dashboard.task.create.manifest.show_items') }}</label>
                                     <select wire:model.live="perPage" class="bg-transparent text-xs font-black text-gray-900 border-none p-0 focus:ring-0 cursor-pointer">
-                                        <option value="5">5 Items</option>
-                                        <option value="10">10 Items</option>
-                                        <option value="20">20 Items</option>
+                                        <option value="5">5 {{ __('dashboard.task.create.manifest.items') }}</option>
+                                        <option value="10">10 {{ __('dashboard.task.create.manifest.items') }}</option>
+                                        <option value="20">20 {{ __('dashboard.task.create.manifest.items') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -304,10 +304,10 @@
                             <table class="w-full text-left">
                                 <thead>
                                 <tr class="bg-white border-b border-gray-100">
-                                    <th class="px-6 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">Index</th>
-                                    <th class="px-6 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">Product Description</th>
-                                    <th class="px-6 py-4 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">Unit Type</th>
-                                    <th class="px-6 py-4 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest">Quantity</th>
+                                    <th class="px-6 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.task.create.table.index') }}</th>
+                                    <th class="px-6 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.task.create.table.product') }}</th>
+                                    <th class="px-6 py-4 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.task.create.table.unit') }}</th>
+                                    <th class="px-6 py-4 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.task.create.table.qty') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 bg-white/50">
@@ -329,7 +329,7 @@
                                                 <span class="text-[12px] font-black text-gray-800 uppercase leading-tight tracking-tight">
                                                     {{ $pkg['name'] }}
                                                 </span>
-                                                <span class="text-[9px] text-gray-400 font-bold uppercase mt-1">Item Ref: {{ substr($pkg['id'], 0, 8) }}</span>
+                                                <span class="text-[9px] text-gray-400 font-bold uppercase mt-1">{{ __('dashboard.task.create.table.item_ref') }} {{ substr($pkg['id'], 0, 8) }}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-5 text-center">
@@ -349,7 +349,7 @@
                         @if($totalPages > 1)
                             <div class="mt-8 flex items-center justify-between">
                             <span class="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">
-                                Page {{ $currentPage }} <span class="mx-2 text-gray-200">/</span> {{ $totalPages }}
+                                {{ __('dashboard.task.create.pagination.page') }} {{ $currentPage }} <span class="mx-2 text-gray-200">/</span> {{ $totalPages }}
                             </span>
                                 <div class="flex items-center gap-2">
                                     <button type="button" wire:click.prevent="setPage({{ max(1, $currentPage - 1) }})"
@@ -380,8 +380,8 @@
                             <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-xl mb-6">
                                 <i class="ki-outline ki-delivery-2 text-4xl text-gray-200"></i>
                             </div>
-                            <h4 class="text-xs font-black text-gray-400 uppercase tracking-[0.5em]">Waiting for Destination</h4>
-                            <p class="text-[10px] text-gray-300 font-bold uppercase mt-2">Silakan pilih destinasi untuk melihat manifest</p>
+                            <h4 class="text-xs font-black text-gray-400 uppercase tracking-[0.5em]">{{ __('dashboard.task.create.waiting.title') }}</h4>
+                            <p class="text-[10px] text-gray-300 font-bold uppercase mt-2">{{ __('dashboard.task.create.waiting.subtitle') }}</p>
                         </div>
                     @endif
                 </div>
@@ -395,12 +395,12 @@
                 wire:navigate
                 class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors"
             >
-                Discard Change
+                {{ __('dashboard.task.create.actions.discard') }}
             </a>
             <button wire:click="submit" wire:loading.attr="disabled" class="group relative overflow-hidden bg-gray-900 px-12 py-5 rounded-2xl shadow-2xl transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50">
                 <div class="relative z-10 flex items-center gap-3">
-                    <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Confirm & Save Task</span>
-                    <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Synchronizing...</span>
+                    <span wire:loading.remove wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">{{ __('dashboard.task.create.actions.confirm') }}</span>
+                    <span wire:loading wire:target="submit" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">{{ __('dashboard.task.create.actions.synchronizing') }}</span>
                     <i class="ki-filled ki-check-circle text-emerald-400 group-hover:text-white transition-colors"></i>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></div>

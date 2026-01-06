@@ -15,7 +15,7 @@
 
     @if(auth()->user()->canany(['dashboards.apps.deliveries.requests.view', 'dashboards.apps.deliveries.tasks.view', 'dashboards.apps.deliveries.reports.view', 'dashboards.apps.trackings.index']))
         <div class="kt-menu-item pt-2.25 pb-px">
-            <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Apps</span>
+            <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">{{ __('menu.apps') }}</span>
         </div>
 
         @if(auth()->user()->canany(['dashboards.apps.deliveries.requests.view', 'dashboards.apps.deliveries.tasks.view', 'dashboards.apps.deliveries.reports.view']))
@@ -95,7 +95,7 @@
 
     @can('dashboards.managements.accounts.view')
         <div class="kt-menu-item pt-2.25 pb-px">
-            <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">Management</span>
+            <span class="kt-menu-heading text-muted-foreground ps-[10px] pe-[10px] text-xs font-medium uppercase">{{ __('menu.management') }}</span>
         </div>
         <div class="kt-menu-item">
             <a href="{{ request()->getSchemeAndHttpHost() . route('dashboards.managements.accounts.index', [], false) }}">
@@ -104,7 +104,7 @@
                     <i class="ki-duotone ki-user text-lg"></i>
                 </span>
                     <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">
-                    Account
+                    {{ __('menu.account') }}
                 </span>
                 </div>
             </a>
@@ -117,7 +117,7 @@
                 <span class="kt-menu-icon text-muted-foreground items-start">
                         <i class="ki-duotone ki-tag text-lg"></i>
                 </span>
-                    <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">Rates</span>
+                    <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">{{ __('menu.rates') }}</span>
                 </div>
             </a>
         </div>

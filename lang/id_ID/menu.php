@@ -6,5 +6,9 @@ return [
     "request" => "Permintaan",
     "task" => "Tugas",
     "report" => "Laporan",
-    "tracking" => "Pemantauan"
+    "tracking" => "Pelacakan",
+    "apps" => "Aplikasi",
+    "management" => "Manajemen",
+    "account" => "Akun",
+    "rates" => "Tarif"
 ];
