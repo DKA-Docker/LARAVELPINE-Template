@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Database\Seeders\App\Deliveries\Histories\DeliveriesHistoriesSeeder;
+use Database\Seeders\App\Deliveries\Rates\AppsDeliveriesDataRatesCategoriesSeeder;
 use Database\Seeders\App\Deliveries\Requests\DeliveriesRequestsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\DeliveriesRequestsDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
@@ -14,6 +15,7 @@ use Database\Seeders\App\Deliveries\Tasks\DeliveriesTasksSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutesSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesOriginsSeeder;
+use Database\Seeders\App\Deliveries\Rates\AppsDeliveriesDataRatesSeeder;
 use Database\Seeders\Base\Accounts\AccountsSeeder;
 use Database\Seeders\Base\Permissions\PermissionsAccountsSeeder;
 use Database\Seeders\Base\Sessions\SessionsAccountsSeeder;
@@ -54,7 +56,9 @@ class DatabaseSeeder extends Seeder
             DataGeoDistrictsSeeder::class,
             DataGeoVillagesSeeder::class,
             DeliveriesTasksGeosSeeder::class,
-            DeliveriesTasksAttachmentsSeeder::class
+            DeliveriesTasksAttachmentsSeeder::class,
+            AppsDeliveriesDataRatesCategoriesSeeder::class,
+            AppsDeliveriesDataRatesSeeder::class
         ]);
     }
 }

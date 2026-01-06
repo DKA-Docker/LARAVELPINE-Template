@@ -16,7 +16,7 @@ class ResourcesDataGeosProvincesServices
 
     public function ReadAll(): Collection
     {
-        return $this->repository->ReadAll();
+        return $this->repository->ReadAll()->where('status', 't');
     }
 
 

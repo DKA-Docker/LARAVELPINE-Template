@@ -14,5 +14,10 @@ class DataGeosProvinces extends Model
     protected $fillable = [
         'id',
         'name',
+        'status'
+    ];
+
+    protected $casts = [
+        'status' => 'boolean'
     ];
 }

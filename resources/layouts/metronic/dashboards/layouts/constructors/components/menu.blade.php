@@ -74,6 +74,7 @@
                             </a>
                         </div>
                     @endcan
+
                 </div>
             </div>
         @endif
@@ -107,7 +108,20 @@
                 </span>
                 </div>
             </a>
+
         </div>
+
+        <div class="kt-menu-item">
+            <a href="{{ request()->getSchemeAndHttpHost() . route('dashboards.apps.deliveries.rates.index', [], false) }}" tabindex="0">
+                <div class="kt-menu-label border border-transparent gap-[10px] ps-[10px] pe-[10px] py-[6px]" tabindex="1">
+                <span class="kt-menu-icon text-muted-foreground items-start">
+                        <i class="ki-duotone ki-tag text-lg"></i>
+                </span>
+                    <span class="kt-menu-title text-foreground kt-menu-item-active:text-primary kt-menu-link-hover:!text-primary text-sm font-bold">Rates</span>
+                </div>
+            </a>
+        </div>
+
     @endcan
 
 </div>

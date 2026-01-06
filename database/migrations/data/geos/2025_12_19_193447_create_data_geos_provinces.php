@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('data_geos_provinces', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement()->primary();
             $table->string("name")->comment("Adalah Judul Request Pengiriman");
+            $table->boolean('status')->default(false);
         });
     }
 

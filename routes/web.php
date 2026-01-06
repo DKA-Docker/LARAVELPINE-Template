@@ -9,6 +9,8 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index a
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as DeliveriesTasksCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Edit as DeliveriesTasksEdit;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as DeliveriesTasks;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Rates\Index as DeliveriesRates;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Rates\Categories\Index as DeliveriesRatesCategories;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as ManagementsAccountsCreate;
@@ -62,6 +64,12 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             });
             Route::prefix('reports')->name('reports.')->group(function () {
                 Route::resource('/', DeliveriesReports::class);
+            });
+            Route::prefix('rates')->name('rates.')->group(function () {
+                Route::resource('/', DeliveriesRates::class);
+                Route::prefix('categories')->name('categories.')->group(function () {
+                    Route::resource('/', DeliveriesRatesCategories::class);
+                });
             });
 
         });
