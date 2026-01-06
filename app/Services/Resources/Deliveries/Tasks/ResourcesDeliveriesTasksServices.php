@@ -105,8 +105,17 @@ class ResourcesDeliveriesTasksServices
                  try {
                      $messaging = Firebase::messaging();
                      /** @var AppsDeliveriesTasks $taskLoaded */
-                     $taskLoaded = $taskCreated->load(['assigned.firebase', 'assigned.information']);
+                     $taskLoaded = $taskCreated->load(['assigned.firebase', 'assigned.information', 'vehicle', 'destination']);
                      $creator = Auth::user()->account->information->first_name ?? 'Admin';
+                     
+                     $notifTitle = "Kamu diberikan tugas dari {$creator}";
+                     $vehicleName = $taskLoaded->vehicle->name ?? 'Kendaraan';
+                     $vehiclePlate = $taskLoaded->vehicle->plate ?? '-';
+                     
+                     $receiptName = $taskLoaded->destination->receipt_name ?? 'Penerima';
+                     $receiptAddress = $taskLoaded->destination->receipt_address ?? 'Alamat';
+                     
+                     $notifBody = "{$taskCreated->name}, {$vehicleName} - {$vehiclePlate}. Penerima: {$receiptName}, Alamat: {$receiptAddress}";
 
                      foreach ($taskLoaded->assigned as $assign) {
                          // Gunakan getRelationValue() untuk menghindari konflik dengan kolom 'firebase' yang berisi string UUID
@@ -126,7 +135,9 @@ class ResourcesDeliveriesTasksServices
                                 ->withData([
                                     'action' => 'TASK_ASSIGNED',
                                     'task_id' => $taskCreated->id,
-                                    'creator' => $creator
+                                    'creator' => $creator,
+                                    'title' => $notifTitle,
+                                    'body' => $notifBody
                                 ])
                                 ->withAndroidConfig([
                                     'priority' => 'high',

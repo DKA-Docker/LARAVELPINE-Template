@@ -37,6 +37,27 @@ class Index extends Controller
             )
         );
     }
+
+    public function show(string $id): JsonResponse
+    {
+        $data = $this->service->Find($id);
+
+        if (!$data) {
+            return response()->json([
+                'status' => false,
+                'code' => Response::HTTP_NOT_FOUND,
+                'msg' => 'Task not found',
+                'data' => null
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'status' => true,
+            'code' => Response::HTTP_OK,
+            'msg' => 'Successfully Read Data',
+            'data' => $data
+        ], Response::HTTP_OK);
+    }
 }
 
 

@@ -109,4 +109,9 @@ class AppsDeliveriesTasks extends Model
             'id'
         );
     }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Data\Vehicles\DataVehicles::class, 'vehicle')->withDefault();
+    }
 }

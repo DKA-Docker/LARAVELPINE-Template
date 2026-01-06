@@ -35,7 +35,7 @@ Route::name('api.')->group(function () {
                     });
                 });
                 Route::prefix('tasks')->name('tasks.')->group(function () {
-                    Route::resource('/', Tasks\Index::class);
+                    Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
                     Route::prefix('routes')->name('routes.')->group(function () {
                         Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
