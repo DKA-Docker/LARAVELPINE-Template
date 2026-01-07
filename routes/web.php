@@ -53,11 +53,15 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
-                Route::resource('/', DeliveriesTasks::class);
-                Route::prefix('create')->name('create.')->group(function () {
-                    Route::resource('/', DeliveriesTasksCreate::class);
-                    Route::get('/geocoding-proxy', [DeliveriesTasksCreate::class, 'geocodingProxy'])->name('geocodingProxy');
-                });
+                Route::get('/', [DeliveriesTasks::class, 'index'])->name('index');
+                Route::get('/create', [DeliveriesTasksCreate::class, 'create'])->name('create');
+                Route::post('/', [DeliveriesTasksCreate::class, 'store'])->name('store');
+                Route::get('/geocoding-proxy', [DeliveriesTasksCreate::class, 'geocodingProxy'])->name('geocodingProxy');
+                
+                // Explicitly define {id} routes AFTER specific paths like 'create' to avoid conflicts
+                Route::get('/{id}', [DeliveriesTasks::class, 'show'])->name('show');
+                Route::delete('/{id}', [DeliveriesTasks::class, 'destroy'])->name('destroy');
+
                 Route::prefix('{id}/edit')->name('edit.')->group(function () {
                      Route::get('/', [DeliveriesTasksEdit::class, 'index'])->name('index');
                 });
