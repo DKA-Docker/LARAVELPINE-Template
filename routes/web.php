@@ -46,31 +46,27 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
         Route::prefix('deliveries')->name('deliveries.')->group(function () {
             /** Name Route dashboards.apps.deliveries member of resource */
             Route::prefix('requests')->name('requests.')->group(function () {
-                Route::resource('/', DeliveriesRequest::class);
+                Route::resource('/', DeliveriesRequest::class)->parameters(['' => 'id']);
                 Route::prefix('create')->name('create.')->group(function () {
                     Route::resource('/', DeliveriesRequestCreate::class);
                     Route::get('/geocoding-proxy', [DeliveriesRequestCreate::class, 'geocodingProxy'])->name('geocodingProxy');
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
-                Route::get('/', [DeliveriesTasks::class, 'index'])->name('index');
-                Route::get('/create', [DeliveriesTasksCreate::class, 'create'])->name('create');
-                Route::post('/', [DeliveriesTasksCreate::class, 'store'])->name('store');
-                Route::get('/geocoding-proxy', [DeliveriesTasksCreate::class, 'geocodingProxy'])->name('geocodingProxy');
-                
-                // Explicitly define {id} routes AFTER specific paths like 'create' to avoid conflicts
-                Route::get('/{id}', [DeliveriesTasks::class, 'show'])->name('show');
-                Route::delete('/{id}', [DeliveriesTasks::class, 'destroy'])->name('destroy');
-
+                Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
+                Route::prefix('create')->name('create.')->group(function () {
+                    Route::resource('/', DeliveriesTasksCreate::class);
+                    Route::get('/geocoding-proxy', [DeliveriesTasksCreate::class, 'geocodingProxy'])->name('geocodingProxy');
+                });
                 Route::prefix('{id}/edit')->name('edit.')->group(function () {
-                     Route::get('/', [DeliveriesTasksEdit::class, 'index'])->name('index');
+                    Route::get('/', [DeliveriesTasksEdit::class, 'index'])->name('index');
                 });
             });
             Route::prefix('reports')->name('reports.')->group(function () {
-                Route::resource('/', DeliveriesReports::class);
+                Route::resource('/', DeliveriesReports::class)->parameters(['' => 'id']);
             });
             Route::prefix('rates')->name('rates.')->group(function () {
-                Route::resource('/', DeliveriesRates::class);
+                Route::resource('/', DeliveriesRates::class)->parameters(['' => 'id']);
                 Route::prefix('categories')->name('categories.')->group(function () {
                     Route::resource('/', DeliveriesRatesCategories::class);
                 });
