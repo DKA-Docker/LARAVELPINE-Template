@@ -65,7 +65,7 @@ const TaskDetailModule: TaskDetailModuleInterface = {
         // Check when Livewire updates (e.g. switching tabs)
         document.addEventListener('livewire:navigated', checkAndInitMap);
         document.addEventListener('livewire:initialized', () => {
-            Livewire.hook('morph.updated', ({ el, component }) => {
+            Livewire.hook('morph.updated', () => {
                 checkAndInitMap();
             });
         });
