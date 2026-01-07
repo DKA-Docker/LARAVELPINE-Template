@@ -105,6 +105,38 @@ class ResourcesDeliveriesRequestsServices
         }
     }
 
+    public function Find($id)
+    {
+        return $this->repositoryRequest->Find($id);
+    }
+
+    public function Update($id, array $data): array
+    {
+        try {
+            DB::beginTransaction();
+
+            $request = $this->repositoryRequest->Find($id);
+            
+            // Only update fillable fields from data
+            $request->update($data);
+
+            DB::commit();
+
+            return [
+                'status'  => true,
+                'message' => 'Berhasil memperbarui request pengiriman.',
+                'data'    => $request,
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return [
+                'status'  => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
     public function query(): Builder
     {
         return $this->repositoryRequest->query();

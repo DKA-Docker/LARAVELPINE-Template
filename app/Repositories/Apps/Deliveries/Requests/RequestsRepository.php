@@ -53,7 +53,9 @@ class RequestsRepository implements RequestsRepositoryInterface {
 
     public function Find($id) : null|Collection|AppsDeliveriesRequests|Model
     {
-        return AppsDeliveriesRequests::query()->findOrFail($id);
+        return AppsDeliveriesRequests::query()->with([
+            'destinations.packages'
+        ])->findOrFail($id);
     }
 
     public function Delete($id) : bool|null
