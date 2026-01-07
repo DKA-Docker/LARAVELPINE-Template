@@ -23,7 +23,7 @@ class ResourcesDeliveriesRequestsDestinationsServices
         return $this->repository->Create($args);
     }
 
-    public function ReadAll(array $includedIds = [], array $excludedIds = []): Collection
+    public function ReadAll(array $includedIds = [], array $excludedIds = [], string $search = ''): Collection
     {
         $query = $this->repository->query();
 
@@ -35,7 +35,17 @@ class ResourcesDeliveriesRequestsDestinationsServices
             $query->whereNotIn('id', $excludedIds);
         }
 
-        return $query->get();
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('receipt_name', 'ilike', "%{$search}%")
+                  ->orWhere('receipt_address', 'ilike', "%{$search}%")
+                  ->orWhereHas('request', function ($qRequest) use ($search) {
+                      $qRequest->where('name', 'ilike', "%{$search}%");
+                  });
+            });
+        }
+
+        return $query->with(['account','request'])->get();
     }
 
     public function Count(): int
