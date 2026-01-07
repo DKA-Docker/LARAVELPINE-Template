@@ -56,7 +56,7 @@ $(window).on('load', function () {
                 name: {
                     title: 'Name',
                     render: (value: any, row: { name: any; id: any; }) => {
-                        return row.name ? `<a href="./tasks/show/${row.id}" class="kt-btn-ghost kt-btn-primary">${row.name}</a>` : '-';
+                        return row.name ? `<a href="tasks/${row.id}" class="kt-btn-ghost kt-btn-primary">${row.name}</a>` : '-';
                     }
                 },
                 assigned: {
@@ -79,10 +79,16 @@ $(window).on('load', function () {
                 },
                 actions: {
                     title: 'Aksi',
-                    render: () => {
-                        return `<a class="kt-btn kt-btn-ghost kt-btn-destructive" href="#">
-                                    Hapus Task
-                                </a>`;
+                    render: (value: any, row: { id: any; name: any; }) => {
+                        return `
+                        <div class="flex items-center gap-2">
+                            <a href="tasks/${row.id}" class="kt-btn kt-btn-ghost kt-btn-primary kt-btn-sm">
+                                Detail
+                            </a>
+                            <button class="kt-btn kt-btn-ghost kt-btn-destructive kt-btn-sm btn-delete" data-id="${row.id}" data-name="${row.name}">
+                                Hapus
+                            </button>
+                        </div>`;
                     }
                 },
             },
@@ -114,5 +120,46 @@ $(window).on('load', function () {
             },
         });
         datatable.reload();
+
+        // Handle Delete Action
+        $(document).on('click', '.btn-delete', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const url = `${FullUriCurrentURL}/${id}`; // URL for DELETE request
+
+            // @ts-ignore
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: `Anda akan menghapus tugas "${name}". Data yang dihapus tidak dapat dikembalikan!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result: any) => {
+                if (result.isConfirmed) {
+                    axios.delete(url)
+                        .then((response) => {
+                            // @ts-ignore
+                            Swal.fire(
+                                'Terhapus!',
+                                'Tugas berhasil dihapus.',
+                                'success'
+                            );
+                            datatable.reload();
+                        })
+                        .catch((error) => {
+                            // @ts-ignore
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus data.',
+                                'error'
+                            );
+                        });
+                }
+            });
+        });
     }
 });
