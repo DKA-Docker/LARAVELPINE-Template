@@ -13,5 +13,8 @@ class Index extends Controller
         return view('dashboards.apps.deliveries.requests.index');
     }
 
-
+    public function show($id): Factory|View
+    {
+        return view('dashboards.apps.deliveries.requests.detail-page', ['requestId' => $id]);
+    }
 }

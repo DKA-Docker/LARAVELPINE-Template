@@ -5,6 +5,7 @@ namespace Routes;
 use App\Http\Controllers\V1\Frontend\Auth\Index as FrontendAuth;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Reports\Index as DeliveriesReports;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Create as DeliveriesRequestCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Edit as DeliveriesRequestEdit;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Index as DeliveriesRequest;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as DeliveriesTasksCreate;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Edit as DeliveriesTasksEdit;
@@ -50,6 +51,9 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 Route::prefix('create')->name('create.')->group(function () {
                     Route::resource('/', DeliveriesRequestCreate::class);
                     Route::get('/geocoding-proxy', [DeliveriesRequestCreate::class, 'geocodingProxy'])->name('geocodingProxy');
+                });
+                Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                    Route::get('/', [DeliveriesRequestEdit::class, 'index'])->name('index');
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
