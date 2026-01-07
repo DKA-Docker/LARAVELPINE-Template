@@ -36,7 +36,7 @@
                 <!-- Container -->
                 @livewire("metronic.dashboards.apps.deliveries.tasks.particles.headings.headings")
                 <!-- End of Container -->
-                @livewire("metronic.dashboards.apps.deliveries.tasks.view")
+                @livewire("metronic.dashboards.apps.deliveries.tasks.components.view")
             </main>
             <!-- End of Content -->
             @livewire("metronic.dashboards.layouts.constructors.footers")

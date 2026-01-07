@@ -80,9 +80,9 @@
                             <tr class="group hover:bg-gray-50 transition-all duration-300">
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col gap-1">
-                                        <span class="font-bold text-gray-800 text-sm group-hover:text-primary transition-colors cursor-pointer">
+                                        <a href="{{ route('dashboards.apps.deliveries.tasks.show', $item->id) }}" wire:navigate class="font-bold text-gray-800 text-sm group-hover:text-primary transition-colors cursor-pointer">
                                             {{ $item->name ?? 'Unnamed Task' }}
-                                        </span>
+                                        </a>
                                         <span class="px-2 py-0.5 rounded-md bg-gray-100 text-[9px] font-bold text-gray-500 w-fit uppercase tracking-tight">
                                             REQ: {{ $item->destination->request->account->information->first_name ?? 'N/A' }}
                                         </span>
@@ -158,8 +158,21 @@
 
                                 <td class="px-6 py-5 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm" href="./tasks/{{ $item->id }}/edit" wire:navigate><i class="ki-filled ki-pencil fs-5" title="Edit Task"></i>
+                                        <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm" href="{{ route('dashboards.apps.deliveries.tasks.show', $item->id) }}" wire:navigate title="Detail">
+                                            <i class="ki-filled ki-eye fs-5"></i>
                                         </a>
+                                        <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-50 text-yellow-500 hover:bg-yellow-100 hover:text-yellow-600 transition-colors shadow-sm" href="./tasks/{{ $item->id }}/edit" wire:navigate title="Edit">
+                                            <i class="ki-filled ki-pencil fs-5"></i>
+                                        </a>
+                                        <button 
+                                            class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm"
+                                            type="button"
+                                            wire:click="delete('{{ $item->id }}')"
+                                            wire:confirm="Are you sure you want to delete this task?"
+                                            title="Delete"
+                                        >
+                                            <i class="ki-filled ki-trash fs-5"></i>
+                                        </button>
                                     </div>
                                 </td>
 

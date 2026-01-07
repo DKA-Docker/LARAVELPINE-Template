@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks;
+namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components;
 
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -71,6 +71,25 @@ class View extends Component
     public function placeholder(): Factory|ViewContract|\Illuminate\View\View
     {
         return view('dashboards.layouts.placeholders.view');
+    }
+
+    public function delete($id)
+    {
+        if (!Auth::user()->can('dashboards.apps.deliveries.tasks.delete')) {
+             $this->dispatch('alert', ['type' => 'error', 'message' => 'Unauthorized action.']);
+             return;
+        }
+
+        try {
+            $response = $this->services->Delete($id);
+            if ($response['code'] == 200) {
+                 $this->dispatch('alert', ['type' => 'success', 'message' => 'Task deleted successfully.']);
+            } else {
+                 $this->dispatch('alert', ['type' => 'error', 'message' => 'Failed to delete task.']);
+            }
+        } catch (\Exception $e) {
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+        }
     }
 
     public function render(): ViewContract
