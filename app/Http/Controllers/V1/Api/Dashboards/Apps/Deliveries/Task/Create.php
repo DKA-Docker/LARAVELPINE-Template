@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task;
 
-use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
+use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Create extends controller {
 
-    protected ResourcesDeliveriesTaksServices $service;
+    protected ResourcesDeliveriesTasksServices $service;
 
     public function __construct(){
-        $this->service = new ResourcesDeliveriesTaksServices();
+        $this->service = new ResourcesDeliveriesTasksServices();
     }
 
     /**
