@@ -82,7 +82,16 @@ class TasksRepository implements TasksRepositoryInterface {
      */
     public function Find($id) : null|Collection|AppsDeliveriesTasks|Model
     {
-        return AppsDeliveriesTasks::query()->findOrFail($id);
+        return AppsDeliveriesTasks::query()->with([
+            'assigned.firebase',
+            'assigned.information',
+            'assigned.contact',
+            'vehicle',
+            'destination.packages',
+            'destination.request.account.information',
+            'history.account.information',
+            'geos'
+        ])->findOrFail($id);
     }
 
     /**

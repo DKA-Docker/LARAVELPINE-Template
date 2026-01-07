@@ -43,6 +43,16 @@ class ResourcesDeliveriesTasksServices
      * @return array{status:bool,code:int,msg:string,data?:mixed}
      * @throws Throwable
      */
+    /**
+     * Finds Task for Detail View with all necessary relations
+     */
+    public function FindByID(string $id)
+    {
+        return $this->repository->Find($id);
+    }
+
+
+
     public function Create(array $payload): array
     {
         DB::beginTransaction(); // Mengaktifkan kembali transaksi database

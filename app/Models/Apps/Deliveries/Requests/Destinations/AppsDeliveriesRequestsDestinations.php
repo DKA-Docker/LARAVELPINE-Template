@@ -35,7 +35,7 @@ class AppsDeliveriesRequestsDestinations extends Model {
         'updated_at' => 'datetime',
     ];
 
-    protected $with = ['account','packages'];
+    protected $with = ['account','packages']; // Removed 'request' to allow deep eager loading without recursion
 //    protected $with = ['account'];
 
     /**
