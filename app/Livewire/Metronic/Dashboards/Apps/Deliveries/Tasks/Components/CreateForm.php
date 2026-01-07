@@ -28,6 +28,7 @@ class CreateForm extends Component
     public $perPage = 5;
     public $currentPage = 1;
     public $driverSearch = '';
+    public $destinationSearch = '';
 
     public $formData = [
         'name' => '',
@@ -51,6 +52,7 @@ class CreateForm extends Component
     public $availableVehicles = [];
 
     public $destinations = [];
+    public $selectedDestinationDetail = null;
     public $provinces = [];
     public $regencies = [];
     public $districts = [];
@@ -81,9 +83,8 @@ class CreateForm extends Component
             throw new AuthorizationException("Unauthorized access to this scope.");
         }
 
-        $usedDestinationIds = AppsDeliveriesTasks::pluck('destination')->toArray();
-        $response = $this->destService->ReadAll(excludedIds: $usedDestinationIds);
-        $this->destinations = $response['data'] ?? $response;
+        // $response = $this->destService->ReadAll();
+        // $this->destinations = $response['data'] ?? $response;
 
         $resProv = $this->GeoProvincesServices->ReadAll();
         $this->provinces = $resProv['data'] ?? $resProv;
@@ -111,11 +112,14 @@ class CreateForm extends Component
             return;
         }
 
-        $dest = collect($this->destinations)->firstWhere('id', $value);
-
+        $usedDestinationIds = AppsDeliveriesTasks::pluck('destination')->toArray();
+        $response = $this->destService->ReadAll(includedIds: [$value], excludedIds: [], search: '');
+        $dest = collect($response['data'] ?? $response)->first();
+        
         if ($dest) {
-            $this->formData['geos']['latitude'] = $dest['latitude'] ?? $this->formData['geos']['latitude'];
-            $this->formData['geos']['longitude'] = $dest['longitude'] ?? $this->formData['geos']['longitude'];
+            $this->selectedDestinationDetail = $dest->toArray();
+            $this->formData['geos']['latitude'] = $dest['coordinate_latitude'] ?? $this->formData['geos']['latitude'];
+            $this->formData['geos']['longitude'] = $dest['coordinate_longitude'] ?? $this->formData['geos']['longitude'];
             $this->formData['geos']['province'] = $dest['province_id'] ?? $dest['province'] ?? null;
 
             if ($this->formData['geos']['province']) {
@@ -134,13 +138,26 @@ class CreateForm extends Component
             }
 
             if (isset($dest['receipt_address'])) {
-                $this->dispatch('search-location', address: $dest['receipt_address']);
+                $this->dispatch('search-location', [
+                    'address' => $dest['receipt_address'],
+                    'lat' => $dest['coordinate_latitude'] ?? null,
+                    'lng' => $dest['coordinate_longitude'] ?? null,
+                ]);
             }
 
             $this->formData['first_name'] = $dest['receipt_name'] ?? null;
 
         }
         $this->currentPage = 1;
+    }
+
+    public function unselectDestination(): void
+    {
+        $this->formData['destination'] = '';
+        $this->destinationSearch = '';
+        $this->resetGeo();
+        $this->destinations = [];
+        $this->selectedDestinationDetail = null;
     }
 
     public function updatedFormDataGeosProvince($value): void
@@ -248,6 +265,16 @@ class CreateForm extends Component
     {
         $suggestions = [];
         $searchTerm = trim($this->driverSearch);
+        $destSearchTerm = trim($this->destinationSearch);
+
+        // Fetch Destinations dynamically
+        if (strlen($destSearchTerm) >= 1) {
+             $usedDestinationIds = AppsDeliveriesTasks::pluck('destination')->toArray();
+             $destResponse = $this->destService->ReadAll(excludedIds: $usedDestinationIds, search: $destSearchTerm);
+             $this->destinations = $destResponse['data'] ?? $destResponse;
+        } else {
+             $this->destinations = [];
+        }
 
         if (strlen($searchTerm) >= 1) {
             $response = $this->accountsServices->FindByName($searchTerm,"driver");

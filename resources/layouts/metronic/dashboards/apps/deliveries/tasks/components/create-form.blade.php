@@ -25,12 +25,78 @@
                 <div class="kt-card-content p-8">
                     <div class="flex flex-col gap-2 mb-8">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider ml-1">{{ __('dashboard.task.create.region.destination_label') }}</label>
-                        <select wire:model.live="formData.destination" class="form-select kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-red-50 font-bold text-gray-700 shadow-sm transition-all">
-                            <option value="">{{ __('dashboard.task.create.region.select_destination') }}</option>
-                            @foreach($destinations as $dest)
-                                <option value="{{ $dest['id'] }}">{{ $dest['receipt_name'] }} ({{ $dest['receipt_address'] }})</option>
-                            @endforeach
-                        </select>
+
+                        @if(!empty($formData['destination']))
+                            {{-- SELECTED STATE: CARD DISPLAY --}}
+                            <div class="relative bg-white border border-blue-100 rounded-2xl p-4 shadow-sm group animate-fade-in ring-4 ring-blue-50/50">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                                            <i class="ki-filled ki-map text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-black text-gray-800 uppercase leading-none mb-1">
+                                                {{ $selectedDestinationDetail['receipt_name'] ?? 'Unknown Receiver' }}
+                                            </h4>
+                                            <p class="text-[10px] text-gray-500 font-bold uppercase leading-tight mb-2">
+                                                {{ $selectedDestinationDetail['receipt_address'] ?? 'No Address' }}
+                                            </p>
+                                            <div class="inline-flex items-center gap-2 px-2 py-1 bg-gray-100 rounded-lg">
+                                                <i class="ki-filled ki-briefcase text-gray-400 text-xs"></i>
+                                                <span class="text-[9px] font-black text-gray-500 uppercase">
+                                                     {{ $selectedDestinationDetail['request']['name'] ?? 'No Request Title' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" wire:click="unselectDestination" class="p-2 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-xl transition-all">
+                                        <i class="ki-filled ki-trash text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @else
+                            {{-- SEARCH STATE --}}
+                            <div class="relative">
+                                <input wire:model.live.debounce.300ms="destinationSearch"
+                                       type="text"
+                                       class="kt-input h-14 rounded-2xl border-gray-100 focus:ring-4 focus:ring-red-50 font-bold text-gray-700 shadow-sm transition-all pl-12"
+                                       placeholder="{{ __('dashboard.task.create.region.select_destination') }}">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="ki-filled ki-magnifier text-xl text-gray-300"></i>
+                                </div>
+
+                                {{-- DROPDOWN --}}
+                                @if(strlen($destinationSearch) >= 1)
+                                    <div class="absolute z-50 mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-64 overflow-y-auto p-2 animate-fade-in">
+                                        @forelse($destinations as $dest)
+                                            <div wire:click="$set('formData.destination', '{{ $dest['id'] }}')"
+                                                 class="p-3 hover:bg-red-50/50 cursor-pointer rounded-xl mb-1 transition-all group border border-transparent hover:border-red-100">
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <div class="text-[11px] font-black text-gray-800 group-hover:text-red-600 uppercase transition-colors mb-0.5">
+                                                            {{ $dest['receipt_name'] }}
+                                                        </div>
+                                                        <div class="text-[9px] text-gray-400 font-bold uppercase truncate max-w-[200px]">
+                                                            {{ $dest['receipt_address'] }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                         <span class="text-[8px] font-black text-gray-300 group-hover:text-red-400 uppercase bg-gray-50 group-hover:bg-red-100 px-2 py-1 rounded-lg">
+                                                            {{ $dest['request']['name'] ?? 'N/A' }}
+                                                         </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="px-4 py-8 text-center">
+                                                <i class="ki-outline ki-search-list text-3xl text-gray-200 mb-2"></i>
+                                                <p class="text-[10px] text-gray-400 font-black uppercase">{{ __('dashboard.task.create.crew.not_found') }}</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                         @error('formData.destination') <span class="text-red-500 text-[10px] font-bold ml-1 italic">{{ $message }}</span> @enderror
                     </div>
 
