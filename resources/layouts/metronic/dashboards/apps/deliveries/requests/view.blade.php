@@ -51,12 +51,13 @@
                             <th class="px-6 py-5 text-left">Muatan (Dest/Pkt)</th> {{-- KOLOM GABUNGAN --}}
                             <th class="px-6 py-5 text-left">Requested By</th>
                             <th class="px-6 py-5 text-left">Status</th>
+                            <th class="px-6 py-5 text-right w-24">Actions</th>
                             <th class="px-6 py-5 text-right">Dibuat</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse($deliveries as $item)
-                            <tr class="group transition-all duration-300">
+                            <tr class="group transition-all duration-300 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('dashboards.apps.deliveries.requests.show', $item->id) }}'">
 
                                 {{-- MODERNIZED: Kolom Nama Request --}}
                                 <td class="px-6 py-5">
@@ -134,6 +135,23 @@
                                             <span class="w-1 h-1 rounded-full bg-current mr-1.5"></span>
                                             {{ $st }}
                                         </span>
+                                    <td class="px-6 py-5 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm" href="{{ route('dashboards.apps.deliveries.requests.show', $item->id) }}" onclick="event.stopPropagation()" title="Detail">
+                                                <i class="ki-filled ki-eye fs-5"></i>
+                                            </a>
+                                            <a class="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-50 text-yellow-500 hover:bg-yellow-100 hover:text-yellow-600 transition-colors shadow-sm" href="{{ route('dashboards.apps.deliveries.requests.edit.index', $item->id) }}" onclick="event.stopPropagation()" title="Edit">
+                                                <i class="ki-filled ki-pencil fs-5"></i>
+                                            </a>
+                                            <button 
+                                                class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm"
+                                                type="button"
+                                                onclick="event.stopPropagation()"
+                                                title="Delete"
+                                            >
+                                                <i class="ki-filled ki-trash fs-5"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-5 text-right">
                                         <div class="flex flex-col items-end gap-1">
