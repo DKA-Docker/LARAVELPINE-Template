@@ -51,7 +51,7 @@
                  
                  <!-- Detail Component -->
                 <div class="kt-container-fixed">
-                     @livewire('metronic.dashboards.apps.deliveries.tasks.components.detail', ['taskId' => $task->id])
+                     @livewire('metronic.dashboards.apps.deliveries.tasks.components.view.view', ['taskId' => $task->id])
                 </div>
             </main>
             <!-- End of Content -->
