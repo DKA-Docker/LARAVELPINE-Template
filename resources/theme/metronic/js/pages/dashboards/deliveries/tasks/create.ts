@@ -92,7 +92,16 @@ const TaskCreateModule: TaskCreateModuleInterface = {
             // @ts-ignore
             Livewire.on('search-location', (event: any) => {
                 const data = Array.isArray(event) ? event[0] : event;
-                if (data.address) self.geocodeAddress(data.address, true);
+                if (data.lat && data.lng) {
+                    self.moveToLocation(parseFloat(data.lng), parseFloat(data.lat), false);
+                    if (data.address) {
+                        self.isAutoFilling = true;
+                        $('#map-search-input').val(data.address).trigger('input');
+                        setTimeout(() => { self.isAutoFilling = false; }, 300);
+                    }
+                } else if (data.address) {
+                    self.geocodeAddress(data.address, true);
+                }
             });
 
             // @ts-ignore
