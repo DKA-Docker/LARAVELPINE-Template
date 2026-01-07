@@ -9,6 +9,7 @@ import "./pages/chat/chat.ts"; // Chat Reverb Logic\
 import "./pages/dashboards/deliveries/requests/create.ts";
 import "./pages/dashboards/deliveries/tasks/index";
 import "./pages/dashboards/deliveries/tasks/create";
+import "./pages/dashboards/deliveries/tasks/detail.ts";
 import "./pages/dashboards/deliveries/tasks/edit";
 import "./pages/dashboards/deliveries/tasks/show";
 import "./pages/managements/accounts/index";
