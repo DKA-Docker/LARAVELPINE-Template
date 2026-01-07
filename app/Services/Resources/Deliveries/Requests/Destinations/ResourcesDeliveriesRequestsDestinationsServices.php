@@ -23,10 +23,19 @@ class ResourcesDeliveriesRequestsDestinationsServices
         return $this->repository->Create($args);
     }
 
-    public function ReadAll(): Collection
+    public function ReadAll(array $includedIds = [], array $excludedIds = []): Collection
     {
+        $query = $this->repository->query();
 
-        return $this->repository->ReadAll();
+        if (!empty($includedIds)) {
+            $query->whereIn('id', $includedIds);
+        }
+
+        if (!empty($excludedIds)) {
+            $query->whereNotIn('id', $excludedIds);
+        }
+
+        return $query->get();
     }
 
     public function Count(): int

@@ -81,7 +81,8 @@ class CreateForm extends Component
             throw new AuthorizationException("Unauthorized access to this scope.");
         }
 
-        $response = $this->destService->ReadAll();
+        $usedDestinationIds = AppsDeliveriesTasks::pluck('destination')->toArray();
+        $response = $this->destService->ReadAll(excludedIds: $usedDestinationIds);
         $this->destinations = $response['data'] ?? $response;
 
         $resProv = $this->GeoProvincesServices->ReadAll();
