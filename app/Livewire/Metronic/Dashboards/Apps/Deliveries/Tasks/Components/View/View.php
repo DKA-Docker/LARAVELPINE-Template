@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components;
+namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components\View;
 
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 
-class Detail extends Component
+#[Lazy]
+class View extends Component
 {
     public string $taskId;
     public string $activeTab = 'general'; // Default tab
