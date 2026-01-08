@@ -61,9 +61,9 @@ class ResourcesDeliveriesDataRatesCategoriesServices
         DB::beginTransaction();
         try {
             $category = $this->repository->Find($id);
-            
+
             $data = $request->only(['name', 'icon', 'description']);
-            
+
             $category->update($data);
 
             DB::commit();
@@ -126,5 +126,10 @@ class ResourcesDeliveriesDataRatesCategoriesServices
                 'msg' => $e->getMessage(),
             ];
         }
+    }
+
+    public function query(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->repository->query();
     }
 }

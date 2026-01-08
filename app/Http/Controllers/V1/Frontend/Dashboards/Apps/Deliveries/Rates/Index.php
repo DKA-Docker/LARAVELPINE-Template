@@ -12,4 +12,14 @@ class Index extends Controller
     {
         return view('dashboards.apps.deliveries.rates.index');
     }
+
+    public function create(): Factory|View
+    {
+        return view('dashboards.apps.deliveries.rates.create');
+    }
+
+    public function edit(string $id): Factory|View
+    {
+        return view('dashboards.apps.deliveries.rates.edit', compact('id'));
+    }
 }

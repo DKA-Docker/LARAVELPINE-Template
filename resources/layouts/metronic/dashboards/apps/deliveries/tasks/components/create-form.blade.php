@@ -194,26 +194,26 @@
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center">
                                 <i class="ki-filled ki-user text-xl text-gray-300"></i>
                             </div>
-                        </div>
 
-                        @if(strlen($driverSearch) >= 1)
-                            <div class="absolute z-[100] mt-[105px] w-full bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-56 overflow-y-auto p-2 animate-fade-in">
-                                @forelse($suggestions as $driver)
-                                    <div wire:click="addDriver('{{ $driver['id'] }}', '{{ trim(($driver['information']['first_name'] ?? '') . ' ' . ($driver['information']['last_name'] ?? '')) ?: $driver['credential']['username'] }}')"
-                                         class="px-4 py-3 hover:bg-blue-50 cursor-pointer rounded-xl mb-1 transition-all group">
-                                        <div class="text-[11px] font-black text-gray-800 group-hover:text-blue-700 uppercase transition-colors">
-                                            {{ $driver['information']['first_name'] ?? '' }} {{ $driver['information']['last_name'] ?? '' }}
+                            @if(strlen($driverSearch) >= 1)
+                                <div class="absolute z-[100] top-full mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-56 overflow-y-auto p-2 animate-fade-in">
+                                    @forelse($suggestions as $driver)
+                                        <div wire:click="addDriver('{{ $driver['id'] }}', '{{ trim(($driver['information']['first_name'] ?? '') . ' ' . ($driver['information']['last_name'] ?? '')) ?: $driver['credential']['username'] }}')"
+                                             class="px-4 py-3 hover:bg-blue-50 cursor-pointer rounded-xl mb-1 transition-all group">
+                                            <div class="text-[11px] font-black text-gray-800 group-hover:text-blue-700 uppercase transition-colors">
+                                                {{ $driver['information']['first_name'] ?? '' }} {{ $driver['information']['last_name'] ?? '' }}
+                                            </div>
+                                            <div class="text-[9px] text-gray-400 font-bold uppercase">{{ $driver['contact']['email'] ?? 'no-email@driver.com' }}</div>
                                         </div>
-                                        <div class="text-[9px] text-gray-400 font-bold uppercase">{{ $driver['contact']['email'] ?? 'no-email@driver.com' }}</div>
-                                    </div>
-                                @empty
-                                    <div class="px-4 py-10 text-center">
-                                        <i class="ki-outline ki-search-list text-3xl text-gray-200 mb-2"></i>
-                                        <p class="text-[10px] text-gray-400 font-black uppercase">{{ __('dashboard.task.create.crew.not_found') }}</p>
-                                    </div>
-                                @endforelse
-                            </div>
-                        @endif
+                                    @empty
+                                        <div class="px-4 py-10 text-center">
+                                            <i class="ki-outline ki-search-list text-3xl text-gray-200 mb-2"></i>
+                                            <p class="text-[10px] text-gray-400 font-black uppercase">{{ __('dashboard.task.create.crew.not_found') }}</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="kt-card-content p-1 w-full">

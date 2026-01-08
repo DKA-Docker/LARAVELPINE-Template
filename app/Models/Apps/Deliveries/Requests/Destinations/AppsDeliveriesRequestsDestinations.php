@@ -56,4 +56,9 @@ class AppsDeliveriesRequestsDestinations extends Model {
     {
         return $this->hasMany(AppsDeliveriesRequestsDestinationsPackages::class, 'destination','id' );
     }
+
+    public function task(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks::class, 'destination', 'id');
+    }
 }

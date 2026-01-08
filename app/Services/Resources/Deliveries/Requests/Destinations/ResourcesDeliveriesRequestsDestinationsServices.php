@@ -31,6 +31,7 @@ class ResourcesDeliveriesRequestsDestinationsServices
             $query->whereIn('id', $includedIds);
         }
 
+//        mencari yang tidak ada dalam daftar
         if (!empty($excludedIds)) {
             $query->whereNotIn('id', $excludedIds);
         }

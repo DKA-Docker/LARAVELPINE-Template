@@ -165,6 +165,7 @@ return [
                 'title' => 'Validation Error',
                 'message' => 'Failed to save because some inputs are missing.',
             ],
+
             'region' => [
                 'title' => 'Region Profiling',
                 'destination_label' => 'Recipient Destination',
@@ -231,6 +232,20 @@ return [
                 'synchronizing' => 'Synchronizing...',
             ],
         ],
+    ],
+    'rates' => [
+        'create' => [
+             'validation_error' => [
+                'title' => 'Validation Error',
+                'message' => 'Failed to save because some inputs are missing.',
+            ],
+        ],
+        'edit' => [
+             'validation_error' => [
+                'title' => 'Validation Error',
+                'message' => 'Failed to save because some inputs are missing.',
+            ],
+        ]
     ],
     'tracking' => [
         'hud' => [

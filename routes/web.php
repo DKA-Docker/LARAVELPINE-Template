@@ -55,6 +55,9 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 Route::prefix('{id}/edit')->name('edit.')->group(function () {
                     Route::get('/', [DeliveriesRequestEdit::class, 'index'])->name('index');
                 });
+                Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                    Route::get('/', [App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Requests\Edit::class, 'index'])->name('index');
+                });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
                 Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
@@ -97,4 +100,3 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
         });
     });
 });
-

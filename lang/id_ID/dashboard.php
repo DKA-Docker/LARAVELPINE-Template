@@ -165,6 +165,7 @@ return [
                 'title' => 'Kesalahan Validasi',
                 'message' => 'Gagal disimpan karena ada inputan tertentu belum di isi.',
             ],
+
             'region' => [
                 'title' => 'Profil Wilayah',
                 'destination_label' => 'Destinasi Penerima',
@@ -231,6 +232,20 @@ return [
                 'synchronizing' => 'Sedang menyinkronkan...',
             ],
         ],
+    ],
+    'rates' => [
+        'create' => [
+             'validation_error' => [
+                'title' => 'Kesalahan Validasi',
+                'message' => 'Gagal disimpan karena ada inputan tertentu belum di isi.',
+            ],
+        ],
+        'edit' => [
+             'validation_error' => [
+                'title' => 'Kesalahan Validasi',
+                'message' => 'Gagal disimpan karena ada inputan tertentu belum di isi.',
+            ],
+        ]
     ],
     'tracking' => [
         'hud' => [
