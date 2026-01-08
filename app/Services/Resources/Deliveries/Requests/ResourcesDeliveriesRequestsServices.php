@@ -137,6 +137,38 @@ class ResourcesDeliveriesRequestsServices
         }
     }
 
+    public function Delete($id): array
+    {
+        try {
+            DB::beginTransaction();
+
+            $request = $this->repositoryRequest->Find($id);
+
+            if (!$request) {
+                return [
+                    'status'  => false,
+                    'msg' => 'Request not found', // msg key matches other service responses
+                ];
+            }
+
+            $request->delete();
+
+            DB::commit();
+
+            return [
+                'status'  => true,
+                'msg' => 'Request deleted successfully',
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return [
+                'status'  => false,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
     public function query(): Builder
     {
         return $this->repositoryRequest->query();

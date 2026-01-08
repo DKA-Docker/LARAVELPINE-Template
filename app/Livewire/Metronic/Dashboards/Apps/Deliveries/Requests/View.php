@@ -56,6 +56,48 @@ class View extends Component
         return view('dashboards.layouts.placeholders.view');
     }
 
+    public $confirmingDeletion = false;
+    public $deleteId = null;
+
+    public function confirmDelete(string $id): void
+    {
+        $this->deleteId = $id;
+        $this->confirmingDeletion = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->confirmingDeletion = false;
+        $this->deleteId = null;
+    }
+
+    public function deleteConfirmed(): void
+    {
+        if (!Auth::user()->can('dashboards.apps.deliveries.requests.delete')) {
+            session()->flash('error', 'Unauthorized action.');
+            $this->cancelDelete();
+            return;
+        }
+
+        if (!$this->deleteId) {
+            return;
+        }
+
+        try {
+            $response = $this->services->Delete($this->deleteId);
+            if ($response['status']) {
+                session()->flash('success', $response['msg']);
+            } else {
+                session()->flash('error', 'Failed to delete request: ' . $response['msg']);
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error: ' . $e->getMessage());
+        }
+
+        $this->confirmingDeletion = false;
+        $this->deleteId = null;
+    }
+
     public function render(): ViewContract
     {
         if (!$this->isAuthorized) {

@@ -101,6 +101,9 @@ class TasksRepository implements TasksRepositoryInterface {
      */
     public function Delete($id) : bool|null
     {
+        if ($id instanceof Model) {
+            return $id->delete();
+        }
         $data = $this->Find($id);
         return $data->delete();
     }

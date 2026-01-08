@@ -73,24 +73,48 @@ class View extends Component
         return view('dashboards.layouts.placeholders.view');
     }
 
-    public function delete($id)
+    public $confirmingDeletion = false;
+    public $deleteId = null;
+
+    public function confirmDelete(string $id): void
+    {
+        $this->deleteId = $id;
+        $this->confirmingDeletion = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->confirmingDeletion = false;
+        $this->deleteId = null;
+    }
+
+    public function deleteConfirmed(): void
     {
         if (!Auth::user()->can('dashboards.apps.deliveries.tasks.delete')) {
-             $this->dispatch('alert', ['type' => 'error', 'message' => 'Unauthorized action.']);
+             session()->flash('error', 'Unauthorized action.');
+             $this->cancelDelete();
              return;
         }
 
+        if (!$this->deleteId) {
+            return;
+        }
+
         try {
-            $response = $this->services->Delete($id);
-            if ($response['code'] == 200) {
-                 $this->dispatch('alert', ['type' => 'success', 'message' => 'Task deleted successfully.']);
+            $response = $this->services->Delete($this->deleteId);
+            if ($response['status']) {
+                 session()->flash('success', $response['msg']);
             } else {
-                 $this->dispatch('alert', ['type' => 'error', 'message' => 'Failed to delete task.']);
+                 session()->flash('error', 'Failed to delete task: ' . $response['msg']);
             }
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+            session()->flash('error', 'Error: ' . $e->getMessage());
         }
+
+        $this->confirmingDeletion = false;
+        $this->deleteId = null;
     }
+
 
     public function render(): ViewContract
     {
