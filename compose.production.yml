@@ -93,7 +93,7 @@ services:
 
       THEME_NAME: metronic
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 1
         delay: 10s
