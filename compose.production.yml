@@ -3,7 +3,6 @@ name: hndgroup-logistech
 services:
   app:
     image: yovanggaanandhika/laravelpine:8.3
-    container_name: hndgroup-logistech-app
     hostname: hndgroup-logistech-app
     pull_policy: always
     environment:
@@ -13,9 +12,9 @@ services:
       APP_DEBUG: false
       APP_TIMEZONE: Asia/Makassar
       # ----------------------------------------------------------
-      APP_URL: https://logistik.hndgroup.co.id
-      FRONTEND_URL: https://logistik.hndgroup.co.id
-      ASSET_URL: https://logistik.hndgroup.co.id
+      APP_URL: https://logistik.hndgroup.id
+      FRONTEND_URL: https://logistik.hndgroup.id
+      ASSET_URL: https://logistik.hndgroup.id
       # ----------------------------------------------------------
       DKA_DEV_DISABLED_NPM_SERVE: true
       # ----------------------------------------------------------
@@ -88,30 +87,35 @@ services:
 
       # Client Side (Vite/Meta Tag)
       VITE_REVERB_APP_KEY: 7cjuaglts0v6pkjsajsakjsavazjcjx
-      VITE_REVERB_HOST: "logistik.hndgroup.co.id"
+      VITE_REVERB_HOST: "logistik.hndgroup.id"
       VITE_REVERB_PORT: 443
       VITE_REVERB_SCHEME: https
 
       THEME_NAME: metronic
     deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
       resources:
         limits:
           cpus: "1.0"
-          memory: 1024M
+          memory: 800M
         reservations:
           cpus: "0.80"
-          memory: 800M
-    ports:
+          memory: 400M
+    #ports:
       # service aplikasi Socket (revert)
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        host_ip: 0.0.0.0
+      #- target: 8080
+      #  published: 8080
+      #  protocol: tcp
+      #  host_ip: 0.0.0.0
       # service aplikasi Backend
-      - target: 80
-        published: 80
-        protocol: tcp
-        host_ip: 0.0.0.0
+      #- target: 80
+      #  published: 80
+      #  protocol: tcp
+      #  host_ip: 0.0.0.0
     volumes:
       - type: volume
         source: storage-data
