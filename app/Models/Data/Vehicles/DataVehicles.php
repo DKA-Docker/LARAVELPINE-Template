@@ -18,7 +18,7 @@ class DataVehicles extends Model
         'description'
     ];
 
-    public function category()
+    public function categoryDetail()
     {
         return $this->belongsTo(DataVehicleCategories::class, 'category');
     }
