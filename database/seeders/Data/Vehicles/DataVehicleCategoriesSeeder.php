@@ -11,17 +11,19 @@ class DataVehicleCategoriesSeeder extends Seeder
 
     protected DataVehicleCategoriesFactory $factory;
 
-    public function __construct()
-    {
-        $this->factory = new DataVehicleCategoriesFactory();
-    }
-
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $this->factory->count(10)->create();
+        $categories = ['Mobil', 'Motor'];
+        
+        foreach ($categories as $name) {
+            \App\Models\Data\Vehicles\DataVehicleCategories::firstOrCreate(
+                ['name' => $name],
+                [
+                    'description' => "Kategori kendaraan ini adalah {$name}, yang digunakan untuk operasional pengiriman barang."
+                ]
+            );
+        }
+        
         $this->command->info('Success Seeder Data Vehicle Categories');
     }
 }

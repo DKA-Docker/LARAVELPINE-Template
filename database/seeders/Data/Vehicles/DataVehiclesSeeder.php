@@ -19,7 +19,15 @@ class DataVehiclesSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->factory->count(10)->create();
+        // Ensure we have categories first
+        $categories = \App\Models\Data\Vehicles\DataVehicleCategories::all();
+        
+        if ($categories->isEmpty()) {
+            $this->command->error('No Vehicle Categories found. Please seed categories first.');
+            return;
+        }
+
+        $this->factory->count(5)->create();
         $this->command->info('Success Seeder Data Vehicles');
 
     }
