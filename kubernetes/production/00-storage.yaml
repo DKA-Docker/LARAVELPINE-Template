@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logistik-postgres-pv
+  labels:
+    type: local
+    app: logistik-postgresql
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/logistik/postgres-data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: app-group
+          operator: In
+          values:
+          - logistik
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logistik-postgres-pvc
+  namespace: hgs-logistik
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  selector:
+    matchLabels:
+      type: local
+      app: logistik-postgresql
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logistik-storage-pv
+  labels:
+    type: local
+    app: logistik-app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/logistik/storage-app"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: app-group
+          operator: In
+          values:
+          - logistik
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logistik-storage-pvc
+  namespace: hgs-logistik
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  selector:
+    matchLabels:
+      type: local
+      app: logistik-app

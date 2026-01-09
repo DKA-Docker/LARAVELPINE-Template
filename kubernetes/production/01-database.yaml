@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logistech-postgresql
+  namespace: hgs-logistik
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      nodeSelector:
+        app-group: logistik
+      containers:
+        - name: postgresql
+          image: yovanggaanandhika/postgresql:latest
+          env:
+            - name: DKA_ROOT_PASSWORD
+              value: '@3ids83jed8dj_3u3hf3hjoiaj2dhfsvnrsvljfwojfojefiuhi3hfk3fiu3hfihf3f3ihf3ihuf3'
+            - name: DKA_DB_NAME
+              value: 'hndgroup_logistech'
+            - name: DKA_CRON_ENABLE
+              value: 'false'
+          resources:
+            requests:
+              memory: "300Mi"
+            limits:
+              memory: "800Mi"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: logistik-postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hndgroup-logistech-postgresql
+  namespace: hgs-logistik
+spec:
+  selector:
+    app: postgresql
+  ports:
+    - port: 5432
+      targetPort: 5432

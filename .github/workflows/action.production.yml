@@ -1,37 +1,35 @@
-name: Action Production CI/CD Backend
+name: Dynamic CI/CD Kubernetes Logistik
 
 on:
   push:
     branches:
       - production
+      - staging
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  # -------------------------------------------------
+  # --- SSH MASTER CONFIG ---
   SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
   SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
   SSH_USER: ${{ secrets.PROD_SSH_USER }}
   SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
-  # -------------------------------------------------
+  # --- DYNAMIC PATHS ---
   GITHUB_REPO_ID: ${{ github.repository_id }}
-  GITHUB_REPO_NAME: ${{ github.repository }}
-  GITHUB_REF_NAME: ${{ github.ref_name }}
-  GITHUB_SHA_ID: ${{ github.sha }}
-  # -------------------------------------------------
-  COMPOSE_FILE: compose.${{ github.ref_name }}.yml
-  # -------------------------------------------------
+  BASE_PATH: "~/APP/HNDGROUP/LOGISTIK"
+  APP_YAML_PATH: "kubernetes/${{ github.ref_name }}/02-app-logistik.yaml"
+  NAMESPACE: "hgs-logistik"
+  DEPLOYMENT_NAME: "logistik-app"
+
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code dari Git Repository
+      - name: Checkout code
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login ke Docker Hub
         uses: docker/login-action@v3
@@ -39,58 +37,51 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_TOKEN }}
 
-      - name: Build dan Push Docker image
+      - name: Build dan Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./${{ env.GITHUB_REF_NAME }}.Dockerfile
-          labels: |
-            org.opencontainers.image.title=${{ github.repository }}
-            org.opencontainers.image.description=repository ${{ env.GITHUB_REPO_NAME }} : ${{ env.GITHUB_REF_NAME }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          file: ./${{ github.ref_name }}.Dockerfile
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ env.GITHUB_REF_NAME }}-${{ env.GITHUB_SHA_ID }}
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ github.ref_name }}-${{ github.sha }}
 
-  pull:
+  deploy-to-kubernetes:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: build-and-push
     steps:
-      - name: Checkout code dari Git Repository
+      - name: Checkout code
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
-      - name: Update image tag in compose
+      - name: Update Image Tag in Manifest
         uses: fjogeleit/yaml-update-action@v0.16.0
         with:
-          valueFile: ${{ env.COMPOSE_FILE }}
-          propertyPath: services.app.image
-          value: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ env.GITHUB_REF_NAME }}-${{ env.GITHUB_SHA_ID }}
+          valueFile: ${{ env.APP_YAML_PATH }}
+          propertyPath: spec.template.spec.containers[0].image
+          value: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ github.ref_name }}-${{ github.sha }}
           commitChange: false
 
-      - name: Login Docker di Server
+      - name: Prepare Server Directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          script: |
-            echo ${{ env.DOCKER_TOKEN }} | docker login -u ${{ env.DOCKER_USERNAME }} --password-stdin
+          script: mkdir -p ${{ env.BASE_PATH }}
 
-      - name: Copy Template Compose file ke path Server di dalam server path
+      - name: Copy Manifests to Master
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          source: ${{env.COMPOSE_FILE}}
+          source: "kubernetes/${{ github.ref_name }}/*.yaml"
+          target: ${{ env.BASE_PATH }}
+          strip_components: 2
           overwrite: true
-          target: "./${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}/${{ env.GITHUB_REF_NAME }}"
 
-      - name: Menuju Path Di Server, dan Jalankan Ulang dengan image baru
+      - name: Execute Deployment & Artisan Commands
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
@@ -98,7 +89,20 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
           script: |
-            # Overide Server Path Yang dituju di dalam server production valid path
-            cd "./${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}/${{ env.GITHUB_REF_NAME }}"
-            # Start new containers
-            docker compose -f ${{ env.COMPOSE_FILE }} up -d
+            cd ${{ env.BASE_PATH }}
+
+            # Apply all manifests in the branch folder
+            sudo kubectl apply -f .
+
+            # Wait for the specific app deployment to be ready
+            echo "Waiting for pods to be ready..."
+            sudo kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }} --timeout=150s
+
+            # Run Laravel specific commands
+            echo "Running database migrations..."
+            sudo kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan migrate --force
+
+            echo "Optimizing application..."
+            sudo kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan optimize:clear
+
+            echo "Deployment to branch ${{ github.ref_name }} Successful!"

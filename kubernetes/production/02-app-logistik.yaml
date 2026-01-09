@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logistik-app
+  namespace: hgs-logistik
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: logistik
+  template:
+    metadata:
+      labels:
+        app: logistik
+    spec:
+      nodeSelector:
+        app-group: logistik
+      containers:
+        - name: php-app
+          image: hndtech/1096283549:production-6b0694bf91a009be735035dcc6697723754a3d93
+          env:
+            - name: APP_NAME
+              value: 'HND Group System Logistik'
+            - name: APP_ENV
+              value: production
+            - name: APP_KEY
+              value: "base64:EBcmQecvKL4nhi0kmw+jy4boUndO9aPTEIJ7DfZ40nA="
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_TIMEZONE
+              value: Asia/Makassar
+            - name: APP_URL
+              value: https://logistik.hndgroup.id
+            - name: FRONTEND_URL
+              value: https://logistik.hndgroup.id
+            - name: ASSET_URL
+              value: https://logistik.hndgroup.id
+            - name: APP_LOCALE
+              value: id_ID
+            - name: APP_FALLBACK_LOCALE
+              value: id_ID
+            - name: APP_FAKER_LOCALE
+              value: id_ID
+            - name: THEME_NAME
+              value: metronic
+            - name: DB_CONNECTION
+              value: pgsql
+            - name: DB_HOST
+              value: hndgroup-logistech-postgresql
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: hndgroup_logistech
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              value: '@3ids83jed8dj_3u3hf3hjoiaj2dhfsvnrsvljfwojfojefiuhi3hfk3fiu3hfihf3f3ihf3ihuf3'
+            - name: SESSION_DRIVER
+              value: database
+            - name: SESSION_TABLE
+              value: sessions_accounts
+            - name: SESSION_LIFETIME
+              value: "120"
+            - name: SESSION_ENCRYPT
+              value: "false"
+            - name: CACHE_STORE
+              value: database
+            - name: QUEUE_CONNECTION
+              value: database
+            - name: FILESYSTEM_DISK
+              value: local
+            - name: BROADCAST_CONNECTION
+              value: reverb
+            - name: REVERB_APP_ID
+              value: "582743"
+            - name: REVERB_APP_KEY
+              value: 7cjuaglts0v6pkjsajsakjsavazjcjx
+            - name: REVERB_APP_SECRET
+              value: fatogha3s1idhtg1mtf329320990230932v
+            - name: REVERB_HOST
+              value: 0.0.0.0
+            - name: REVERB_PORT
+              value: "8080"
+            - name: REVERB_SCHEME
+              value: http
+            - name: REVERB_SERVER_HOST
+              value: 0.0.0.0
+            - name: REVERB_SERVER_PORT
+              value: "8080"
+            - name: VITE_REVERB_APP_KEY
+              value: 7cjuaglts0v6pkjsajsakjsavazjcjx
+            - name: VITE_REVERB_HOST
+              value: "logistik.hndgroup.id"
+            - name: VITE_REVERB_PORT
+              value: "443"
+            - name: VITE_REVERB_SCHEME
+              value: https
+            - name: DKA_DEV_DISABLED_NPM_SERVE
+              value: "true"
+            - name: PHP_CLI_SERVER_WORKERS
+              value: "4"
+            - name: BCRYPT_ROUNDS
+              value: "12"
+            - name: LOG_CHANNEL
+              value: stack
+            - name: LOG_STACK
+              value: single
+            - name: LOG_LEVEL
+              value: error
+          resources:
+            requests:
+              memory: "400Mi"
+            limits:
+              memory: "800Mi"
+              cpu: "1.0"
+          volumeMounts:
+            - name: storage-data
+              mountPath: /var/www/storage/app
+      volumes:
+        - name: storage-data
+          persistentVolumeClaim:
+            claimName: logistik-storage-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hndgroup-logistech-app
+  namespace: hgs-logistik
+spec:
+  selector:
+    app: logistik
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: reverb
+      port: 8080
+      targetPort: 8080
