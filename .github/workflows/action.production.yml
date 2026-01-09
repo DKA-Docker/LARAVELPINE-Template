@@ -17,6 +17,7 @@ env:
   # --- DYNAMIC PATHS ---
   GITHUB_REPO_ID: ${{ github.repository_id }}
   BASE_PATH: "/home/server/APP/HNDGROUP/LOGISTIK"
+  APP_YAML_PATH: "kubernetes/${{ github.ref_name }}/02-app-logistik.yaml"
   NAMESPACE: "hgs-logistik"
   DEPLOYMENT_NAME: "logistik-app"
 
