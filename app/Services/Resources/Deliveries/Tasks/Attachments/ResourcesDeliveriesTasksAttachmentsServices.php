@@ -58,7 +58,8 @@ class ResourcesDeliveriesTasksAttachmentsServices
             // Store file
             // Format: uploads/tasks/{category}/{task_id}/{uuid}.{ext}
             $uuid = (string) Str::uuid();
-            $extension = $file->getClientOriginalExtension();
+            // Use guessed extension based on mime type to ensure consistency
+            $extension = $file->guessExtension() ?? $file->getClientOriginalExtension();
             $storageKey = "uploads/tasks/{$category}/{$taskId}/{$uuid}.{$extension}";
             
             $path = $file->storeAs(dirname($storageKey), basename($storageKey), 'public');

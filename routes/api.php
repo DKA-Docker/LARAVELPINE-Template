@@ -40,7 +40,7 @@ Route::name('api.')->group(function () {
                         Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
                     Route::prefix('attachments')->name('attachments.')->group(function () {
-                         Route::resource('/', Tasks\Attachments\Index::class);
+                         Route::resource('/', Tasks\Attachments\Index::class)->parameters(['' => 'id']);
                     });
 
                 });
