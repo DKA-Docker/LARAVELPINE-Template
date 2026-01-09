@@ -8,47 +8,11 @@
             </label>
         </div>
 
-        <button wire:click="create" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/20">
+        <a href="{{ route('dashboards.settings.vehicles.categories.create.index') }}" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/20">
             <i class="ki-filled ki-plus-square fs-3"></i>
             Add Category
-        </button>
+        </a>
     </div>
-
-    {{-- Modal --}}
-    @if($isModalOpen)
-    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[500px] p-6 animate-scale-in border border-gray-100 relative">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-gray-900">{{ $editId ? 'Edit Category' : 'Add Category' }}</h3>
-                <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="ki-filled ki-cross text-xl"></i>
-                </button>
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-bold text-gray-600 uppercase">Name</label>
-                    <input type="text" wire:model="name" class="bg-gray-50 border-none rounded-xl px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary/10">
-                    @error('name') <span class="text-xs text-red-500 font-bold mt-1">{{ $message }}</span> @enderror
-                </div>
-                
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-bold text-gray-600 uppercase">Description</label>
-                    <textarea wire:model="description" rows="3" class="bg-gray-50 border-none rounded-xl px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary/10"></textarea>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-3 mt-8">
-                <button wire:click="closeModal" class="px-4 py-2.5 rounded-xl bg-gray-100 text-gray-600 font-bold text-sm hover:bg-gray-200 transition-colors">
-                    Cancel
-                </button>
-                <button wire:click="store" class="px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">
-                    Save Changes
-                </button>
-            </div>
-        </div>
-    </div>
-    @endif
 
     {{-- Table Card --}}
     <div class="kt-card kt-card-grid min-w-full shadow-sm bg-white rounded-2xl overflow-hidden">
@@ -79,10 +43,10 @@
                             </td>
                             <td class="px-6 py-5 text-end">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button wire:click="edit('{{ $category->id }}')" class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm">
+                                    <a href="{{ route('dashboards.settings.vehicles.categories.edit.index', $category->id) }}" class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-pencil fs-5"></i>
-                                    </button>
-                                    <button wire:click="delete('{{ $category->id }}')" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
+                                    </a>
+                                    <button wire:click="delete('{{ $category->id }}')" wire:confirm="Are you sure?" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-trash fs-5"></i>
                                     </button>
                                 </div>

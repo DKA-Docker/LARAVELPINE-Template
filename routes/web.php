@@ -19,6 +19,10 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as Ma
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use App\Http\Controllers\V1\Frontend\Resources\Index as FrontendResources;
 use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Index as SettingsVehiclesIndex;
+use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Create as SettingsVehiclesCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Edit as SettingsVehiclesEdit;
+use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Categories\Create as SettingsVehiclesCategoriesCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Categories\Edit as SettingsVehiclesCategoriesEdit;
 use Illuminate\Support\Facades\Route;
 
 /** Sumber Halaman Frontend Utama */
@@ -101,6 +105,23 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::prefix('vehicles')->name('vehicles.')->group(function () {
             Route::resource('/', SettingsVehiclesIndex::class);
+            
+            Route::prefix('create')->name('create.')->group(function () {
+                 Route::resource('/', SettingsVehiclesCreate::class);
+            });
+            Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                Route::get('/', [SettingsVehiclesEdit::class, 'index'])->name('index');
+            });
+
+             Route::prefix('categories')->name('categories.')->group(function () {
+                 Route::prefix('create')->name('create.')->group(function () {
+                     Route::resource('/', SettingsVehiclesCategoriesCreate::class);
+                 });
+                 Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                     Route::get('/', [SettingsVehiclesCategoriesEdit::class, 'index'])->name('index');
+                 });
+            });
         });
     });
 });
+
