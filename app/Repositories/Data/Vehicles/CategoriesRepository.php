@@ -2,40 +2,35 @@
 
 namespace App\Repositories\Data\Vehicles;
 
-use App\Models\Settings\Vehicles\SettingsVehiclesCategories;
+use App\Models\Data\Vehicles\DataVehicleCategories;
 
 class CategoriesRepository implements CategoriesRepositoryInterface
 {
-    public function getQuery()
+    public function GetQuery()
     {
-        return SettingsVehiclesCategories::query();
+        return DataVehicleCategories::query();
     }
 
-    public function find($id)
+    public function Find($id)
     {
-        return SettingsVehiclesCategories::find($id);
+        return DataVehicleCategories::findOrFail($id);
     }
 
-    public function create(array $data)
+    public function Create(array $data)
     {
-        return SettingsVehiclesCategories::create($data);
+        return DataVehicleCategories::create($data);
     }
 
-    public function update($id, array $data)
+    public function Update($id, array $data)
     {
-        $model = SettingsVehiclesCategories::find($id);
-        if ($model) {
-            $model->update($data);
-        }
+        $model = DataVehicleCategories::findOrFail($id);
+        $model->update($data);
         return $model;
     }
 
-    public function delete($id)
+    public function Delete($id)
     {
-        $model = SettingsVehiclesCategories::find($id);
-        if ($model) {
-            return $model->delete();
-        }
-        return false;
+        $model = DataVehicleCategories::findOrFail($id);
+        return $model->delete();
     }
 }

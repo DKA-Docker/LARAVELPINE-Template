@@ -4,9 +4,9 @@ namespace App\Repositories\Data\Vehicles;
 
 interface VehiclesRepositoryInterface
 {
-    public function getQuery();
-    public function find($id);
-    public function create(array $data);
-    public function update($id, array $data);
-    public function delete($id);
+    public function GetQuery();
+    public function Find($id);
+    public function Create(array $data);
+    public function Update($id, array $data);
+    public function Delete($id);
 }

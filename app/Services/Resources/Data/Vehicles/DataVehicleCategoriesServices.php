@@ -2,18 +2,19 @@
 
 namespace App\Services\Resources\Data\Vehicles;
 
-use App\Repositories\Data\Vehicles\VehiclesRepositoryInterface;
+use App\Repositories\Data\Vehicles\CategoriesRepositoryInterface;
+use App\Models\Data\Vehicles\DataVehicleCategories;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class DataVehiclesServices
+class DataVehicleCategoriesServices
 {
     protected $repository;
 
     public function __construct()
     {
-        $this->repository = new \App\Repositories\Data\Vehicles\VehiclesRepository();
+        $this->repository = new \App\Repositories\Data\Vehicles\CategoriesRepository();
     }
 
     public function GetQuery()
@@ -23,17 +24,18 @@ class DataVehiclesServices
 
     public function ReadAll(array $filters = [], int $perPage = 10)
     {
-        $query = $this->repository->GetQuery()->with('categoryDetail');
+        $query = $this->repository->GetQuery();
 
         if (isset($filters['name']) && !empty($filters['name'])) {
             $query->where('name', 'ilike', '%' . $filters['name'] . '%');
         }
 
-        if (isset($filters['category']) && !empty($filters['category'])) {
-            $query->where('category', $filters['category']);
-        }
-
         return $query->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+
+    public function GetDropdown()
+    {
+        return $this->repository->GetQuery()->orderBy('name')->get();
     }
 
     public function Find($id)
@@ -46,6 +48,8 @@ class DataVehiclesServices
         DB::beginTransaction();
         try {
             $data['id'] = Str::uuid()->toString();
+            // Account logic handled in controller/livewire
+            
             $model = $this->repository->Create($data);
             DB::commit();
 

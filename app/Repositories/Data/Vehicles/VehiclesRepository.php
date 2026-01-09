@@ -2,40 +2,35 @@
 
 namespace App\Repositories\Data\Vehicles;
 
-use App\Models\Settings\Vehicles\SettingsVehicles;
+use App\Models\Data\Vehicles\DataVehicles;
 
 class VehiclesRepository implements VehiclesRepositoryInterface
 {
-    public function getQuery()
+    public function GetQuery()
     {
-        return SettingsVehicles::query();
+        return DataVehicles::query();
     }
 
-    public function find($id)
+    public function Find($id)
     {
-        return SettingsVehicles::find($id);
+        return DataVehicles::findOrFail($id);
     }
 
-    public function create(array $data)
+    public function Create(array $data)
     {
-        return SettingsVehicles::create($data);
+        return DataVehicles::create($data);
     }
 
-    public function update($id, array $data)
+    public function Update($id, array $data)
     {
-        $model = SettingsVehicles::find($id);
-        if ($model) {
-            $model->update($data);
-        }
+        $model = DataVehicles::findOrFail($id);
+        $model->update($data);
         return $model;
     }
 
-    public function delete($id)
+    public function Delete($id)
     {
-        $model = SettingsVehicles::find($id);
-        if ($model) {
-            return $model->delete();
-        }
-        return false;
+        $model = DataVehicles::findOrFail($id);
+        return $model->delete();
     }
 }
