@@ -1,134 +1,121 @@
-<div class="flex flex-col grow pt-5" id="scrollable_content">
-    <main class="grow" role="content">
-        <!-- Toolbar -->
-        <div class="pb-6">
-            <!-- Container -->
-            <div class="kt-container-fluid flex items-center justify-between flex-wrap gap-3">
-                <div class="flex items-center flex-wrap gap-1 lg:gap-5">
-                    <h1 class="font-medium text-lg text-mono">
-                        Delivery Reports
-                    </h1>
-                    <div class="flex items-center gap-1 text-sm font-normal">
-                        <a class="text-secondary-foreground hover:text-primary" href="#">
-                            Home
-                        </a>
-                        <span class="text-muted-foreground text-sm">
-                            /
-                        </span>
-                        <span class="text-secondary-foreground">
-                            Apps
-                        </span>
-                        <span class="text-muted-foreground text-sm">
-                            /
-                        </span>
-                        <span class="text-mono">
-                            Reports
-                        </span>
-                    </div>
+<div class="kt-container-fixed">
+    <div class="grid gap-5 lg:gap-7.5">
+
+        {{-- SECTION FILTER --}}
+        <div class="rounded-2xl shadow-sm px-6 py-4 flex flex-wrap items-center gap-4">
+            <label class="kt-input rounded-xl px-3 py-2 flex items-center gap-2">
+                <i class="ki-filled ki-magnifier"></i>
+                <input wire:model.live.debounce.300ms="query" class="bg-transparent border-none focus:ring-0 text-xs placeholder-gray-400 w-40" placeholder="Search Reports..." type="text" />
+            </label>
+
+            <div class="flex flex-wrap gap-2 items-center">
+                 {{-- Date Range --}}
+                 <div class="flex items-center gap-2">
+                    <input type="date" wire:model.live="startDate" class="border-none rounded-xl text-xs font-medium py-2 px-3 focus:ring-2 focus:ring-primary/10 bg-gray-50" />
+                    <span class="text-gray-400 text-xs">-</span>
+                    <input type="date" wire:model.live="endDate" class="border-none rounded-xl text-xs font-medium py-2 px-3 focus:ring-2 focus:ring-primary/10 bg-gray-50" />
+                </div>
+
+                 {{-- Quick Filters --}}
+                <div class="flex items-center gap-1">
+                    <button class="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border {{ $dateFilter === 'this_month' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50' }} transition-all" wire:click="setDateFilter('this_month')">
+                        Month
+                    </button>
+                    <button class="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border {{ $dateFilter === 'last_6_months' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50' }} transition-all" wire:click="setDateFilter('last_6_months')">
+                        6 Months
+                    </button>
+                    <button class="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border {{ $dateFilter === 'this_year' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50' }} transition-all" wire:click="setDateFilter('this_year')">
+                        Year
+                    </button>
+                     <button class="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border {{ $dateFilter === 'all' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50' }} transition-all" wire:click="setDateFilter('all')">
+                        All
+                    </button>
+                </div>
+
+                @if($query || $dateFilter !== 'all')
+                    <button wire:click="setDateFilter('all'); $set('query', '');" class="flex items-center gap-1.5 pl-2 text-[10px] font-bold text-red-500 hover:text-red-700 transition-all uppercase tracking-widest">
+                        <i class="ki-filled ki-cross-circle fs-6"></i>
+                        Clear
+                    </button>
+                @endif
+            </div>
+
+             <div class="ml-auto">
+                <button class="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors font-bold text-xs uppercase tracking-wide border border-green-100 shadow-sm" wire:click="exportPdf">
+                    <i class="ki-filled ki-file-down fs-5"></i>
+                    Export PDF
+                </button>
+            </div>
+        </div>
+
+        {{-- TABLE CARD --}}
+        <div class="kt-card kt-card-grid min-w-full shadow-sm rounded-2xl overflow-hidden">
+            <div class="kt-card-header px-8 py-5">
+                <div class="flex flex-col gap-1">
+                    <h3 class="text-sm font-bold">Delivery Reports</h3>
+                    <p class="text-[10px] font-medium uppercase tracking-tighter">
+                        Showing {{ $reports->firstItem() ?? 0 }}-{{ $reports->lastItem() ?? 0 }} of {{ $reports->total() }} Records
+                    </p>
                 </div>
             </div>
-            <!-- End of Container -->
-        </div>
-        <!-- End of Toolbar -->
-        <!-- Container -->
-        <div class="kt-container-fluid">
-            <div class="flex flex-col items-stretch gap-7">
-                <div class="flex items-center gap-3 w-full">
-                    <div class="kt-input w-full">
-                        <i class="ki-filled ki-magnifier">
-                        </i>
-                        <input wire:model.live.debounce.300ms="query" placeholder="Search Reports" type="text" />
-                    </div>
-                    <!--Filter-->
-                    <button class="kt-dropdown-toggle kt-btn kt-btn-primary">
-                        <i class="ki-filled ki-filter">
-                        </i>
-                        Filter
-                    </button>
-                    <!--End of Filter-->
-                </div>
-                
-                <!-- Date Filters -->
-                <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center gap-2">
-                        <input type="date" wire:model.live="startDate" class="h-10 px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-                        <span class="text-muted-foreground">-</span>
-                        <input type="date" wire:model.live="endDate" class="h-10 px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="kt-btn kt-btn-sm kt-btn-outline {{ $dateFilter === 'this_month' ? 'bg-primary text-primary-foreground' : '' }}" wire:click="setDateFilter('this_month')">
-                            Month
-                        </button>
-                        <button class="kt-btn kt-btn-sm kt-btn-outline {{ $dateFilter === 'last_6_months' ? 'bg-primary text-primary-foreground' : '' }}" wire:click="setDateFilter('last_6_months')">
-                            6 Months
-                        </button>
-                        <button class="kt-btn kt-btn-sm kt-btn-outline {{ $dateFilter === 'this_year' ? 'bg-primary text-primary-foreground' : '' }}" wire:click="setDateFilter('this_year')">
-                            Year
-                        </button>
-                         <button class="kt-btn kt-btn-sm kt-btn-outline {{ $dateFilter === 'all' ? 'bg-primary text-primary-foreground' : '' }}" wire:click="setDateFilter('all')">
-                            All
-                        </button>
-                    </div>
-                <!-- begin: toolbar -->
-                <div class="flex flex-wrap items-center gap-5 justify-between mt-3">
-                    <h3 class="text-sm text-mono font-medium">
-                        Showing {{ $reports->firstItem() }} - {{ $reports->lastItem() }} of {{ $reports->total() }} results
-                    </h3>
-                    <div class="flex items-center gap-2.5">
-                        <button class="kt-btn kt-btn-sm kt-btn-light" wire:click="exportPdf">
-                            <i class="ki-filled ki-file-down"></i>
-                            Export PDF
-                        </button>
-                        <select class="kt-select w-[175px] bg-background" data-kt-select="true" name="kt-select">
-                            <option selected="" value="1">
-                                Newest First
-                            </option>
-                            <option value="2">
-                                Oldest First
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <!-- end: toolbar -->
 
-                <!-- begin: list -->
-                <div class="" id="shop1_lists">
-                     <!-- Skeleton Loading -->
-                    <div wire:loading class="grid grid-cols-1 gap-5 w-full">
-                        @for($i = 0; $i < 5; $i++)
-                            <div class="kt-card animate-pulse">
-                                <div class="kt-card-content flex items-center flex-wrap justify-between p-2 pe-5 gap-4.5">
-                                    <div class="flex items-center gap-3.5 w-2/3">
-                                        <div class="bg-gray-200 rounded h-[70px] w-[90px] shadow-none"></div>
-                                        <div class="flex flex-col gap-2 w-full">
-                                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                                            <div class="flex items-center gap-2">
-                                                <div class="h-5 bg-gray-200 rounded-full w-20"></div>
-                                                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
-                                                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+            <div class="kt-card-content px-2">
+                <div class="kt-scrollable-x-auto">
+                    <table class="kt-table table-auto w-full align-middle border-collapse">
+                        <thead>
+                        <tr class="font-bold text-[10px] uppercase tracking-widest">
+                            <th class="px-6 py-5 text-left">Task Name</th>
+                            <th class="px-6 py-5 text-left">Destination</th>
+                            <th class="px-6 py-5 text-left">Assigned Drivers</th>
+                            <th class="px-6 py-5 text-left">Status</th>
+                            <th class="px-6 py-5 text-right w-24">Actions</th>
+                            <th class="px-6 py-5 text-right">Created</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse($reports as $report)
+                            <tr class="group transition-all duration-300 hover:bg-gray-50">
+                                {{-- Task Name --}}
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="hidden sm:flex w-10 h-10 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 shadow-sm group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
+                                            <i class="ki-filled ki-clipboard-check group-hover:text-primary transition-colors text-lg"></i>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="font-bold text-sm tracking-tight group-hover:text-primary transition-colors truncate leading-tight">
+                                                {{ $report->name ?? 'Unnamed Task' }}
+                                            </span>
+                                            <div class="flex items-center gap-1.5 mt-1">
+                                                <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded">
+                                                    ID
+                                                </span>
+                                                <span class="text-[10px] font-medium truncate text-gray-500">
+                                                    #{{ substr($report->id, 0, 8) }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <div class="flex -space-x-2">
-                                            <div class="h-8 w-8 bg-gray-200 rounded-full ring-2 ring-white"></div>
-                                            <div class="h-8 w-8 bg-gray-200 rounded-full ring-2 ring-white"></div>
-                                        </div>
-                                        <div class="h-9 w-24 bg-gray-200 rounded ms-2"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endfor
-                    </div>
+                                </td>
 
-                    <!-- begin: grid -->
-                    <div wire:loading.remove class="grid grid-cols-1 gap-5">
-                        @forelse($reports as $report)
-                            <div class="kt-card">
-                                <div class="kt-card-content flex items-center flex-wrap justify-between p-2 pe-5 gap-4.5">
-                                    <div class="flex items-center gap-3.5">
-                                        <div class="kt-card flex items-center justify-center bg-accent/50 h-[70px] w-[90px] shadow-none">
-                                            <div class="flex -space-x-2">
+                                {{-- Destination --}}
+                                <td class="px-6 py-5">
+                                    <div class="flex flex-col gap-1">
+                                         <span class="text-sm font-bold text-gray-700 leading-tight">
+                                            {{ $report->destinationData->receipt_name ?? 'N/A' }}
+                                        </span>
+                                        <div class="flex items-center gap-2">
+                                            @php $pkgCount = $report->destinationData->packages->count() ?? 0; @endphp
+                                             <div class="flex items-center gap-1 bg-indigo-50 px-2 py-0.5 rounded text-indigo-600">
+                                                <i class="ki-filled ki-package fs-9"></i>
+                                                <span class="text-[9px] font-bold">{{ $pkgCount }} Pkg</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                {{-- Assigned Drivers --}}
+                                <td class="px-6 py-5">
+                                     <div class="flex -space-x-2 overflow-hidden py-1">
                                         @php
                                             $drivers = collect();
                                             foreach($report->assigns as $assign) {
@@ -138,87 +125,87 @@
                                             }
                                             $drivers = $drivers->unique('id');
                                         @endphp
-                                        @foreach($drivers as $user)
-                                            @php
-                                                $firstName = $user->information->first_name ?? '';
-                                                $lastName = $user->information->last_name ?? '';
-                                                $fullName = trim($firstName . ' ' . $lastName);
-                                                if (empty($fullName)) {
-                                                    $fullName = $user->credential->username ?? $user->name ?? 'Driver';
-                                                }
-                                            @endphp
-                                            <div class="flex" title="{{ $fullName }}">
-                                                <img class="ring-background relative size-6 shrink-0 rounded-full ring-1 hover:z-5"
-                                                     src="{{ $user->avatar_url ?? asset('storage/avatars/300-1.png') }}"
-                                                     alt="{{ $fullName }}" />
-                                            </div>
-                                        @endforeach
+                                        @forelse($drivers as $user)
+                                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" 
+                                                 title="{{ $user->information->first_name ?? $user->name }}"
+                                                 src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
+                                                 alt="{{ $user->name }}"/>
+                                        @empty
+                                            <span class="text-gray-400 text-xs italic">Unassigned</span>
+                                        @endforelse
                                     </div>
-                                        </div>
-                                        <div class="flex flex-col gap-2">
-                                            <div class="flex items-center gap-2.5 -mt-1">
-                                                <a class="hover:text-primary text-sm font-medium text-mono leading-5.5" href="#">
-                                                    {{ $report->name ?? 'Task #' . $report->id }}
-                                                </a>
-                                            </div>
-                                            <div class="flex items-center flex-wrap gap-3">
-                                                <span class="kt-badge kt-badge-warning kt-badge-sm rounded-full gap-1">
-                                                    {{ $report->history->sortByDesc('created_at')->first()->to_status ?? 'Pending' }}
-                                                </span>
-                                                <div class="flex items-center flex-wrap gap-2 lg:gap-4">
-                                                    <span class="text-xs font-normal text-secondary-foreground uppercase">
-                                                        ID:
-                                                        <span class="text-xs font-medium text-foreground">
-                                                            {{ substr($report->id, 0, 8) }}
-                                                        </span>
-                                                    </span>
-                                                    <span class="text-xs font-normal text-secondary-foreground">
-                                                        Destination:
-                                                        <span class="text-xs font-medium text-foreground">
-                                                            {{ $report->destinationData->receipt_name ?? 'N/A' }}
-                                                        </span>
-                                                    </span>
-                                                    @php $pkgCount = $report->destinationData->packages->count() ?? 0; @endphp
-                                                    <div class="flex items-center gap-2.5 p-1.5 pr-4 rounded-xl bg-primary/5 w-fit">
-                                                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-white shadow-sm text-primary">
-                                                            <i class="ki-duotone ki-delivery-3 fs-4"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                                                        </div>
-                                                        <div class="flex flex-col leading-none">
-                                                            <span class="text-[12px] font-black text-primary">{{ $pkgCount }}</span>
-                                                            <span class="text-[8px] font-bold text-primary/60 uppercase">Paket</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <div class="flex -space-x-2 overflow-hidden">
-                                            @foreach($report->assigned as $user)
-                                                <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" alt="{{ $user->name }}"/>
-                                            @endforeach
-                                        </div>
-                                        <button class="kt-btn kt-btn-outline ms-2 shrink-0">
-                                            <i class="ki-filled ki-eye">
-                                            </i>
-                                            View Details
+                                </td>
+
+                                {{-- Status --}}
+                                <td class="px-6 py-5">
+                                    @php
+                                        $status = $report->history->sortByDesc('created_at')->first()->to_status ?? 'pending';
+                                        $st = strtolower($status);
+                                        $statusConfig = [
+                                            'delivered' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                            'completed' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                            'pending' => 'bg-orange-50 text-orange-600 border-orange-100',
+                                            'in_progress' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                            'cancelled' => 'bg-red-50 text-red-600 border-red-100',
+                                            'default' => 'bg-gray-50 text-gray-600 border-gray-100'
+                                        ];
+                                        $currentStyle = $statusConfig[$st] ?? $statusConfig['default'];
+                                    @endphp
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border {{ $currentStyle }}">
+                                        <span class="w-1 h-1 rounded-full bg-current mr-1.5"></span>
+                                        {{ $status }}
+                                    </span>
+                                </td>
+
+                                {{-- Actions --}}
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {{-- Add View Detail Link if exists --}}
+                                        <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 cursor-not-allowed transition-colors shadow-sm" title="View Details (Coming Soon)">
+                                            <i class="ki-filled ki-eye fs-5"></i>
                                         </button>
                                     </div>
-                                </div>
-                            </div>
+                                </td>
+
+                                {{-- Created --}}
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex flex-col items-end gap-1">
+                                        <span class="font-bold text-[11px]">{{ $report->created_at->format('d M Y') }}</span>
+                                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-tight text-gray-500">
+                                            {{ $report->created_at->format('H:i') }} WIB
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
                         @empty
-                            <div class="text-center p-10">
-                                <span class="text-muted-foreground">No reports found.</span>
-                            </div>
+                            <tr>
+                                <td colspan="6" class="py-24 text-center">
+                                    <div class="flex flex-col items-center justify-center gap-3">
+                                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center border border-dashed border-gray-200 text-gray-300">
+                                            <i class="ki-filled ki-file text-3xl"></i>
+                                        </div>
+                                        <p class="font-bold italic text-xs text-gray-500">No reports found.</p>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforelse
-                    </div>
-                </div>
-                <!-- end: list -->
-                
-                <div class="mt-5">
-                    {{ $reports->links() }}
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+            <div class="kt-card-footer px-8 py-5 bg-gray-50/30 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 text-xs font-bold">
+                    Show:
+                    <select wire:model.live="perPage" class="bg-white border-none shadow-sm rounded-lg text-xs font-bold px-2 py-1 cursor-pointer focus:ring-2 focus:ring-primary/10">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <div>{{ $reports->links(data: ['scrollTo' => false]) }}</div>
+            </div>
         </div>
-    </main>
+    </div>
 </div>

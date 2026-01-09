@@ -9,6 +9,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
+
+use Livewire\Attributes\Lazy;
+
+#[Lazy]
 class ReportTable extends Component
 {
     use WithPagination;
@@ -17,6 +21,12 @@ class ReportTable extends Component
     public $startDate;
     public $endDate;
     public $dateFilter = 'all';
+    public $perPage = 10;
+
+    public function placeholder()
+    {
+        return view('dashboards.layouts.placeholders.view');
+    }
 
     public function setDateFilter($range)
     {
@@ -47,6 +57,11 @@ class ReportTable extends Component
     {
         if ($property === 'startDate' || $property === 'endDate') {
             $this->dateFilter = 'custom';
+            $this->resetPage();
+        }
+
+        if ($property === 'query' || $property === 'perPage') {
+            $this->resetPage();
         }
     }
 
@@ -69,7 +84,7 @@ class ReportTable extends Component
             ->when($this->startDate, fn(Builder $q) => $q->whereDate('created_at', '>=', $this->startDate))
             ->when($this->endDate, fn(Builder $q) => $q->whereDate('created_at', '<=', $this->endDate))
             ->latest() // default sort
-            ->paginate(10);
+            ->paginate($this->perPage);
 
         return view('dashboards.apps.deliveries.reports.report-table', [
             'reports' => $reports
