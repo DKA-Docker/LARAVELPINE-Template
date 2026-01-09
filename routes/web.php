@@ -11,6 +11,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Create as 
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Edit as DeliveriesTasksEdit;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks\Index as DeliveriesTasks;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Rates\Index as DeliveriesRates;
+use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Sessions\Index as DeliveriesSessions;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Rates\Categories\Index as DeliveriesRatesCategories;
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
@@ -79,6 +80,9 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 Route::prefix('categories')->name('categories.')->group(function () {
                     Route::resource('/', DeliveriesRatesCategories::class);
                 });
+            });
+            Route::prefix('sessions')->name('sessions.')->group(function () {
+                Route::resource('/', DeliveriesSessions::class)->parameters(['' => 'id']);
             });
 
         });

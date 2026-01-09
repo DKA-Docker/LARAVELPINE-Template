@@ -435,6 +435,90 @@
                                                     "response": []
                                                 }
                                             ]
+                                        },
+                                        {
+                                            "name": "Attachments",
+                                            "item": [
+                                                {
+                                                    "name": "Upload Attachment",
+                                                    "request": {
+                                                        "method": "POST",
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json",
+                                                                "type": "text"
+                                                            }
+                                                        ],
+                                                        "body": {
+                                                            "mode": "formdata",
+                                                            "formdata": [
+                                                                {
+                                                                    "key": "task_id",
+                                                                    "value": "{{task_id}}",
+                                                                    "type": "text"
+                                                                },
+                                                                {
+                                                                    "key": "file",
+                                                                    "type": "file",
+                                                                    "src": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/attachments",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "attachments"
+                                                            ]
+                                                        },
+                                                        "description": "Upload a file attachment for a task"
+                                                    },
+                                                    "response": []
+                                                },
+                                                {
+                                                    "name": "Delete Attachment",
+                                                    "request": {
+                                                        "method": "DELETE",
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json",
+                                                                "type": "text"
+                                                            }
+                                                        ],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/attachments/:id",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "attachments",
+                                                                ":id"
+                                                            ],
+                                                            "variable": [
+                                                                {
+                                                                    "key": "id",
+                                                                    "value": "{{attachment_id}}",
+                                                                    "description": "Attachment ID"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Delete a task attachment"
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
                                         }
                                     ],
                                     "description": "Delivery task management endpoints"

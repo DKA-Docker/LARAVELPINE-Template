@@ -12,5 +12,6 @@ return [
     "account" => "Akun",
     "rates" => "Tarif",
     "settings" => "Pengaturan",
-    "vehicle" => "Kendaraan"
+    "vehicle" => "Kendaraan",
+    "session" => "Session"
 ];

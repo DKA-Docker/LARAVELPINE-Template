@@ -710,6 +710,118 @@
                 }
             }
         },
+        "/dashboards/apps/deliveries/tasks/attachments": {
+            "post": {
+                "tags": [
+                    "Delivery Tasks"
+                ],
+                "summary": "Upload task attachment",
+                "description": "Upload an attachment file for a specific task",
+                "operationId": "createTaskAttachment",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTaskAttachmentInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Attachment uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Creates Data",
+                                    "data": {
+                                        "id": "att-550e8400-e29b-41d4-a716-446655440001",
+                                        "task_id": "task-550e8400-e29b-41d4-a716-446655440000",
+                                        "file_name": "delivery_proof.jpg",
+                                        "file_path": "attachments/delivery_proof.jpg",
+                                        "file_type": "image/jpeg",
+                                        "file_size": 102400,
+                                        "created_at": "2025-12-28T00:35:00+08:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": false,
+                                    "code": 400,
+                                    "msg": "Failed Sending Data"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/tasks/attachments/{id}": {
+            "delete": {
+                "tags": [
+                    "Delivery Tasks"
+                ],
+                "summary": "Delete task attachment",
+                "description": "Delete a specific task attachment",
+                "operationId": "deleteTaskAttachment",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attachment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                },
+                                "example": {
+                                    "status": true,
+                                    "code": 200,
+                                    "msg": "Successfully Deleted Data"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            }
+        },
         "/dashboards/apps/deliveries/reports": {
             "get": {
                 "tags": [
@@ -1764,6 +1876,25 @@
                         "type": "string",
                         "description": "Firebase Cloud Messaging token",
                         "example": "fGcI1234567890abcdef..."
+                    }
+                }
+            },
+            "CreateTaskAttachmentInput": {
+                "type": "object",
+                "required": [
+                    "task_id",
+                    "file"
+                ],
+                "properties": {
+                    "task_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the task to attach file to"
+                    },
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "File to upload (max 10MB)"
                     }
                 }
             },

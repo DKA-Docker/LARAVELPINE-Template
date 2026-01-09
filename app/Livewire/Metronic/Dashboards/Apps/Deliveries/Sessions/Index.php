@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Sessions;
 
-use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasksAssigns;
+use App\Models\Apps\Deliveries\Sessions\AppsDeliveriesSessions;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,15 +17,13 @@ class Index extends Component
 
     public function render()
     {
-        $assigns = AppsDeliveriesTasksAssigns::query()
-            ->with(['task', 'assignedAccount.information'])
+        $sessions = AppsDeliveriesSessions::query()
             ->latest()
             ->paginate($this->perPage);
 
-        return view('dashboards.apps.deliveries.sessions.livewire-index', [
-            'assigns' => $assigns
+        return view('dashboards.apps.deliveries.sessions.view', [
+            'sessions' => $sessions
         ]);
-
     }
 
     public function placeholder()

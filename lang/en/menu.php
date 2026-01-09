@@ -12,5 +12,6 @@ return [
     "account" => "Account",
     "rates" => "Rates",
     "settings" => "Settings",
-    "vehicle" => "Vehicle"
+    "vehicle" => "Vehicle",
+    "session" => "Session"
 ];

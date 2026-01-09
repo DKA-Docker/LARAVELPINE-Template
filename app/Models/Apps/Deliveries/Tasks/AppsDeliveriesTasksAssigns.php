@@ -30,7 +30,7 @@ class AppsDeliveriesTasksAssigns extends Model
         'task'
     ];
 
-    protected $with = ['assignedAccount','task'];
+    protected $with = ['assignedAccount','taskData'];
 
     protected $hidden = ['pivot'];
 
@@ -43,7 +43,7 @@ class AppsDeliveriesTasksAssigns extends Model
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function task(): BelongsTo
+    public function taskData(): BelongsTo
     {
         return $this->belongsTo(AppsDeliveriesTasks::class, 'task')->withDefault();
     }
