@@ -119,9 +119,9 @@ spec:
               value: error
           resources:
             requests:
-              memory: "400Mi"
+              memory: "128Mi"
             limits:
-              memory: "800Mi"
+              memory: "300Mi"
               cpu: "1.0"
           volumeMounts:
             - name: storage-data

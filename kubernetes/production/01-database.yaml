@@ -29,9 +29,9 @@ spec:
               value: 'false'
           resources:
             requests:
-              memory: "300Mi"
+              memory: "256Mi"
             limits:
-              memory: "800Mi"
+              memory: "450Mi"
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql
