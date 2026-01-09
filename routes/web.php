@@ -18,6 +18,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as M
 use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use App\Http\Controllers\V1\Frontend\Resources\Index as FrontendResources;
+use App\Http\Controllers\V1\Frontend\Dashboards\Settings\Vehicles\Index as SettingsVehiclesIndex;
 use Illuminate\Support\Facades\Route;
 
 /** Sumber Halaman Frontend Utama */
@@ -94,6 +95,12 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::prefix('create')->name('create.')->group(function () {
                 Route::resource('/', ManagementsAccountsCreate::class);
             });
+        });
+    });
+
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::prefix('vehicles')->name('vehicles.')->group(function () {
+            Route::resource('/', SettingsVehiclesIndex::class);
         });
     });
 });

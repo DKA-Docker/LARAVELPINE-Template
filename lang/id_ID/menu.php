@@ -10,5 +10,7 @@ return [
     "apps" => "Aplikasi",
     "management" => "Manajemen",
     "account" => "Akun",
-    "rates" => "Tarif"
+    "rates" => "Tarif",
+    "settings" => "Pengaturan",
+    "vehicle" => "Kendaraan"
 ];

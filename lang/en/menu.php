@@ -10,5 +10,7 @@ return [
     "apps" => "Apps",
     "management" => "Management",
     "account" => "Account",
-    "rates" => "Rates"
+    "rates" => "Rates",
+    "settings" => "Settings",
+    "vehicle" => "Vehicle"
 ];
