@@ -38,10 +38,8 @@
                     </div>
 
                     <div class="card">
-                        <div class="card-body py-4">
-                            <div class="text-center text-gray-500">
-                                Vehicle Management Content
-                            </div>
+                        <div class="card-body">
+                            @livewire('metronic.dashboards.settings.vehicles.components.view')
                         </div>
                     </div>
                 </div>
