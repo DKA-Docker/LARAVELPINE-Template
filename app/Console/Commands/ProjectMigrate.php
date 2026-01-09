@@ -27,14 +27,14 @@ class ProjectMigrate extends Command
         }
 
         $imageName = $yaml['services']['app']['image'];
-        $targetImage = 'yovanggaanandhika/laravelpine:8.3-fpm';
+        $targetImage = 'yovanggaanandhika/laravelpine:8.3';
 
         $this->info("📦 Image ditemukan: $imageName");
 
-        if ($imageName !== $targetImage) {
+        /*if ($imageName !== $targetImage) {
             $this->error("⚠️ Image tidak sesuai. Ditemukan: $imageName, tapi yang diharapkan: $targetImage");
             return 1;
-        }
+        }*/
 
         // Cari container aktif dari image
         $this->info("🔍 Mencari container aktif dari image...");
