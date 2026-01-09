@@ -4,7 +4,7 @@ metadata:
   name: logistik-app
   namespace: hgs-logistik
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: Recreate
   selector:
@@ -15,8 +15,13 @@ spec:
       labels:
         app: logistik
     spec:
-      nodeSelector:
-        app-group: logistik
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "kubernetes.io/hostname"
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: logistik
       containers:
         - name: php-app
           image: hndtech/1096283549:production-6b0694bf91a009be735035dcc6697723754a3d93
