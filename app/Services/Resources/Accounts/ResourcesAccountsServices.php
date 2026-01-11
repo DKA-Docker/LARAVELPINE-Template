@@ -60,12 +60,13 @@ class ResourcesAccountsServices
         try {
             // (opsional) validasi cepat; hapus jika repositori sudah handle
             Validator::make($payload, [
-                'information' => ['required', 'array'],
-                'credential'  => ['required', 'array'],
-                'contact'     => ['required', 'array'],
-                'firebase'    => ['nullable', 'array'],
-                'roles'       => ['nullable', 'array'],
-                'roles.*'     => ['string'],
+                'information'   => ['required', 'array'],
+                'credential'    => ['required', 'array'],
+                'contact'       => ['required', 'array'],
+                'contact.email' => ['required', 'email'],
+                'firebase'      => ['nullable', 'array'],
+                'roles'         => ['nullable', 'array'],
+                'roles.*'       => ['string'],
             ])->validate();
             /**
              * @var $information array about information account
@@ -124,6 +125,36 @@ class ResourcesAccountsServices
                 'msg'    => 'Unexpected error: ' . $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Register new account (maps flat payload to structured payload)
+     * @param array $payload
+     * @return array
+     * @throws Throwable
+     */
+    public function Register(array $payload) : array
+    {
+        // 1. Map flat input to structured Create payload
+        $createPayload = [
+            'credential' => [
+                'username' => $payload['credential']['username'] ?? null,
+                'password' => $payload['credential']['password'] ?? null,
+            ],
+            'information' => [
+                'first_name' => $payload['information']['first_name'] ?? null,
+                'last_name'  => $payload['information']['last_name'] ?? null,
+            ],
+            'contact' => [
+                'email' => $payload['contact']['email'] ?? null,
+                'phone' => $payload['contact']['phone'] ?? null,
+            ],
+            'firebase' => $payload['firebase'] ?? [],
+            'roles' => $payload['roles'] ?? ['customer'],
+        ];
+
+        // 2. Call existing Create method
+        return $this->Create($createPayload);
     }
 
     /**

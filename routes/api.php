@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\Api\Base\Accounts as Accounts;
+use App\Http\Controllers\V1\Api\Base\Accounts\Register as AccountsRegister;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests\Destinations as Destinations;
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 /** Buat Route Penamaan Api */
 Route::name('api.')->group(function () {
+    /** Buat Route Penamaan Api */
+    Route::post('/register', AccountsRegister::class);
+
     /** Grouping Ke Group Auth Di Dalam Web Routes*/
     Route::prefix('auth')->name('auth.')->group(function () {
         /** Name Route dashboards.apps */
