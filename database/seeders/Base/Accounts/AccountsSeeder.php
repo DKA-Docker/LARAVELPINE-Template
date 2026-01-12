@@ -32,7 +32,7 @@ class AccountsSeeder extends Seeder
             ],
             "credential" => [
                 "username" => "superadmin",
-                "password" => "Superadmin.789"
+                "password" => "vYnyMyx3BGu8ageC6vF0"
             ],
             "contact" => [
                 "email" => "superadmin@example.com"
