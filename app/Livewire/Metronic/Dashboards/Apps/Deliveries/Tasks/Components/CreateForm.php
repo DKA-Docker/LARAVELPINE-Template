@@ -99,7 +99,7 @@ class CreateForm extends Component
         $this->formData['vehicle_id'] = '';
 
         if ($value) {
-            $this->availableVehicles = DataVehicles::whereHas('category', function ($q) use ($value) {
+            $this->availableVehicles = DataVehicles::query()->whereHas('categoryDetail', function ($q) use ($value) {
                 $q->where('name', $value);
             })->get();
         }
@@ -115,7 +115,7 @@ class CreateForm extends Component
         $usedDestinationIds = AppsDeliveriesTasks::pluck('destination')->toArray();
         $response = $this->destService->ReadAll(includedIds: [$value], excludedIds: [], search: '');
         $dest = collect($response['data'] ?? $response)->first();
-        
+
         if ($dest) {
             $this->selectedDestinationDetail = $dest->toArray();
             $this->formData['geos']['latitude'] = $dest['coordinate_latitude'] ?? $this->formData['geos']['latitude'];
