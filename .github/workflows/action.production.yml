@@ -52,14 +52,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Update Image Tag in Manifest
-        uses: fjogeleit/yaml-update-action@v0.16.0
-        with:
-          valueFile: ${{ env.APP_YAML_PATH }}
-          propertyPath: spec.template.spec.containers[0].image
-          value: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ github.ref_name }}-${{ github.sha }}
-          commitChange: false
-
       - name: Prepare Server Directory
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -67,7 +59,17 @@ jobs:
           username: ${{ env.SSH_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          script: mkdir -p ${{ env.BASE_PATH }}
+          script: |
+            mkdir -p ${{ env.BASE_PATH }}
+            rm -f ${{ env.BASE_PATH }}/*.yaml
+
+      - name: Update Image Tag in Manifest
+        uses: fjogeleit/yaml-update-action@v0.16.0
+        with:
+          valueFile: ${{ env.APP_YAML_PATH }}
+          propertyPath: spec.template.spec.containers[0].image
+          value: ${{ env.DOCKER_USERNAME }}/${{ env.GITHUB_REPO_ID }}:${{ github.ref_name }}-${{ github.sha }}
+          commitChange: false
 
       - name: Copy Manifests to Master
         uses: appleboy/scp-action@v0.1.7
