@@ -27,7 +27,7 @@ spec:
               app: logistik
       containers:
         - name: php-app
-          image: hndtech/1096283549:production-6b0694bf91a009be735035dcc6697723754a3d93
+          image: hndtech/1096283549:production-907b0a0762a3eeabd7658907e314caf8cc90642d
           env:
             - name: APP_NAME
               value: 'HND Group System Logistik'
