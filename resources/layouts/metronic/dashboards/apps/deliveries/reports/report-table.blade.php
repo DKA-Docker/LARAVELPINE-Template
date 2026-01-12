@@ -68,7 +68,7 @@
                             <th class="px-6 py-5 text-left">Destination</th>
                             <th class="px-6 py-5 text-left">Assigned Drivers</th>
                             <th class="px-6 py-5 text-left">Status</th>
-                            <th class="px-6 py-5 text-right w-24">Actions</th>
+{{--                            <th class="px-6 py-5 text-right w-24">Actions</th>--}}
                             <th class="px-6 py-5 text-right">Created</th>
                         </tr>
                         </thead>
@@ -166,14 +166,14 @@
                                 </td>
 
                                 {{-- Actions --}}
-                                <td class="px-6 py-5 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        {{-- Add View Detail Link if exists --}}
-                                        <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 cursor-not-allowed transition-colors shadow-sm" title="View Details (Coming Soon)">
-                                            <i class="ki-filled ki-eye fs-5"></i>
-                                        </button>
-                                    </div>
-                                </td>
+{{--                                <td class="px-6 py-5 text-right">--}}
+{{--                                    <div class="flex items-center justify-end gap-2">--}}
+{{--                                        --}}{{-- Add View Detail Link if exists --}}
+{{--                                        <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 cursor-not-allowed transition-colors shadow-sm" title="View Details (Coming Soon)">--}}
+{{--                                            <i class="ki-filled ki-eye fs-5"></i>--}}
+{{--                                        </button>--}}
+{{--                                    </div>--}}
+{{--                                </td>--}}
 
                                 {{-- Created --}}
                                 <td class="px-6 py-5 text-right">

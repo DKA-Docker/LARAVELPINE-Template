@@ -32,7 +32,7 @@ class AccountsSeeder extends Seeder
             ],
             "credential" => [
                 "username" => "superadmin",
-                "password" => "superadmin"
+                "password" => "Superadmin.789"
             ],
             "contact" => [
                 "email" => "superadmin@example.com"
@@ -46,127 +46,6 @@ class AccountsSeeder extends Seeder
         ]);
         $this->command->info(json_encode($create));
 
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Administrator",
-                "last_name" => ""
-            ],
-            "credential" => [
-                "username" => "admin",
-                "password" => "admin"
-            ],
-            "contact" => [
-                "email" => "admin@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "admin"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
-
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Driver",
-                "last_name" => "Satria"
-            ],
-            "credential" => [
-                "username" => "driver",
-                "password" => "driver"
-            ],
-            "contact" => [
-                "email" => "driver@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "driver"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Driver",
-                "last_name" => "Bagas"
-            ],
-            "credential" => [
-                "username" => "driver1",
-                "password" => "driver1"
-            ],
-            "contact" => [
-                "email" => "driver1@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "driver"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Driver",
-                "last_name" => "Agus"
-            ],
-            "credential" => [
-                "username" => "driver2",
-                "password" => "driver2"
-            ],
-            "contact" => [
-                "email" => "driver2@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "driver"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Driver",
-                "last_name" => "Joni"
-            ],
-            "credential" => [
-                "username" => "driver3",
-                "password" => "driver3"
-            ],
-            "contact" => [
-                "email" => "driver3@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "driver"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
-        $create = $this->account->Create([
-            "information" => [
-                "first_name" => "Customer",
-                "last_name" => "Demo"
-            ],
-            "credential" => [
-                "username" => "customer",
-                "password" => "customer"
-            ],
-            "contact" => [
-                "email" => "customer@example.com"
-            ],
-            "firebase" => [
-                "token" => null
-            ],
-            "roles" => [
-                "customer"
-            ]
-        ]);
-        $this->command->info(json_encode($create));
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }
