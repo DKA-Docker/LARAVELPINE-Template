@@ -115,7 +115,7 @@
 
                                 {{-- Assigned Drivers --}}
                                 <td class="px-6 py-5">
-                                     <div class="flex -space-x-2 overflow-hidden py-1">
+                                    <div class="flex flex-wrap gap-2 py-1">
                                         @php
                                             $drivers = collect();
                                             foreach($report->assigns as $assign) {
@@ -123,13 +123,21 @@
                                                     $drivers->push($assign->assignedAccount);
                                                 }
                                             }
+
                                             $drivers = $drivers->unique('id');
                                         @endphp
                                         @forelse($drivers as $user)
-                                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" 
-                                                 title="{{ $user->information->first_name ?? $user->name }}"
-                                                 src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
-                                                 alt="{{ $user->name }}"/>
+                                              @php
+                                                 $info = $user->getRelation('information');
+                                                 // Robustly construct full name
+                                                 $firstName = $info->first_name ?? '';
+                                                 $lastName = $info->last_name ?? '';
+                                                 $fullName = trim($firstName . ' ' . $lastName);
+                                             @endphp
+                                             <span class="inline-flex items-center gap-1.5 px-7 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-xl shadow-sm transition-transform hover:scale-120" title="{{ $fullName }}">
+                                                 {{ strtoupper($fullName) }}
+                                            </span>
+
                                         @empty
                                             <span class="text-gray-400 text-xs italic">Unassigned</span>
                                         @endforelse
@@ -171,8 +179,8 @@
                                 <td class="px-6 py-5 text-right">
                                     <div class="flex flex-col items-end gap-1">
                                         <span class="font-bold text-[11px]">{{ $report->created_at->format('d M Y') }}</span>
-                                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-tight text-gray-500">
-                                            {{ $report->created_at->format('H:i') }} WIB
+                                        <span class="px-2 py-0.2 rounded text-[2px] font-bold tracking-tight text-gray-500">
+                                            {{ $report->created_at->format('H:i') }} WITA
                                         </span>
                                     </div>
                                 </td>

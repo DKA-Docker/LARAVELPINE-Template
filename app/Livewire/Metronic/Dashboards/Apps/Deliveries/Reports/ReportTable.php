@@ -87,7 +87,7 @@ class ReportTable extends Component
             ->paginate($this->perPage);
 
         return view('dashboards.apps.deliveries.reports.report-table', [
-            'reports' => $reports
+            'reports' => $reports,
         ]);
     }
 
