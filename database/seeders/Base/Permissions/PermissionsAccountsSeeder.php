@@ -41,12 +41,17 @@ class PermissionsAccountsSeeder extends Seeder
             'dashboards.managements.accounts.delete',
         ];
 
+        $deliverySessions = [
+            'dashboards.apps.deliveries.tasks.sessions.view',
+        ];
+
         // Gabungkan semua untuk pembuatan master data permissions
         $allPermissions = array_merge(
             $deliveryRequests,
             $deliveryTasks,
             $deliveryReports,
-            $accountManagement
+            $accountManagement,
+            $deliverySessions
         );
 
         // 2. Buat Data Master Permissions
