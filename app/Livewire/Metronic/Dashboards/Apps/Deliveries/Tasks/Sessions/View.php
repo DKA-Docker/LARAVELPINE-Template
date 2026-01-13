@@ -26,6 +26,18 @@ class View extends Component
         ]);
     }
 
+    public ?AppsDeliveriesTasksSessions $selectedSession = null;
+
+    public function showTracking(string $id): void
+    {
+        $this->selectedSession = AppsDeliveriesTasksSessions::with(['account.credential', 'task', 'account.information'])->find($id);
+    }
+
+    public function closeTracking(): void
+    {
+        $this->selectedSession = null;
+    }
+
     public function placeholder()
     {
         return view('dashboards.layouts.placeholders.view');
