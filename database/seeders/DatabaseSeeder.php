@@ -26,6 +26,8 @@ use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesO
 use Database\Seeders\App\Deliveries\Tasks\Routes\Point\AppsDeliveriesTaskRoutesDestinationsSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\DeliveriesRequestsDestinationsPackagesSeeder;
 use Database\Seeders\App\Deliveries\Requests\Destinations\Packages\Units\DeliveriesRequestsDestinationsPackagesUnitsSeeder;
+use Illuminate\Support\Collection;
+use function JmesPath\search;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,44 +36,45 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. SEEDER INTI: Selalu jalan di Production & Local
-        $seeders = collect([
-            PermissionsAccountsSeeder::class,
-            AccountsSeeder::class,
-            SessionsAccountsSeeder::class,
-        ]);
-
-        // 2. SEEDER DINAMIS: Hanya jalan jika di environment LOCAL
-        if (config('app.env') === 'dev') {
-            $seeders = $seeders->merge([
-                // Data Pendukung (Kendaraan & Geo)
-                DataVehicleCategoriesSeeder::class,
-                DataVehiclesSeeder::class,
-                DataGeoProvincesSeeder::class,
-                DataGeoRegenciesSeeder::class,
-                DataGeoDistrictsSeeder::class,
-                DataGeoVillagesSeeder::class,
-
-                // Alur Pengiriman (Requests & Destinations)
-                DeliveriesRequestsSeeder::class,
-                DeliveriesRequestsDestinationsSeeder::class,
-                DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
-                DeliveriesRequestsDestinationsPackagesSeeder::class,
-
-                // Alur Tugas & Rute (Tasks & Routes)
-                AppsDeliveriesTasksRoutesSeeder::class,
-                AppsDeliveriesTaskRoutesOriginsSeeder::class,
-                AppsDeliveriesTaskRoutesDestinationsSeeder::class, // Menambahkan destinasi rute
-                DeliveriesTasksSeeder::class,
-                DeliveriesHistoriesSeeder::class,
-                DeliveriesTasksAssignsSeeder::class,
-                DeliveriesTasksGeosSeeder::class,
-                DeliveriesTasksAttachmentsSeeder::class,
-
-                // Data Tarif (Rates)
-                AppsDeliveriesDataRatesCategoriesSeeder::class,
-                AppsDeliveriesDataRatesSeeder::class,
-            ]);
+        $seeders = collect();
+        /**
+         * the Env Key
+         */
+        switch (config("app.env")){
+            case "production":
+                $seeders = $seeders->merge([
+                    PermissionsAccountsSeeder::class,
+                    AccountsSeeder::class,
+                    SessionsAccountsSeeder::class,
+                    DataVehicleCategoriesSeeder::class,
+                    DataVehiclesSeeder::class,
+                    DataGeoProvincesSeeder::class,
+                    DataGeoRegenciesSeeder::class,
+                    DataGeoDistrictsSeeder::class,
+                    DataGeoVillagesSeeder::class
+                ]);
+                break;
+            case "local":
+                $seeders = $seeders->merge([
+                    // Alur Pengiriman (Requests & Destinations)
+                    DeliveriesRequestsSeeder::class,
+                    DeliveriesRequestsDestinationsSeeder::class,
+                    DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
+                    DeliveriesRequestsDestinationsPackagesSeeder::class,
+                    // Alur Tugas & Rute (Tasks & Routes)
+                    AppsDeliveriesTasksRoutesSeeder::class,
+                    AppsDeliveriesTaskRoutesOriginsSeeder::class,
+                    AppsDeliveriesTaskRoutesDestinationsSeeder::class, // Menambahkan destinasi rute
+                    DeliveriesTasksSeeder::class,
+                    DeliveriesHistoriesSeeder::class,
+                    DeliveriesTasksAssignsSeeder::class,
+                    DeliveriesTasksGeosSeeder::class,
+                    DeliveriesTasksAttachmentsSeeder::class,
+                    // Data Tarif (Rates)
+                    AppsDeliveriesDataRatesCategoriesSeeder::class,
+                    AppsDeliveriesDataRatesSeeder::class,
+                ]);
+                break;
         }
 
         // 3. Eksekusi semua class seeder
