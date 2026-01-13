@@ -57,7 +57,7 @@ class Index extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         // 1. Validasi Input menggunakan Request object
         $validator = Validator::make($request->all(), [
@@ -109,7 +109,7 @@ class Index extends Controller
      *
      * @return JsonResponse
      */
-    public function logout(): JsonResponse
+    public function destroy(): JsonResponse
     {
         // Panggil revoke() dari service.
         // Service akan mendeteksi apakah ini sesi web atau token API dan menanganinya.

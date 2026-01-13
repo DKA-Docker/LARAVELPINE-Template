@@ -5,6 +5,7 @@ namespace Database\Seeders\Base\Accounts;
 use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Database\Factories\Base\Accounts\AccountsFactory;
 use Illuminate\Database\Seeder;
+use Throwable;
 
 class AccountsSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class AccountsSeeder extends Seeder
 
     /**
      * Run the database seeds.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function run(): void
     {
