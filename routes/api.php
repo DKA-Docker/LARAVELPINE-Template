@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Reports;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests as Requests;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Requests\Destinations as Destinations;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task as Tasks;
+use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Sessions as Sessions;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Routes as Routes;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Monitors as TrackingsMonitors;
 use App\Http\Controllers\V1\Api\Dashboards\Apps\Trackings\Alarms as TrackingsAlarms;
@@ -43,7 +44,9 @@ Route::name('api.')->group(function () {
                     Route::prefix('attachments')->name('attachments.')->group(function () {
                          Route::resource('/', Tasks\Attachments\Index::class)->parameters(['' => 'id']);
                     });
-
+                    Route::prefix('sessions')->name('sessions.')->group(function () {
+                        Route::resource('/', Tasks\Sessions\Index::class)->parameters(['' => 'id']);
+                    });
                 });
                 Route::resource('reports', Reports::class);
             });
