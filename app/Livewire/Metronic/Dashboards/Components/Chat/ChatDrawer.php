@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Metronic\Dashboards\Components\Chat;
 
+use App\Models\Base\Accounts\Accounts;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
 
@@ -18,31 +19,31 @@ class ChatDrawer extends Component
     {
         // Update current user's last_seen_at
         auth()->user()->update(['last_seen_at' => now()]);
-        
+
         // Broadcast that user is online
         broadcast(new \App\Events\Chats\UserOnline(
             userId: (int) auth()->id(),
             isOnline: true,
             lastSeen: now()->toIso8601String()
         ));
-        
+
         // Load available contacts (all users except current user)
-        $this->contacts = \App\Models\Base\Accounts\Accounts::where('id', '!=', auth()->id())
+        $this->contacts = Accounts::where('id', '!=', auth()->id())
             ->with('information')
             ->get()
             ->map(function($user) {
                 $info = $user->getRelationValue('information');
                 $firstName = '';
                 $lastName = '';
-                
+
                 // Check if information exists (has ID means it's real data, not withDefault)
                 if ($info && isset($info->id)) {
                     $firstName = $info->first_name ?? '';
                     $lastName = $info->last_name ?? '';
                 }
-                
+
                 $fullName = trim($firstName . ' ' . $lastName);
-                
+
                 return [
                     'id' => $user->id,
                     'name' => !empty($fullName) ? $fullName : 'Unknown User',
@@ -52,18 +53,18 @@ class ChatDrawer extends Component
                 ];
             })
             ->toArray();
-        
+
         // Load messages if a receiver is selected
         $this->loadMessages();
     }
-    
+
     public function loadMessages()
     {
         if (!$this->selectedReceiverId) {
             $this->messages = [];
             return;
         }
-        
+
         // Load messages between current user and selected receiver
         $this->messages = \App\Models\Base\Chats\Message::with('sender')
             ->where(function($query) {
@@ -80,18 +81,18 @@ class ChatDrawer extends Component
             ->get()
             ->toArray();
     }
-    
+
     public function selectContact($receiverId)
     {
         // Update last_seen_at on activity
         auth()->user()->update(['last_seen_at' => now()]);
-        
+
         $this->selectedReceiverId = $receiverId;
         $this->loadMessages();
-        
+
         // Dispatch event to JavaScript to update selectedReceiverId
         $this->dispatch('contact-selected', receiverId: $receiverId);
-        
+
         // Broadcast online status
         broadcast(new \App\Events\Chats\UserOnline(
             userId: (int) auth()->id(),
@@ -125,7 +126,7 @@ class ChatDrawer extends Component
             $this->dispatch('error', 'Please select a contact first');
             return;
         }
-        
+
         $this->validate([
             'messageBody' => 'required|string|max:1000',
         ]);
@@ -148,7 +149,7 @@ class ChatDrawer extends Component
      * Laravel Echo usually expects the full class name for events unless aliased.
      * Default Reverb/Pusher event name for `App\Events\Chats\MessageSent` is `.App.Events.Chats.MessageSent` (with leading dot often inferred)
      * OR just `MessageSent` if namespace is omitted in Echo client, but standard is fully qualified.
-     * 
+     *
      * Livewire attribute format: #[On('echo:{channel},{event}')]
      */
     //     #[\Livewire\Attributes\On('echo:chat,.App.Events.Chats.MessageSent')]
@@ -158,24 +159,24 @@ class ChatDrawer extends Component
         // We might need to fetch the message or just push the payload if it matches structure
         // Usually event payload contains the public properties of the Event class.
         // MessageSent has public $message.
-        
-        // Safety check to avoid duplicating own message if broadcast(..)->toOthers() didn't catch it 
-        // (Echo listener in Livewire receives it even if sent by self if not carefully excluded, 
-        // but toOthers() excludes the socket ID. Livewire listener is server-side triggered by client-side Echo? 
+
+        // Safety check to avoid duplicating own message if broadcast(..)->toOthers() didn't catch it
+        // (Echo listener in Livewire receives it even if sent by self if not carefully excluded,
+        // but toOthers() excludes the socket ID. Livewire listener is server-side triggered by client-side Echo?
         // No, Livewire Echo listener is client-side Echo receiving it, then triggering a Livewire roundtrip.
-        
+
         $newMessage = $event['message'];
-        
+
         // Eager load sender if not present in payload (it might be if model was serialized with it, but standard serialization is just model attributes)
         // Better to fetch fresh or rely on what's sent.
         // For simplicity, let's just append.
-        
+
         // Ensure we don't duplicate if we just sent it (though toOthers should handle the socket exclusion)
         // Only add message if it's part of current conversation
         if (isset($newMessage['user_id']) && isset($newMessage['receiver_id'])) {
             $isForMe = ($newMessage['receiver_id'] == auth()->id() && $newMessage['user_id'] == $this->selectedReceiverId);
             $isFromMe = ($newMessage['user_id'] == auth()->id() && $newMessage['receiver_id'] == $this->selectedReceiverId);
-            
+
             if ($isForMe || $isFromMe) {
                 $msgModel = \App\Models\Base\Chats\Message::with('sender')->find($newMessage['id']);
                 if ($msgModel) {
@@ -184,7 +185,7 @@ class ChatDrawer extends Component
             }
         }
     }
-    
+
     /**
      * Check if user is online (last seen within 5 minutes)
      */
@@ -193,7 +194,7 @@ class ChatDrawer extends Component
         if (!$lastSeenAt) {
             return false;
         }
-        
+
         return $lastSeenAt->diffInMinutes(now()) < 5;
     }
 }
