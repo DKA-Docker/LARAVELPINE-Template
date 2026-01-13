@@ -3,6 +3,7 @@
 namespace App\Models\Apps\Deliveries\Tasks\Sessions;
 
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
+use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +20,26 @@ class AppsDeliveriesTasksSessions extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'account',
         'task',
+        'route',
         'description',
     ];
+
+    protected $with = ['account','task'];
+
+    protected $hidden = [
+        'deleted_at',
+    ];
+
+    /**
+     * Relation Data Account Untuk Table Ini Di dalam database
+     * @return BelongsTo
+     */
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Accounts::class, 'account')->withDefault();
+    }
 
     public function task(): BelongsTo
     {

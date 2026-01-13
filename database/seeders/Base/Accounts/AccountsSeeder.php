@@ -46,7 +46,6 @@ class AccountsSeeder extends Seeder
             ]
         ]);
         $this->command->info(json_encode($create));
-
         $this->command->info('✅ 1 accounts root (include info & credential) successfully created.');
     }
 }

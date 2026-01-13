@@ -20,8 +20,8 @@ class AppsDeliveriesTasksAssignsFactory extends Factory
         $taskRequest = AppsDeliveriesTasks::inRandomOrder()->first();
         return [
             'id' => (String) Str::uuid(),
-            'account' => $accounts->id,
-            'task' => $taskRequest->id,
+            'account' => $accounts,
+            'task' => $taskRequest,
         ];
     }
 }

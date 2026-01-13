@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class Index
 {
@@ -21,6 +22,7 @@ class Index
         $this->authService = new AuthAccountsServices();
     }
 
+    /* @throws Throwable **/
     public function edit(Request $request){
         $req = $request->all();
         $session = $this->authService->verify();

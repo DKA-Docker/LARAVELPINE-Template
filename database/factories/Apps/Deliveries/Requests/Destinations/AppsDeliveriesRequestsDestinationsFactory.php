@@ -15,7 +15,7 @@ class AppsDeliveriesRequestsDestinationsFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
         $account = Accounts::inRandomOrder()->first();
         $request = AppsDeliveriesRequests::inRandomOrder()->first();
-        
+
         // Array of real coordinates in Makassar for realistic test data
         $makassarLocations = [
             ['lat' => -5.1477614, 'lng' => 119.4327314],  // Fort Rotterdam
@@ -31,9 +31,9 @@ class AppsDeliveriesRequestsDestinationsFactory extends Factory
             ['lat' => -5.1945408, 'lng' => 119.4901267],  // Hertasning
             ['lat' => -5.1122531, 'lng' => 119.4536694],  // Tamalanrea
         ];
-        
+
         $location = $this->faker->randomElement($makassarLocations);
-        
+
         return [
             'id' => (string) Str::uuid(),
             'account' => $account->id,
