@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Sessions;
+namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Sessions;
 
-use App\Models\Apps\Deliveries\Sessions\AppsDeliveriesSessions;
+use App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Lazy]
-class Index extends Component
+class View extends Component
 {
     use WithPagination;
 
@@ -17,11 +17,11 @@ class Index extends Component
 
     public function render()
     {
-        $sessions = AppsDeliveriesSessions::query()
+        $sessions = AppsDeliveriesTasksSessions::query()
             ->latest()
             ->paginate($this->perPage);
 
-        return view('dashboards.apps.deliveries.sessions.view', [
+        return view('dashboards.apps.deliveries.tasks.sessions.view', [
             'sessions' => $sessions
         ]);
     }

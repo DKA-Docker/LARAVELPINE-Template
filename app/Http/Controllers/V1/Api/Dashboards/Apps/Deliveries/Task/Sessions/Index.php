@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Dashboards\Apps\Deliveries\Task\Sessions;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Services\Resources\Deliveries\Tasks\Sessions\TasksSessionsServices;
 use Illuminate\Http\Request;
 

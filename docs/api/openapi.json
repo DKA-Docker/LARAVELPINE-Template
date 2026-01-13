@@ -41,6 +41,10 @@
             "description": "Manage delivery routes and waypoints"
         },
         {
+            "name": "Delivery Sessions",
+            "description": "Manage delivery task sessions"
+        },
+        {
             "name": "Delivery Reports",
             "description": "Generate and retrieve delivery reports"
         },
@@ -89,7 +93,10 @@
                                                 "example": "password123"
                                             }
                                         },
-                                        "required": ["username", "password"]
+                                        "required": [
+                                            "username",
+                                            "password"
+                                        ]
                                     },
                                     "information": {
                                         "type": "object",
@@ -103,7 +110,9 @@
                                                 "example": "Doe"
                                             }
                                         },
-                                        "required": ["first_name"]
+                                        "required": [
+                                            "first_name"
+                                        ]
                                     },
                                     "contact": {
                                         "type": "object",
@@ -114,25 +123,37 @@
                                                 "example": "john.doe@example.com"
                                             },
                                             "phone": {
-                                              "type": "string",
-                                              "example": "08123456789"
+                                                "type": "string",
+                                                "example": "08123456789"
                                             }
                                         },
-                                        "required": ["email"]
+                                        "required": [
+                                            "email"
+                                        ]
                                     },
                                     "firebase": {
                                         "type": "array",
-                                        "items": { "type": "string" },
+                                        "items": {
+                                            "type": "string"
+                                        },
                                         "example": []
                                     },
                                     "roles": {
                                         "type": "array",
-                                        "items": { "type": "string" },
-                                        "example": ["customer"],
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "customer"
+                                        ],
                                         "description": "User roles (default: ['customer'])"
                                     }
                                 },
-                                "required": ["credential", "information", "contact"]
+                                "required": [
+                                    "credential",
+                                    "information",
+                                    "contact"
+                                ]
                             }
                         }
                     }
@@ -813,6 +834,208 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/tasks/sessions": {
+            "get": {
+                "tags": [
+                    "Delivery Sessions"
+                ],
+                "summary": "List delivery sessions",
+                "description": "Retrieve a list of delivery sessions",
+                "operationId": "listDeliverySessions",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Delivery Sessions"
+                ],
+                "summary": "Create delivery session",
+                "description": "Create a new delivery session",
+                "operationId": "createDeliverySession",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "task": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/dashboards/apps/deliveries/tasks/sessions/{id}": {
+            "get": {
+                "tags": [
+                    "Delivery Sessions"
+                ],
+                "summary": "Get delivery session",
+                "description": "Get a delivery session by ID",
+                "operationId": "getDeliverySession",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Delivery Sessions"
+                ],
+                "summary": "Update delivery session",
+                "description": "Update a delivery session",
+                "operationId": "updateDeliverySession",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Session updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Delivery Sessions"
+                ],
+                "summary": "Delete delivery session",
+                "description": "Delete a delivery session",
+                "operationId": "deleteDeliverySession",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
                     }
                 }
             }

@@ -34,9 +34,13 @@
                 <div class="kt-container-fixed"></div>
                 <!-- End of Container -->
                 <!-- Container -->
-                @livewire("metronic.dashboards.apps.deliveries.tasks.particles.headings.headings")
+                <!-- Container -->
+                <!-- Container -->
+                <div class="kt-container-fixed">
+                    @livewire("metronic.dashboards.apps.deliveries.tasks.components.tabs")
+                </div>
                 <!-- End of Container -->
-                @livewire("metronic.dashboards.apps.deliveries.tasks.components.view")
+                <!-- End of Container -->
             </main>
             <!-- End of Content -->
             @livewire("metronic.dashboards.layouts.constructors.footers")

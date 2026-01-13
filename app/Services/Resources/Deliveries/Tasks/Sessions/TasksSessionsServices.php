@@ -155,4 +155,14 @@ class TasksSessionsServices
     {
         return $this->repository->Find($id);
     }
+
+    public function ReadAll()
+    {
+        return [
+            'status' => true,
+            'code'   => 200,
+            'msg'    => 'Successfully Read Data',
+            'data'   => $this->repository->ReadAll()
+        ];
+    }
 }

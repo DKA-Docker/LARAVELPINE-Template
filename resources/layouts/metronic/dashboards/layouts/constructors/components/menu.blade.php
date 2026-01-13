@@ -62,19 +62,7 @@
                         </div>
                     @endcan
 
-                    {{-- @can('dashboards.apps.deliveries.sessions.view') --}}
-                        <div class="kt-menu-item">
-                            <a class="kt-menu-link kt-menu-item-active:bg-accent/60 dark:menu-item-active:border-border kt-menu-item-active:rounded-lg hover:bg-accent/60 grow items-center gap-[14px] border border-transparent py-[8px] ps-[10px] pe-[10px] hover:rounded-lg"
-                               href="{{ request()->getSchemeAndHttpHost() . route('dashboards.apps.deliveries.sessions.index', [], false) }}" tabindex="0">
-                                <span class="kt-menu-bullet kt-menu-item-active:before:bg-primary kt-menu-item-hover:before:bg-primary relative -start-[3px] flex w-[6px] before:absolute before:top-0 before:size-[6px] before:-translate-y-1/2 before:rounded-full rtl:start-0 rtl:before:translate-x-1/2"></span>
-                                <span class="kt-menu-icon text-muted-foreground items-start">
-                    <i class="ki-duotone ki-user-tick text-lg"></i>
-                </span>
-                                <span class="kt-menu-title text-2sm text-foreground kt-menu-item-active:text-primary kt-menu-item-active:font-semibold kt-menu-link-hover:!text-primary font-medium">{{ __('menu.session') }}</span>
-                            </a>
 
-                        </div>
-                    {{-- @endcan --}}
 
                     @can('dashboards.apps.deliveries.reports.view')
                         <div class="kt-menu-item">

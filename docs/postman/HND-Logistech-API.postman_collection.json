@@ -20,7 +20,6 @@
         {
             "name": "Authentication",
             "item": [
-
                 {
                     "name": "Login",
                     "event": [
@@ -30,9 +29,8 @@
                                 "exec": [
                                     "if (pm.response.code === 200) {",
                                     "    var jsonData = pm.response.json();",
-                                    "    pm.environment.set(\"access_token\", jsonData.token);",
-                                    "    pm.environment.set(\"user_id\", jsonData.user.id);",
-                                    "    console.log(\"Token saved:\", jsonData.token);",
+                                    "    pm.environment.set(\"access_token\", jsonData.data);",
+                                    "    console.log(\"Token saved:\", jsonData.data);",
                                     "}"
                                 ],
                                 "type": "text/javascript"
@@ -516,6 +514,173 @@
                                                             ]
                                                         },
                                                         "description": "Delete a task attachment"
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Sessions",
+                                            "item": [
+                                                {
+                                                    "name": "List Sessions",
+                                                    "request": {
+                                                        "method": "GET",
+                                                        "header": [],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/sessions?page=1&per_page=15",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "sessions"
+                                                            ],
+                                                            "query": [
+                                                                {
+                                                                    "key": "page",
+                                                                    "value": "1"
+                                                                },
+                                                                {
+                                                                    "key": "per_page",
+                                                                    "value": "15"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "List delivery task sessions"
+                                                    },
+                                                    "response": []
+                                                },
+                                                {
+                                                    "name": "Create Session",
+                                                    "request": {
+                                                        "method": "POST",
+                                                        "header": [
+                                                            {
+                                                                "key": "Content-Type",
+                                                                "value": "application/json"
+                                                            }
+                                                        ],
+                                                        "body": {
+                                                            "mode": "raw",
+                                                            "raw": "{\n  \"task\": \"{{task_id}}\",\n  \"description\": \"Session description\"\n}"
+                                                        },
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/sessions",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "sessions"
+                                                            ]
+                                                        },
+                                                        "description": "Create a new delivery session"
+                                                    },
+                                                    "response": []
+                                                },
+                                                {
+                                                    "name": "Get Session",
+                                                    "request": {
+                                                        "method": "GET",
+                                                        "header": [],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/sessions/:id",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "sessions",
+                                                                ":id"
+                                                            ],
+                                                            "variable": [
+                                                                {
+                                                                    "key": "id",
+                                                                    "value": "{{session_id}}",
+                                                                    "description": "Session ID"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Get session details"
+                                                    },
+                                                    "response": []
+                                                },
+                                                {
+                                                    "name": "Update Session",
+                                                    "request": {
+                                                        "method": "PATCH",
+                                                        "header": [
+                                                            {
+                                                                "key": "Content-Type",
+                                                                "value": "application/json"
+                                                            }
+                                                        ],
+                                                        "body": {
+                                                            "mode": "raw",
+                                                            "raw": "{\n  \"description\": \"Updated session description\"\n}"
+                                                        },
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/sessions/:id",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "sessions",
+                                                                ":id"
+                                                            ],
+                                                            "variable": [
+                                                                {
+                                                                    "key": "id",
+                                                                    "value": "{{session_id}}",
+                                                                    "description": "Session ID"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Update session"
+                                                    },
+                                                    "response": []
+                                                },
+                                                {
+                                                    "name": "Delete Session",
+                                                    "request": {
+                                                        "method": "DELETE",
+                                                        "header": [],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/dashboards/apps/deliveries/tasks/sessions/:id",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "dashboards",
+                                                                "apps",
+                                                                "deliveries",
+                                                                "tasks",
+                                                                "sessions",
+                                                                ":id"
+                                                            ],
+                                                            "variable": [
+                                                                {
+                                                                    "key": "id",
+                                                                    "value": "{{session_id}}",
+                                                                    "description": "Session ID"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Delete session"
                                                     },
                                                     "response": []
                                                 }

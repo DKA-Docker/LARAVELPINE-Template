@@ -45,8 +45,9 @@ Route::name('api.')->group(function () {
                          Route::resource('/', Tasks\Attachments\Index::class)->parameters(['' => 'id']);
                     });
                     Route::prefix('sessions')->name('sessions.')->group(function () {
-                        Route::resource('/', Tasks\Sessions\Index::class)->parameters(['' => 'id']);
+                        Route::resource('/', Sessions\Index::class)->parameters(['' => 'id']);
                     });
+                
                 });
                 Route::resource('reports', Reports::class);
             });
@@ -70,9 +71,9 @@ Route::name('api.')->group(function () {
 
     Route::middleware(['auth:sanctum'])->prefix('base')->name('base.')->group(function () {
         Route::prefix('accounts')->name('account.')->group(function () {
-            Route::get('/', [Accounts\Index::class, 'index']);
+            Route::get('/', [Accounts::class, 'index']);
             Route::prefix('firebase')->name('firebase.')->group(function () {
-                Route::patch('/', [Accounts\Firebase\Index::class, 'edit']);
+                Route::patch('/', [App\Http\Controllers\V1\Api\Base\Accounts\Firebase\Index::class, 'edit']);
             });
         });
     });
