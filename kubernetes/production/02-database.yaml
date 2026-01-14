@@ -28,7 +28,7 @@ spec:
             - name: DKA_DB_NAME
               value: 'hndgroup_logistech'
             - name: DKA_CRON_ENABLE
-              value: 'false'
+              value: 'true'
           resources:
             requests:
               memory: "256Mi"
