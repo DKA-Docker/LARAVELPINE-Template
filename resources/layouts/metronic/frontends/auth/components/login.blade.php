@@ -56,7 +56,7 @@
                     <label class="kt-form-label font-normal text-mono">
                         Kata Sandi
                     </label>
-                    <a class="text-sm kt-link shrink-0" href="#">
+                    <a class="text-sm kt-link shrink-0" href="{{ route('auth.forgot-password') }}">
                         Lupa kata Sandi?
                     </a>
                 </div>

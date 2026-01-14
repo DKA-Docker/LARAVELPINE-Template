@@ -34,8 +34,11 @@ Route::prefix('privacy')->name('privacy.')->group(function () {
 });
 /** Grouping Ke Group Auth Di Dalam Web Routes*/
 Route::prefix('auth')->name('auth.')->group(function () {
-    /** Name Route dashboards.apps */
     Route::resource('/', FrontendAuth::class);
+    /** Register Route */
+    Route::get('/register', [FrontendAuth::class, 'register'])->name('register');
+    /** Forgot Password Route */
+    Route::get('/forgot-password', [FrontendAuth::class, 'forgotPassword'])->name('forgot-password');
 });
 /** name Route dashboards */
 Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->group(function () {

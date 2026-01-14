@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 // Pastikan ini di-import jika menggunakan Sanctum
 
@@ -143,6 +145,55 @@ class AuthAccountsServices {
             "code" => Response::HTTP_UNAUTHORIZED,
             "msg" => "Unauthorized",
         ];
+    }
+
+    /**
+     * Send Reset Link
+     * @param string $email
+     * @return array
+     */
+    public function sendResetLink(string $email): array
+    {
+        try {
+            $contact = $this->contact->FindByEmail($email);
+            if (!$contact) {
+                // Return success even if email not found to prevent enumeration, or failed based on policy.
+                // For now, let's return failed to be explicit for user.
+                return [
+                    'status' => false,
+                    'code' => Response::HTTP_NOT_FOUND,
+                    'msg' => 'Email not found',
+                ];
+            }
+
+            // Generate Token (simple random string for now, or use Password Broker if configured)
+            // Using DB table 'password_reset_tokens' is standard Laravel.
+            $token = Str::random(60);
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $email],
+                [
+                    'email' => $email,
+                    'token' => Hash::make($token),
+                    'created_at' => now()
+                ]
+            );
+
+            // Send Email
+            \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\Auth\ForgotPasswordMail($email, $token));
+
+            return [
+                'status' => true,
+                'code' => Response::HTTP_OK,
+                'msg' => 'Reset link sent to your email',
+            ];
+
+        } catch (\Throwable $th) {
+             return [
+                'status' => false,
+                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'msg' => 'Failed to send reset link: ' . $th->getMessage()
+            ];
+        }
     }
 
     public function revoke(): array

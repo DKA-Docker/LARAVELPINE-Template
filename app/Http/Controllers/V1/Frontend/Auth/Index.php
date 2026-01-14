@@ -37,7 +37,7 @@ class Index extends Controller
         return redirect()->route('dashboards.index');
     }
 
-    public function register(): RedirectResponse|Factory|View
+    public function register()
     {
         // Cek jika user sudah login, redirect ke dashboard (opsional)
         // $AuthVerification = $this->auth->verify();
@@ -46,6 +46,11 @@ class Index extends Controller
         // }
 
         return view('frontends.auth.register');
+    }
+
+    public function forgotPassword()
+    {
+        return view('frontends.auth.forgot-password');
     }
 
 
