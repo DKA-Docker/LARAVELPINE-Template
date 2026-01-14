@@ -56,6 +56,15 @@ class DatabaseSeeder extends Seeder
                 break;
             case "local":
                 $seeders = $seeders->merge([
+                    PermissionsAccountsSeeder::class,
+                    AccountsSeeder::class,
+                    SessionsAccountsSeeder::class,
+                    DataVehicleCategoriesSeeder::class,
+                    DataVehiclesSeeder::class,
+                    DataGeoProvincesSeeder::class,
+                    DataGeoRegenciesSeeder::class,
+                    DataGeoDistrictsSeeder::class,
+                    DataGeoVillagesSeeder::class,
                     // Alur Pengiriman (Requests & Destinations)
                     DeliveriesRequestsSeeder::class,
                     DeliveriesRequestsDestinationsSeeder::class,

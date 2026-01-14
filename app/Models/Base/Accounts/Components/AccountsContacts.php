@@ -18,6 +18,7 @@ class AccountsContacts extends Model
     protected $fillable = [
         'id',
         'email',
+        'phone',
     ];
 
     protected $hidden = [

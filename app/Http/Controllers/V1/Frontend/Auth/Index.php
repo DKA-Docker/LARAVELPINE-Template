@@ -37,5 +37,16 @@ class Index extends Controller
         return redirect()->route('dashboards.index');
     }
 
+    public function register(): RedirectResponse|Factory|View
+    {
+        // Cek jika user sudah login, redirect ke dashboard (opsional)
+        // $AuthVerification = $this->auth->verify();
+        // if ($AuthVerification['status']) {
+        //    return redirect()->route('dashboards.index');
+        // }
+
+        return view('frontends.auth.register');
+    }
+
 
 }

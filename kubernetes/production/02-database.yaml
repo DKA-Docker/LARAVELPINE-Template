@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logistech-postgresql
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   replicas: 1
   strategy:
@@ -15,11 +15,13 @@ spec:
       labels:
         app: postgresql
     spec:
-      nodeSelector:
-        app-group: logistik
+      securityContext:
+        fsGroup: 70             # Memberikan izin group postgres (Alpine) pada volume
       containers:
         - name: postgresql
           image: yovanggaanandhika/postgresql:latest
+          securityContext:
+            runAsUser: 70       # Jalankan sebagai user postgres Alpine
           env:
             - name: DKA_ROOT_PASSWORD
               value: '@3ids83jed8dj_3u3hf3hjoiaj2dhfsvnrsvljfwojfojefiuhi3hfk3fiu3hfihf3f3ihf3ihuf3'
@@ -44,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hndgroup-logistech-postgresql
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   selector:
     app: postgresql

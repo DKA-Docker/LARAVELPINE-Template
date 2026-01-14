@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logistik-app
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   replicas: 2
   strategy:
@@ -27,7 +27,7 @@ spec:
               app: logistik
       containers:
         - name: php-app
-          image: hndtech/1096283549:production-907b0a0762a3eeabd7658907e314caf8cc90642d
+          image: hndtech/1096283549:production-2c26fa11371e3ee46b89478d21836bbeadb97563
           env:
             - name: APP_NAME
               value: 'HND Group System Logistik'
@@ -135,7 +135,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hndgroup-logistech-app
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   selector:
     app: logistik

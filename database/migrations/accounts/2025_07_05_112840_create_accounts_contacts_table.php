@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('accounts_contacts', function (Blueprint $table) {
             $table->uuid('id')->comment('adalah uuid dari data contact')->primary();
             $table->string('email')->comment('adalah email untuk login')->unique();
+            $table->string('phone')->nullable()->comment('no telp user');
             $table->softDeletes()->comment('adalah parameter soft deleted');
             $table->timestamps();
         });

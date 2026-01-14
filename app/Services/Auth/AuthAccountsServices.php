@@ -116,7 +116,11 @@ class AuthAccountsServices {
 
     // Metode authorize tidak perlu diubah.
 
+
+
+
     public function verify(): array
+
     {
         /** @var $auth Authenticatable ambil data verification dari data user yang login saat ini. */
         $auth = Auth::guard('web')->user() ?? Auth::guard('sanctum')->user();

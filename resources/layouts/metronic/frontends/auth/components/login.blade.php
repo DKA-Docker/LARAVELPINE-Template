@@ -96,7 +96,7 @@
             </label>
 
             <div class="flex items-end justify-end font-medium">
-                <a class="text-sm link" href="#">
+                <a class="text-sm link" href="{{ route('auth.register') }}">
                     Daftar Sekarang
                 </a>
             </div>

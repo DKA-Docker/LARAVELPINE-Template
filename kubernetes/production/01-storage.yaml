@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: logistik-postgres-pvc
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   storageClassName: longhorn
   accessModes:
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: logistik-storage-pvc
-  namespace: hgs-logistik
+  namespace: hndgroup-logistik
 spec:
   storageClassName: longhorn
   accessModes:
