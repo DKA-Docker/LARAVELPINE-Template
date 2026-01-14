@@ -4,7 +4,7 @@
 
 return [
     // ...
-    'view_path' => resource_path('layouts/'.config('theme.name', 'Metronic')),
+    'view_path' => resource_path('layouts/'.config('theme.name', 'metronic')),
     'hotwire' => true,
     // ...
 ];

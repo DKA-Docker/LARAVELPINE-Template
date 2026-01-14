@@ -45,4 +45,9 @@ class AccountsContactsRepository implements AccountsContactsRepositoryInterface 
         $model->update($data);
         return $model;
     }
+
+    public function FindByEmail(string $email): ?AccountsContacts
+    {
+        return AccountsContacts::query()->where('email', $email)->first();
+    }
 }

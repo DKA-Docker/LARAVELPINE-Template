@@ -6,5 +6,6 @@ use App\Models\Base\Accounts\Components\AccountsContacts;
 
 interface AccountsContactsRepositoryInterface
 {
-    public function Create(...$args): AccountsContacts;
+    public function Update(int|string $id, array $data): AccountsContacts;
+    public function FindByEmail(string $email): ?AccountsContacts;
 }
