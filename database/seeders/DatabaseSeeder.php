@@ -66,19 +66,19 @@ class DatabaseSeeder extends Seeder
                     DataGeoDistrictsSeeder::class,
                     DataGeoVillagesSeeder::class,
                     // Alur Pengiriman (Requests & Destinations)
-                    DeliveriesRequestsSeeder::class,
-                    DeliveriesRequestsDestinationsSeeder::class,
-                    DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
-                    DeliveriesRequestsDestinationsPackagesSeeder::class,
+//                    DeliveriesRequestsSeeder::class,
+//                    DeliveriesRequestsDestinationsSeeder::class,
+//                    DeliveriesRequestsDestinationsPackagesUnitsSeeder::class,
+//                    DeliveriesRequestsDestinationsPackagesSeeder::class,
                     // Alur Tugas & Rute (Tasks & Routes)
-                    AppsDeliveriesTasksRoutesSeeder::class,
-                    AppsDeliveriesTaskRoutesOriginsSeeder::class,
-                    AppsDeliveriesTaskRoutesDestinationsSeeder::class, // Menambahkan destinasi rute
-                    DeliveriesTasksSeeder::class,
-                    DeliveriesHistoriesSeeder::class,
-                    DeliveriesTasksAssignsSeeder::class,
-                    DeliveriesTasksGeosSeeder::class,
-                    DeliveriesTasksAttachmentsSeeder::class,
+//                    AppsDeliveriesTasksRoutesSeeder::class,
+//                    AppsDeliveriesTaskRoutesOriginsSeeder::class,
+//                    AppsDeliveriesTaskRoutesDestinationsSeeder::class, // Menambahkan destinasi rute
+//                    DeliveriesTasksSeeder::class,
+//                    DeliveriesHistoriesSeeder::class,
+//                    DeliveriesTasksAssignsSeeder::class,
+//                    DeliveriesTasksGeosSeeder::class,
+//                    DeliveriesTasksAttachmentsSeeder::class,
                     // Data Tarif (Rates)
                     AppsDeliveriesDataRatesCategoriesSeeder::class,
                     AppsDeliveriesDataRatesSeeder::class,

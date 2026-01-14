@@ -41,7 +41,7 @@
                     </thead>
                     <tbody>
                         @forelse($vehicles as $vehicle)
-                        <tr class="group hover:bg-gray-50 transition-all duration-300">
+                        <tr wire:key="{{ $vehicle->id }}" class="group hover:bg-gray-50 transition-all duration-300">
                             <td class="px-6 py-5">
                                 <div class="flex flex-col">
                                     <span class="font-bold text-gray-800 text-sm group-hover:text-primary transition-colors">{{ $vehicle->name }}</span>
@@ -63,7 +63,7 @@
                                     <a href="{{ route('dashboards.settings.vehicles.edit.index', $vehicle->id) }}" class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-pencil fs-5"></i>
                                     </a>
-                                    <button wire:click="delete('{{ $vehicle->id }}')" wire:confirm="Are you sure?" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
+                                    <button wire:click="$dispatch('confirm-delete', { id: '{{ $vehicle->id }}', type: 'vehicle' })" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-trash fs-5"></i>
                                     </button>
                                 </div>
@@ -88,4 +88,5 @@
             {{ $vehicles->links() }}
         </div>
     </div>
+
 </div>

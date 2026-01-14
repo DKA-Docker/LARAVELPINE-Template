@@ -46,6 +46,7 @@ class DataVehiclesServices
         DB::beginTransaction();
         try {
             $data['id'] = Str::uuid()->toString();
+            // Create expects ...$args which merges with defaults. Passing array as first arg works.
             $model = $this->repository->Create($data);
             DB::commit();
 
@@ -72,7 +73,9 @@ class DataVehiclesServices
     {
         DB::beginTransaction();
         try {
-            $model = $this->repository->Update($id, $data);
+            // New Update signature requires Model, so we find it first
+            $model = $this->repository->Find($id);
+            $model = $this->repository->Update($model, $data);
             DB::commit();
 
             return [

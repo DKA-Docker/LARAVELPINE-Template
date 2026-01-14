@@ -29,6 +29,6 @@ class CreateForm extends Component
         ]);
 
         session()->flash('success', 'Category created successfully.');
-        return redirect()->route('dashboards.settings.vehicles');
+        return redirect()->route('dashboards.settings.vehicles.index');
     }
 }

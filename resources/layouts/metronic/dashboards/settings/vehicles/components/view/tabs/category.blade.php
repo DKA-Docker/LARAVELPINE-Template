@@ -8,7 +8,7 @@
             </label>
         </div>
 
-        <a href="{{ route('dashboards.settings.vehicles.categories.create.index') }}" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/20">
+        <a href="{{ route('dashboards.settings.vehicles.create.index', ['tab' => 'category']) }}" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/20">
             <i class="ki-filled ki-plus-square fs-3"></i>
             Add Category
         </a>
@@ -34,19 +34,19 @@
                     </thead>
                     <tbody>
                         @forelse($categories as $category)
-                        <tr class="group hover:bg-gray-50 transition-all duration-300">
+                        <tr wire:key="{{ $category->id }}" class="group hover:bg-gray-50 transition-all duration-300">
                             <td class="px-6 py-5">
                                 <span class="font-bold text-gray-800 text-sm group-hover:text-primary transition-colors">{{ $category->name }}</span>
                             </td>
                             <td class="px-6 py-5">
-                                <span class="text-xs font-medium text-gray-500">{{ Str::limit($category->description, 50) ?? '-' }}</span>
+                                <span class="text-xs font-medium text-gray-500">{{ Str::limit($category->description ?? '', 50) ?: '-' }}</span>
                             </td>
                             <td class="px-6 py-5 text-end">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('dashboards.settings.vehicles.categories.edit.index', $category->id) }}" class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-pencil fs-5"></i>
                                     </a>
-                                    <button wire:click="delete('{{ $category->id }}')" wire:confirm="Are you sure?" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
+                                    <button wire:click="$dispatch('confirm-delete', { id: '{{ $category->id }}', type: 'category' })" class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors shadow-sm">
                                         <i class="ki-filled ki-trash fs-5"></i>
                                     </button>
                                 </div>
@@ -71,4 +71,6 @@
             {{ $categories->links() }}
         </div>
     </div>
+
 </div>
+

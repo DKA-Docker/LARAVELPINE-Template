@@ -29,6 +29,10 @@ class View extends Component
     public $minPackages = null;
     public $maxPackages = null;
 
+    // confirm delete propetries
+    public $confirmingDeletion = false;
+    public $deleteId = null;
+
     public bool $isAuthorized = true;
 
     public function boot(): void
@@ -72,9 +76,6 @@ class View extends Component
     {
         return view('dashboards.layouts.placeholders.view');
     }
-
-    public $confirmingDeletion = false;
-    public $deleteId = null;
 
     public function confirmDelete(string $id): void
     {

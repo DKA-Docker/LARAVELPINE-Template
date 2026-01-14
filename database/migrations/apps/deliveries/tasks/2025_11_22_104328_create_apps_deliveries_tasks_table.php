@@ -30,7 +30,7 @@ return new class extends Migration
                 ->index()
                 ->comment('request utama untuk task ini')
                 ->constrained('apps_deliveries_requests_destinations', 'id')
-                ->onDelete('cascade'); // kalau mau cuma null: ->nullOnDelete()
+                ->nullOnDelete(); // kalau mau cuma null: ->nullOnDelete()
 
             $table->foreignUuid('vehicle')
                   ->index()

@@ -13,6 +13,8 @@ class Category extends Component
 
     public $name = '';
 
+    protected $listeners = ['refresh-list' => '$refresh'];
+
     public function render(DataVehicleCategoriesServices $service)
     {
         $categories = $service->ReadAll([
@@ -22,11 +24,5 @@ class Category extends Component
         return view('dashboards.settings.vehicles.components.view.tabs.category', [
             'categories' => $categories
         ]);
-    }
-
-    public function delete($id, DataVehicleCategoriesServices $service)
-    {
-        $service->Delete($id);
-        session()->flash('success', 'Category deleted successfully.');
     }
 }

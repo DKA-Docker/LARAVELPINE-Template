@@ -16,6 +16,8 @@ class Vehicle extends Component
     public $name = '';
     public $category = '';
 
+    protected $listeners = ['refresh-list' => '$refresh'];
+
     public function render(DataVehiclesServices $vehicleService, DataVehicleCategoriesServices $categoryService)
     {
         $vehicles = $vehicleService->ReadAll([
@@ -29,11 +31,5 @@ class Vehicle extends Component
             'vehicles' => $vehicles,
             'categories' => $categories
         ]);
-    }
-
-    public function delete($id, DataVehiclesServices $service)
-    {
-        $service->Delete($id);
-        session()->flash('success', 'Vehicle deleted successfully.');
     }
 }

@@ -13,6 +13,7 @@ class DataVehicles extends Model
     protected $fillable = [
         'id',
         'category',
+        'account',
         'name',
         'plate',
         'description'

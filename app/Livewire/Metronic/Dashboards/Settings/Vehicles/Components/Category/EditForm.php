@@ -38,6 +38,6 @@ class EditForm extends Component
         ]);
 
         session()->flash('success', 'Category updated successfully.');
-        return redirect()->route('dashboards.settings.vehicles.categories.index');
+        return redirect()->route('dashboards.settings.vehicles.index', ['tab' => 'categories']);
     }
 }
