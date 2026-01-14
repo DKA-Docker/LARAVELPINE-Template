@@ -89,18 +89,15 @@ jobs:
           script: |
             cd ${{ env.BASE_PATH }}
 
-            # Apply all manifests in the branch folder
-            sudo kubectl apply -f .
+            # 1. Apply all manifests in the branch folder
+            kubectl apply -f .
 
-            # Wait for the specific app deployment to be ready
-            echo "Waiting for pods to be ready..."
-            sudo kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }} --timeout=150s
+            # 2. Tunggu proses rollout selesai agar pod baru benar-benar running
+            echo "Menunggu pod baru ${{ env.DEPLOYMENT_NAME }} siap..."
+            kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }} --timeout=150s
 
-            # Run Laravel specific commands
-            echo "Running database migrations..."
-            sudo kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan migrate --force
+            # 3. Optimasi Laravel (Clear Cache, Config, Route)
+            echo "Running Laravel optimization..."
+            kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan optimize:clear
 
-            echo "Optimizing application..."
-            sudo kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan optimize:clear
-
-            echo "Deployment to branch ${{ github.ref_name }} Successful!"
+            echo "Deployment ke branch ${{ github.ref_name }} Berhasil!"
