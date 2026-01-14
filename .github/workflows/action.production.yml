@@ -87,17 +87,19 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
           script: |
+            # 0. Go To Path Server
             cd ${{ env.BASE_PATH }}
-
-            # 1. Apply all manifests in the branch folder
+            # 1. Apply semua manifest
             kubectl apply -f .
-
-            # 2. Tunggu proses rollout selesai agar pod baru benar-benar running
-            echo "Menunggu pod baru ${{ env.DEPLOYMENT_NAME }} siap..."
+            # 2. Tunggu Database Ready
+            echo "Waiting for Database..."
+            kubectl rollout status deployment/logistech-postgresql -n ${{ env.NAMESPACE }} --timeout=120s
+            # 3. Tunggu App Ready
+            echo "Waiting for App ${{ env.DEPLOYMENT_NAME }}..."
             kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }} --timeout=150s
-
-            # 3. Optimasi Laravel (Clear Cache, Config, Route)
+            # 4. Jalankan Migrasi & Optimasi
+            echo "Running database migrations..."
+            kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan migrate --force
             echo "Running Laravel optimization..."
             kubectl exec -n ${{ env.NAMESPACE }} deployment/${{ env.DEPLOYMENT_NAME }} -- php artisan optimize:clear
-
             echo "Deployment ke branch ${{ github.ref_name }} Berhasil!"
