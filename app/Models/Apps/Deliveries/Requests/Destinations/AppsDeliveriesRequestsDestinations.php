@@ -3,11 +3,13 @@ namespace App\Models\Apps\Deliveries\Requests\Destinations;
 
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\Packages\AppsDeliveriesRequestsDestinationsPackages;
+use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
 use App\Models\Base\Accounts\Accounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppsDeliveriesRequestsDestinations extends Model {
@@ -57,8 +59,8 @@ class AppsDeliveriesRequestsDestinations extends Model {
         return $this->hasMany(AppsDeliveriesRequestsDestinationsPackages::class, 'destination','id' );
     }
 
-    public function task(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function task(): HasOne
     {
-        return $this->hasOne(\App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks::class, 'destination', 'id');
+        return $this->hasOne(AppsDeliveriesTasks::class, 'destination', 'id');
     }
 }
