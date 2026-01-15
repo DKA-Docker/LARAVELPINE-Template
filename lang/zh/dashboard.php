@@ -272,6 +272,7 @@ return [
                     'role' => '角色',
                     'device' => '设备',
                     'registered' => '注册时间',
+                    'action' => '行动',
                 ],
                 'empty' => '暂无数据',
                 'no_role' => '无角色',

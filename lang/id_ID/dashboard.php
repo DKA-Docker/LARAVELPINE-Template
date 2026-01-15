@@ -287,6 +287,7 @@ return [
                     'role' => 'Peran',
                     'device' => 'Perangkat',
                     'registered' => 'Terdaftar',
+                    'action' => 'Aksi',
                 ],
                 'empty' => 'Data Kosong',
                 'no_role' => 'Tanpa Peran',

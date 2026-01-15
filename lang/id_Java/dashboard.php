@@ -272,6 +272,7 @@ return [
                     'role' => 'Peran',
                     'device' => 'Piranti',
                     'registered' => 'Kedaftar',
+                    'action' => 'Tumindak',
                 ],
                 'empty' => 'Data Kosong',
                 'no_role' => 'Tanpa Peran',

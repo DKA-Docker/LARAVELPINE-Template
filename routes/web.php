@@ -16,6 +16,7 @@ use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Rates\Categories
 use App\Http\Controllers\V1\Frontend\Dashboards\Apps\Trackings;
 use App\Http\Controllers\V1\Frontend\Dashboards\Index as DashboardsIndex;
 use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Create as ManagementsAccountsCreate;
+use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Edit as ManagementsAccountsEdit;
 use App\Http\Controllers\V1\Frontend\Dashboards\Managements\Accounts\Index as ManagementsAccountsIndex;
 use App\Http\Controllers\V1\Frontend\Index as FrontendIndex;
 use App\Http\Controllers\V1\Frontend\Resources\Index as FrontendResources;
@@ -105,6 +106,9 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
             Route::resource('/',ManagementsAccountsIndex::class);
             Route::prefix('create')->name('create.')->group(function () {
                 Route::resource('/', ManagementsAccountsCreate::class);
+            });
+            Route::prefix('{id}/edit')->name('edit.')->group(function () {
+                Route::get('/', [ManagementsAccountsEdit::class, 'index'])->name('index');
             });
         });
     });

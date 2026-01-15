@@ -28,6 +28,10 @@ class View extends Component
     public $minPackages = null;
     public $maxPackages = null;
 
+    // Delete Confirmation
+    public $confirmingDeletion = false;
+    public $accountIdToDelete = '';
+
     public bool $isAuthorized = true;
 
     public function boot(): void
@@ -55,6 +59,32 @@ class View extends Component
         $this->reset(['search', 'status', 'customerName', 'recipientName', 'minPackages', 'maxPackages']);
         $this->sort = 'latest';
         $this->resetPage();
+    }
+
+    public function confirmDelete($id): void
+    {
+        $this->confirmingDeletion = true;
+        $this->accountIdToDelete = $id;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->confirmingDeletion = false;
+        $this->accountIdToDelete = '';
+    }
+
+    public function deleteConfirmed(): void
+    {
+        $result = $this->services->Delete($this->accountIdToDelete);
+
+        if ($result['status']) {
+            session()->flash('success', $result['msg']);
+        } else {
+            session()->flash('error', $result['msg']);
+        }
+
+        $this->confirmingDeletion = false;
+        $this->accountIdToDelete = '';
     }
 
     public function placeholder(): Factory|ViewContract|\Illuminate\View\View

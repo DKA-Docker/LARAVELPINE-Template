@@ -272,6 +272,7 @@ return [
                     'role' => 'Peran',
                     'device' => 'Perangkat',
                     'registered' => 'Kedaftar',
+                    'action' => 'Ewako',
                 ],
                 'empty' => 'Kosong Data',
                 'no_role' => 'Tena Peran',
