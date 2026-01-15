@@ -104,12 +104,21 @@ class View extends Component
             return view('dashboards.layouts.unauthorized');
         }
 
-        // INTEGRASI: Eager loading sesuai instruksi Anda
+        $user = Auth::user();
+
         $query = $this->services->query()->with([
             'account.information',
             'account.contact',
             'destinations.packages'
         ]);
+
+        // --- LOGIKA HAK AKSES (SUPERADMIN & ADMIN) ---
+        // Jika user BUKAN superadmin dan BUKAN admin, filter berdasarkan user_id mereka sendiri
+        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+            // Asumsi kolom di tabel request adalah 'user_id' atau 'created_by'
+            $query->where('account', $user->id);
+        }
+        // ----------------------------------------------
 
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
@@ -130,11 +139,9 @@ class View extends Component
 
         $deliveries = $query->paginate($this->perPage);
 
-        // TRANSFORMATION: Tetap menggunakan through sesuai permintaan Anda
         $deliveries->through(function ($item) {
             $account = $item->getRelation('account');
             if ($account) {
-                // Pertahankan bentuk nama object lama
                 $item->account = $account;
                 $item->account->information = $account->getRelationValue('information');
                 $item->account->contact = $account->getRelationValue('contact');
