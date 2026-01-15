@@ -123,26 +123,35 @@ class View extends Component
             return view('dashboards.layouts.unauthorized');
         }
 
+        $user = Auth::user();
+
         $query = $this->services->query()
             ->with([
-            'destination.request.account.information',
-            'destination.packages',
-            'history.account.information'
-        ]);
+                'destination.request.account.information',
+                'destination.packages',
+                'history.account.information'
+            ]);
+
+        // --- LOGIKA HAK AKSES ---
+        // Jika bukan superadmin/admin, filter hanya data milik user tersebut
+        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+            // Berdasarkan migration Anda, kolom foreign key ke tabel accounts adalah 'account'
+            $query->where('account', $user->id);
+        }
 
         // Global Search
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-        // Filter Status (Mencari status terbaru di tabel history)
+        // Filter Status
         if ($this->status) {
             $query->whereHas('history', function ($q) {
                 $q->where('to_status', $this->status);
             });
         }
 
-        // Filter Nama Customer (Requester)
+        // Filter Nama Customer (Hanya diproses jika destination ada)
         if ($this->customerName) {
             $query->whereHas('destination.request.account.information', function ($q) {
                 $q->where('first_name', 'like', '%' . $this->customerName . '%')
@@ -159,36 +168,42 @@ class View extends Component
 
         // Filter Range Paket
         if ($this->minPackages !== null && $this->minPackages !== '') {
-            $query->whereHas('destination.packages', function($q) {}, '>=', $this->minPackages);
+            $query->whereHas('destination.packages', function($q) {}, '>=', (int)$this->minPackages);
         }
         if ($this->maxPackages !== null && $this->maxPackages !== '') {
-            $query->whereHas('destination.packages', function($q) {}, '<=', $this->maxPackages);
+            $query->whereHas('destination.packages', function($q) {}, '<=', (int)$this->maxPackages);
         }
 
         $this->sort === 'latest' ? $query->latest() : $query->oldest();
         $tasks = $query->paginate($this->perPage);
 
-        // KUNCI: Pertahankan transformasi manual agar properti account & destination terbaca sebagai objek
+        // Transformasi Data dengan pengecekan null safety
         $tasks->through(function ($item) {
-            $item->account = $item->getRelation('account');
+            $item->account_relation = $item->getRelation('account'); // Hindari konflik nama kolom 'account'
             $item->history = $item->getRelation('history');
 
-            $item->destination = $item->getRelation('destination');
-            if ($item->destination) {
-                $item->destination->request = $item->destination->getRelationValue('request');
-                if ($item->destination->request) {
-                    $item->destination->request->account = $item->destination->request->getRelationValue('account');
-                    if ($item->destination->request->account) {
-                        $item->destination->request->account->information = $item->destination->request->account->getRelationValue('information');
+            // Menggunakan getRelation agar tetap efisien (Eager Loaded)
+            $destination = $item->getRelation('destination');
+
+            if ($destination) {
+                $request = $destination->getRelationValue('request');
+                if ($request) {
+                    $reqAccount = $request->getRelationValue('account');
+                    if ($reqAccount) {
+                        $reqAccount->information = $reqAccount->getRelationValue('information');
+                        $request->account = $reqAccount;
                     }
+                    $destination->request = $request;
                 }
-                $item->destination->packages = $item->destination->getRelationValue('packages');
+                $destination->packages = $destination->getRelationValue('packages');
+                $item->destination = $destination;
+            } else {
+                // Jika destination null, pastikan properti tetap ada agar view tidak error
+                $item->destination = null;
             }
 
             return $item;
         });
-
-        Debugbar::error($tasks);
 
         return view('dashboards.apps.deliveries.tasks.components.view', [
             'tasks' => $tasks

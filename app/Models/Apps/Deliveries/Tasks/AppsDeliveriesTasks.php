@@ -73,12 +73,7 @@ class AppsDeliveriesTasks extends Model
 
     public function destination(): BelongsTo
     {
-        return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
-    }
-
-    public function destinationData(): BelongsTo
-    {
-        return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withDefault();
+        return $this->belongsTo(AppsDeliveriesRequestsDestinations::class, 'destination')->withTrashed()->withDefault();
     }
 
     public function assigns(): HasMany

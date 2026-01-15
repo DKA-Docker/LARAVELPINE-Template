@@ -49,7 +49,7 @@ class AppsDeliveriesRequestsDestinations extends Model {
 
     public function request(): BelongsTo
     {
-        return $this->belongsTo(AppsDeliveriesRequests::class, 'request')->withDefault();
+        return $this->belongsTo(AppsDeliveriesRequests::class, 'request')->withTrashed()->withDefault();
     }
 
     public function packages(): HasMany
