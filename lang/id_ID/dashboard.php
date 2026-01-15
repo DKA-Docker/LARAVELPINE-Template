@@ -259,7 +259,7 @@ return [
         'accounts' => [
             'search_placeholder' => 'Cari akun...',
             'filter' => [
-                'cust' => 'Plggn...',
+                'cust' => 'Pelanggan...',
                 'recp' => 'Penerima...',
                 'status_label' => 'Status',
                 'status_options' => [

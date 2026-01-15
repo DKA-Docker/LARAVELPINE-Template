@@ -1,4 +1,4 @@
-<div class="kt-container-fixed animate-fade-in scale-[0.98] origin-top">
+<div class="kt-container-fixed animate-fade-in">
     <div class="grid gap-4 lg:gap-6">
         {{-- ALERT SUKSES DENGAN ANIMASI --}}
         @if (session()->has('success'))

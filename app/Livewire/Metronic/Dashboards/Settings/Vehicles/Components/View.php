@@ -4,8 +4,8 @@ namespace App\Livewire\Metronic\Dashboards\Settings\Vehicles\Components;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Services\Resources\Data\Vehicles\DataVehiclesServices;
-use App\Services\Resources\Data\Vehicles\DataVehicleCategoriesServices;
+use App\Services\Resources\Data\Vehicles\DataVehiclesServices as Vehicles;
+use App\Services\Resources\Data\Vehicles\DataVehicleCategoriesServices as VehicleCategories;
 
 class View extends Component
 {
@@ -42,8 +42,8 @@ class View extends Component
     }
 
     public function deleteConfirmed(
-        DataVehiclesServices $vehicleService,
-        DataVehicleCategoriesServices $categoryService
+        Vehicles $vehicleService,
+        VehicleCategories $categoryService
     ) {
         if ($this->deleteId && $this->deleteType) {
             try {
@@ -58,7 +58,7 @@ class View extends Component
                 if ($response && $response['status']) {
                     session()->flash('success', ucfirst($this->deleteType) . ' deleted successfully.');
                     // Refresh the appropriate child component
-                    $this->dispatch('refresh-list'); 
+                    $this->dispatch('refresh-list');
                 } else {
                     session()->flash('error', 'Failed to delete ' . $this->deleteType . ': ' . ($response['msg'] ?? 'Unknown error'));
                 }
