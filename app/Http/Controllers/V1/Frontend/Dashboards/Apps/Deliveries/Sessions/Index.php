@@ -14,6 +14,11 @@ class Index extends Controller
      */
     public function index(): Factory|View
     {
-        return view('dashboards.apps.deliveries.sessions.index');
+        return view('dashboards.apps.deliveries.tasks.sessions.view');
+    }
+
+    public function show(string $id): Factory|View
+    {
+        return view('dashboards.apps.deliveries.tasks.sessions.detail', ['id' => $id]);
     }
 }

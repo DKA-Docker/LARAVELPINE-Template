@@ -67,6 +67,9 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                 });
             });
             Route::prefix('tasks')->name('tasks.')->group(function () {
+                Route::prefix('sessions')->name('sessions.')->group(function () {
+                    Route::resource('/', DeliveriesSessions::class)->parameters(['' => 'id']);
+                });
                 Route::resource('/', DeliveriesTasks::class)->parameters(['' => 'id']);
                 Route::prefix('create')->name('create.')->group(function () {
                     Route::resource('/', DeliveriesTasksCreate::class);
@@ -85,9 +88,7 @@ Route::middleware(['auth:web'])->prefix('dashboards')->name('dashboards.')->grou
                     Route::resource('/', DeliveriesRatesCategories::class);
                 });
             });
-            Route::prefix('sessions')->name('sessions.')->group(function () {
-                Route::resource('/', DeliveriesSessions::class)->parameters(['' => 'id']);
-            });
+
 
         });
         Route::prefix('trackings')->name('trackings.')->group(function () {

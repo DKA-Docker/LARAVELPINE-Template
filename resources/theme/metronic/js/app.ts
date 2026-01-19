@@ -12,6 +12,7 @@ import "./pages/dashboards/deliveries/tasks/create";
 import "./pages/dashboards/deliveries/tasks/detail.ts";
 import "./pages/dashboards/deliveries/tasks/edit";
 import "./pages/dashboards/deliveries/tasks/show";
+import "./pages/dashboards/deliveries/tasks/sessions/view.ts";
 import "./pages/managements/accounts/index";
 import "./pages/dashboards/deliveries/requests/detail.ts";
 //import "./layouts/demo1.js";
