@@ -1,248 +1,148 @@
 import mapboxgl from "mapbox-gl";
+import $ from "jquery";
+
+let map: mapboxgl.Map | null = null;
+let currentMarker: mapboxgl.Marker | null = null;
+let destinationMarker: mapboxgl.Marker | null = null;
+let hoverPopup: mapboxgl.Popup | null = null;
+
+const formatTimeWithSeconds = (ts: string) => {
+    const d = new Date(ts);
+    return d.getHours().toString().padStart(2, '0') + ':' +
+        d.getMinutes().toString().padStart(2, '0') + ':' +
+        d.getSeconds().toString().padStart(2, '0');
+};
 
 const fetchRoadRoute = async (start: [number, number], end: [number, number], token: string) => {
-    try {
-        const query = await fetch(
-            `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${token}`,
-            { method: 'GET' }
-        );
-        const json = await query.json();
-        const data = json.routes[0];
-        return data.geometry;
-    } catch (e) {
-        console.error('[Mapbox] Directions API Error:', e);
-        return null;
+    const response = await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${token}`);
+    const data = await response.json();
+    return data.routes[0]?.geometry;
+};
+
+const updateLogList = (coords: any[], times: any[], speeds: any[]) => {
+    const $container = $('#log-container');
+    $container.empty();
+    const startIdx = Math.max(0, coords.length - 50);
+    for (let i = coords.length - 1; i >= startIdx; i--) {
+        $container.append(`
+            <div class="log-item p-3 rounded-xl bg-gray-50 border border-gray-100" id="log-item-${i}">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[11px] font-black text-indigo-600">${formatTimeWithSeconds(times[i])}</span>
+                    <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[9px] font-bold">${speeds[i]} KM/H</span>
+                </div>
+                <div class="text-[9px] text-gray-400 font-mono">COORD: ${coords[i][1].toFixed(5)}, ${coords[i][0].toFixed(5)}</div>
+            </div>
+        `);
     }
 };
 
-const initSessionMap = async (attempt = 1) => {
-    const containerId = 'session-tracking-map';
-    const container = document.getElementById(containerId);
-    const dataContainer = document.getElementById('session-map-data');
+const updateMapData = async () => {
+    const $el = $('#session-map-data');
+    if (!$el.length || !map) return;
 
-    if (!container || !dataContainer) {
-        if (attempt < 20) {
-            setTimeout(() => initSessionMap(attempt + 1), 300);
-        }
-        return;
+    const token = $('meta[name="mapbox-token"]').attr('content') as string;
+    const geoJson = JSON.parse($el.attr('data-geojson') || '{}');
+    const destData = JSON.parse($el.attr('data-destination') || '{}');
+
+    // Cek ketersediaan Data Driver
+    const coords = geoJson.geometry?.coordinates || [];
+    const hasDriver = coords.length > 0;
+
+    // 1. Update Jalur Hijau & List Log (Jika ada data driver)
+    if (hasDriver) {
+        (map.getSource('route') as mapboxgl.GeoJSONSource).setData(geoJson);
+        updateLogList(coords, geoJson.properties.times, geoJson.properties.speeds);
+
+        const lastCoord: [number, number] = coords[coords.length - 1];
+        if (currentMarker) currentMarker.setLngLat(lastCoord);
     }
 
-    // Token & Data Extraction
-    const meta = document.querySelector('meta[name="mapbox-token"]') as HTMLMetaElement;
-    const token = meta?.content;
-    const geoJsonRaw = dataContainer.getAttribute('data-geojson');
-    const destinationRaw = dataContainer.getAttribute('data-destination');
+    // 2. LOGIKA JALUR MERAH & MARKER TUJUAN
+    if (destData.lat && destData.lng) {
+        const destCoord: [number, number] = [parseFloat(destData.lng), parseFloat(destData.lat)];
 
-    if (!token) return;
+        // Update atau Buat Marker Tujuan
+        if (!destinationMarker) {
+            const div = document.createElement('div');
+            div.innerHTML = `<div class="flex flex-col items-center">
+                <div class="tracking-marker-label bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold mb-1 shadow">${destData.name}</div>
+                <div class="w-3 h-3 bg-red-500 border-2 border-white rounded-full"></div>
+            </div>`;
+            destinationMarker = new mapboxgl.Marker({ element: div, anchor: 'bottom' }).setLngLat(destCoord).addTo(map);
+        } else {
+            destinationMarker.setLngLat(destCoord);
+            // Update Label jika berubah
+            const labelEl = destinationMarker.getElement().querySelector('.tracking-marker-label');
+            if (labelEl) labelEl.textContent = destData.name;
+        }
 
-    // IF MAP EXISTS, UPDATE DATA INSTEAD OF RE-INITIALIZING
-    if (container.classList.contains('mapboxgl-map')) {
-        const map = (window as any).sessionMap as mapboxgl.Map;
-        if (map && map.isStyleLoaded()) {
+        // Jalur Merah (Hanya jika ada driver & tujuan)
+        if (hasDriver) {
+            const lastCoord: [number, number] = coords[coords.length - 1];
             try {
-                if (geoJsonRaw) {
-                    const geoJson = JSON.parse(geoJsonRaw);
-                    const source = map.getSource('route') as mapboxgl.GeoJSONSource;
-                    if (source && geoJson.coordinates && geoJson.coordinates.length > 0) {
-                        source.setData(geoJson);
-
-                        const lastCoord = geoJson.coordinates[geoJson.coordinates.length - 1];
-                        if ((window as any).currentLocationMarker) {
-                            (window as any).currentLocationMarker.setLngLat(lastCoord);
-                        }
-
-                        // Update destination line (Road Following)
-                        if (destinationRaw) {
-                            const destData = JSON.parse(destinationRaw);
-                            if (destData.lat && destData.lng) {
-                                const destCoord: [number, number] = [parseFloat(destData.lng), parseFloat(destData.lat)];
-                                const roadGeoJson = await fetchRoadRoute(lastCoord, destCoord, token);
-                                if (roadGeoJson) {
-                                    const toDestSource = map.getSource('to-destination') as mapboxgl.GeoJSONSource;
-                                    if (toDestSource) {
-                                        toDestSource.setData({
-                                            type: 'Feature',
-                                            properties: {},
-                                            geometry: roadGeoJson
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
+                const roadGeo = await fetchRoadRoute(lastCoord, destCoord, token);
+                if (roadGeo) {
+                    (map.getSource('to-destination') as mapboxgl.GeoJSONSource).setData({
+                        type: 'Feature',
+                        geometry: roadGeo,
+                        properties: {}
+                    });
                 }
-            } catch (e) {
-                console.error('[Mapbox] Live Update Error:', e);
+            } catch (error) {
+                console.error("Gagal mengambil rute merah:", error);
             }
         }
-        return;
-    }
-
-    mapboxgl.accessToken = token;
-
-    let routeData: any = null;
-    try {
-        if (geoJsonRaw) routeData = JSON.parse(geoJsonRaw);
-    } catch (e) {
-        console.error('[Mapbox] Invalid GeoJSON');
-    }
-
-    let destinationData: any = null;
-    try {
-        if (destinationRaw) destinationData = JSON.parse(destinationRaw);
-    } catch (e) {
-        console.error('[Mapbox] Invalid Destination JSON');
-    }
-
-    // Center calculation
-    let center: [number, number] = [106.827153, -6.175392];
-    if (routeData?.coordinates?.length) {
-        const last = routeData.coordinates[routeData.coordinates.length - 1];
-        center = [last[0], last[1]];
-    }
-
-    // Determine Style
-    const isDark = document.documentElement.classList.contains('dark');
-    const style = isDark ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v12';
-
-    if (!mapboxgl.supported()) return;
-
-    try {
-        const map = new mapboxgl.Map({
-            container: container,
-            style: style,
-            center: center,
-            zoom: 16,
-            attributionControl: false,
-            pitch: 45
-        });
-
-        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-        (window as any).sessionMap = map;
-
-        map.on('load', async () => {
-            map.resize();
-
-            // 1. ADD ARROW ICON
-            const arrowImg = new Image(24, 24);
-            arrowImg.onload = () => map.addImage('arrow-icon', arrowImg);
-            arrowImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="#ffffff" stroke="#10b981" stroke-width="2" stroke-linejoin="round"/></svg>');
-
-            if (routeData) {
-                // TRAVELED ROUTE (THICK GREEN LINE)
-                map.addSource('route', { type: 'geojson', data: routeData });
-
-                map.addLayer({
-                    id: 'route-line-case',
-                    type: 'line',
-                    source: 'route',
-                    layout: { 'line-join': 'round', 'line-cap': 'round' },
-                    paint: { 'line-color': '#064e3b', 'line-width': 12, 'line-opacity': 0.3 }
-                });
-
-                map.addLayer({
-                    id: 'route-line',
-                    type: 'line',
-                    source: 'route',
-                    layout: { 'line-join': 'round', 'line-cap': 'round' },
-                    paint: { 'line-color': '#10b981', 'line-width': 8 }
-                });
-
-                // DIRECTIONAL ARROWS
-                map.addLayer({
-                    id: 'route-arrows',
-                    type: 'symbol',
-                    source: 'route',
-                    layout: {
-                        'symbol-placement': 'line',
-                        'symbol-spacing': 80,
-                        'icon-image': 'arrow-icon',
-                        'icon-size': 0.5,
-                        'icon-rotation-alignment': 'map',
-                        'icon-allow-overlap': true,
-                        'icon-ignore-placement': true
-                    },
-                    paint: { 'icon-opacity': 0.8 }
-                });
-
-                if (routeData.coordinates && routeData.coordinates.length > 0) {
-                    const lastCoord = routeData.coordinates[routeData.coordinates.length - 1];
-                    const el = document.createElement('div');
-                    el.className = 'navigation-marker';
-                    el.style.width = '40px';
-                    el.style.height = '40px';
-                    el.innerHTML = `
-                        <div class="relative flex items-center justify-center">
-                            <div class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></div>
-                            <div class="relative inline-flex rounded-full h-8 w-8 bg-blue-600 border-4 border-white shadow-lg flex items-center justify-center">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/></svg>
-                            </div>
-                        </div>
-                    `;
-
-                    (window as any).currentLocationMarker = new mapboxgl.Marker({ element: el })
-                        .setLngLat(lastCoord)
-                        .addTo(map);
-
-                    // DESTINATION (ROAD FOLLOWING)
-                    if (destinationData?.lat && destinationData?.lng) {
-                        const destCoord: [number, number] = [parseFloat(destinationData.lng), parseFloat(destinationData.lat)];
-
-                        // Initial fetch for road route
-                        const roadGeoJson = await fetchRoadRoute(lastCoord, destCoord, token);
-
-                        map.addSource('to-destination', {
-                            type: 'geojson',
-                            data: {
-                                type: 'Feature',
-                                properties: {},
-                                geometry: roadGeoJson || { type: 'LineString', coordinates: [lastCoord, destCoord] }
-                            }
-                        });
-
-                        map.addLayer({
-                            id: 'to-destination-line',
-                            type: 'line',
-                            source: 'to-destination',
-                            paint: {
-                                'line-color': '#ef4444',
-                                'line-width': 6,
-                                'line-dasharray': [2, 1]
-                            }
-                        });
-
-                        const destEl = document.createElement('div');
-                        destEl.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-md mb-1 uppercase whitespace-nowrap">${destinationData.name}</div>
-                                <div class="w-6 h-6 bg-red-600 border-4 border-white rounded-full shadow-lg"></div>
-                            </div>
-                        `;
-                        new mapboxgl.Marker({ element: destEl })
-                            .setLngLat(destCoord)
-                            .addTo(map);
-                    }
-
-                    const bounds = new mapboxgl.LngLatBounds();
-                    routeData.coordinates.forEach((x: any) => bounds.extend(x));
-                    if (destinationData?.lat) bounds.extend([destinationData.lng, destinationData.lat]);
-                    map.fitBounds(bounds, { padding: 100 });
-                }
-            }
-        });
-
-        const resizeObserver = new ResizeObserver(() => map.resize());
-        resizeObserver.observe(container);
-
-    } catch (e: any) {
-        console.error('[Mapbox] Crash:', e);
     }
 };
 
-// Event Listeners
-document.addEventListener('livewire:navigated', () => initSessionMap(1));
-document.addEventListener('init-session-map', () => initSessionMap(1));
-document.addEventListener('update-session-map', () => initSessionMap(1));
+const initMap = () => {
+    const $data = $('#session-map-data');
+    if (!$("#session-tracking-map").length || !$data.length || map) return;
 
-// Start checking immediately
-initSessionMap(1);
+    mapboxgl.accessToken = $('meta[name="mapbox-token"]').attr('content') || '';
+    const initialGeo = JSON.parse($data.attr('data-geojson') || '{"geometry":{"coordinates":[[0,0]]}}');
+    const center = initialGeo.geometry.coordinates[initialGeo.geometry.coordinates.length - 1] || [0, 0];
+
+    map = new mapboxgl.Map({
+        container: 'session-tracking-map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: center,
+        zoom: 15,
+        attributionControl: false
+    });
+
+    hoverPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, offset: 15 });
+
+    map.on('load', () => {
+        if (!map) return;
+        map.addSource('route', { type: 'geojson', data: initialGeo });
+        map.addSource('to-destination', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
+
+        map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#10b981', 'line-width': 6, 'line-cap': 'round' } });
+        map.addLayer({ id: 'to-dest-line', type: 'line', source: 'to-destination', paint: { 'line-color': '#ef4444', 'line-width': 4, 'line-dasharray': [2, 1] } });
+        map.addLayer({ id: 'route-sensor', type: 'line', source: 'route', paint: { 'line-color': 'rgba(0,0,0,0)', 'line-width': 30 } });
+
+        map.on('mousemove', 'route-sensor', (e) => {
+            if (!e.features?.length) return;
+            const props = e.features[0].properties;
+            const times = JSON.parse(props.times);
+            const activeIdx = times.length - 1;
+
+            hoverPopup?.setLngLat(e.lngLat).setHTML(`<div class="text-center font-bold text-indigo-600">${formatTimeWithSeconds(times[activeIdx])}</div>`).addTo(map!);
+
+            $('.log-item').removeClass('active');
+            $(`#log-item-${activeIdx}`).addClass('active')[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        map.on('mouseleave', 'route-sensor', () => { hoverPopup?.remove(); $('.log-item').removeClass('active'); });
+
+        const el = document.createElement('div');
+        el.className = 'w-4 h-4 bg-blue-600 border-2 border-white rounded-full shadow-lg';
+        currentMarker = new mapboxgl.Marker({ element: el }).setLngLat(center).addTo(map);
+
+        updateMapData();
+    });
+};
+
+$(document).on('livewire:navigated', () => { if (map) { map.remove(); map = null; } initMap(); });
+$(window).on('update-session-map', () => map ? updateMapData() : initMap());

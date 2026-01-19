@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Reports;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Apps\Deliveries\Tasks\AppsDeliveriesTasks;
@@ -70,21 +71,51 @@ class ReportTable extends Component
         $reports = AppsDeliveriesTasks::query()
             ->with([
                 'account',
-                'assigns.assignedAccount.information', // Load assignments via pivot model
-                'assigns.assignedAccount.credential', // Load credential for username fallback
-                'destinationData.packages', // Load destination packages
-                'destinationData.request.account.information', // Load detailed destination info matches Tasks View
+                'assigns.assigned.information',
+                'assigns.assigned.credential',
+                'destination.packages',
+                'destination.request.account.information',
                 'history',
                 'geos'
-            ]) // Eager load for performance
+            ])
             ->when($this->query, function ($q) {
                 $q->where('id', 'like', '%' . $this->query . '%')
-                  ->orWhere('name', 'like', '%' . $this->query . '%');
+                    ->orWhere('name', 'like', '%' . $this->query . '%');
             })
-            ->when($this->startDate, fn(Builder $q) => $q->whereDate('created_at', '>=', $this->startDate))
-            ->when($this->endDate, fn(Builder $q) => $q->whereDate('created_at', '<=', $this->endDate))
-            ->latest() // default sort
+            ->when($this->startDate, fn($q) => $q->whereDate('created_at', '>=', $this->startDate))
+            ->when($this->endDate, fn($q) => $q->whereDate('created_at', '<=', $this->endDate))
+            ->latest()
             ->paginate($this->perPage);
+
+        // Memproses setiap item hasil paginasi
+        $reports->through(function ($item) {
+            // Ambil relasi asli yang sudah di-load (Eager Loaded)
+            $destination = $item->getRelation('destination');
+
+            if ($destination) {
+                // Pastikan nested relations tetap terikat dengan benar
+                $destination->setRelation('packages', $destination->getRelation('packages'));
+
+                $request = $destination->getRelation('request');
+                if ($request) {
+                    $reqAccount = $request->getRelation('account');
+                    if ($reqAccount) {
+                        $reqAccount->setRelation('information', $reqAccount->getRelation('information'));
+                        $request->setRelation('account', $reqAccount);
+                    }
+                    $destination->setRelation('request', $request);
+                }
+
+                // TIMPA kolom 'destination' (string) dengan object relasi
+                $item->destination = $destination;
+            }
+
+            // Tangani relasi lain jika diperlukan agar tidak konflik dengan kolom
+            $item->account = $item->getRelation('account');
+            $item->history = $item->getRelation('history');
+
+            return $item;
+        });
 
         return view('dashboards.apps.deliveries.reports.report-table', [
             'reports' => $reports,
@@ -96,10 +127,10 @@ class ReportTable extends Component
         $reports = AppsDeliveriesTasks::query()
             ->with([
                 'account',
-                'assigns.assignedAccount.information',
-                'assigns.assignedAccount.credential',
-                'destinationData.packages',
-                'destinationData.request.account.information',
+                'assigns.assigned.information', // Load assignments via pivot model
+                'assigns.assigned.credential', // Load credential for username fallback
+                'destination.packages', // Load destination packages
+                'destination.request.account.information', // Load detailed destination info matches Tasks View
                 'history',
                 'geos'
             ])

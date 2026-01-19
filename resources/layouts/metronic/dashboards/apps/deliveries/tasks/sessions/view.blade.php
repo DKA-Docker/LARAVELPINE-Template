@@ -51,15 +51,15 @@
 
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-sm text-gray-800">{{ $session->accountDetail->information->first_name ?? $session->accountDetail->username ?? 'Unknown' }}</span>
-                                        <span class="text-xs text-gray-500">{{ $session->accountDetail->credential->username ?? '' }}</span>
+                                        <span class="font-bold text-sm text-gray-800">{{ $session->account->information->first_name ?? $session->account->username ?? 'Unknown' }}</span>
+                                        <span class="text-xs text-gray-500">{{ $session->account->credential->username ?? '' }}</span>
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-sm text-gray-800">{{ $session->taskDetail->name ?? '-' }}</span>
-                                        <span class="text-xs text-gray-500">{{ $session->taskDetail->id ?? '' }}</span>
+                                        <span class="font-bold text-sm text-gray-800">{{ $session->task->name ?? '-' }}</span>
+                                        <span class="text-xs text-gray-500">{{ $session->task->id ?? '' }}</span>
                                     </div>
                                 </td>
 
@@ -75,9 +75,6 @@
                                         <a href="{{ route('dashboards.apps.deliveries.tasks.sessions.show', $session->id) }}" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="View Map">
                                             <i class="ki-filled ki-map fs-6"></i>
                                         </a>
-                                        <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors" title="Edit">
-                                            <i class="ki-filled ki-pencil fs-6"></i>
-                                        </button>
                                         <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete">
                                             <i class="ki-filled ki-trash fs-6"></i>
                                         </button>

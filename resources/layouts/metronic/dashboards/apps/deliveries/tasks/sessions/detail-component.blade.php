@@ -1,43 +1,49 @@
-<div class="kt-container-fixed h-full flex flex-col" wire:poll.5s="refreshData">
-    <div class="bg-white rounded-2xl shadow-sm px-6 py-4 mb-5 flex items-center justify-between">
-         <div class="flex items-center gap-4">
-            <a href="{{ route('dashboards.apps.deliveries.tasks.sessions.index') }}" class="btn btn-sm btn-light">
-                <i class="ki-filled ki-arrow-left"></i> Back
-            </a>
-            <h3 class="text-lg font-bold text-gray-800">
-                Session Tracking: {{ $sessionData->accountDetail->information->first_name ?? 'Driver' }}
-                <span class="text-sm font-normal text-gray-500">({{ $sessionData->taskDetail->name ?? '-' }})</span>
-            </h3>
+<div class="kt-container-fixed h-screen flex flex-col pb-5" wire:poll.5s="refreshData">
+
+
+    {{-- Layout 70:30 --}}
+    <div class="flex flex-row flex-grow gap-5 min-h-0">
+        {{-- MAP (70%) --}}
+        <div class="w-[70%] bg-white rounded-2xl shadow-sm overflow-hidden relative border border-gray-100">
+            <div wire:ignore class="w-full h-full">
+                <div id="session-tracking-map" class="w-full h-full"></div>
+            </div>
+            <div id="session-map-data" class="hidden"
+                 data-geojson="{{ $routeGeoJson }}"
+                 data-destination="{{ $destinationCoords }}">
+            </div>
+        </div>
+
+        {{-- SIDEBAR LIST (30%) --}}
+        <div class="w-[30%] bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-0">
+            <div class="p-4 border-b border-gray-100">
+                <h4 class="font-bold text-gray-800">Activity Logs</h4>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Waktu & Kecepatan</p>
+            </div>
+            <div id="log-container" class="flex-grow overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                {{-- Diisi via JS --}}
+            </div>
         </div>
     </div>
 
-    <div class="flex-1 bg-white rounded-2xl shadow-sm overflow-hidden relative min-h-[600px]">
-        {{-- STATUS INDICATOR --}}
-        <div class="absolute top-4 left-4 z-50 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm border border-gray-200 flex items-center gap-3">
-             <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-             </span>
-             <div class="flex flex-col">
-                 <span class="text-xs font-bold text-gray-800 uppercase tracking-wider">Live Monitor</span>
-                 <span class="text-[10px] text-gray-500 font-medium">Driver Ready (Active)</span>
-             </div>
-        </div>
-
-        {{-- HIDDEN DATA CONTAINER (UPDATED BY LIVEWIRE) --}}
-        <div id="session-map-data" 
-             class="hidden" 
-             data-geojson="{{ $routeGeoJson }}" 
-             data-destination="{{ $destinationCoords ?? '{}' }}">
-        </div>
-
-        {{-- MAP BOX CONTAINER (STABLE) --}}
-        <div
-            id="session-tracking-map"
-            class="w-full h-[800px] bg-gray-100"
-            wire:ignore
-            x-data
-            x-init="$nextTick(() => { window.dispatchEvent(new CustomEvent('init-session-map')); })"
-        ></div>
-    </div>
+    <style>
+        .log-item { transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+        .log-item.active {
+            background: #f0fdf4 !important;
+            border-color: #10b981 !important;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .mapboxgl-popup { pointer-events: none !important; z-index: 1000; }
+        .mapboxgl-popup-content {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(8px);
+            border-radius: 12px !important;
+            padding: 10px 15px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
+            border: 1px solid #e5e7eb !important;
+        }
+    </style>
 </div>

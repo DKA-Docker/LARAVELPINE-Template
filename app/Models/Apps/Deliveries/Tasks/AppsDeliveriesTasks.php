@@ -5,8 +5,11 @@ namespace App\Models\Apps\Deliveries\Tasks;
 use App\Models\Apps\Deliveries\Histories\AppsDeliveriesHistories;
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Apps\Deliveries\Requests\Destinations\AppsDeliveriesRequestsDestinations;
+use App\Models\Apps\Deliveries\Tasks\Attachments\AppsDeliveriesTasksAttachments;
 use App\Models\Apps\Deliveries\Tasks\Routes\AppsDeliveriesTasksRoutes;
+use App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions;
 use App\Models\Base\Accounts\Accounts;
+use App\Models\Data\Vehicles\DataVehicles;
 use Database\Factories\Apps\Deliveries\Tasks\AppsDeliveriesTasksFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -90,16 +93,13 @@ class AppsDeliveriesTasks extends Model
     public function sessions(): HasMany
     {
         return $this->hasMany(
-            \App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions::class,
-            'task',
-            'id'
-        );
+            AppsDeliveriesTasksSessions::class, 'task', 'id');
     }
 
     public function attachments(): HasMany
     {
         return $this->hasMany(
-            \App\Models\Apps\Deliveries\Tasks\Attachments\AppsDeliveriesTasksAttachments::class,
+            AppsDeliveriesTasksAttachments::class,
             'task_id',
             'id'
         );
@@ -107,6 +107,6 @@ class AppsDeliveriesTasks extends Model
 
     public function vehicle(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Data\Vehicles\DataVehicles::class, 'vehicle')->withDefault();
+        return $this->belongsTo(DataVehicles::class, 'vehicle')->withDefault();
     }
 }

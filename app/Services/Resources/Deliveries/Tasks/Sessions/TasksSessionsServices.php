@@ -9,7 +9,9 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class TasksSessionsServices
@@ -27,35 +29,35 @@ class TasksSessionsServices
      * Create Delivery Task Session
      * @param array $payload
      * @return array
+     * @throws Throwable
      */
     public function Create(array $payload): array
     {
         DB::beginTransaction();
         try {
-            // Generate UUID manually
-            $payload['id'] = Str::uuid()->toString();
-            // Set account to current logged in user, or keep payload account if set (for testing/admin override)
-            $payload['account'] = Auth::id() ?? $payload['account'] ?? null;
-            
-            if (!$payload['account']) {
-                throw new \Exception("Account ID is required to create session");
-            }
 
-            // Ensure route is initialized with empty LINESTRING if not provided, to satisfy NOT NULL constraint
-            if (!isset($payload['route'])) {
-                $payload['route'] = DB::raw("ST_GeomFromText('LINESTRINGZM EMPTY', 4326)");
-            }
-
-            $session = $this->repository->Create($payload);
+            $validated = Validator::make($payload, [
+                'account'       => ['required', 'uuid'],
+                'task'          => ['required', 'uuid'],
+                'route'         => ['required', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
+                'route.*'       => ['array', 'size:4'], // Memastikan setiap titik punya 4 elemen (X, Y, Z, M)
+                'route.*.*'     => ['numeric'],
+                'description'   => ['nullable', 'string'],
+                'time_started'  => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
+                'time_received' => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
+            ])->validate();
+            /** @var $data
+             * Created Data
+             */
+            $data = $this->repository->Create($validated);
             DB::commit();
-
+            /** Returning Variable */
             return [
                 'status' => true,
                 'code'   => 201,
                 'msg'    => 'Session Successfully Created',
-                'data'   => $session,
+                'data'   => $data,
             ];
-
         } catch (QueryException $e) {
             Debugbar::warning($e);
             DB::rollBack();
@@ -76,15 +78,40 @@ class TasksSessionsServices
      * @param string $id
      * @param array $payload
      * @return array
+     * @throws Throwable
      */
     public function Update(string $id, array $payload): array
     {
         DB::beginTransaction();
         try {
-            /** @var AppsDeliveriesTasksSessions|null $session */
-            $session = $this->repository->Find($id);
 
-            if (!$session) {
+
+            $newData = Validator::make($payload, [
+                'account'       => ['required', 'uuid'],
+                'task'          => ['required', 'uuid'],
+                'route'         => ['required', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
+                'route.*'       => ['array', 'size:4'], // Memastikan setiap titik punya 4 elemen (X, Y, Z, M)
+                'route.*.*'     => ['numeric'],
+                'time_started'  => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
+                'time_received' => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
+            ])->validate();
+
+            $updatedData = $this->repository->Update(
+                find: [
+                    'id' => $id
+                ],
+                data: $newData
+            );
+
+            if ($updatedData){
+                DB::commit();
+                return [
+                    'status' => true,
+                    'code'   => 200,
+                    'msg'    => 'Session Successfully Updated',
+                    'data'   => $newData,
+                ];
+            } else{
                 DB::rollBack();
                 return [
                     'status' => false,
@@ -92,33 +119,14 @@ class TasksSessionsServices
                     'msg'    => 'Session not found',
                 ];
             }
-
-            $this->repository->Update($session, $payload);
-            
-            // If payload contains WKT point in description, append to route
-            if (isset($payload['description']) && str_starts_with($payload['description'], 'SRID=4326;POINT')) {
-                $wktPoint = $payload['description'];
-                
-                // Extract coordinates from WKT point for building LINESTRING
-                // Use ST_MakeLine to properly combine points into a line
-                // Use ST_AddPoint to append the new point to the existing route LINESTRING
-                // This assumes route is already a valid LINESTRING (handled by creation logic)
-                DB::statement("
-                    UPDATE apps_deliveries_tasks_sessions 
-                    SET route = ST_AddPoint(route, ST_GeomFromText(?, 4326)::geometry(POINTZM, 4326))
-                    WHERE id = ?
-                ", [$wktPoint, $id]);
-            }
-            
-            DB::commit();
-
+        }catch (ValidationException $e) {
+            DB::rollBack();
             return [
-                'status' => true,
-                'code'   => 200,
-                'msg'    => 'Session Successfully Updated',
-                'data'   => $session,
+                'status' => false,
+                'code'   => 422,
+                'msg'    => 'Validation Error',
+                'errors' => $e->errors(),
             ];
-
         } catch (QueryException $e) {
             DB::rollBack();
             return $this->helpersExceptionsHttpCode->fromSQLError($e);
@@ -136,15 +144,35 @@ class TasksSessionsServices
      * Delete Delivery Task Session
      * @param string $id
      * @return array
+     * @throws Throwable
+     */
+    /**
+     * Delete Delivery Task Session
+     * @param string $id
+     * @return array
+     * @throws Throwable
      */
     public function Delete(string $id): array
     {
         DB::beginTransaction();
         try {
-            /** @var AppsDeliveriesTasksSessions|null $session */
-            $session = $this->repository->Find($id);
+            // Menggunakan gaya 'find' seperti pada Update
+            $deleted = $this->repository->Delete(
+                data: [
+                    'id' => $id
+                ]
+            );
 
-            if (!$session) {
+            if ($deleted) {
+                DB::commit();
+
+                return [
+                    'status' => true,
+                    'code'   => 200,
+                    'msg'    => 'Session Successfully Deleted',
+                    'data'   => ['id' => $id],
+                ];
+            } else {
                 DB::rollBack();
                 return [
                     'status' => false,
@@ -152,16 +180,6 @@ class TasksSessionsServices
                     'msg'    => 'Session not found',
                 ];
             }
-
-            $this->repository->Delete($session);
-            DB::commit();
-
-            return [
-                'status' => true,
-                'code'   => 200,
-                'msg'    => 'Session Successfully Deleted',
-                'data'   => ['id' => $id],
-            ];
 
         } catch (QueryException $e) {
             DB::rollBack();

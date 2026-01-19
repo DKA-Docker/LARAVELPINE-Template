@@ -3,6 +3,7 @@
 namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Sessions;
 
 use App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -18,8 +19,30 @@ class View extends Component
     public function render()
     {
         $sessions = AppsDeliveriesTasksSessions::query()
+            // Kita gunakan with() untuk memastikan eager loading berjalan
+            ->with(['account', 'task'])
             ->latest()
             ->paginate($this->perPage);
+
+        $sessions->through(function ($item) {
+            // Ambil object relasi dari internal Laravel (Eager Loaded)
+            $accountRelation = $item->getRelation('account');
+            $taskRelation = $item->getRelation('task');
+
+            // Timpa property 'account' (yang tadinya string UUID) dengan Object Model
+            // Begitu juga dengan 'task'
+            if ($accountRelation) {
+                $item->account = $accountRelation;
+            }
+
+            if ($taskRelation) {
+                // Jika di dalam task Anda ingin menarik data destination juga
+                // Pastikan task tersebut sudah me-load relasinya
+                $item->task = $taskRelation;
+            }
+
+            return $item;
+        });
 
         return view('dashboards.apps.deliveries.tasks.sessions.view', [
             'sessions' => $sessions
@@ -33,7 +56,7 @@ class View extends Component
     public function showTracking(string $id): void
     {
         $this->selectedSession = AppsDeliveriesTasksSessions::query()
-            ->select('*', \Illuminate\Support\Facades\DB::raw("ST_AsGeoJSON(route) as route_geojson"))
+            ->select('*', DB::raw("ST_AsGeoJSON(route) as route_geojson"))
             ->with(['accountDetail.credential', 'taskDetail', 'accountDetail.information'])
             ->find($id);
 

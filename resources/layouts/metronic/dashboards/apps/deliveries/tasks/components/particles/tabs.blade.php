@@ -13,10 +13,10 @@
     </div>
 
     <div class="block" id="tab_tasks">
-        @livewire("metronic.dashboards.apps.deliveries.tasks.particles.headings.headings")
+        @livewire("metronic.dashboards.apps.deliveries.tasks.components.particles.headings.headings")
         @livewire("metronic.dashboards.apps.deliveries.tasks.components.view")
     </div>
-    
+
     @can('dashboards.apps.deliveries.tasks.sessions.view')
         <div class="hidden" id="tab_sessions">
              @livewire("metronic.dashboards.apps.deliveries.tasks.sessions.view")

@@ -101,10 +101,10 @@
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col gap-1">
                                          <span class="text-sm font-bold text-gray-700 leading-tight">
-                                            {{ $report->destinationData->receipt_name ?? 'N/A' }}
+                                            {{ $report->destination->receipt_name ?? 'N/A' }}
                                         </span>
                                         <div class="flex items-center gap-2">
-                                            @php $pkgCount = $report->destinationData->packages->count() ?? 0; @endphp
+                                            @php $pkgCount = $report->destination->packages->count() ?? 0; @endphp
                                              <div class="flex items-center gap-1 bg-indigo-50 px-2 py-0.5 rounded text-indigo-600">
                                                 <i class="ki-filled ki-package fs-9"></i>
                                                 <span class="text-[9px] font-bold">{{ $pkgCount }} Pkg</span>
@@ -119,8 +119,8 @@
                                         @php
                                             $drivers = collect();
                                             foreach($report->assigns as $assign) {
-                                                if($assign->assignedAccount) {
-                                                    $drivers->push($assign->assignedAccount);
+                                                if($assign->assigned) {
+                                                    $drivers->push($assign->assigned);
                                                 }
                                             }
 

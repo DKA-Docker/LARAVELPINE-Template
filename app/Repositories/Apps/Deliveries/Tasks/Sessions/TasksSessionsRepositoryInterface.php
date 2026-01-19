@@ -17,5 +17,7 @@ interface TasksSessionsRepositoryInterface
 
     public function query(): Builder;
 
-    public function Delete($id): bool|null;
+    public function Update(array $find, array $data): bool;
+
+    public function Delete(array $data): bool|null;
 }

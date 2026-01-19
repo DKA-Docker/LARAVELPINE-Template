@@ -37,7 +37,7 @@
                 <!-- Container -->
                 <!-- Container -->
                 <div class="kt-container-fixed">
-                    @livewire("metronic.dashboards.apps.deliveries.tasks.components.tabs")
+                    @livewire("metronic.dashboards.apps.deliveries.tasks.components.particles.tabs")
                 </div>
                 <!-- End of Container -->
                 <!-- End of Container -->

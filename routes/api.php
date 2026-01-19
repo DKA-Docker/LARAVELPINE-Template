@@ -37,7 +37,7 @@ Route::name('api.')->group(function () {
                     });
                 });
                 Route::prefix('tasks')->name('tasks.')->group(function () {
-                    Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
+                    //
                     Route::prefix('routes')->name('routes.')->group(function () {
                         Route::resource('/', Routes\Index::class)->parameters(['' => 'id']);
                     });
@@ -45,9 +45,9 @@ Route::name('api.')->group(function () {
                          Route::resource('/', Tasks\Attachments\Index::class)->parameters(['' => 'id']);
                     });
                     Route::prefix('sessions')->name('sessions.')->group(function () {
-                        Route::resource('/', Sessions\Index::class)->parameters(['' => 'id']);
+                        Route::resource('/', Sessions\Index::class);
                     });
-                
+                    Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
                 });
                 Route::resource('reports', Reports::class);
             });

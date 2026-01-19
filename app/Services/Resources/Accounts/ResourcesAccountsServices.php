@@ -11,13 +11,11 @@ use App\Repositories\Base\Accounts\Components\Firebases\AccountsFirebasesReposit
 use App\Repositories\Base\Accounts\Components\Informations\AccountsInformationsRepository;
 use App\Services\Auth\AuthAccountsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -107,7 +105,6 @@ class ResourcesAccountsServices
             ];
         } catch (QueryException $e) {
             Debugbar::warning($e);
-
             /** Cancel Changes Database */
             DB::rollBack();
             $err = $this->HelpersExceptionsHttpCode->fromSQLError($e);

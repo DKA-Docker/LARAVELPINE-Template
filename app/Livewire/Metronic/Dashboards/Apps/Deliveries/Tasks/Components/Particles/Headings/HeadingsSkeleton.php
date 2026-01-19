@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Particles\Headings;
+namespace App\Livewire\Metronic\Dashboards\Apps\Deliveries\Tasks\Components\Particles\Headings;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;

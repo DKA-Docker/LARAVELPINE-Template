@@ -8,6 +8,9 @@ use Faker\Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TasksSessionsRepository implements TasksSessionsRepositoryInterface
 {
@@ -32,11 +35,15 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
     public function Create(...$args): Model|AppsDeliveriesTasksSessions
     {
         /** @var $defaults
-         * jika data inputan kosong maka semua variable di set null
+         * jika data inputan kosong maka ambil dari faker,
          */
-        $defaults = [];
-        /** @var $data $data lakukan merge data untuk payload dengan data default */
-        $data = array_merge($defaults, ...$args);
+        $defaults = [
+            'id' => (string) Str::uuid(),
+            'account' => Auth::id(),
+            'route' => DB::raw("ST_GeomFromText('LINESTRINGZM EMPTY', 4326)")
+        ];
+
+        $data = array_merge($defaults, $args);
 
         return AppsDeliveriesTasksSessions::query()->create($data);
     }
@@ -69,27 +76,26 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
     }
 
     /**
-     * add function data for deleted data for this model data
-     * @param $id
-     * @return bool|null
+     * @param array $find
+     * @param array $data
+     * @return bool
      */
-    public function Delete($id): bool|null
+    public function Update(array $find, array $data): bool
     {
-        if ($id instanceof Model) {
-            return $id->delete();
-        }
-        $data = $this->Find($id);
-        return $data->delete();
+        return AppsDeliveriesTasksSessions::query()
+            ->where($find)
+            ->update($data);
     }
 
     /**
-     * @param Model|AppsDeliveriesTasksSessions $model
+     * add function data for deleted data for this model data
      * @param array $data
-     * @return Model|AppsDeliveriesTasksSessions
+     * @return bool|null
      */
-    public function Update(Model $model, array $data): Model|AppsDeliveriesTasksSessions
+    public function Delete(array $data): bool|null
     {
-        $model->update($data);
-        return $model;
+        return AppsDeliveriesTasksSessions::query()
+            ->where($data)
+            ->delete();
     }
 }
