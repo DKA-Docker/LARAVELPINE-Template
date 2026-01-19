@@ -28,7 +28,10 @@ return new class extends Migration
             // Menggunakan linestring untuk menyimpan seluruh rute perjalanan
             // XYZM: X=Long, Y=Lat, Z=Alt(0), M=Timestamp
             // Kita gunakan geometry karena geography 4D dukungannya terbatas di beberapa versi PostGIS
-            $table->geometry('route', 'linestringzm', 4326);
+            $table->geometry('route', 'linestringzm', 4326)->nullable();
+            $table->string('description')->nullable()->comment('Deskripsi sesi');
+            $table->timestamp('time_started')->nullable()->comment('Waktu mulai navigasi/sesi');
+            $table->timestamp('time_received')->nullable()->comment('Waktu task diterima oleh driver');
             $table->softDeletes();
             $table->timestamps();
         });

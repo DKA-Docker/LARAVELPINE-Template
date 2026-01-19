@@ -32,6 +32,9 @@ return new class extends Migration
             $table->string('description')
                 ->comment('Deskripsi singkat history');
             $table->string('name');
+            $table->timestamp('time_started')->nullable()->comment('Waktu mulai pengiriman');
+            $table->timestamp('time_received')->nullable()->comment('Waktu task diterima driver');
+            $table->timestamp('time_created')->nullable()->comment('Waktu history dibuat');
             $table->softDeletes();
             $table->timestamps();
         });

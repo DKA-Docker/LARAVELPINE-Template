@@ -63,8 +63,8 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
     public function Find($id): null|Collection|AppsDeliveriesTasksSessions|Model
     {
         return AppsDeliveriesTasksSessions::query()->with([
-            'account',
-            'task'
+            'accountDetail',
+            'taskDetail'
         ])->findOrFail($id);
     }
 

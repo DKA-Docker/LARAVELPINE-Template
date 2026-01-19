@@ -34,8 +34,17 @@ class TasksSessionsServices
         try {
             // Generate UUID manually
             $payload['id'] = Str::uuid()->toString();
-            // Set account to current logged in user
-            $payload['account'] = Auth::id();
+            // Set account to current logged in user, or keep payload account if set (for testing/admin override)
+            $payload['account'] = Auth::id() ?? $payload['account'] ?? null;
+            
+            if (!$payload['account']) {
+                throw new \Exception("Account ID is required to create session");
+            }
+
+            // Ensure route is initialized with empty LINESTRING if not provided, to satisfy NOT NULL constraint
+            if (!isset($payload['route'])) {
+                $payload['route'] = DB::raw("ST_GeomFromText('LINESTRINGZM EMPTY', 4326)");
+            }
 
             $session = $this->repository->Create($payload);
             DB::commit();
@@ -85,6 +94,22 @@ class TasksSessionsServices
             }
 
             $this->repository->Update($session, $payload);
+            
+            // If payload contains WKT point in description, append to route
+            if (isset($payload['description']) && str_starts_with($payload['description'], 'SRID=4326;POINT')) {
+                $wktPoint = $payload['description'];
+                
+                // Extract coordinates from WKT point for building LINESTRING
+                // Use ST_MakeLine to properly combine points into a line
+                // Use ST_AddPoint to append the new point to the existing route LINESTRING
+                // This assumes route is already a valid LINESTRING (handled by creation logic)
+                DB::statement("
+                    UPDATE apps_deliveries_tasks_sessions 
+                    SET route = ST_AddPoint(route, ST_GeomFromText(?, 4326)::geometry(POINTZM, 4326))
+                    WHERE id = ?
+                ", [$wktPoint, $id]);
+            }
+            
             DB::commit();
 
             return [

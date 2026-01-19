@@ -51,15 +51,15 @@
 
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-sm text-gray-800">{{ $session->account->information->first_name ?? $session->account->username ?? 'Unknown' }}</span>
-                                        <span class="text-xs text-gray-500">{{ $session->account->credential->username ?? '' }}</span>
+                                        <span class="font-bold text-sm text-gray-800">{{ $session->accountDetail->information->first_name ?? $session->accountDetail->username ?? 'Unknown' }}</span>
+                                        <span class="text-xs text-gray-500">{{ $session->accountDetail->credential->username ?? '' }}</span>
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-5">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-sm text-gray-800">{{ $session->task->name ?? '-' }}</span>
-                                        <span class="text-xs text-gray-500">{{ $session->task->id ?? '' }}</span>
+                                        <span class="font-bold text-sm text-gray-800">{{ $session->taskDetail->name ?? '-' }}</span>
+                                        <span class="text-xs text-gray-500">{{ $session->taskDetail->id ?? '' }}</span>
                                     </div>
                                 </td>
 
@@ -72,9 +72,9 @@
 
                                 <td class="px-6 py-5 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button wire:click="showTracking('{{ $session->id }}')" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="View Map">
+                                        <a href="{{ route('dashboards.apps.deliveries.tasks.sessions.show', $session->id) }}" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="View Map">
                                             <i class="ki-filled ki-map fs-6"></i>
-                                        </button>
+                                        </a>
                                         <button class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors" title="Edit">
                                             <i class="ki-filled ki-pencil fs-6"></i>
                                         </button>
@@ -122,67 +122,3 @@
             </div>
         </div>
     </div>
-
-    {{-- TRACKING MODAL --}}
-    @if($selectedSession)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" wire:click.self="closeTracking">
-            <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden m-4">
-                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <i class="ki-duotone ki-geolocation text-primary text-xl"><span class="path1"></span><span class="path2"></span></i>
-                        {{ $selectedSession->account->information->first_name ?? 'Driver' }}'s Location
-                        <span class="text-sm font-normal text-gray-500">({{ $selectedSession->task->name }})</span>
-                    </h3>
-                    <button wire:click="closeTracking" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="ki-filled ki-cross text-gray-500 text-lg"></i>
-                    </button>
-                </div>
-                <div class="p-0 h-[500px] relative bg-gray-100">
-                    {{-- MAP CONTAINER --}}
-                    <div id="tracking-map" class="w-full h-full" wire:ignore></div>
-                    
-                    {{-- LEAFLET ASSETS INJECTION (Scoped) --}}
-                    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-                    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-                    <script>
-                        document.addEventListener('livewire:initialized', () => {
-                             function initMap() {
-                                if (document.getElementById('tracking-map') && !window.trackingMap) {
-                                    // Default to Monas if no data
-                                    const lat = -6.175392;
-                                    const lng = 106.827153;
-                                    
-                                    window.trackingMap = L.map('tracking-map').setView([lat, lng], 13);
-                                    
-                                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                    }).addTo(window.trackingMap);
-
-                                    L.marker([lat, lng]).addTo(window.trackingMap)
-                                        .bindPopup('Driver Location<br>Recently Active')
-                                        .openPopup();
-                                        
-                                    // Fix map size issues in modal
-                                    setTimeout(() => {
-                                        window.trackingMap.invalidateSize();
-                                    }, 200);
-                                }
-                            }
-                            
-                            // Initialize immediately
-                            initMap();
-                        });
-                        
-                        // Re-init on Livewire updates if element was removed/added
-                        Livewire.hook('morph.updated', ({ el, component }) => {
-                             if(document.getElementById('tracking-map') && !window.trackingMap) {
-                                // Simple re-check
-                                // Note: In a real app we'd handle destruction properly
-                             }
-                        });
-                    </script>
-                </div>
-            </div>
-        </div>
-    @endif

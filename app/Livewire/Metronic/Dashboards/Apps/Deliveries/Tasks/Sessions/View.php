@@ -28,9 +28,16 @@ class View extends Component
 
     public ?AppsDeliveriesTasksSessions $selectedSession = null;
 
+    public $routeGeoJson = null;
+
     public function showTracking(string $id): void
     {
-        $this->selectedSession = AppsDeliveriesTasksSessions::with(['account.credential', 'task', 'account.information'])->find($id);
+        $this->selectedSession = AppsDeliveriesTasksSessions::query()
+            ->select('*', \Illuminate\Support\Facades\DB::raw("ST_AsGeoJSON(route) as route_geojson"))
+            ->with(['accountDetail.credential', 'taskDetail', 'accountDetail.information'])
+            ->find($id);
+
+        $this->routeGeoJson = $this->selectedSession->route_geojson ?? null;
     }
 
     public function closeTracking(): void

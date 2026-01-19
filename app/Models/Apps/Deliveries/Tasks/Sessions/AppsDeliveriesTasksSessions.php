@@ -24,9 +24,12 @@ class AppsDeliveriesTasksSessions extends Model
         'task',
         'route',
         'description',
+        'time_started',
+        'time_received',
+        'time_created',
     ];
 
-    protected $with = ['account','task'];
+    protected $with = ['accountDetail','taskDetail'];
 
     protected $hidden = [
         'deleted_at',
@@ -36,13 +39,22 @@ class AppsDeliveriesTasksSessions extends Model
      * Relation Data Account Untuk Table Ini Di dalam database
      * @return BelongsTo
      */
-    public function account(): BelongsTo
+    public function accountDetail(): BelongsTo
     {
         return $this->belongsTo(Accounts::class, 'account')->withDefault();
     }
 
-    public function task(): BelongsTo
+    public function taskDetail(): BelongsTo
     {
         return $this->belongsTo(AppsDeliveriesTasks::class, 'task');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->route)) {
+                $model->route = DB::raw("ST_GeomFromText('LINESTRINGZM EMPTY', 4326)");
+            }
+        });
     }
 }

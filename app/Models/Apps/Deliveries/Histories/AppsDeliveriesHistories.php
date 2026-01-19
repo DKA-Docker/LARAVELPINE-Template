@@ -24,7 +24,10 @@ class AppsDeliveriesHistories extends Model
         'to_status',
         'title',
         'description',
-        'name'
+        'name',
+        'time_started',
+        'time_received',
+        'time_created',
     ];
 
     protected $with = ['account'];
