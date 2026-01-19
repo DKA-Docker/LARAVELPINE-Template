@@ -45,7 +45,7 @@ Route::name('api.')->group(function () {
                          Route::resource('/', Tasks\Attachments\Index::class)->parameters(['' => 'id']);
                     });
                     Route::prefix('sessions')->name('sessions.')->group(function () {
-                        Route::resource('/', Sessions\Index::class);
+                        Route::resource('/', Sessions\Index::class)->parameters(['' => 'id']);
                     });
                     Route::resource('/', Tasks\Index::class)->parameters(['' => 'id']);
                 });

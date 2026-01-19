@@ -1,4 +1,4 @@
-<div class="kt-container-fixed h-screen flex flex-col pb-5" wire:poll.5s="refreshData">
+<div class="kt-container-fixed h-screen flex flex-col pb-5" wire:poll.2s="refreshData">
 
 
     {{-- Layout 70:30 --}}

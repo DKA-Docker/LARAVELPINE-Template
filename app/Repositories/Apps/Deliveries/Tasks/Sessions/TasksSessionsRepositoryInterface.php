@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface TasksSessionsRepositoryInterface
 {
-    public function Create(...$args): Model|AppsDeliveriesTasksSessions;
+    public function Create(array $payload): Model|AppsDeliveriesTasksSessions;
 
     public function ReadAll(): Collection;
 

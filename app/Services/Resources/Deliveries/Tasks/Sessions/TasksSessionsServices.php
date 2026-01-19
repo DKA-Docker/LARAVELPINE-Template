@@ -37,9 +37,10 @@ class TasksSessionsServices
         try {
 
             $validated = Validator::make($payload, [
+                'id'            => ['nullable', 'string'],
                 'account'       => ['required', 'uuid'],
                 'task'          => ['required', 'uuid'],
-                'route'         => ['required', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
+                'route'         => ['nullable', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
                 'route.*'       => ['array', 'size:4'], // Memastikan setiap titik punya 4 elemen (X, Y, Z, M)
                 'route.*.*'     => ['numeric'],
                 'description'   => ['nullable', 'string'],
@@ -89,12 +90,31 @@ class TasksSessionsServices
             $newData = Validator::make($payload, [
                 'account'       => ['required', 'uuid'],
                 'task'          => ['required', 'uuid'],
-                'route'         => ['required', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
+                'route'         => ['nullable', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
                 'route.*'       => ['array', 'size:4'], // Memastikan setiap titik punya 4 elemen (X, Y, Z, M)
                 'route.*.*'     => ['numeric'],
                 'time_started'  => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
                 'time_received' => ['nullable', 'date_format:Y-m-d H:i:s'], // Mewajibkan format spesifik
             ])->validate();
+
+            // Logic PostGIS: Jika ada data route (array of points), append ke existing linestring
+            if (isset($newData['route']) && is_array($newData['route'])) {
+                $routeRaw = "route";
+                $hasValidPoints = false;
+                foreach ($newData['route'] as $point) {
+                    if (is_array($point) && count($point) >= 4) {
+                        $rawPoint = "ST_SetSRID(ST_MakePoint({$point[0]}, {$point[1]}, {$point[2]}, {$point[3]}), 4326)";
+                        $routeRaw = "ST_AddPoint($routeRaw, $rawPoint)";
+                        $hasValidPoints = true;
+                    }
+                }
+
+                if ($hasValidPoints && $routeRaw !== "route") {
+                    $newData['route'] = DB::raw($routeRaw);
+                } else {
+                    unset($newData['route']);
+                }
+            }
 
             $updatedData = $this->repository->Update(
                 find: [

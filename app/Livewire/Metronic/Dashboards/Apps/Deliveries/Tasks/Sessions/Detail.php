@@ -36,11 +36,46 @@ class Detail extends Component
             // Proses GeoJSON untuk List Log (Times & Speeds)
             $times = []; $speeds = [];
             if (isset($decodedGeo['coordinates'])) {
-                $count = count($decodedGeo['coordinates']);
-                $startTime = \Carbon\Carbon::parse($data->created_at);
+                $coords = $decodedGeo['coordinates'];
+                $count = count($coords);
+                
                 for ($i = 0; $i < $count; $i++) {
-                    $times[] = $startTime->copy()->addSeconds($i * 10)->toIso8601String();
-                    $speeds[] = rand(20, 60); // Ganti dengan data asli jika ada
+                    $curr = $coords[$i];
+                    
+                    // 1. Time (M value at index 3)
+                    $ts = isset($curr[3]) ? (float)$curr[3] : null;
+                    if ($ts) {
+                        $times[] = \Carbon\Carbon::createFromTimestamp($ts)->toIso8601String();
+                    } else {
+                        // Fallback time
+                        $times[] = \Carbon\Carbon::parse($data->created_at)->addSeconds($i * 10)->toIso8601String();
+                    }
+
+                    // 2. Speed Calculation
+                    $speedKmh = 0;
+                    if ($i > 0) {
+                        $prev = $coords[$i-1];
+                        $t1 = isset($prev[3]) ? (float)$prev[3] : 0;
+                        $t2 = isset($curr[3]) ? (float)$curr[3] : 0;
+                        $deltaT = $t2 - $t1;
+                        
+                        // Haversine Distance
+                        $lat1 = $prev[1]; $lon1 = $prev[0];
+                        $lat2 = $curr[1]; $lon2 = $curr[0];
+                        
+                        $earthRadius = 6371000;
+                        $dLat = deg2rad($lat2 - $lat1);
+                        $dLon = deg2rad($lon2 - $lon1);
+                        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon/2) * sin($dLon/2);
+                        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+                        $distMeters = $earthRadius * $c;
+
+                        if ($deltaT > 0) {
+                             $speedMps = $distMeters / $deltaT;
+                             $speedKmh = round($speedMps * 3.6);
+                        }
+                    }
+                    $speeds[] = $speedKmh;
                 }
             }
 

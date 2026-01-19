@@ -32,7 +32,7 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
      * @param ...$args AppsDeliveriesTasksSessions
      * @return AppsDeliveriesTasksSessions|Model
      */
-    public function Create(...$args): Model|AppsDeliveriesTasksSessions
+    public function Create(array $payload): Model|AppsDeliveriesTasksSessions
     {
         /** @var $defaults
          * jika data inputan kosong maka ambil dari faker,
@@ -43,7 +43,15 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
             'route' => DB::raw("ST_GeomFromText('LINESTRINGZM EMPTY', 4326)")
         ];
 
-        $data = array_merge($defaults, $args);
+        // Ensure route is removed if null/empty in payload so default is used
+        if (array_key_exists('route', $payload) && empty($payload['route'])) {
+            unset($payload['route']);
+        }
+        
+        // TODO: Handle array-to-geometry conversion if route is provided as array
+        // For now, we rely on the default if empty, or raw value if provided
+
+        $data = array_merge($defaults, $payload);
 
         return AppsDeliveriesTasksSessions::query()->create($data);
     }
@@ -70,8 +78,8 @@ class TasksSessionsRepository implements TasksSessionsRepositoryInterface
     public function Find($id): null|Collection|AppsDeliveriesTasksSessions|Model
     {
         return AppsDeliveriesTasksSessions::query()->with([
-            'accountDetail',
-            'taskDetail'
+            'account',
+            'task'
         ])->findOrFail($id);
     }
 
