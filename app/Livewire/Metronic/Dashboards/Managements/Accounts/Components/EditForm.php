@@ -7,6 +7,7 @@ use App\Services\Resources\Accounts\ResourcesAccountsServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
@@ -136,7 +137,7 @@ class EditForm extends Component
     {
         try {
             $this->validate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->addError('submit', 'Terdapat kesalahan validasi. Silakan periksa kembali inputan Anda.');
             throw $e;
         }
