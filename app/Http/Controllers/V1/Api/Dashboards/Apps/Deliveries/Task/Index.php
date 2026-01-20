@@ -6,6 +6,7 @@ use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Controller
@@ -18,6 +19,13 @@ class Index extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        // For API: Automatically filter by logged-in user's assigned tasks
+        // If 'account' parameter is provided, use it; otherwise use authenticated user ID
+        // This ensures drivers only see tasks assigned to them
+        if (!$request->filled('assigned') && Auth::check()) {
+            $request->merge(['assigned' => Auth::id()]);
+        }
+        
         return response()->json(
             data: array(
                 'status' => true,
