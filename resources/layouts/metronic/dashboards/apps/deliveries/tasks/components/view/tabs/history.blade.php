@@ -8,12 +8,12 @@
             <div class="relative">
                 {{-- Dot --}}
                 <div class="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-white border-2 border-primary shadow-sm ring-4 ring-white"></div>
-                
+
                 <div class="flex flex-col gap-1">
                     {{-- Status Header --}}
                     <div class="flex items-center gap-2">
                         <span class="text-sm font-black text-gray-800 uppercase tracking-wide">
-                            {{ str_replace('_', ' ', data_get($history, 'to_status')) }}
+                            {{ str_replace('_', ' ', data_get($history, 'status')) }}
                         </span>
                         <span class="text-xs font-semibold text-gray-400">
                              {{ \Carbon\Carbon::parse(data_get($history, 'created_at'))->format('H:i, d M Y') }}
@@ -22,7 +22,7 @@
 
                     {{-- Description --}}
                     <div class="p-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-medium text-gray-600">
-                         {{ data_get($history, 'description', 'No Description provided.') }}
+                         {{ data_get($history, 'title', 'No Title provided.') }}
                     </div>
 
                     {{-- User Info --}}

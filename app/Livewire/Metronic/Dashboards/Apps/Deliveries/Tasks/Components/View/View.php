@@ -41,6 +41,9 @@ class View extends Component
             'assigned.information',
             'assigned.contact',
             'geos',
+            'history' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
             'history.account.information',
             'destination.request.account.information',
             'vehicle'

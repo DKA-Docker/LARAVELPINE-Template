@@ -7,6 +7,7 @@ use App\Repositories\Apps\Deliveries\Histories\HistoriesRepository;
 use App\Repositories\Apps\Deliveries\Tasks\Sessions\TasksSessionsRepository;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -59,6 +60,12 @@ class TasksSessionsServices
                     'status'   => 'PICKUP', // Status awal default
                     'title' => "Barang Sudah Diambil Kurir"
                 ]);
+                $this->histories->Create([
+                    'task'        => $data['task'],
+                    'account'     => $data['account'],
+                    'status'   => 'DELIVERING',
+                    'title' => "Kurir Dalam Perjalanan"
+                ]);
             });
 
             DB::commit();
@@ -96,8 +103,8 @@ class TasksSessionsServices
         DB::beginTransaction();
         try {
             $newData = Validator::make($payload, [
-                'account'       => ['required', 'uuid'],
-                'task'          => ['required', 'uuid'],
+                'account'       => ['nullable', 'uuid'],
+                'task'          => ['nullable', 'uuid'],
                 'route'         => ['nullable', 'array', 'min:0'], // min:0 membolehkan array kosong untuk "EMPTY"
                 'route.*'       => ['array', 'size:4'], // Memastikan setiap titik punya 4 elemen (X, Y, Z, M)
                 'route.*.*'     => ['numeric'],
@@ -124,6 +131,8 @@ class TasksSessionsServices
                 }
             }
 
+            $sessionData = $this->repository->Find($id);
+
             $updatedData = $this->repository->Update(
                 find: [
                     'id' => $id
@@ -131,22 +140,13 @@ class TasksSessionsServices
                 data: $newData
             );
 
-            DB::afterCommit(function () use ($newData) {
-                if ($newData['time_started'] !== null){
+            DB::afterCommit(function () use ($newData, $sessionData) {
+                if (isset($newData['time_received']) && $newData['time_received'] != null){
                     $this->histories->Create([
-                        'task'        => $newData['task'],
-                        'account'     => $newData['account'],
-                        'status'   => 'DELIVERING',
-                        'title' => "Kurir Dalam Perjalanan"
-                    ]);
-                }
-
-                if ($newData['time_received'] !== null){
-                    $this->histories->Create([
-                        'task'        => $newData['task'],
-                        'account'     => $newData['account'],
+                        'task'        => $sessionData->task,
+                        'account'     => Auth::id(),
                         'status'   => 'DELIVERED',
-                        'title' => "Kurir Dalam Perjalanan"
+                        'title' => "Barang Diterima",
                     ]);
                 }
             });
@@ -206,12 +206,23 @@ class TasksSessionsServices
     {
         DB::beginTransaction();
         try {
-            // Menggunakan gaya 'find' seperti pada Update
+            $sessionData = $this->repository->Find($id);
+           // Menggunakan gaya 'find' seperti pada Update
             $deleted = $this->repository->Delete(
                 data: [
                     'id' => $id
                 ]
             );
+
+            DB::afterCommit(function () use ($id, $sessionData) {
+
+                $this->histories->Create([
+                    'account' => Auth::id(),
+                    'task' => $sessionData->task,
+                    'status'   => 'CANCELED',
+                    'title' => "Pengiriman Dibatalkan"
+                ]);
+            });
 
             if ($deleted) {
                 DB::commit();

@@ -56,6 +56,10 @@ class HistoriesRepository implements HistoriesRepositoryInterface
         return AppsDeliveriesHistories::with($relations);
     }
 
+    public function findIDTask($id, array $data) : int
+    {
+        return AppsDeliveriesHistories::query()->where($id)->create($data);
+    }
 
     public function Find($id) : null|Collection|AppsDeliveriesHistories|Model
     {

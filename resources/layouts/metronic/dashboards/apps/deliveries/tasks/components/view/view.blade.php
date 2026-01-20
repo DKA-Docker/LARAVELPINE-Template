@@ -17,7 +17,7 @@
                             <div class="flex items-center mb-2">
                                 <a href="#" class="text-gray-900 hover:text-primary text-2xl font-bold me-2">{{ data_get($task, 'name', 'Task Name') }}</a>
                                 <span class="px-3 py-1 rounded-lg bg-green-50 text-green-600 text-xs font-bold uppercase tracking-wide">
-                                   {{ data_get($task, 'history.0.to_status', 'Pending') }}
+                                   {{ data_get($task, 'history.0.status', 'Tidak Diketahui') }}
                                 </span>
                             </div>
                             <div class="flex flex-wrap font-semibold text-gray-400 text-sm mb-4 gap-4">
@@ -37,26 +37,26 @@
 
             {{-- Tabs --}}
             <div class="flex overflow-x-auto border-b border-gray-200">
-                <button 
-                    wire:click.prevent="setActiveTab('general')" 
+                <button
+                    wire:click.prevent="setActiveTab('general')"
                     class="py-4 px-6 text-sm font-bold border-b-2 transition-colors whitespace-nowrap {{ $activeTab === 'general' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}"
                 >
                     General
                 </button>
-                <button 
-                    wire:click.prevent="setActiveTab('assigned')" 
+                <button
+                    wire:click.prevent="setActiveTab('assigned')"
                     class="py-4 px-6 text-sm font-bold border-b-2 transition-colors whitespace-nowrap {{ $activeTab === 'assigned' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}"
                 >
                     Data Assigned
                 </button>
-                <button 
-                    wire:click.prevent="setActiveTab('geo')" 
+                <button
+                    wire:click.prevent="setActiveTab('geo')"
                     class="py-4 px-6 text-sm font-bold border-b-2 transition-colors whitespace-nowrap {{ $activeTab === 'geo' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}"
                 >
                     Geo Location
                 </button>
-                <button 
-                    wire:click.prevent="setActiveTab('history')" 
+                <button
+                    wire:click.prevent="setActiveTab('history')"
                     class="py-4 px-6 text-sm font-bold border-b-2 transition-colors whitespace-nowrap {{ $activeTab === 'history' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}"
                 >
                     History

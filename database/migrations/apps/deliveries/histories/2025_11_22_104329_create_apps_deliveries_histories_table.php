@@ -26,7 +26,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('title')
                 ->comment('Judul singkat history');
-            $table->enum('status', ['UNKNOWN', 'ASSIGNED','DEPARTED', 'PICKUP', 'DELIVERING','FAILED', 'DELIVERED', 'DONE'])
+            $table->enum('status', ['UNKNOWN', 'ASSIGNED','DEPARTED', 'PICKUP', 'DELIVERING','FAILED', 'DELIVERED', 'DONE', 'CANCELED'])
                 ->comment('Status baru, misal: on_delivery, delivered, failed, done');
             $table->string('description')
                 ->comment('Deskripsi singkat history')
