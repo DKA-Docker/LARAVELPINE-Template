@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\V1\Frontend\Dashboards\Apps\Deliveries\Tasks;
 
-use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTaksServices;
 use App\Services\Resources\Deliveries\Tasks\ResourcesDeliveriesTasksServices;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Contracts\View\Factory;
@@ -33,7 +32,6 @@ class Create extends Controller
     }
 
     /**
-     * @throws ConnectionException
      */
     public function store(Request $request)
     {

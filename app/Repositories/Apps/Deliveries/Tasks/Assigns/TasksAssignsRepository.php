@@ -23,7 +23,7 @@ class TasksAssignsRepository implements TasksAssignsRepositoryInterface
     }
 
     /**
-     * @param ...$args AppsDeliveriesTasksAssigns
+     * @param array $args AppsDeliveriesTasksAssigns
      * @return AppsDeliveriesTasksAssigns|Model
      */
     public function Create(...$args): Model|AppsDeliveriesTasksAssigns

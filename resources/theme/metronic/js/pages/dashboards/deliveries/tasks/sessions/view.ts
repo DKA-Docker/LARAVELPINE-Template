@@ -116,8 +116,10 @@ const initMap = () => {
     map.on('load', () => {
         if (!map) return;
         map.addSource('route', { type: 'geojson', data: initialGeo });
+        // @ts-ignore
         map.addSource('to-destination', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
 
+        // @ts-ignore
         map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#10b981', 'line-width': 6, 'line-cap': 'round' } });
         map.addLayer({ id: 'to-dest-line', type: 'line', source: 'to-destination', paint: { 'line-color': '#ef4444', 'line-width': 4, 'line-dasharray': [2, 1] } });
         map.addLayer({ id: 'route-sensor', type: 'line', source: 'route', paint: { 'line-color': 'rgba(0,0,0,0)', 'line-width': 30 } });
@@ -125,7 +127,7 @@ const initMap = () => {
         map.on('mousemove', 'route-sensor', (e) => {
             if (!e.features?.length) return;
             const props = e.features[0].properties;
-            const times = JSON.parse(props.times);
+            const times = JSON.parse(props?.times);
             const activeIdx = times.length - 1;
 
             hoverPopup?.setLngLat(e.lngLat).setHTML(`<div class="text-center font-bold text-indigo-600">${formatTimeWithSeconds(times[activeIdx])}</div>`).addTo(map!);

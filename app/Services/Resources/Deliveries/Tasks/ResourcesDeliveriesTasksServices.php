@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Messaging\CloudMessage;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 class ResourcesDeliveriesTasksServices
@@ -52,7 +53,11 @@ class ResourcesDeliveriesTasksServices
     }
 
 
-
+    /**
+     * @param array $payload
+     * @return array
+     * @throws Throwable
+     */
     public function Create(array $payload): array
     {
         DB::beginTransaction(); // Mengaktifkan kembali transaksi database
@@ -86,7 +91,6 @@ class ResourcesDeliveriesTasksServices
 
             // 6. Simpan Geos dengan memastikan seluruh field wilayah terkirim
             if ($taskCreated && isset($payload['geos'])) {
-
                 $geosPayload = $payload['geos'];
                 $geosPayload['task'] = $taskCreated->id;
 
@@ -110,31 +114,31 @@ class ResourcesDeliveriesTasksServices
                 ]);
 
             }
-//
+
             DB::afterCommit(function () use ($taskCreated, $currentUserId) {
                  try {
                      $messaging = Firebase::messaging();
                      /** @var AppsDeliveriesTasks $taskLoaded */
                      $taskLoaded = $taskCreated->load(['assigned.firebase', 'assigned.information', 'vehicle', 'destination.packages']);
                      $creator = Auth::user()?->account?->information?->first_name ?? 'Admin';
-                     
+
                      $notifTitle = "Kamu diberikan tugas dari {$creator}";
-                     
+
                      // Gunakan getRelationValue karena nama relasi 'vehicle' sama dengan nama kolom foreign key
                      $vehicleRel = $taskLoaded->getRelationValue('vehicle');
                      $vehicleName = $vehicleRel->name ?? 'Kendaraan';
                      $vehiclePlate = $vehicleRel->plate ?? '-';
-                     
+
                      // Gunakan getRelationValue karena nama relasi 'destination' sama dengan nama kolom foreign key
                      $destinationRel = $taskLoaded->getRelationValue('destination');
                      $receiptName = $destinationRel->receipt_name ?? 'Penerima';
                      $receiptAddress = $destinationRel->receipt_address ?? 'Alamat';
-                     
+
                      // Hitung paket
                      $packages = $destinationRel->packages ?? collect([]);
                      $totalItems = $packages->count();
                      $totalQty = $packages->sum('qty');
-                     
+
                      $notifBody = "Hai, Kamu mendapatkan Task Baru Dari {$creator} pengiriman Ke {$receiptAddress} menggunakan {$vehicleName} dengan Plate kendaraan {$vehiclePlate} dengan jumlah {$totalItems} Paket, Jumlah Paketnya {$totalQty} total";
 
                      foreach ($taskLoaded->assigned as $assign) {
@@ -142,26 +146,23 @@ class ResourcesDeliveriesTasksServices
                          // $assign adalah model Account karena relasi 'assigned' adalah BelongsToMany
                          $firebaseRel = $assign->getRelationValue('firebase');
                          $token = $firebaseRel->token ?? null;
-                         
+
                          if ($token) {
-                             Log::info("Sending FCM for Task {$taskCreated->id}", [
+                             Log::info("Sending FCM for Task $taskCreated->id", [
                                  'token' => substr($token, 0, 10) . '...',
                                  'assign_id' => $assign->id
                              ]);
 
                              $messaging = Firebase::messaging();
-            
-                            $message = CloudMessage::withTarget('token', $token)
+
+                            $message = CloudMessage::new()
+                                ->toToken(token: $token)
                                 ->withData([
                                     'action' => 'TASK_ASSIGNED',
                                     'task_id' => $taskCreated->id,
                                     'creator' => $creator,
                                     'title' => $notifTitle,
                                     'body' => $notifBody
-                                ])
-                                ->withAndroidConfig([
-                                    'priority' => 'high',
-                                    'ttl' => '0s',
                                 ]);
 
                             $result = $messaging->send($message);
@@ -202,6 +203,7 @@ class ResourcesDeliveriesTasksServices
 
     /**
      * Update Delivery Task (atomik)
+     * @throws Throwable
      */
     public function Update(string $id, array $payload): array
     {
@@ -246,7 +248,7 @@ class ResourcesDeliveriesTasksServices
 
             return [
                 'status' => true,
-                'code'   => Response::HTTP_OK,
+                'code'   => ResponseAlias::HTTP_OK,
                 'msg'    => 'Delivery Task Successfully Updated',
                 'data'   => $task->load(['assigned', 'geos']),
             ];
@@ -266,6 +268,7 @@ class ResourcesDeliveriesTasksServices
 
     /**
      * Delete Delivery Task
+     * @throws Throwable
      */
     public function Delete(string $id): array
     {
@@ -310,6 +313,10 @@ class ResourcesDeliveriesTasksServices
     public function ReadAll(): Collection { return $this->repository->ReadAll(); }
     public function Count(): int { return $this->repository->Count(); }
     public function Find($id) { return $this->repository->Find($id); }
+
+    /**
+     * @throws Throwable
+     */
     public function FindByAssign($id) : array
     {
         DB::beginTransaction();
