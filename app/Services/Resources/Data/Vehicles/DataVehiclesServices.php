@@ -3,6 +3,7 @@
 namespace App\Services\Resources\Data\Vehicles;
 
 use App\Repositories\Data\Vehicles\VehiclesRepositoryInterface;
+use App\Repositories\Data\Vehicles\VehiclesRepository;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -13,7 +14,7 @@ class DataVehiclesServices
 
     public function __construct()
     {
-        $this->repository = new \App\Repositories\Data\Vehicles\VehiclesRepository();
+        $this->repository = new VehiclesRepository();
     }
 
     public function GetQuery()
