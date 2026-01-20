@@ -24,14 +24,13 @@ return new class extends Migration
                 ->comment('request utama untuk task ini')
                 ->constrained('apps_deliveries_tasks', 'id')
                 ->onDelete('cascade');
-            $table->string('to_status')
-                ->comment('Status baru, misal: on_delivery, delivered, failed, done');
             $table->string('title')
-                ->comment('Judul singkat history')
-                ->nullable();
+                ->comment('Judul singkat history');
+            $table->enum('status', ['UNKNOWN', 'ASSIGNED','DEPARTED', 'PICKUP', 'DELIVERING','FAILED', 'DELIVERED', 'DONE'])
+                ->comment('Status baru, misal: on_delivery, delivered, failed, done');
             $table->string('description')
-                ->comment('Deskripsi singkat history');
-            $table->string('name');
+                ->comment('Deskripsi singkat history')
+                ->nullable();
             $table->timestamp('time_started')->nullable()->comment('Waktu mulai pengiriman');
             $table->timestamp('time_received')->nullable()->comment('Waktu task diterima driver');
             $table->timestamp('time_created')->nullable()->comment('Waktu history dibuat');

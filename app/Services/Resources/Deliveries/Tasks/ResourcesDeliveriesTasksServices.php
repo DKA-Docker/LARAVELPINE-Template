@@ -104,15 +104,12 @@ class ResourcesDeliveriesTasksServices
             // 7. Simpan History Awal (Contoh: Status 'pending' atau 'created')
             // Menyesuaikan dengan $this->histories yang diinisialisasi di constructor
             if ($taskCreated) {
-               $response = $this->histories->Create([
+               $this->histories->Create([
                     'task'        => $taskCreated->id,
                     'account'     => $currentUserId,
-                    'to_status'   => 'to do', // Status awal default
-                    'title' => null,
-                    'description' => $taskData['name'],
-                    'name'        => $taskData['first_name']
+                    'status'   => 'ASSIGNED', // Status awal default
+                    'title' => "kurir Sudah Ditugaskan",
                 ]);
-
             }
 
             DB::afterCommit(function () use ($taskCreated, $currentUserId) {

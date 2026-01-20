@@ -21,10 +21,9 @@ class AppsDeliveriesHistories extends Model
     protected $fillable = [
         'task',
         'account',
-        'to_status',
         'title',
+        'status',
         'description',
-        'name',
         'time_started',
         'time_received',
         'time_created',

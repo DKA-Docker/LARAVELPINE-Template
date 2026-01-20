@@ -3,14 +3,12 @@
 namespace App\Services\Resources\Deliveries\Tasks\Sessions;
 
 use App\Helpers\Exceptions\HelpersExceptionsHttpCode;
-use App\Models\Apps\Deliveries\Tasks\Sessions\AppsDeliveriesTasksSessions;
+use App\Repositories\Apps\Deliveries\Histories\HistoriesRepository;
 use App\Repositories\Apps\Deliveries\Tasks\Sessions\TasksSessionsRepository;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -18,11 +16,13 @@ class TasksSessionsServices
 {
     protected TasksSessionsRepository $repository;
     protected HelpersExceptionsHttpCode $helpersExceptionsHttpCode;
+    protected HistoriesRepository $histories;
 
     public function __construct()
     {
         $this->repository = new TasksSessionsRepository();
         $this->helpersExceptionsHttpCode = new HelpersExceptionsHttpCode();
+        $this->histories = new HistoriesRepository();
     }
 
     /**
@@ -51,6 +51,16 @@ class TasksSessionsServices
              * Created Data
              */
             $data = $this->repository->Create($validated);
+
+            DB::afterCommit(function () use ($data) {
+                $this->histories->Create([
+                    'task'        => $data['task'],
+                    'account'     => $data['account'],
+                    'status'   => 'PICKUP', // Status awal default
+                    'title' => "Barang Sudah Diambil Kurir"
+                ]);
+            });
+
             DB::commit();
             /** Returning Variable */
             return [
@@ -85,8 +95,6 @@ class TasksSessionsServices
     {
         DB::beginTransaction();
         try {
-
-
             $newData = Validator::make($payload, [
                 'account'       => ['required', 'uuid'],
                 'task'          => ['required', 'uuid'],
@@ -123,8 +131,30 @@ class TasksSessionsServices
                 data: $newData
             );
 
+            DB::afterCommit(function () use ($newData) {
+                if ($newData['time_started'] !== null){
+                    $this->histories->Create([
+                        'task'        => $newData['task'],
+                        'account'     => $newData['account'],
+                        'status'   => 'DELIVERING',
+                        'title' => "Kurir Dalam Perjalanan"
+                    ]);
+                }
+
+                if ($newData['time_received'] !== null){
+                    $this->histories->Create([
+                        'task'        => $newData['task'],
+                        'account'     => $newData['account'],
+                        'status'   => 'DELIVERED',
+                        'title' => "Kurir Dalam Perjalanan"
+                    ]);
+                }
+            });
+
             if ($updatedData){
+
                 DB::commit();
+
                 return [
                     'status' => true,
                     'code'   => 200,
