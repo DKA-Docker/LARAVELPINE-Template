@@ -12,6 +12,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Symfony\Component\HttpFoundation\Response;
 use App\Events\Dashboards\Apps\Trackings\Monitors\Index as MonitorEvent;
+use App\Events\Dashboards\Apps\Trackings\Alarms\Index as AlarmEvent;
 use function React\Promise\all;
 
 class Index extends Controller
@@ -68,7 +69,7 @@ class Index extends Controller
                      $incommingRequest['driver_name'] = $account->information->first_name ?? 'Unknown';
                      
                      // Use Alarm Event for GPS OFF
-                     broadcast(new \App\Events\Dashboards\Apps\Trackings\Alarms\Index([
+                     broadcast(new AlarmEvent([
                         'data' => $incommingRequest
                      ]));
                      Log::info("Broadcast dispatched for GPS OFF event via ALARM Channel.", ['account_id' => $account->id]);
