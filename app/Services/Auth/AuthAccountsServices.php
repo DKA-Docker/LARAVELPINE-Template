@@ -16,6 +16,8 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Auth\ForgotPasswordMail;
 
 // Pastikan ini di-import jika menggunakan Sanctum
 
@@ -179,7 +181,7 @@ class AuthAccountsServices {
             );
 
             // Send Email
-            \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\Auth\ForgotPasswordMail($email, $token));
+            Mail::to($email)->send(new ForgotPasswordMail($email, $token));
 
             return [
                 'status' => true,
