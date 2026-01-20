@@ -2,9 +2,14 @@
 
 namespace App\Livewire\Metronic\Dashboards\Components\Chat;
 
+use App\Events\Chats\UserOnline;
+use App\Events\Chats\UserTyping;
+use App\Events\Chats\MessageSent;
 use App\Models\Base\Accounts\Accounts;
+use App\Models\Base\Chats\Message;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\On;
 
 #[Lazy]
 class ChatDrawer extends Component
@@ -21,7 +26,7 @@ class ChatDrawer extends Component
         auth()->user()->update(['last_seen_at' => now()]);
 
         // Broadcast that user is online
-        broadcast(new \App\Events\Chats\UserOnline(
+        broadcast(new UserOnline(
             userId: (int) auth()->id(),
             isOnline: true,
             lastSeen: now()->toIso8601String()
@@ -66,7 +71,7 @@ class ChatDrawer extends Component
         }
 
         // Load messages between current user and selected receiver
-        $this->messages = \App\Models\Base\Chats\Message::with('sender')
+        $this->messages = Message::with('sender')
             ->where(function($query) {
                 $query->where(function($q) {
                     $q->where('user_id', auth()->id())
@@ -94,7 +99,7 @@ class ChatDrawer extends Component
         $this->dispatch('contact-selected', receiverId: $receiverId);
 
         // Broadcast online status
-        broadcast(new \App\Events\Chats\UserOnline(
+        broadcast(new UserOnline(
             userId: (int) auth()->id(),
             isOnline: true,
             lastSeen: now()->toIso8601String()
@@ -116,7 +121,7 @@ class ChatDrawer extends Component
         // Only broadcast typing event if message body has content
         // Don't broadcast if empty (which happens after sending)
         if (!empty(trim($this->messageBody)) && strlen(trim($this->messageBody)) > 0) {
-            broadcast(new \App\Events\Chats\UserTyping(auth()->user()))->toOthers();
+            broadcast(new UserTyping(auth()->user()))->toOthers();
         }
     }
 
@@ -131,13 +136,13 @@ class ChatDrawer extends Component
             'messageBody' => 'required|string|max:1000',
         ]);
 
-        $message = \App\Models\Base\Chats\Message::create([
+        $message = Message::create([
             'user_id' => auth()->id(),
             'receiver_id' => $this->selectedReceiverId,
             'body' => $this->messageBody,
         ]);
 
-        broadcast(new \App\Events\Chats\MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message))->toOthers();
 
         $this->messages[] = $message->load('sender')->toArray();
         $this->messageBody = '';
@@ -152,7 +157,7 @@ class ChatDrawer extends Component
      *
      * Livewire attribute format: #[On('echo:{channel},{event}')]
      */
-    //     #[\Livewire\Attributes\On('echo:chat,.App.Events.Chats.MessageSent')]
+    //     #[On('echo:chat,.App.Events.Chats.MessageSent')]
     public function onMessageSent($event)
     {
         // $event is the payload broadcasted
@@ -178,7 +183,7 @@ class ChatDrawer extends Component
             $isFromMe = ($newMessage['user_id'] == auth()->id() && $newMessage['receiver_id'] == $this->selectedReceiverId);
 
             if ($isForMe || $isFromMe) {
-                $msgModel = \App\Models\Base\Chats\Message::with('sender')->find($newMessage['id']);
+                $msgModel = Message::with('sender')->find($newMessage['id']);
                 if ($msgModel) {
                     $this->messages[] = $msgModel->toArray();
                 }
