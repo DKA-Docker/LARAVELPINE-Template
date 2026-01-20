@@ -91,10 +91,51 @@ class ResourcesDeliveriesTasksAttachmentsServices
             DB::rollBack();
             // Clean up file if it was uploaded but DB transaction failed?
             // For now, let's keep it simple. Garbage collection of orphaned files is a separate concern.
+            
+            // Handle different types of errors with user-friendly messages
+            $errorMessage = $e->getMessage();
+            $userFriendlyMessage = 'Gagal mengunggah file. Silakan coba lagi.';
+            
+            // Check for OOM (Out of Memory) errors
+            if (str_contains($errorMessage, 'Allowed memory size') || 
+                str_contains($errorMessage, 'out of memory') ||
+                str_contains($errorMessage, 'memory exhausted')) {
+                $userFriendlyMessage = 'Server sedang sibuk. Silakan coba lagi dalam beberapa saat.';
+            }
+            // Check for file size errors
+            elseif (str_contains($errorMessage, 'upload_max_filesize') || 
+                    str_contains($errorMessage, 'post_max_size') ||
+                    str_contains($errorMessage, 'file size')) {
+                $userFriendlyMessage = 'Ukuran file terlalu besar. Maksimal 10MB.';
+            }
+            // Check for storage errors
+            elseif (str_contains($errorMessage, 'disk') || 
+                    str_contains($errorMessage, 'storage') ||
+                    str_contains($errorMessage, 'No space left')) {
+                $userFriendlyMessage = 'Ruang penyimpanan tidak cukup. Hubungi administrator.';
+            }
+            // Check for file type errors
+            elseif (str_contains($errorMessage, 'mime') || 
+                    str_contains($errorMessage, 'type')) {
+                $userFriendlyMessage = 'Jenis file tidak didukung. Gunakan format gambar (JPG, PNG).';
+            }
+            // Check for network/timeout errors
+            elseif (str_contains($errorMessage, 'timeout') || 
+                    str_contains($errorMessage, 'timed out')) {
+                $userFriendlyMessage = 'Koneksi terputus. Periksa jaringan Anda dan coba lagi.';
+            }
+            
+            // Log the actual error for debugging (but don't show to user)
+            \Log::error('Attachment upload failed', [
+                'task_id' => $request->input('task_id'),
+                'error' => $errorMessage,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return [
                 'status' => false,
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'msg' => $e->getMessage(),
+                'msg' => $userFriendlyMessage,
             ];
         }
     }
