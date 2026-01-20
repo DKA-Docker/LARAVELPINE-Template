@@ -5,7 +5,6 @@ namespace App\Jobs\Dashboards\Apps\Deliveries;
 use App\Mail\Dashboards\Apps\Deliveries\RequestCreatedMail;
 use App\Models\Apps\Deliveries\Requests\AppsDeliveriesRequests;
 use App\Models\Base\Accounts\Accounts;
-use App\Models\Base\Apps\Deliveries\Requests\Requests;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -48,7 +47,7 @@ class SendRequestCreatedNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $request = Requests::with(['destinations.packages'])->find($this->requestId);
+        $request = AppsDeliveriesRequests::with(['destinations.packages'])->find($this->requestId);
         $user = Accounts::with('contact')->find($this->userId);
 
         // Gunakan getRelationValue karena nama kolom 'contact' bentrok dengan nama relasi
