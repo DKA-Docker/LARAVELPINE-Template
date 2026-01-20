@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Throwable;
 
 class ResourcesDeliveriesDataRatesCategoriesServices
@@ -128,7 +129,7 @@ class ResourcesDeliveriesDataRatesCategoriesServices
         }
     }
 
-    public function query(): \Illuminate\Database\Eloquent\Builder
+    public function query(): Builder
     {
         return $this->repository->query();
     }
