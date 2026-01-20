@@ -3,6 +3,7 @@
 namespace App\Services\Resources\Data\Vehicles;
 
 use App\Repositories\Data\Vehicles\CategoriesRepositoryInterface;
+use App\Repositories\Data\Vehicles\CategoriesRepository;
 use App\Models\Data\Vehicles\DataVehicleCategories;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class DataVehicleCategoriesServices
 
     public function __construct()
     {
-        $this->repository = new \App\Repositories\Data\Vehicles\CategoriesRepository();
+        $this->repository = new CategoriesRepository();
     }
 
     public function GetQuery()
