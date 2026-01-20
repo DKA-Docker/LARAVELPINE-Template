@@ -4,6 +4,8 @@ namespace App\Livewire\Metronic\Dashboards\Settings\Vehicles\Components;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Services\Resources\Data\Vehicles\DataVehiclesServices;
+use App\Services\Resources\Data\Vehicles\DataVehicleCategoriesServices;
 
 class View extends Component
 {
@@ -40,8 +42,8 @@ class View extends Component
     }
 
     public function deleteConfirmed(
-        \App\Services\Resources\Data\Vehicles\DataVehiclesServices $vehicleService,
-        \App\Services\Resources\Data\Vehicles\DataVehicleCategoriesServices $categoryService
+        DataVehiclesServices $vehicleService,
+        DataVehicleCategoriesServices $categoryService
     ) {
         if ($this->deleteId && $this->deleteType) {
             try {
