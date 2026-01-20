@@ -72,7 +72,7 @@ class View extends Component
         $this->resetPage();
     }
 
-    public function placeholder(): Factory|ViewContract|\Illuminate\View\View
+    public function placeholder(): Factory|ViewContract
     {
         return view('dashboards.layouts.placeholders.view');
     }
