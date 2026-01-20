@@ -45,10 +45,10 @@ class Detail extends Component
                     // 1. Time (M value at index 3)
                     $ts = isset($curr[3]) ? (float)$curr[3] : null;
                     if ($ts) {
-                        $times[] = \Carbon\Carbon::createFromTimestamp($ts)->toIso8601String();
+                        $times[] = Carbon::createFromTimestamp($ts)->toIso8601String();
                     } else {
                         // Fallback time
-                        $times[] = \Carbon\Carbon::parse($data->created_at)->addSeconds($i * 10)->toIso8601String();
+                        $times[] = Carbon::parse($data->created_at)->addSeconds($i * 10)->toIso8601String();
                     }
 
                     // 2. Speed Calculation
