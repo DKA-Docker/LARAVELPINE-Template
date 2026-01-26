@@ -1,0 +1,158 @@
+name: dka-laravelpine
+
+services:
+  app:
+    image: yovanggaanandhika/laravelpine:8.3
+    container_name: dka-laravelpine-app
+    hostname: dka-laravelpine-app
+    pull_policy: always
+    environment:
+      APP_NAME: 'Laravelpine'
+      APP_ENV: local
+      APP_KEY: base64:EBcmQecvKL4nhi0kmw+jy6boUndO9aPTEKJ7DfZ40nA=
+      APP_DEBUG: true
+      APP_TIMEZONE: Asia/Makassar
+
+      APP_LOCALE: id_ID
+      APP_FALLBACK_LOCALE: id_ID
+      APP_FAKER_LOCALE: id_ID
+      APP_MAINTENANCE_DRIVER: file
+      # APP_MAINTENANCE_STORE:database
+      PHP_CLI_SERVER_WORKERS: 4
+      BCRYPT_ROUNDS: 12
+      LOG_CHANNEL: stack
+      LOG_STACK: single
+      LOG_DEPRECATIONS_CHANNEL: null
+      LOG_LEVEL: debug
+
+      DB_CONNECTION: pgsql
+      DB_HOST: dka-laravelpine-postgresql
+      DB_PORT: 5432
+      DB_DATABASE: dka_laravelpine
+      DB_USERNAME: postgres
+      DB_PASSWORD: '@Thedarkangels2010'
+
+      SESSION_DRIVER: database
+      SESSION_TABLE: sessions_accounts
+      SESSION_LIFETIME: 120
+      SESSION_ENCRYPT: false
+      SESSION_PATH: /
+      SESSION_DOMAIN: null
+
+      BROADCAST_CONNECTION: reverb
+      FILESYSTEM_DISK: local
+      QUEUE_CONNECTION: database
+
+      CACHE_STORE: database
+      # CACHE_PREFIX:
+
+      MEMCACHED_HOST: 127.0.0.1
+
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: 127.0.0.1
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+      # ----------------------------------------------------------
+      MAIL_MAILER:
+      MAIL_HOST:
+      MAIL_PORT:
+      MAIL_USERNAME:
+      MAIL_PASSWORD:
+      MAIL_ENCRYPTION:
+      MAIL_FROM_ADDRESS:
+      MAIL_FROM_NAME: "${APP_NAME}"
+      # ----------------------------------------------------------
+
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_BUCKET:
+      AWS_USE_PATH_STYLE_ENDPOINT: false
+
+      REVERB_APP_ID: 582743
+      REVERB_APP_KEY: 7cjuaglts0v6pvazjcjx
+      REVERB_APP_SECRET: fatogha3s1idhtg1mtfv
+      REVERB_HOST: "127.0.0.1"
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+
+      VITE_REVERB_APP_KEY: 7cjuaglts0v6pvazjcjx
+      VITE_REVERB_HOST: 127.0.0.1
+      VITE_REVERB_PORT: 8080
+      VITE_REVERB_SCHEME: http
+
+      THEME_NAME: metronic
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+        reservations:
+          cpus: "0.80"
+          memory: 800M
+    ports:
+      - target: 5173
+        published: 5173
+        protocol: tcp
+        host_ip: 0.0.0.0
+      - target: 80
+        published: 80
+        protocol: tcp
+        host_ip: 0.0.0.0
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        host_ip: 0.0.0.0
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www
+    networks:
+      - default
+
+  postgresql:
+    image: yovanggaanandhika/postgresql:latest
+    container_name: dka-laravelpine-postgresql
+    hostname: dka-laravelpine-postgresql
+    pull_policy: always
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 2
+    environment:
+      DKA_ROOT_PASSWORD: '@Thedarkangels2010'
+      DKA_DB_NAME: dka_laravelpine
+      DKA_CRON_ENABLE: false
+    ports:
+      - target: 5432
+        published: 5433
+        protocol: tcp
+        host_ip: 0.0.0.0
+    deploy:
+      resources:
+        limits:
+          memory: 800M
+          #cpus: '0.8'
+        reservations:
+          memory: 200M
+          #cpus: '0.3'
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql
+    networks:
+      - default
+
+volumes:
+  postgres-data:
+    name: dka-laravelpine-postgres-data
+    driver: local
+
+networks:
+  default:
+    name: dka-laravelpine
+    driver: bridge

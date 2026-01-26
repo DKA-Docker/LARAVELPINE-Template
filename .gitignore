@@ -9,7 +9,6 @@
 /.idea
 /.run
 composer.lock
-compose.yml
 /.nova
 /.phpunit.cache
 /.vscode
